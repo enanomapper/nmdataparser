@@ -1,0 +1,33 @@
+{
+    "commands": {
+  		"csv": {
+        	"name" : "CSV parser",
+        	"description" : "Parse",
+        	"parse"  : {
+        		"params" : {
+        		}
+        	}        	
+        },            
+  		"nanowiki": {
+        	"name" : "NanoWiki parser",
+        	"description" : "Parse",
+        	"parse"  : {
+        		"params" : {
+        		}
+        	}        	
+        },       
+        "help" : {
+        	"name" : "API help",
+        	"description" : "Show API commands",
+        	"help" : {
+        		"description" : "Displays all available commands"
+        	},
+        	"json" : {
+        		"description" : "Displays JSON configuration of API commands"
+        	},
+        	"html" : {
+        		"description" : "Generates HTML documentation for all API commands and runs examples"
+        	}
+        }                        
+    }
+}
