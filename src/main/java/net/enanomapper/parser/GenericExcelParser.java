@@ -10,14 +10,14 @@ import java.util.ArrayList;
  */
 public class GenericExcelParser 
 {
-	private ArrayList<String> configErrors = new ArrayList<String> ();
+	
 	private ArrayList<String> parseErrors = new ArrayList<String> ();
+	private ExcelParserConfigurator parserConfig = null;
 	
-	
-	public void configParser(String jsonFileName)
+	public void configParser(String jsonFileName) throws Exception
 	{
-		configErrors.clear();
-		//TODO
+		parserConfig = ExcelParserConfigurator.loadFromJSON(jsonFileName);
+		
 	}
 	
 	
