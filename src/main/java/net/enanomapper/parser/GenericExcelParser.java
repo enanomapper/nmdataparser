@@ -10,8 +10,15 @@ import java.util.ArrayList;
  */
 public class GenericExcelParser 
 {
+	private ArrayList<String> configErrors = new ArrayList<String> ();
 	private ArrayList<String> parseErrors = new ArrayList<String> ();
 	
-	//TODO
+	
+	public void configParser(String jsonFileName)
+	{
+		configErrors.clear();
+		//TODO
+	}
+	
 	
 }
