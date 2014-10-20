@@ -1,5 +1,5 @@
 nmdataparser
 ============
 
-Configurable parsers for different NM data formats
+Configurable parsers for different eNanoMapper input data formats
 --
