@@ -1,4 +1,4 @@
 nmdataparser
 ============
 
-Parsers for different NM data formats
+Configurable parsers for different NM data formats
