@@ -38,4 +38,15 @@ public class ExcelParserConfigurator
 		
 		return epConfig;
 	}
+	
+	
+	public String getAllErrorsAsString()
+	{
+		if (configErrors.isEmpty())
+			return "";
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < configErrors.size(); i++)
+			sb.append(configErrors.get(i) + "\n");
+		return sb.toString();
+	}
 }
