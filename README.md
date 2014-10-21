@@ -26,3 +26,4 @@ Configurable parsers for different eNanoMapper input data formats
 
 * [Value](http://ambit.uni-plovdiv.bg/downloads/ambit2/2.7.0-SNAPSHOT/apidocs/ambit2/base/data/study/Value.html)
 
+* ![Java class diagram](ambit2.base.data.study.gif "Java class diagram")
