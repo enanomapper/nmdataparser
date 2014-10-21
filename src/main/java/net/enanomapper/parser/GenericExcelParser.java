@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IChemObject;
 import org.openscience.cdk.io.IChemObjectReaderErrorHandler;
@@ -24,20 +27,32 @@ import ambit2.core.io.IRawReader;
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {
 	
-	private ArrayList<String> parseErrors = new ArrayList<String> ();
-	private ExcelParserConfigurator parserConfig = null;
+	protected ArrayList<String> parseErrors = new ArrayList<String> ();
+	protected ExcelParserConfigurator parserConfig = null;
+	protected  InputStream input;
 	
-	public GenericExcelParser(String excelFileName, String jsonConfig) throws Exception
+	protected Workbook workbook;
+	protected boolean hssf = true;
+	
+	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
 	{
+		this(input, jsonConfig, true);
+	}
+	
+	public GenericExcelParser(InputStream input, String jsonConfig, boolean hssf) throws Exception
+	{
+		super();
+		this.hssf = hssf;
+		
 		parserConfig = ExcelParserConfigurator.loadFromJSON(jsonConfig);
 		if (parserConfig.configErrors.size() > 0)		
 			throw new Exception("GenericExcelParser configuration errors:\n" + parserConfig.getAllErrorsAsString());
 		
+		setReader(input);
 		init();
-		
 	}
 	
-	public void init() 
+	public void init() throws Exception
 	{
 		//TODO
 		
@@ -83,15 +98,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public void setReader(Reader arg0) throws CDKException {
-		// TODO Auto-generated method stub
-		
+		throw new CDKException("Not implemented");
 	}
 
 
 	@Override
 	public void setReader(InputStream arg0) throws CDKException {
-		// TODO Auto-generated method stub
-		
+		try {
+			workbook = hssf?new HSSFWorkbook(input):new XSSFWorkbook(input);
+		} catch (Exception x) {
+			throw new CDKException(x.getMessage(),x);
+		}
 	}
 
 
@@ -118,8 +135,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
-		
+		input.close();
+		input = null;
+		workbook = null;
 	}
 
 
@@ -153,8 +171,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public Object next() {
-		// TODO Auto-generated method stub
-		return null;
+		return nextRecord();
 	}
 
 
