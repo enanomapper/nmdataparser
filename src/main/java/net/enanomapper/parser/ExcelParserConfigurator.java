@@ -35,10 +35,12 @@ public class ExcelParserConfigurator
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
 	
+	public String templateName = null;
+	
 	public int configurationType = 1;
 	public int startRow = 1;
 	public int headerRow = 1;
-	public String templateName = ""; 
+	 
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -54,12 +56,40 @@ public class ExcelParserConfigurator
 		} finally {
 			try {fin.close();} catch (Exception x) {}	
 		}
-		ExcelParserConfigurator epConfig = new ExcelParserConfigurator(); 
 		
+		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
+		conf.templateName = conf.extractStringKeyword(root, "template_name", false);
+		 
 		//TODO
 		
-		return epConfig;
+		return conf;
 	}
+	
+	
+	public String extractStringKeyword(JsonNode node, String keyword, boolean isRequired)
+	{
+		JsonNode keyNode = node.path(keyword);
+		if(node.isMissingNode())
+		{
+			if(isRequired)
+			{	
+				configErrors.add("Keyword " + keyword + " is missing!");
+				return null;
+			}
+			return "";
+		}
+		
+		if (keyNode.isTextual())
+		{	
+			return keyNode.asText();
+		}
+		else
+		{	
+			configErrors.add("Keyword " + keyword + " is not of type text!");
+			return null;
+		}			
+	}
+	
 	
 	public String toJSONString()
 	{
