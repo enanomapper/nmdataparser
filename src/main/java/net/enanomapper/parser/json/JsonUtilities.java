@@ -35,5 +35,79 @@ public class JsonUtilities
 		}			
 	}
 	
+	public Double extractDoubleKeyword(JsonNode node, String keyword, boolean isRequired)
+	{
+		error = "";
+		JsonNode keyNode = node.path(keyword);
+		if(node.isMissingNode())
+		{
+			if(isRequired)
+			{	
+				error = "Keyword " + keyword + " is missing!";
+				return null;
+			}
+			return null;
+		}
+		
+		if (keyNode.isDouble())
+		{	
+			return keyNode.asDouble();
+		}
+		else
+		{	
+			error = "Keyword " + keyword + " is not of type Int!";
+			return null;
+		}			
+	}
+	
+	public Integer extractIntKeyword(JsonNode node, String keyword, boolean isRequired)
+	{
+		error = "";
+		JsonNode keyNode = node.path(keyword);
+		if(node.isMissingNode())
+		{
+			if(isRequired)
+			{	
+				error = "Keyword " + keyword + " is missing!";
+				return null;
+			}
+			return null;
+		}
+		
+		if (keyNode.isInt())
+		{	
+			return keyNode.asInt();
+		}
+		else
+		{	
+			error = "Keyword " + keyword + " is not of type Int!";
+			return null;
+		}			
+	}
+	
+	public Boolean extractBooleanKeyword(JsonNode node, String keyword, boolean isRequired)
+	{
+		error = "";
+		JsonNode keyNode = node.path(keyword);
+		if(node.isMissingNode())
+		{
+			if(isRequired)
+			{	
+				error = "Keyword " + keyword + " is missing!";
+				return null;
+			}
+			return null;
+		}
+		
+		if (keyNode.isBoolean())
+		{	
+			return keyNode.asBoolean();
+		}
+		else
+		{	
+			error = "Keyword " + keyword + " is not of type Boolean!";
+			return null;
+		}			
+	}
 	
 }
