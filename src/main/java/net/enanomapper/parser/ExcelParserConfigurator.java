@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import net.enanomapper.parser.json.JsonUtilities;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -57,38 +59,20 @@ public class ExcelParserConfigurator
 			try {fin.close();} catch (Exception x) {}	
 		}
 		
+		JsonUtilities jsonUtils = new JsonUtilities();
 		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
-		conf.templateName = conf.extractStringKeyword(root, "template_name", false);
-		 
-		//TODO
+		
+		//Handle template_name
+		String keyword =  jsonUtils.extractStringKeyword(root, "template_name", false);
+		if (keyword == null)
+			conf.configErrors.add(jsonUtils.getError());
+		else
+			conf.templateName = keyword;
+			
 		
 		return conf;
 	}
 	
-	
-	public String extractStringKeyword(JsonNode node, String keyword, boolean isRequired)
-	{
-		JsonNode keyNode = node.path(keyword);
-		if(node.isMissingNode())
-		{
-			if(isRequired)
-			{	
-				configErrors.add("Keyword " + keyword + " is missing!");
-				return null;
-			}
-			return "";
-		}
-		
-		if (keyNode.isTextual())
-		{	
-			return keyNode.asText();
-		}
-		else
-		{	
-			configErrors.add("Keyword " + keyword + " is not of type text!");
-			return null;
-		}			
-	}
 	
 	
 	public String toJSONString()
