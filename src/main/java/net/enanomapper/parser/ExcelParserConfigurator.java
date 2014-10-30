@@ -18,7 +18,7 @@ import org.codehaus.jackson.node.ObjectNode;
 public class ExcelParserConfigurator 
 {
 	public enum IterationAccess {
-		ROW_SINGLE, ROW_MULTI_FIXED, ROWS_MULTI_DYNAMIC, UNDEFINED;
+		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, UNDEFINED;
 		
 		public static IterationAccess fromString(String s)
 		{	 
@@ -37,11 +37,12 @@ public class ExcelParserConfigurator
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
 	
+	//Configuration variables
 	public String templateName = null;
-	
 	public int configurationType = 1;
-	public int startRow = 1;
-	public int headerRow = 1;
+	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
+	public int startRow = 2;
+	public int[] headerRows = {1,2};
 	 
 	
 	
@@ -63,7 +64,7 @@ public class ExcelParserConfigurator
 		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
 		
 		//Handle template_name
-		String keyword =  jsonUtils.extractStringKeyword(root, "template_name", false);
+		String keyword =  jsonUtils.extractStringKeyword(root, "TEMPLATE_NAME", false);
 		if (keyword == null)
 			conf.configErrors.add(jsonUtils.getError());
 		else
@@ -79,7 +80,7 @@ public class ExcelParserConfigurator
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("{\n");
-		sb.append("   \"template_name\" : \"" + templateName + "\",\n" );
+		sb.append("   \"TEMPLATE_NAME\" : \"" + templateName + "\",\n" );
 		
 		
 		

@@ -6,8 +6,12 @@ import java.io.Reader;
 import java.util.ArrayList;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
+
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IChemObject;
 import org.openscience.cdk.io.IChemObjectReaderErrorHandler;
@@ -28,25 +32,34 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {
 	
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
-	protected ExcelParserConfigurator parserConfig = null;
+	protected ExcelParserConfigurator config = null;
 	protected  InputStream input;
 	
 	protected Workbook workbook;
-	protected boolean hssf = true;
+	protected boolean xlsxFormat = false;
+	
+	//Helper variables for excel file iteration
+	protected int curSheetNum = 0;
+	protected int curRowNum = 0;
+	protected int curCellNum = 0;	
+	protected Sheet curSheet = null;
+	protected Row curRow = null;
+	protected Cell curCell = null;
+		
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
 	{
 		this(input, jsonConfig, true);
 	}
 	
-	public GenericExcelParser(InputStream input, String jsonConfig, boolean hssf) throws Exception
+	public GenericExcelParser(InputStream input, String jsonConfig, boolean xlsxFormat) throws Exception
 	{
 		super();
-		this.hssf = hssf;
+		this.xlsxFormat = xlsxFormat;
 		
-		parserConfig = ExcelParserConfigurator.loadFromJSON(jsonConfig);
-		if (parserConfig.configErrors.size() > 0)		
-			throw new Exception("GenericExcelParser configuration errors:\n" + parserConfig.getAllErrorsAsString());
+		config = ExcelParserConfigurator.loadFromJSON(jsonConfig);
+		if (config.configErrors.size() > 0)		
+			throw new Exception("GenericExcelParser configuration errors:\n" + config.getAllErrorsAsString());
 		
 		setReader(input);
 		init();
@@ -105,7 +118,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	@Override
 	public void setReader(InputStream arg0) throws CDKException {
 		try {
-			workbook = hssf?new HSSFWorkbook(input):new XSSFWorkbook(input);
+			workbook = xlsxFormat?new XSSFWorkbook(input):new HSSFWorkbook(input);
 		} catch (Exception x) {
 			throw new CDKException(x.getMessage(),x);
 		}
@@ -164,7 +177,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
+		switch (config.substanceIteration)
+		{
+		case ROW_SINGLE:
+		case ROW_MULTI_FIXED:
+		case ROW_MULTI_DYNAMIC:	
+			if (curRowNum < curSheet.getLastRowNum())
+				return true;
+			else
+				return false;
+			
+		}
 		return false;
 	}
 
@@ -178,14 +201,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	@Override
 	public void remove() {
 		// TODO Auto-generated method stub
-		
 	}
 
 
 	@Override
 	public SubstanceRecord nextRecord() {
-		// TODO Auto-generated method stub
-		return null;
+		if (!hasNext())// TODO Auto-generated method stub
+			return null;
+		
+		SubstanceRecord r = new SubstanceRecord ();
+		//TODO
+		return r;
 	}
 	
 	
