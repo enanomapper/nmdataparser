@@ -36,10 +36,13 @@ public class ExcelParserConfigurator
 	
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
+	public ArrayList<String> configWarning = new ArrayList<String> ();
 	
 	//Configuration variables
 	public String templateName = null;
-	public int configurationType = 1;
+	public String templateVersion = null;	
+	public int templateType = 1;
+	
 	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
 	public int startRow = 2;
 	public int[] headerRows = {1,2};
@@ -63,13 +66,32 @@ public class ExcelParserConfigurator
 		JsonUtilities jsonUtils = new JsonUtilities();
 		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
 		
-		//Handle template_name
-		String keyword =  jsonUtils.extractStringKeyword(root, "TEMPLATE_NAME", false);
-		if (keyword == null)
-			conf.configErrors.add(jsonUtils.getError());
+		//Handle template info 
+		JsonNode templateNode = root.path("TEMPLATE_INFO");
+		if (templateNode.isMissingNode())
+			conf.configWarning.add("JSON Section 'TEMPLATE_INFO' is missing!");
 		else
-			conf.templateName = keyword;
+		{
+			//NAME
+			String keyword =  jsonUtils.extractStringKeyword(templateNode, "NAME", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.templateName = keyword;
+			//VERSION
+			keyword =  jsonUtils.extractStringKeyword(templateNode, "VERSION", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.templateVersion = keyword;
+			//TYPE
+			Integer intValue = jsonUtils.extractIntKeyword(templateNode, "TYPE", true);
+			if (intValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.templateType = intValue;
 			
+		}	
 		
 		return conf;
 	}
@@ -80,9 +102,15 @@ public class ExcelParserConfigurator
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("{\n");
-		sb.append("\t\"TEMPLATE_NAME\" : \"" + templateName + "\",\n" );
+		sb.append("\t\"TEMPLATE_INFO\" : \n");
+		sb.append("\t{\n");
+		if (templateName != null)
+			sb.append("\t\t\"NAME\" : \"" + templateName + "\",\n" );
+		if (templateVersion != null)
+			sb.append("\t\t\"VERSION\" : \"" + templateVersion + "\",\n" );
 		
-		
+		sb.append("\t\t\"TYPE\" : " + templateType + "\n" );
+		sb.append("\t},\n");
 		
 		sb.append("}\n");
 		return sb.toString();
