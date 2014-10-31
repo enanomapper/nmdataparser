@@ -1,7 +1,12 @@
 package net.enanomapper.parser.test;
 
+import java.io.FileInputStream;
+
+import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.ExcelParserConfigurator.IterationAccess;
+import net.enanomapper.parser.GenericExcelParser;
+
 
 public class NMParserTestUtils {
 
@@ -11,7 +16,9 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
-		testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		
+		testExcelTemplate("/Users/nick/Projects/eNanoMapper/test0.xls","/Users/nick/Projects/eNanoMapper/config01.json");
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		
@@ -30,6 +37,25 @@ public class NMParserTestUtils {
 		
 		System.out.println("ExcelParserConfigurator " + jsonFile);
 		System.out.println(parserConfig.toJSONString());
+	}
+	
+	public static void testExcelTemplate(String excelFile, String jsonFile) throws Exception
+	{
+		FileInputStream fin = new FileInputStream(excelFile);
+		boolean isXLSX = excelFile.endsWith("xlsx");
+		System.out.println("isXLSX = " + isXLSX);
+		GenericExcelParser parser = new GenericExcelParser(fin, jsonFile, isXLSX);
+		
+		int n = 0;
+		while (parser.hasNext())
+		{
+			SubstanceRecord r = parser.nextRecord();
+			n++;
+			System.out.println("Record #" + n);
+			System.out.println(r.toJSON(null));
+		}
+		
+		fin.close();
 	}
 
 }

@@ -56,6 +56,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		super();
 		this.xlsxFormat = xlsxFormat;
+		this.input = input;
 		
 		config = ExcelParserConfigurator.loadFromJSON(jsonConfig);
 		if (config.configErrors.size() > 0)		
@@ -67,7 +68,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	public void init() throws Exception
 	{
-		//TODO
+		curSheet = workbook.getSheetAt(curSheetNum);
 		
 	}
 
@@ -111,14 +112,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public void setReader(Reader arg0) throws CDKException {
-		throw new CDKException("Not implemented");
+		throw new CDKException("setReader(Reader arg0)Not implemented");
 	}
 
 
 	@Override
 	public void setReader(InputStream arg0) throws CDKException {
 		try {
-			workbook = xlsxFormat?new XSSFWorkbook(input):new HSSFWorkbook(input);
+			if (xlsxFormat)
+				workbook = new XSSFWorkbook(input);
+			else
+				workbook = new HSSFWorkbook(input);
+			
 		} catch (Exception x) {
 			throw new CDKException(x.getMessage(),x);
 		}
@@ -127,8 +132,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public void setReaderMode(Mode arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -209,6 +212,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (!hasNext())// TODO Auto-generated method stub
 			return null;
 		
+		curRowNum++;
 		SubstanceRecord r = new SubstanceRecord ();
 		//TODO
 		return r;
