@@ -80,7 +80,7 @@ public class ExcelParserConfigurator
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("{\n");
-		sb.append("   \"TEMPLATE_NAME\" : \"" + templateName + "\",\n" );
+		sb.append("\t\"TEMPLATE_NAME\" : \"" + templateName + "\",\n" );
 		
 		
 		

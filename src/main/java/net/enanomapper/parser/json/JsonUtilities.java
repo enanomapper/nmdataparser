@@ -14,7 +14,7 @@ public class JsonUtilities
 	{
 		error = "";
 		JsonNode keyNode = node.path(keyword);
-		if(node.isMissingNode())
+		if(keyNode.isMissingNode())
 		{
 			if(isRequired)
 			{	
@@ -39,7 +39,7 @@ public class JsonUtilities
 	{
 		error = "";
 		JsonNode keyNode = node.path(keyword);
-		if(node.isMissingNode())
+		if(keyNode.isMissingNode())
 		{
 			if(isRequired)
 			{	
@@ -64,7 +64,7 @@ public class JsonUtilities
 	{
 		error = "";
 		JsonNode keyNode = node.path(keyword);
-		if(node.isMissingNode())
+		if(keyNode.isMissingNode())
 		{
 			if(isRequired)
 			{	
@@ -89,7 +89,7 @@ public class JsonUtilities
 	{
 		error = "";
 		JsonNode keyNode = node.path(keyword);
-		if(node.isMissingNode())
+		if(keyNode.isMissingNode())
 		{
 			if(isRequired)
 			{	

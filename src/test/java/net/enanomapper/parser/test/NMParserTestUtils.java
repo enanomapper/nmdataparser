@@ -16,9 +16,9 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
-		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
 		
-		testExcelTemplate("/Users/nick/Projects/eNanoMapper/test0.xls","/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelTemplate("/Users/nick/Projects/eNanoMapper/test0.xls","/Users/nick/Projects/eNanoMapper/config01.json");
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		
