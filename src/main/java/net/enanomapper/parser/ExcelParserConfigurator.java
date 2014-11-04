@@ -14,9 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * 
  * @author nick
- *	Internally all numbers of rows, columns and sheets are represented as 0-based integers
+ *	Internally all indices/numbers/ of rows, columns and sheets are represented as 0-based integers
  *  while in the JSON configuration they are 1-based represented (user-friendly style) 
- *  The conversion from 1-based to 0-based and vice versa is done on "parsing" and toJSON() procedures.
+ *  The conversion from 1-based to 0-based and vice versa is done on "parsing" and toJSON() procedures respectively.
  */
 public class ExcelParserConfigurator 
 {	
@@ -144,10 +144,26 @@ public class ExcelParserConfigurator
 			}	
 			
 		}
-		
-		
-		//Handle specific data locations
-		//TODO
+				
+		//Handle SubstanceRecord data locations
+		curNode = root.path("SUBSTANCE_RECORD");
+		if (curNode.isMissingNode())
+			conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\" is missing!");
+		else
+		{
+			//COMPANY_NAME
+			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME");
+			if (loc == null)
+				conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
+			else
+			{	
+				if (loc.error != null)			
+					conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" error: " + loc.error);
+				else
+					conf.locations.put("SubstanceRecord.companyName", loc);
+			}
+			
+		}
 		
 		return conf;
 	}
@@ -198,9 +214,14 @@ public class ExcelParserConfigurator
 		return sb.toString();
 	}
 	
-	public ExcelDataLocation extractDataLocation(JsonNode node, String keyword)
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String keyword)
 	{
+		JsonNode keyNode = node.path(keyword);
+		if (keyNode.isMissingNode())
+			return null;
+		
+		ExcelDataLocation loc = new ExcelDataLocation();
 		//TODO
-		return null;
+		return loc;
 	}
 }

@@ -55,6 +55,7 @@ public class ExcelDataLocation
 		}
 	}
 	
+	public String error = null;
 	
 	public DataType dataType = DataType.CELL;
 	public IterationAccess dataAccess = IterationAccess.ROW_SINGLE;
@@ -65,5 +66,11 @@ public class ExcelDataLocation
 	public String columnName = null;
 	public int rowIndex = 0;
 	public String rowName = null;
+	
+	public String toJSONKeyWord()
+	{
+		//TODO
+		return "";
+	}
 	
 }
