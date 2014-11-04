@@ -38,10 +38,12 @@ public class ExcelDataLocation
 		}
 	}
 	
-	
 	public DataType dataType = DataType.CELL;
 	public IterationAccess dataAccess = IterationAccess.ROW_SINGLE;
+	public boolean allowEmpty = true;
 	public int sheetNumber = 0;
 	public String sheetName = null;
+	public int columnNum = 0;
+	public int rowNum = 0;
 	
 }

@@ -2,6 +2,7 @@ package net.enanomapper.parser;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.json.JsonUtilities;
@@ -12,12 +13,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * 
  * @author nick
- *
+ *	Internally all numbers of rows, columns and sheets are represented as 0-based integers
+ *  while in the JSON configuration they are 1-based represented (user-friendly style) 
+ *  The conversion from 1-based to 0-based and vice versa is done on "parsing" and toJSON() procedures.
  */
 public class ExcelParserConfigurator 
-{
-	
-	
+{	
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
 	public ArrayList<String> configWarning = new ArrayList<String> ();
@@ -27,10 +28,15 @@ public class ExcelParserConfigurator
 	public String templateVersion = null;	
 	public int templateType = 1;
 	
+	//Global configuration for the data access
 	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
 	public int startRow = 2;
-	public int[] headerRows = {1,2};
-	 
+	public int sheetNum = 0;
+	public int[] headerRows = {0,1};
+	
+	//Specific data locations
+	public HashMap<String, ExcelDataLocation> locations = new HashMap<String, ExcelDataLocation>();
+	
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -51,31 +57,65 @@ public class ExcelParserConfigurator
 		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
 		
 		//Handle template info 
-		JsonNode templateNode = root.path("TEMPLATE_INFO");
-		if (templateNode.isMissingNode())
-			conf.configWarning.add("JSON Section 'TEMPLATE_INFO' is missing!");
+		JsonNode curNode = root.path("TEMPLATE_INFO");
+		if (curNode.isMissingNode())
+			conf.configWarning.add("JSON Section \"TEMPLATE_INFO\" is missing!");
 		else
 		{
 			//NAME
-			String keyword =  jsonUtils.extractStringKeyword(templateNode, "NAME", false);
+			String keyword =  jsonUtils.extractStringKeyword(curNode, "NAME", false);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 				conf.templateName = keyword;
 			//VERSION
-			keyword =  jsonUtils.extractStringKeyword(templateNode, "VERSION", false);
+			keyword =  jsonUtils.extractStringKeyword(curNode, "VERSION", false);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 				conf.templateVersion = keyword;
 			//TYPE
-			Integer intValue = jsonUtils.extractIntKeyword(templateNode, "TYPE", true);
+			Integer intValue = jsonUtils.extractIntKeyword(curNode, "TYPE", true);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 				conf.templateType = intValue;
+		}
+		
+		//Handle global data access
+		curNode = root.path("DATA_ACCESS");
+		if (curNode.isMissingNode())
+			conf.configErrors.add("JSON Section \"DATA_ACCESS\" is missing!");
+		else
+		{
+			//ITERATION
+			String keyword =  jsonUtils.extractStringKeyword(curNode, "ITERATION", true);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				conf.substanceIteration = IterationAccess.fromString(keyword);
+				if (conf.substanceIteration == IterationAccess.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"DATA_ACCESS\"  \"ITERATION\" is incorrect or UNDEFINED!");
+			}			
+			//SHEET_NUM
+			Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_NUM", false);
+			if (intValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.sheetNum = intValue - 1; //1-based --> 0-based
+			//START_ROW
+			intValue = jsonUtils.extractIntKeyword(curNode, "START_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.startRow = intValue - 1; //1-based --> 0-based
 			
-		}	
+		}
+		
+		
+		//Handle specific data locations
+		//TODO
 		
 		return conf;
 	}
@@ -86,14 +126,21 @@ public class ExcelParserConfigurator
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append("{\n");
+		
 		sb.append("\t\"TEMPLATE_INFO\" : \n");
 		sb.append("\t{\n");
 		if (templateName != null)
 			sb.append("\t\t\"NAME\" : \"" + templateName + "\",\n" );
 		if (templateVersion != null)
-			sb.append("\t\t\"VERSION\" : \"" + templateVersion + "\",\n" );
-		
+			sb.append("\t\t\"VERSION\" : \"" + templateVersion + "\",\n" );		
 		sb.append("\t\t\"TYPE\" : " + templateType + "\n" );
+		sb.append("\t},\n\n");
+		
+		sb.append("\t\"DATA_ACCESS\" : \n");
+		sb.append("\t{\n");		
+		sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
+		sb.append("\t\t\"SHEET_NUM\" : " + (sheetNum + 1) + ",\n" ); //0-based --> 1-based
+		sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t},\n");
 		
 		sb.append("}\n");
@@ -108,5 +155,11 @@ public class ExcelParserConfigurator
 		for (int i = 0; i < configErrors.size(); i++)
 			sb.append(configErrors.get(i) + "\n");
 		return sb.toString();
+	}
+	
+	public ExcelDataLocation extractDataLocation(JsonNode node, String keyword)
+	{
+		//TODO
+		return null;
 	}
 }
