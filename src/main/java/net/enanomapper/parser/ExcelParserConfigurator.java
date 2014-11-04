@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
+import net.enanomapper.parser.ExcelDataLocation.Recognition;
 import net.enanomapper.parser.json.JsonUtilities;
 
 import org.codehaus.jackson.JsonNode;
@@ -31,8 +32,11 @@ public class ExcelParserConfigurator
 	//Global configuration for the data access
 	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
 	public int startRow = 2;
-	public int sheetNum = 0;
-	public int[] headerRows = {0,1};
+	public int sheetIndex = 0;
+	public int startHeaderRow = 0;
+	public int endHeaderRow = 0;
+	public boolean allowEmpty = true;
+	public Recognition columnRecognition = Recognition.BY_INDEX;
 	
 	//Specific data locations
 	public HashMap<String, ExcelDataLocation> locations = new HashMap<String, ExcelDataLocation>();
@@ -96,20 +100,48 @@ public class ExcelParserConfigurator
 			{	
 				conf.substanceIteration = IterationAccess.fromString(keyword);
 				if (conf.substanceIteration == IterationAccess.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"DATA_ACCESS\"  \"ITERATION\" is incorrect or UNDEFINED!");
+					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
 			}			
 			//SHEET_NUM
-			Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_NUM", false);
+			Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
-				conf.sheetNum = intValue - 1; //1-based --> 0-based
+				conf.sheetIndex = intValue - 1; //1-based --> 0-based
 			//START_ROW
 			intValue = jsonUtils.extractIntKeyword(curNode, "START_ROW", false);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
-				conf.startRow = intValue - 1; //1-based --> 0-based
+				conf.startRow = intValue - 1; //1-based --> 0-based			
+			//START_HEADER_ROW
+			intValue = jsonUtils.extractIntKeyword(curNode, "START_HEADER_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.startHeaderRow = intValue - 1; //1-based --> 0-based
+			//END_HEADER_ROW
+			intValue = jsonUtils.extractIntKeyword(curNode, "END_HEADER_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.endHeaderRow = intValue - 1; //1-based --> 0-based
+			//ALLOW_EMPTY
+			Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, "ALLOW_EMPTY", false);
+			if (boolValue == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+				conf.allowEmpty = boolValue;
+			//COLUMN_RECOGNITION
+			keyword =  jsonUtils.extractStringKeyword(curNode, "COLUMN_RECOGNITION", true);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				conf.columnRecognition = Recognition.fromString(keyword);
+				if (conf.columnRecognition == Recognition.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"COLUMN_RECOGNITION\" is incorrect or UNDEFINED!");
+			}	
 			
 		}
 		
@@ -139,9 +171,18 @@ public class ExcelParserConfigurator
 		sb.append("\t\"DATA_ACCESS\" : \n");
 		sb.append("\t{\n");		
 		sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
-		sb.append("\t\t\"SHEET_NUM\" : " + (sheetNum + 1) + ",\n" ); //0-based --> 1-based
+		sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t},\n");
+		sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
+		sb.append("\t\t\"COLUMN_RECOGNITION\" : \"" + columnRecognition.toString() + "\",\n" );	
+		sb.append("\t},\n\n");
+		
+		sb.append("\t\"SUBSTANCE_RECORD\" : \n");
+		sb.append("\t{\n");
+		
+		sb.append("\t},\n\n");
 		
 		sb.append("}\n");
 		return sb.toString();

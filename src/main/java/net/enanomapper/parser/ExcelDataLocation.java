@@ -38,12 +38,32 @@ public class ExcelDataLocation
 		}
 	}
 	
+	public enum Recognition {
+		BY_INDEX, BY_NAME, BY_INDEX_AND_NAME, UNDEFINED;
+		
+		public static Recognition fromString(String s)
+		{
+			try
+			{
+				Recognition rec  = Recognition.valueOf(s) ;
+				return (rec);
+			}
+			catch (Exception e)
+			{
+				return Recognition.UNDEFINED;
+			}
+		}
+	}
+	
+	
 	public DataType dataType = DataType.CELL;
 	public IterationAccess dataAccess = IterationAccess.ROW_SINGLE;
 	public boolean allowEmpty = true;
-	public int sheetNumber = 0;
+	public int sheetIndex = 0;
 	public String sheetName = null;
-	public int columnNum = 0;
-	public int rowNum = 0;
+	public int columnIndex = 0;
+	public String columnName = null;
+	public int rowIndex = 0;
+	public String rowName = null;
 	
 }
