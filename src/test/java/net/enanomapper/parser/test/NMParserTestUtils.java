@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ExcelParserConfigurator;
-import net.enanomapper.parser.ExcelParserConfigurator.IterationAccess;
+
 import net.enanomapper.parser.GenericExcelParser;
 
 
@@ -16,7 +16,8 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
-		testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		testExcelParserConfiguration("D:/Projects/nina/eNanoMapper/config01.json");
 		
 		//testExcelTemplate("/Users/nick/Projects/eNanoMapper/test0.xls","/Users/nick/Projects/eNanoMapper/config01.json");
 		

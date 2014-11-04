@@ -1,14 +1,13 @@
 package net.enanomapper.parser;
 
-import java.util.ArrayList;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
+import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.json.JsonUtilities;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 
 /**
  * 
@@ -17,22 +16,7 @@ import org.codehaus.jackson.node.ObjectNode;
  */
 public class ExcelParserConfigurator 
 {
-	public enum IterationAccess {
-		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, UNDEFINED;
-		
-		public static IterationAccess fromString(String s)
-		{	 
-			try
-			{
-				IterationAccess access = IterationAccess.valueOf(s) ;
-				return (access);
-			}
-			catch (Exception e)
-			{
-				return IterationAccess.UNDEFINED;
-			}
-		}
-	}
+	
 	
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
@@ -43,7 +27,7 @@ public class ExcelParserConfigurator
 	public String templateVersion = null;	
 	public int templateType = 1;
 	
-	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
+	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
 	public int startRow = 2;
 	public int[] headerRows = {1,2};
 	 
