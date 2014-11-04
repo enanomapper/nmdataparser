@@ -21,7 +21,27 @@ public class ExcelDataLocation
 		}
 	}
 	
-	public enum DataType {CELL, ROW, COLUMN, BLOCK }
+	public enum DataType {
+		CELL, ROW, COLUMN, BLOCK, UNDEFINED;
+		
+		public static DataType fromString(String s)
+		{
+			try
+			{
+				DataType type  = DataType.valueOf(s) ;
+				return (type);
+			}
+			catch (Exception e)
+			{
+				return DataType.UNDEFINED;
+			}
+		}
+	}
 	
-	public DataType elementType = DataType.CELL;
+	
+	public DataType dataType = DataType.CELL;
+	public IterationAccess dataAccess = IterationAccess.ROW_SINGLE;
+	public int sheetNumber = 0;
+	public String sheetName = null;
+	
 }
