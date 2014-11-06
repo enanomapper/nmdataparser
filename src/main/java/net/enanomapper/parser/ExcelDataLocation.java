@@ -55,15 +55,14 @@ public class ExcelDataLocation
 		}
 	}
 	
-	public String error = null;
-	
-	public String name = "";
+	public int nErrors = 0;
+	public String sectionName = "";
 	
 	public DataType dataType = DataType.CELL;
 	public boolean FlagDataType = false;
 	
-	public IterationAccess dataAccess = IterationAccess.ROW_SINGLE;	
-	public boolean FlagDataAccess = false;
+	public IterationAccess iteration = IterationAccess.ROW_SINGLE;	
+	public boolean FlagIteration = false;
 	
 	public boolean allowEmpty = true;
 	public boolean FlagAllowEmpty = false;
@@ -91,7 +90,7 @@ public class ExcelDataLocation
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append(offset + name + ":\n");
+		sb.append(offset + sectionName + ":\n");
 		sb.append(offset + "{\n");
 		
 		if (FlagDataType)
@@ -100,11 +99,11 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
-		if (FlagDataAccess)
+		if (FlagIteration)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"DATA_ACCESS\" : \"" + dataAccess.toString() + "\"");
+			sb.append(offset + "\t\"ITERATION\" : \"" + iteration.toString() + "\"");
 			nFields++;
 		}
 		

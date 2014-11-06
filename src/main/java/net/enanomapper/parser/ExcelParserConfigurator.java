@@ -144,7 +144,7 @@ public class ExcelParserConfigurator
 			}	
 			
 		}
-				
+		
 		//Handle SubstanceRecord data locations
 		curNode = root.path("SUBSTANCE_RECORD");
 		if (curNode.isMissingNode())
@@ -152,15 +152,15 @@ public class ExcelParserConfigurator
 		else
 		{
 			//COMPANY_NAME
-			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME");
+			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME", conf);
 			if (loc == null)
 				conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
 			else
 			{	
-				if (loc.error != null)			
-					conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" error: " + loc.error);
-				else
+				if (loc.nErrors == 0)							
 					conf.locations.put("SubstanceRecord.companyName", loc);
+				//else
+				//	conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" error: " + loc.error);
 			}
 			
 		}
@@ -200,6 +200,7 @@ public class ExcelParserConfigurator
 		sb.append("\t\"SUBSTANCE_RECORD\" : \n");
 		sb.append("\t{\n");
 		n = 0;
+		
 		loc = locations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{
@@ -227,16 +228,34 @@ public class ExcelParserConfigurator
 		return sb.toString();
 	}
 	
-	public static ExcelDataLocation extractDataLocation(JsonNode node, String keyword)
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
 	{
-		JsonNode keyNode = node.path(keyword);
-		if (keyNode.isMissingNode())
+		JsonNode sectionNode = node.path(jsonSection);
+		if (sectionNode.isMissingNode())
 			return null;
 		
-		ExcelDataLocation loc = new ExcelDataLocation();
-		loc.name = keyword;
+		JsonUtilities jsonUtils = new JsonUtilities();
 		
-		//TODO
+		ExcelDataLocation loc = new ExcelDataLocation();
+		loc.sectionName = jsonSection;
+		
+		if (!sectionNode.path("ITERATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "ITERATION", false);
+			if (keyword == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" : " + jsonUtils.getError());
+			}	
+			else
+			{	
+				loc.FlagIteration = true;
+				loc.iteration = IterationAccess.fromString(keyword);
+				if (loc.iteration == IterationAccess.UNDEFINED)
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
+			}
+		}
+		
+		
 		return loc;
 	}
 }
