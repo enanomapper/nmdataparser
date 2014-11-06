@@ -172,6 +172,8 @@ public class ExcelParserConfigurator
 	
 	public String toJSONString()
 	{
+		ExcelDataLocation loc;
+		int n;
 		StringBuffer sb = new StringBuffer();
 		sb.append("{\n");
 		
@@ -197,8 +199,19 @@ public class ExcelParserConfigurator
 		
 		sb.append("\t\"SUBSTANCE_RECORD\" : \n");
 		sb.append("\t{\n");
+		n = 0;
+		loc = locations.get("SubstanceRecord.companyName");
+		if (loc != null)
+		{
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
 		
-		sb.append("\t},\n\n");
+		if (n > 0)
+			sb.append("\n");
+		
+		sb.append("\t},\n\n"); //end of SUBSTANCE_RECORD
+		
 		
 		sb.append("}\n");
 		return sb.toString();
@@ -221,6 +234,8 @@ public class ExcelParserConfigurator
 			return null;
 		
 		ExcelDataLocation loc = new ExcelDataLocation();
+		loc.name = keyword;
+		
 		//TODO
 		return loc;
 	}
