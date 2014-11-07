@@ -102,7 +102,7 @@ public class ExcelParserConfigurator
 				if (conf.substanceIteration == IterationAccess.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
 			}			
-			//SHEET_NUM
+			//SHEET_INDEX
 			Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
@@ -255,6 +255,23 @@ public class ExcelParserConfigurator
 			}
 		}
 		
+		Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", false);
+		if (intValue == null)
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
+		else
+		{	
+			loc.FlagColumnIndex = true;
+			loc.columnIndex = intValue - 1; //1-based --> 0-based
+		}
+		
+		String stringValue = jsonUtils.extractStringKeyword(sectionNode, "COLUMN_NAME", false);
+		if (stringValue == null)
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" : " + jsonUtils.getError());
+		else
+		{	
+			loc.FlagColumnName = true;
+			loc.columnName = stringValue;
+		}
 		
 		return loc;
 	}

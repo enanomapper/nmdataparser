@@ -130,7 +130,7 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 				
-			sb.append(offset + "\t\"SHEET_NAME\" : " + sheetName);
+			sb.append(offset + "\t\"SHEET_NAME\" : \"" + sheetName+"\"");
 			nFields++;
 		}
 		
@@ -148,7 +148,7 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 				
-			sb.append(offset + "\t\"COLUMN_NAME\" : " + columnName);
+			sb.append(offset + "\t\"COLUMN_NAME\" : \"" + columnName + "\"");
 			nFields++;
 		}
 		
@@ -166,7 +166,7 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 				
-			sb.append(offset + "\t\"ROW_NAME\" : " + rowName);
+			sb.append(offset + "\t\"ROW_NAME\" : \"" + rowName + "\"");
 			nFields++;
 		}
 		
