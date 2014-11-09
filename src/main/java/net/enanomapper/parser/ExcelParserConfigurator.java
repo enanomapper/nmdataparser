@@ -30,7 +30,8 @@ public class ExcelParserConfigurator
 	public int templateType = 1;
 	
 	//Global configuration for the data access
-	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;	
+	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
+	public int rowMultiFixedSize = 1;
 	public int startRow = 2;
 	public int sheetIndex = 0;
 	public int startHeaderRow = 0;

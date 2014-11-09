@@ -44,7 +44,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected int curCellNum = 0;	
 	protected Sheet curSheet = null;
 	protected Row curRow = null;
+	protected ArrayList<Row> curRows = null;
 	protected Cell curCell = null;
+	 
 		
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
@@ -183,15 +185,23 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE:
-		case ROW_MULTI_FIXED:
 		case ROW_MULTI_DYNAMIC:	
+			//Decision logic: at least one row must be left
 			if (curRowNum < curSheet.getLastRowNum())
 				return true;
 			else
 				return false;
 			
+		case ROW_MULTI_FIXED:
+			//Decision logic: at least config.rowMultiFixedSize rows must be left
+			if (curRowNum < curSheet.getLastRowNum() - config.rowMultiFixedSize)
+				return true;
+			else
+				return false;
+			
+		default:	
+			return false;
 		}
-		return false;
 	}
 
 
@@ -209,14 +219,72 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public SubstanceRecord nextRecord() {
-		if (!hasNext())// TODO Auto-generated method stub
+		if (!hasNext())
 			return null;
 		
-		curRowNum++;
+		if (iterateExcel() == 0)
+			return getSubstanceRecord();
+		else
+			return null;
+	}
+	
+	protected int iterateExcel()
+	{	
+		switch (config.substanceIteration)
+		{
+		case ROW_SINGLE:
+			curRowNum++;
+			break;
+			
+		case ROW_MULTI_FIXED:
+			for (int i = 0; i < config.rowMultiFixedSize; i++)
+			{
+				curRowNum++;
+			}
+			break;
+			
+		case ROW_MULTI_DYNAMIC:
+			//TODO
+			curRowNum++;
+			break;	
+				
+		default : 
+			curRowNum++;
+		}
+		
+		return 0;
+	}
+	
+	protected SubstanceRecord getSubstanceRecord()
+	{
+		switch (config.substanceIteration)
+		{
+		case ROW_SINGLE:			
+			return readSR(curRow);
+			
+		case ROW_MULTI_FIXED:			
+			return readSR(curRows);
+			
+		case ROW_MULTI_DYNAMIC:
+			return null;
+				
+		default : 
+			return null;
+		}
+	}
+	
+	protected SubstanceRecord readSR(Row row)
+	{
 		SubstanceRecord r = new SubstanceRecord ();
 		//TODO
 		return r;
 	}
 	
+	protected SubstanceRecord readSR(ArrayList<Row> rows)
+	{
+		SubstanceRecord r = new SubstanceRecord ();
+		//TODO
+		return r;
+	}
 	
 }
