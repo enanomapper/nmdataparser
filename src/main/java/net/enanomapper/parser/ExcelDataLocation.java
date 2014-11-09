@@ -38,6 +38,37 @@ public class ExcelDataLocation
 		}
 	}
 	
+	public enum CellType {
+		BLANK, BOOLEAN, ERROR, FORMULA, NUMERIC, STRING, UNDEFINED;
+		
+		public static CellType fromString(String s)
+		{
+			try
+			{
+				CellType type  = CellType.valueOf(s) ;
+				return (type);
+			}
+			catch (Exception e)
+			{
+				return CellType.UNDEFINED;
+			}
+		}
+		
+		public static CellType fromPOICelType(int poiCellType)
+		{
+			//TODO
+			return null;
+		}
+		
+		public static int toPOICellType(CellType type)
+		{
+			//TODO
+			return 0;
+		}
+		
+		
+	}
+	
 	public enum Recognition {
 		BY_INDEX, BY_NAME, BY_INDEX_AND_NAME, UNDEFINED;
 		

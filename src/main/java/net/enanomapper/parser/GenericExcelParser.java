@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -11,7 +12,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
-
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IChemObject;
 import org.openscience.cdk.io.IChemObjectReaderErrorHandler;
@@ -45,6 +45,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected Sheet curSheet = null;
 	protected Row curRow = null;
 	protected ArrayList<Row> curRows = null;
+	protected Iterator<Row> rowIt = null; 
 	protected Cell curCell = null;
 	 
 		
@@ -71,7 +72,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	public void init() throws Exception
 	{
 		curSheet = workbook.getSheetAt(curSheetNum);
-		
 	}
 
 
@@ -233,8 +233,23 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE:
-			curRowNum++;
-			break;
+			if (config.FlagAllowEmptyRows)
+			{	
+				return iterateToNextNonEmptyRow();
+			}
+			else
+			{	
+				curRow = curSheet.getRow(curRowNum);
+				curRowNum++;
+				if (curRow == null)
+				{	
+					parseErrors.add("Row " + curRowNum + " is empty!");
+					return -1;
+				}
+				else
+					return 0;
+			}
+			
 			
 		case ROW_MULTI_FIXED:
 			for (int i = 0; i < config.rowMultiFixedSize; i++)
@@ -255,6 +270,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return 0;
 	}
 	
+	protected int iterateToNextNonEmptyRow()
+	{
+		while (curRowNum < curSheet.getLastRowNum())
+		{
+			curRow = curSheet.getRow(curRowNum);
+			curRowNum++;
+			if (curRow != null)
+				return 0;
+		}
+		
+		return -1;
+	}
+	
 	protected SubstanceRecord getSubstanceRecord()
 	{
 		switch (config.substanceIteration)
@@ -266,7 +294,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			return readSR(curRows);
 			
 		case ROW_MULTI_DYNAMIC:
-			return null;
+			return readSR(curRows);
 				
 		default : 
 			return null;
@@ -276,7 +304,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected SubstanceRecord readSR(Row row)
 	{
 		SubstanceRecord r = new SubstanceRecord ();
+		
+		ExcelDataLocation loc = config.locations.get("SubstanceRecord.companyName");
+		String s = getStringValue(row, loc);
+		r.setCompanyName(s);
+		
 		//TODO
+		
 		return r;
 	}
 	
@@ -285,6 +319,30 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		SubstanceRecord r = new SubstanceRecord ();
 		//TODO
 		return r;
+	}
+	
+	protected String getStringValue(Row row, ExcelDataLocation loc)
+	{
+		Cell c = row.getCell(loc.columnIndex);
+		if (c.getCellType() != Cell.CELL_TYPE_STRING)
+		{
+			//Add error 
+			return null;
+		}
+		
+		return c.getStringCellValue();
+	}
+	
+	protected Double getNumericValue(Row row, ExcelDataLocation loc)
+	{
+		Cell c = row.getCell(loc.columnIndex);
+		if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
+		{
+			//Add error 
+			return null;
+		}
+		
+		return c.getNumericCellValue();
 	}
 	
 }
