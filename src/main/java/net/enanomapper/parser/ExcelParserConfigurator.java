@@ -15,8 +15,8 @@ import org.codehaus.jackson.map.ObjectMapper;
  * 
  * @author nick
  *	Internally all indices/numbers/ of rows, columns and sheets are represented as 0-based integers
- *  while in the JSON configuration they are 1-based represented (user-friendly style) 
- *  The conversion from 1-based to 0-based and vice versa is done on "parsing" and toJSON() procedures respectively.
+ *  while in the JSON configuration and error messages they are 1-based represented (user-friendly style) 
+ *  The conversion from 1-based to 0-based and vice versa is done on "parsing", error messages and toJSON() procedures respectively.
  */
 public class ExcelParserConfigurator 
 {	
@@ -38,7 +38,7 @@ public class ExcelParserConfigurator
 	public int startHeaderRow = 0;
 	public int endHeaderRow = 0;
 	public boolean allowEmpty = true;
-	public Recognition columnRecognition = Recognition.BY_INDEX;
+	public Recognition recognition = Recognition.BY_INDEX;
 	
 	//Specific data locations
 	public HashMap<String, ExcelDataLocation> locations = new HashMap<String, ExcelDataLocation>();
@@ -134,15 +134,15 @@ public class ExcelParserConfigurator
 				conf.configErrors.add(jsonUtils.getError());
 			else
 				conf.allowEmpty = boolValue;
-			//COLUMN_RECOGNITION
-			keyword =  jsonUtils.extractStringKeyword(curNode, "COLUMN_RECOGNITION", true);
+			//RECOGNITION
+			keyword =  jsonUtils.extractStringKeyword(curNode, "RECOGNITION", true);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 			{	
-				conf.columnRecognition = Recognition.fromString(keyword);
-				if (conf.columnRecognition == Recognition.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"COLUMN_RECOGNITION\" is incorrect or UNDEFINED!");
+				conf.recognition = Recognition.fromString(keyword);
+				if (conf.recognition == Recognition.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
 			}	
 			
 		}
@@ -196,7 +196,7 @@ public class ExcelParserConfigurator
 		sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
-		sb.append("\t\t\"COLUMN_RECOGNITION\" : \"" + columnRecognition.toString() + "\",\n" );	
+		sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
 		sb.append("\t},\n\n");
 		
 		sb.append("\t\"SUBSTANCE_RECORD\" : \n");
@@ -241,7 +241,12 @@ public class ExcelParserConfigurator
 		ExcelDataLocation loc = new ExcelDataLocation();
 		loc.sectionName = jsonSection;
 		
-		if (!sectionNode.path("ITERATION").isMissingNode())
+		//ITERATION
+		if (sectionNode.path("ITERATION").isMissingNode())
+		{
+			loc.iteration = conf.substanceIteration; //default value is taken form global config
+		}
+		else
 		{
 			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "ITERATION", false);
 			if (keyword == null)
@@ -257,22 +262,64 @@ public class ExcelParserConfigurator
 			}
 		}
 		
-		Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", false);
-		if (intValue == null)
-			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
+		
+		//RECOGNITION
+		if (sectionNode.path("RECOGNITION").isMissingNode())
+		{
+			loc.recognition = conf.recognition; //default value is taken form global config
+		}
 		else
-		{	
-			loc.FlagColumnIndex = true;
-			loc.columnIndex = intValue - 1; //1-based --> 0-based
+		{
+			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "RECOGNITION", false);
+			if (keyword == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" : " + jsonUtils.getError());
+			}	
+			else
+			{	
+				loc.FlagRecognition = true;
+				loc.recognition = Recognition.fromString(keyword);
+				if (loc.recognition == Recognition.UNDEFINED)
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+			}
 		}
 		
-		String stringValue = jsonUtils.extractStringKeyword(sectionNode, "COLUMN_NAME", false);
-		if (stringValue == null)
-			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" : " + jsonUtils.getError());
+		
+		//COLUMN_INDEX
+		if (sectionNode.path("COLUMN_INDEX").isMissingNode())
+		{
+			if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
+		}
 		else
-		{	
-			loc.FlagColumnName = true;
-			loc.columnName = stringValue;
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", true);
+			if (intValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.FlagColumnIndex = true;
+				loc.columnIndex = intValue - 1; //1-based --> 0-based
+			}
+		}
+		
+		
+		//COLUMN_NAME
+		if (sectionNode.path("COLUMN_NAME").isMissingNode())
+		{
+			if (loc.recognition == Recognition.BY_NAME || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
+		}
+		else
+		{
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "COLUMN_NAME", false);
+			if (stringValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.FlagColumnName = true;
+				loc.columnName = stringValue;
+			}
 		}
 		
 		return loc;

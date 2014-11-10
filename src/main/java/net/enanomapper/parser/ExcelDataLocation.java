@@ -92,6 +92,9 @@ public class ExcelDataLocation
 	public DataType dataType = DataType.CELL;
 	public boolean FlagDataType = false;
 	
+	public Recognition recognition = Recognition.BY_INDEX;
+	public boolean FlagRecognition = false;
+	
 	//public CellType cellType = CellType.STRING;
 	//public boolean FlagCellType = false;
 	
@@ -130,6 +133,12 @@ public class ExcelDataLocation
 		if (FlagDataType)
 		{
 			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagRecognition)
+		{
+			sb.append(offset + "\t\"RECOGNITION\" : \"" + recognition.toString() + "\"");
 			nFields++;
 		}
 		
