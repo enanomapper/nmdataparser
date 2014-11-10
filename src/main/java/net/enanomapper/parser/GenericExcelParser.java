@@ -311,6 +311,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		//TODO
 		
+		//TODO handle errors
 		return r;
 	}
 	
@@ -324,9 +325,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected String getStringValue(Row row, ExcelDataLocation loc)
 	{
 		Cell c = row.getCell(loc.columnIndex);
+		
+		if (c == null)
+			if (!loc.allowEmpty)
+			{
+				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
+				return null;
+			}
+		
 		if (c.getCellType() != Cell.CELL_TYPE_STRING)
 		{
-			//Add error 
+			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+					", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type STRING!"); 
 			return null;
 		}
 		
@@ -336,9 +347,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected Double getNumericValue(Row row, ExcelDataLocation loc)
 	{
 		Cell c = row.getCell(loc.columnIndex);
+		
+		if (c == null)
+			if (!loc.allowEmpty)
+			{
+				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
+				return null;
+			}
+		
 		if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
 		{
-			//Add error 
+			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+					", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type NUMERIC!"); 
 			return null;
 		}
 		

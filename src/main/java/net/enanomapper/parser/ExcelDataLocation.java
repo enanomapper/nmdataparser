@@ -92,6 +92,9 @@ public class ExcelDataLocation
 	public DataType dataType = DataType.CELL;
 	public boolean FlagDataType = false;
 	
+	//public CellType cellType = CellType.STRING;
+	//public boolean FlagCellType = false;
+	
 	public IterationAccess iteration = IterationAccess.ROW_SINGLE;	
 	public boolean FlagIteration = false;
 	
