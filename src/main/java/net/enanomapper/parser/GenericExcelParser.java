@@ -114,7 +114,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public void setReader(Reader arg0) throws CDKException {
-		throw new CDKException("setReader(Reader arg0)Not implemented");
+		throw new CDKException("setReader(Reader arg0) - Not implemented");
 	}
 
 
@@ -306,8 +306,26 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		SubstanceRecord r = new SubstanceRecord ();
 		
 		ExcelDataLocation loc = config.locations.get("SubstanceRecord.companyName");
-		String s = getStringValue(row, loc);
-		r.setCompanyName(s);
+		if (loc != null)
+		{	
+			String s = getStringValue(row, loc);
+			r.setCompanyName(s);
+		}
+		
+		loc = config.locations.get("SubstanceRecord.ownerName");
+		if (loc != null)
+		{	
+			String s = getStringValue(row, loc);
+			r.setOwnerName(s);
+		}
+		
+		loc = config.locations.get("SubstanceRecord.substanceType");
+		if (loc != null)
+		{	
+			String s = getStringValue(row, loc);
+			r.setSubstancetype(s);
+		}
+		
 		
 		//TODO
 		

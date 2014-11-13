@@ -156,13 +156,41 @@ public class ExcelParserConfigurator
 			//COMPANY_NAME
 			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME", conf);
 			if (loc == null)
-				conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
+			{	
+				//Currently missing section is counted as an error
+				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
+			}	
 			else
 			{	
 				if (loc.nErrors == 0)							
 					conf.locations.put("SubstanceRecord.companyName", loc);
-				//else
-				//	conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" error: " + loc.error);
+				//error messages are already added to conf (this is valid for all other location extractions)
+			}
+			
+			//OWNER_NAME
+			loc = extractDataLocation(curNode,"OWNER_NAME", conf);
+			if (loc == null)
+			{	
+				//Currently missing section is counted as an error
+				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"OWNER_NAME\" is missing!");
+			}	
+			else
+			{	
+				if (loc.nErrors == 0)							
+					conf.locations.put("SubstanceRecord.ownerName", loc);
+			}
+			
+			//SUBSTANCE_TYPE
+			loc = extractDataLocation(curNode,"SUBSTANCE_TYPE", conf);
+			if (loc == null)
+			{	
+				//Currently missing section is counted as an error
+				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"SUBSTANCE_TYPE\" is missing!");
+			}	
+			else
+			{	
+				if (loc.nErrors == 0)							
+					conf.locations.put("SubstanceRecord.substanceType", loc);
 			}
 			
 		}
@@ -210,6 +238,24 @@ public class ExcelParserConfigurator
 			n++;
 		}
 		
+		loc = locations.get("SubstanceRecord.ownerName");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
+		loc = locations.get("SubstanceRecord.substanceType");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
 		if (n > 0)
 			sb.append("\n");
 		
@@ -232,6 +278,9 @@ public class ExcelParserConfigurator
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
 	{
+		//Error messages are stored globally in 'conf' variable and are
+		//counted locally in return variable 'loc'
+		
 		JsonNode sectionNode = node.path(jsonSection);
 		if (sectionNode.isMissingNode())
 			return null;
@@ -252,13 +301,17 @@ public class ExcelParserConfigurator
 			if (keyword == null)
 			{	
 				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" : " + jsonUtils.getError());
+				loc.nErrors++;
 			}	
 			else
 			{	
 				loc.FlagIteration = true;
 				loc.iteration = IterationAccess.fromString(keyword);
 				if (loc.iteration == IterationAccess.UNDEFINED)
+				{	
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
+					loc.nErrors++;
+				}	
 			}
 		}
 		
@@ -274,13 +327,17 @@ public class ExcelParserConfigurator
 			if (keyword == null)
 			{	
 				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" : " + jsonUtils.getError());
+				loc.nErrors++;
 			}	
 			else
 			{	
 				loc.FlagRecognition = true;
 				loc.recognition = Recognition.fromString(keyword);
 				if (loc.recognition == Recognition.UNDEFINED)
+				{	
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+					loc.nErrors++;
+				}	
 			}
 		}
 		
@@ -289,13 +346,19 @@ public class ExcelParserConfigurator
 		if (sectionNode.path("COLUMN_INDEX").isMissingNode())
 		{
 			if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+			{	
 				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
+				loc.nErrors++;
+			}	
 		}
 		else
 		{
 			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", true);
 			if (intValue == null)
+			{	
 				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
 			else
 			{	
 				loc.FlagColumnIndex = true;
