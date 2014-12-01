@@ -43,6 +43,8 @@ public class ExcelParserConfigurator
 	//Specific data locations
 	public HashMap<String, ExcelDataLocation> locations = new HashMap<String, ExcelDataLocation>();
 	
+	//Substance record parameters
+	public int numProtocols = 2;
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -195,6 +197,26 @@ public class ExcelParserConfigurator
 			
 		}
 		
+		//Handle Protocols
+		curNode = root.path("PROTOCOLS");
+		if (curNode.isMissingNode())
+			conf.configErrors.add("JSON Section \"PROTOCOLS\" is missing!");
+		else
+		{
+			if (!curNode.isArray())
+			{
+				conf.configErrors.add("JSON Section \"PROTOCOLS\" is not array!");
+				return conf;
+			}
+			
+			for (int i = 0; i < curNode.size(); i++)
+			{	
+				int res = handleProtocolDataLocations(curNode.get(i), i);
+				if (res != 0)
+					return conf;
+			}	
+		}
+		
 		return conf;
 	}
 	
@@ -261,6 +283,19 @@ public class ExcelParserConfigurator
 		
 		sb.append("\t},\n\n"); //end of SUBSTANCE_RECORD
 		
+		
+		sb.append("\t\"PROTOCOLS\" : [\n");
+		for (int i = 0; i < numProtocols; i++)
+		{
+			sb.append("\t\t{\n");
+			
+			sb.append("\t\t}");
+			if (i < numProtocols-1)
+				sb.append(",\n");
+			sb.append("\n");
+			
+		}
+		sb.append("\t]\n\n"); //end of PROTOCOLS
 		
 		sb.append("}\n");
 		return sb.toString();
@@ -386,5 +421,11 @@ public class ExcelParserConfigurator
 		}
 		
 		return loc;
+	}
+	
+	public static int handleProtocolDataLocations(JsonNode node, int protocolNum)
+	{
+		//TODO
+		return 0;
 	}
 }
