@@ -1,10 +1,11 @@
 package net.enanomapper.parser.test;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ExcelParserConfigurator;
-
 import net.enanomapper.parser.GenericExcelParser;
 
 
@@ -23,7 +24,6 @@ public class NMParserTestUtils {
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		
-
 	}
 	
 	public static void testExcelParserConfiguration(String jsonFile) throws Exception
@@ -39,6 +39,8 @@ public class NMParserTestUtils {
 		System.out.println("ExcelParserConfigurator " + jsonFile);
 		System.out.println(parserConfig.toJSONString());
 	}
+	
+	
 	
 	public static void testExcelTemplate(String excelFile, String jsonFile) throws Exception
 	{
@@ -61,5 +63,7 @@ public class NMParserTestUtils {
 		
 		fin.close();
 	}
+	
+	
 
 }

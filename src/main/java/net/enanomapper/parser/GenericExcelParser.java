@@ -48,7 +48,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected Iterator<Row> rowIt = null; 
 	protected Cell curCell = null;
 	 
-		
+	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
+	private SubstanceRecord nextRecordBuffer = null;
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
 	{
@@ -182,6 +183,34 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 	@Override
 	public boolean hasNext() {
+		
+		if (FlagNextRecordLoaded)  //Next record is already read and loaded to the buffer
+			return true;
+		
+		if (hasExcelDataForNextRecord())
+		{
+			//This is the actual reading of next substance record
+			if (iterateExcel() == 0)
+			{	
+				nextRecordBuffer = getSubstanceRecord();
+				if (nextRecordBuffer == null)
+					return false;
+				else
+				{	
+					FlagNextRecordLoaded = true;
+					return true;
+				}	
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	
+	
+	private boolean hasExcelDataForNextRecord()
+	{
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE:
@@ -221,11 +250,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	public SubstanceRecord nextRecord() {
 		if (!hasNext())
 			return null;
-		
-		if (iterateExcel() == 0)
-			return getSubstanceRecord();
 		else
-			return null;
+		{	
+			SubstanceRecord result = nextRecordBuffer;
+			//Invalidate (empty) the buffer the next record 
+			nextRecordBuffer = null;
+			FlagNextRecordLoaded = false;
+			return result;
+		}	
 	}
 	
 	protected int iterateExcel()
