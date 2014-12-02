@@ -345,12 +345,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		Cell c = row.getCell(loc.columnIndex);
 		
 		if (c == null)
-			if (!loc.allowEmpty)
+		{	
+			if (loc.allowEmpty)
+			{
+				return "";
+			}
+			else
 			{
 				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
 						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
 				return null;
 			}
+			
+		}	
 		
 		if (c.getCellType() != Cell.CELL_TYPE_STRING)
 		{
@@ -367,12 +374,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		Cell c = row.getCell(loc.columnIndex);
 		
 		if (c == null)
-			if (!loc.allowEmpty)
+		{	
+			if (loc.allowEmpty)
+			{
+				return 0.0;
+			}
+			else
 			{
 				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
 						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
 				return null;
 			}
+		}
 		
 		if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
 		{

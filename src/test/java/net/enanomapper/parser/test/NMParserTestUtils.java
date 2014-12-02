@@ -16,10 +16,10 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
-		testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
 		//testExcelParserConfiguration("D:/Projects/nina/eNanoMapper/config01.json");
 		
-		//testExcelTemplate("/Users/nick/Projects/eNanoMapper/test0.xls","/Users/nick/Projects/eNanoMapper/config01.json");
+		testExcelTemplate("/Users/nick/Projects/eNanoMapper/template01-NR.xlsx","/Users/nick/Projects/eNanoMapper/config01.json");
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		
@@ -49,11 +49,14 @@ public class NMParserTestUtils {
 		
 		int n = 0;
 		while (parser.hasNext())
-		{
+		{	
 			SubstanceRecord r = parser.nextRecord();
 			n++;
-			System.out.println("Record #" + n);
-			System.out.println(r.toJSON(null));
+			if (r != null)
+			{	
+				System.out.println("Record #" + n);
+				System.out.println(r.toJSON(null));
+			}	
 		}
 		
 		fin.close();
