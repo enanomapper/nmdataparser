@@ -182,7 +182,7 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 				
-			sb.append(offset + "\t\"COLUMN_INDEX\" : " + (columnIndex + 1)); //0 --> 1-based
+			sb.append(offset + "\t\"COLUMN_INDEX\" : " + (columnIndex + 1) ); //0 --> 1-based
 			nFields++;
 		}
 		
@@ -200,7 +200,7 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 				
-			sb.append(offset + "\t\"ROW_INDEX\" : " + (rowIndex + 1)); //0 --> 1-based
+			sb.append(offset + "\t\"ROW_INDEX\" : " + (rowIndex + 1) ); //0 --> 1-based
 			nFields++;
 		}
 		

@@ -42,8 +42,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	//Helper variables for excel file iteration
 	protected int curSheetNum = 0;
-	protected int curRowNum = 0;
-	protected int curCellNum = 0;	
+	protected int curRowNum = 1;
+	protected int curCellNum = 1;	
 	protected Sheet curSheet = null;
 	protected Row curRow = null;
 	protected ArrayList<Row> curRows = null;
@@ -81,7 +81,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		curSheet = workbook.getSheetAt(curSheetNum);
 		curRowNum = config.startRow;
-		LOGGER.info("start_workSheet = " + curSheetNum +  "   starRow = " + curRowNum);
+		LOGGER.info("workSheet = " + curSheetNum +  "   starRow = " + curRowNum);
 	}
 
 
@@ -344,6 +344,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected SubstanceRecord readSR(Row row)
 	{
+		LOGGER.info("Reading row: " + (curRowNum+1));
+		//LOGGER.info(row.toString());
+		
 		SubstanceRecord r = new SubstanceRecord ();
 		
 		ExcelDataLocation loc = config.locations.get("SubstanceRecord.companyName");
