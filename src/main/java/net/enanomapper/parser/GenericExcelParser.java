@@ -81,7 +81,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		curSheet = workbook.getSheetAt(curSheetNum);
 		curRowNum = config.startRow;
-		LOGGER.info("workSheet = " + curSheetNum +  "   starRow = " + curRowNum);
+		initialIteration();
+		FlagNextRecordLoaded = false;
+		nextRecordBuffer = null;
+		
+		LOGGER.info("workSheet# = " + (curSheetNum + 1) + "   starRow# = " + (curRowNum + 1));
+		LOGGER.info("Last row# = " + (curSheet.getLastRowNum() + 1));
 	}
 
 
@@ -194,22 +199,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (hasExcelDataForNextRecord())
 		{
 			//This is the actual reading of next substance record
-			if (iterateExcel() >= 0)
-			{	
-				nextRecordBuffer = getSubstanceRecord();
-				if (nextRecordBuffer == null)
-					nextRecordBuffer = new SubstanceRecord();
-					
-				FlagNextRecordLoaded = true;
-				return true;					
-			}
-			else
-			{	
-				//Empty record is returned
-				FlagNextRecordLoaded = true;
+			nextRecordBuffer = getSubstanceRecord();
+			if (nextRecordBuffer == null)
 				nextRecordBuffer = new SubstanceRecord();
-				return true;
-			}	
+				
+			FlagNextRecordLoaded = true;
+			iterateExcel();
+			return true;
 		}
 		else
 			return false;
@@ -259,15 +255,20 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (hasNext())
 		{	
 			SubstanceRecord result = nextRecordBuffer;
-			//Invalidate (empty) the buffer the next record 
-			nextRecordBuffer = null;
-			FlagNextRecordLoaded = false;
+			nextRecordBuffer = null;        //Invalidate (empty) the buffer for the next record 
+			FlagNextRecordLoaded = false;   //Invalidate for the next record
 			return result;
 		}
 		else
 			return null;
 	}
 	
+	protected void initialIteration()
+	{
+		//TODO - just temporary code
+		curRow = curSheet.getRow(curRowNum);
+	}
+		
 	protected int iterateExcel()
 	{	
 		switch (config.substanceIteration)
@@ -295,6 +296,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			for (int i = 0; i < config.rowMultiFixedSize; i++)
 			{
 				curRowNum++;
+				//TODO
 			}
 			break;
 			
@@ -311,13 +313,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	}
 	
 	protected int iterateToNextNonEmptyRow()
-	{
+	{	
 		curRowNum++;
 		while (curRowNum <= curSheet.getLastRowNum())
 		{
 			curRow = curSheet.getRow(curRowNum);
 			if (curRow != null)
+			{	
+				//TODO - to check whether this row is really empty 
+				//sometimes row looks empty but it is not treated as empty ...
 				return curRowNum;
+			}	
 			curRowNum++;
 		}
 		
