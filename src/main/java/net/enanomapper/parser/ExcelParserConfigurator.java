@@ -30,7 +30,7 @@ public class ExcelParserConfigurator
 	public int templateType = 1;
 	
 	//Global configuration for the data access
-	public boolean FlagAllowEmptyRows = true;
+	public boolean FlagSkipEmptyRows = true;
 	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public int rowMultiFixedSize = 1;
 	public int startRow = 2;
@@ -117,19 +117,19 @@ public class ExcelParserConfigurator
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
-				conf.startRow = intValue - 1; //1-based --> 0-based			
+				conf.startRow = intValue; //row indexing within Excel is 1-based			
 			//START_HEADER_ROW
 			intValue = jsonUtils.extractIntKeyword(curNode, "START_HEADER_ROW", false);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
-				conf.startHeaderRow = intValue - 1; //1-based --> 0-based
+				conf.startHeaderRow = intValue; //1-based
 			//END_HEADER_ROW
 			intValue = jsonUtils.extractIntKeyword(curNode, "END_HEADER_ROW", false);
 			if (intValue == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
-				conf.endHeaderRow = intValue - 1; //1-based --> 0-based
+				conf.endHeaderRow = intValue; //1-based
 			//ALLOW_EMPTY
 			Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, "ALLOW_EMPTY", false);
 			if (boolValue == null)
@@ -242,9 +242,9 @@ public class ExcelParserConfigurator
 		sb.append("\t{\n");		
 		sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
 		sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		sb.append("\t\t\"START_ROW\" : " + startRow + ",\n" ); //1-based
+		sb.append("\t\t\"START_HEADER_ROW\" : " + startHeaderRow + ",\n" ); //1-based
+		sb.append("\t\t\"END_HEADER_ROW\" : " + endHeaderRow + ",\n" ); //1-based
 		sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
 		sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
 		sb.append("\t},\n\n");
@@ -397,7 +397,7 @@ public class ExcelParserConfigurator
 			else
 			{	
 				loc.FlagColumnIndex = true;
-				loc.columnIndex = intValue - 1; //1-based --> 0-based
+				loc.columnIndex = intValue; // - 1; //1-based --> 0-based
 			}
 		}
 		

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,6 +31,7 @@ import ambit2.core.io.IRawReader;
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {
+	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
 	protected ExcelParserConfigurator config = null;
@@ -70,23 +72,28 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		init();
 	}
 	
+	public ExcelParserConfigurator getExcelParserConfigurator() 
+	{
+		return config;
+	}
+	
 	public void init() throws Exception
 	{
 		curSheet = workbook.getSheetAt(curSheetNum);
+		curRowNum = config.startRow;
+		LOGGER.info("start_workSheet = " + curSheetNum +  "   starRow = " + curRowNum);
 	}
 
 
 	@Override
 	public void handleError(String arg0) throws CDKException {
 		// TODO Auto-generated method stub
-		
 	}
 
 
 	@Override
 	public void handleError(String arg0, Exception arg1) throws CDKException {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -94,7 +101,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	public void handleError(String arg0, int arg1, int arg2, int arg3)
 			throws CDKException {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -102,14 +108,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	public void handleError(String arg0, int arg1, int arg2, int arg3,
 			Exception arg4) throws CDKException {
 		// TODO Auto-generated method stub
-		
 	}
 
 
 	@Override
 	public void setErrorHandler(IChemObjectReaderErrorHandler arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -190,19 +194,22 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (hasExcelDataForNextRecord())
 		{
 			//This is the actual reading of next substance record
-			if (iterateExcel() == 0)
+			if (iterateExcel() >= 0)
 			{	
 				nextRecordBuffer = getSubstanceRecord();
 				if (nextRecordBuffer == null)
-					return false;
-				else
-				{	
-					FlagNextRecordLoaded = true;
-					return true;
-				}	
+					nextRecordBuffer = new SubstanceRecord();
+					
+				FlagNextRecordLoaded = true;
+				return true;					
 			}
 			else
-				return false;
+			{	
+				//Empty record is returned
+				FlagNextRecordLoaded = true;
+				nextRecordBuffer = new SubstanceRecord();
+				return true;
+			}	
 		}
 		else
 			return false;
@@ -216,14 +223,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 		case ROW_MULTI_DYNAMIC:	
 			//Decision logic: at least one row must be left
-			if (curRowNum < curSheet.getLastRowNum())
+			if (curRowNum <= curSheet.getLastRowNum())
 				return true;
 			else
 				return false;
 			
 		case ROW_MULTI_FIXED:
 			//Decision logic: at least config.rowMultiFixedSize rows must be left
-			if (curRowNum < curSheet.getLastRowNum() - config.rowMultiFixedSize)
+			if (curRowNum <= curSheet.getLastRowNum() - config.rowMultiFixedSize)
 				return true;
 			else
 				return false;
@@ -247,17 +254,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 
 	@Override
-	public SubstanceRecord nextRecord() {
-		if (!hasNext())
-			return null;
-		else
+	public SubstanceRecord nextRecord()
+	{
+		if (hasNext())
 		{	
 			SubstanceRecord result = nextRecordBuffer;
 			//Invalidate (empty) the buffer the next record 
 			nextRecordBuffer = null;
 			FlagNextRecordLoaded = false;
 			return result;
-		}	
+		}
+		else
+			return null;
 	}
 	
 	protected int iterateExcel()
@@ -265,21 +273,21 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE:
-			if (config.FlagAllowEmptyRows)
+			if (config.FlagSkipEmptyRows)
 			{	
 				return iterateToNextNonEmptyRow();
 			}
 			else
 			{	
-				curRow = curSheet.getRow(curRowNum);
 				curRowNum++;
+				curRow = curSheet.getRow(curRowNum);
 				if (curRow == null)
 				{	
 					parseErrors.add("Row " + curRowNum + " is empty!");
 					return -1;
 				}
 				else
-					return 0;
+					return curRowNum;
 			}
 			
 			
@@ -304,12 +312,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected int iterateToNextNonEmptyRow()
 	{
-		while (curRowNum < curSheet.getLastRowNum())
+		curRowNum++;
+		while (curRowNum <= curSheet.getLastRowNum())
 		{
 			curRow = curSheet.getRow(curRowNum);
-			curRowNum++;
 			if (curRow != null)
-				return 0;
+				return curRowNum;
+			curRowNum++;
 		}
 		
 		return -1;

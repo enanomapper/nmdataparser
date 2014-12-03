@@ -110,4 +110,38 @@ public class JsonUtilities
 		}			
 	}
 	
+	public static String getNodeTypeAsString(JsonNode node)
+	{
+		if (node.isArray())
+			return ("Array");
+		
+		if (node.isTextual())
+			return ("Text");
+		
+		if (node.isObject())
+			return ("Object");
+		
+		if (node.isInt())
+			return ("Int");
+		
+		if (node.isLong())
+			return ("Long");
+		
+		if (node.isDouble())
+			return ("Double");
+		
+		if (node.isBoolean())
+			return ("Boolean");
+		
+		if (node.isBigInteger())
+			return ("BigInteger");
+		
+		
+		/*
+		if (node.isMissingNode())
+			return ("MissingNode");
+		*/
+		return "0";
+	}
+	
 }

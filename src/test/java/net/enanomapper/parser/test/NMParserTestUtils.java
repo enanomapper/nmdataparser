@@ -46,8 +46,9 @@ public class NMParserTestUtils {
 	{
 		FileInputStream fin = new FileInputStream(excelFile);
 		boolean isXLSX = excelFile.endsWith("xlsx");
-		System.out.println("isXLSX = " + isXLSX);
+		System.out.println("isXLSX = " + isXLSX + "\n");
 		GenericExcelParser parser = new GenericExcelParser(fin, jsonFile, isXLSX);
+		System.out.println(parser.getExcelParserConfigurator().toJSONString() + "\n");
 		
 		int n = 0;
 		while (parser.hasNext())
