@@ -6,7 +6,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import net.enanomapper.parser.ExcelDataLocation.Recognition;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -79,8 +83,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return config;
 	}
 	
-	public void init() throws Exception
+	protected void init() throws Exception
 	{
+		handleConfigRecognitions();
+		
 		curSheet = workbook.getSheetAt(curSheetNum);
 		curRowNum = config.startRow;
 		initialIteration();
@@ -90,37 +96,29 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		LOGGER.info("workSheet# = " + (curSheetNum + 1) + "   starRow# = " + (curRowNum + 1));
 		LOGGER.info("Last row# = " + (curSheet.getLastRowNum() + 1));
 	}
-
-
-	@Override
-	public void handleError(String arg0) throws CDKException {
-		// TODO Auto-generated method stub
+	
+	protected  void handleConfigRecognitions()
+	{
+		Set<Entry<String, ExcelDataLocation>> locEntries = config.substanceLocations.entrySet();
+		for (Entry<String, ExcelDataLocation> entry : locEntries )
+		{
+			ExcelDataLocation loc = entry.getValue();
+			handleRecognition(loc);
+		}
+		
+		for (ProtocolApplicationDataLocation ploc : config.protocolAppLocations)
+			handleRecognition(ploc);
 	}
-
-
-	@Override
-	public void handleError(String arg0, Exception arg1) throws CDKException {
-		// TODO Auto-generated method stub
+	
+	
+	protected void handleRecognition(ExcelDataLocation loc)
+	{
+		//TODO
 	}
-
-
-	@Override
-	public void handleError(String arg0, int arg1, int arg2, int arg3)
-			throws CDKException {
-		// TODO Auto-generated method stub
-	}
-
-
-	@Override
-	public void handleError(String arg0, int arg1, int arg2, int arg3,
-			Exception arg4) throws CDKException {
-		// TODO Auto-generated method stub
-	}
-
-
-	@Override
-	public void setErrorHandler(IChemObjectReaderErrorHandler arg0) {
-		// TODO Auto-generated method stub
+	
+	protected void handleRecognition(ProtocolApplicationDataLocation paLocation)
+	{
+		//TODO
 	}
 
 
@@ -145,51 +143,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 
 
 	@Override
-	public void setReaderMode(Mode arg0) {
-	}
-
-
-	@Override
-	public boolean accepts(Class<? extends IChemObject> arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void addChemObjectIOListener(IChemObjectIOListener arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
 	public void close() throws IOException {
 		input.close();
 		input = null;
 		workbook = null;
 	}
 
-
-	@Override
-	public IResourceFormat getFormat() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public IOSetting[] getIOSettings() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void removeChemObjectIOListener(IChemObjectIOListener arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	@Override
@@ -242,12 +201,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	@Override
 	public Object next() {
 		return nextRecord();
-	}
-
-
-	@Override
-	public void remove() {
-		// TODO Auto-generated method stub
 	}
 
 
@@ -453,6 +406,81 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 		
 		return c.getNumericCellValue();
+	}
+	
+	
+	
+	@Override
+	public void handleError(String arg0) throws CDKException {
+		// TODO Auto-generated method stub
+	}
+
+
+	@Override
+	public void handleError(String arg0, Exception arg1) throws CDKException {
+		// TODO Auto-generated method stub
+	}
+
+
+	@Override
+	public void handleError(String arg0, int arg1, int arg2, int arg3)
+			throws CDKException {
+		// TODO Auto-generated method stub
+	}
+
+
+	@Override
+	public void handleError(String arg0, int arg1, int arg2, int arg3,
+			Exception arg4) throws CDKException {
+		// TODO Auto-generated method stub
+	}
+
+
+	@Override
+	public void setErrorHandler(IChemObjectReaderErrorHandler arg0) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void remove() {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void setReaderMode(Mode arg0) {
+	}
+
+
+	@Override
+	public boolean accepts(Class<? extends IChemObject> arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public void addChemObjectIOListener(IChemObjectIOListener arg0) {
+		// TODO Auto-generated method stub
+	}
+	
+	
+	@Override
+	public IResourceFormat getFormat() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public IOSetting[] getIOSettings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void removeChemObjectIOListener(IChemObjectIOListener arg0) {
+		// TODO Auto-generated method stub
 	}
 	
 }
