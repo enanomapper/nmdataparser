@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,6 +22,7 @@ import org.openscience.cdk.io.listener.IChemObjectIOListener;
 import org.openscience.cdk.io.setting.IOSetting;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import ambit2.core.io.IRawReader;
 
 
@@ -355,31 +357,31 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		SubstanceRecord r = new SubstanceRecord ();
 		
-		ExcelDataLocation loc = config.locations.get("SubstanceRecord.companyName");
+		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
 			String s = getStringValue(row, loc);
 			r.setCompanyName(s);
 		}
 		
-		loc = config.locations.get("SubstanceRecord.ownerName");
+		loc = config.substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{	
 			String s = getStringValue(row, loc);
 			r.setOwnerName(s);
 		}
 		
-		loc = config.locations.get("SubstanceRecord.substanceType");
+		loc = config.substanceLocations.get("SubstanceRecord.substanceType");
 		if (loc != null)
 		{	
 			String s = getStringValue(row, loc);
 			r.setSubstancetype(s);
 		}
 		
+		List<ProtocolApplication> measurements = readProtocolApplications(row);
+		r.setMeasurements(measurements);
 		
-		//TODO
-		
-		//TODO handle errors
+		//TODO handle errors ???
 		return r;
 	}
 	
@@ -388,6 +390,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		SubstanceRecord r = new SubstanceRecord ();
 		//TODO
 		return r;
+	}
+	
+	protected List<ProtocolApplication> readProtocolApplications(Row row)
+	{
+		//TODO
+		return null;
 	}
 	
 	protected String getStringValue(Row row, ExcelDataLocation loc)

@@ -41,10 +41,11 @@ public class ExcelParserConfigurator
 	public Recognition recognition = Recognition.BY_INDEX;
 	
 	//Specific data locations
-	public HashMap<String, ExcelDataLocation> locations = new HashMap<String, ExcelDataLocation>();
+	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
+	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
 	
 	//Substance record parameters
-	public int numProtocols = 2;
+	public int numProtocolApplications = 2;
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -165,7 +166,7 @@ public class ExcelParserConfigurator
 			else
 			{	
 				if (loc.nErrors == 0)							
-					conf.locations.put("SubstanceRecord.companyName", loc);
+					conf.substanceLocations.put("SubstanceRecord.companyName", loc);
 				//error messages are already added to conf (this is valid for all other location extractions)
 			}
 			
@@ -179,7 +180,7 @@ public class ExcelParserConfigurator
 			else
 			{	
 				if (loc.nErrors == 0)							
-					conf.locations.put("SubstanceRecord.ownerName", loc);
+					conf.substanceLocations.put("SubstanceRecord.ownerName", loc);
 			}
 			
 			//SUBSTANCE_TYPE
@@ -192,20 +193,20 @@ public class ExcelParserConfigurator
 			else
 			{	
 				if (loc.nErrors == 0)							
-					conf.locations.put("SubstanceRecord.substanceType", loc);
+					conf.substanceLocations.put("SubstanceRecord.substanceType", loc);
 			}
 			
 		}
 		
-		//Handle Protocols
-		curNode = root.path("PROTOCOLS");
+		//Handle Protocol Applications
+		curNode = root.path("PROTOCOL_APPLICATIONS");
 		if (curNode.isMissingNode())
-			conf.configErrors.add("JSON Section \"PROTOCOLS\" is missing!");
+			conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is missing!");
 		else
 		{
 			if (!curNode.isArray())
 			{
-				conf.configErrors.add("JSON Section \"PROTOCOLS\" is not array!");
+				conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is not array!");
 				return conf;
 			}
 			
@@ -253,14 +254,14 @@ public class ExcelParserConfigurator
 		sb.append("\t{\n");
 		n = 0;
 		
-		loc = locations.get("SubstanceRecord.companyName");
+		loc = substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{
 			sb.append(loc.toJSONKeyWord("\t\t"));
 			n++;
 		}
 		
-		loc = locations.get("SubstanceRecord.ownerName");
+		loc = substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{
 			if (n > 0)
@@ -269,7 +270,7 @@ public class ExcelParserConfigurator
 			n++;
 		}
 		
-		loc = locations.get("SubstanceRecord.substanceType");
+		loc = substanceLocations.get("SubstanceRecord.substanceType");
 		if (loc != null)
 		{
 			if (n > 0)
@@ -284,13 +285,13 @@ public class ExcelParserConfigurator
 		sb.append("\t},\n\n"); //end of SUBSTANCE_RECORD
 		
 		
-		sb.append("\t\"PROTOCOLS\" : [\n");
-		for (int i = 0; i < numProtocols; i++)
+		sb.append("\t\"PROTOCOL_APPLICATIONS\" : [\n");
+		for (int i = 0; i < numProtocolApplications; i++)
 		{
 			sb.append("\t\t{\n");
 			
 			sb.append("\t\t}");
-			if (i < numProtocols-1)
+			if (i < numProtocolApplications-1)
 				sb.append(",\n");
 			sb.append("\n");
 			
