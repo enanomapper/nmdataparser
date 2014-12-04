@@ -3,6 +3,7 @@ package net.enanomapper.parser;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
@@ -10,6 +11,8 @@ import net.enanomapper.parser.json.JsonUtilities;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import ambit2.base.data.substance.ExternalIdentifier;
 
 /**
  * 
@@ -158,45 +161,60 @@ public class ExcelParserConfigurator
 		{
 			//COMPANY_NAME
 			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME", conf);
-			if (loc == null)
-			{	
-				//Currently missing section is counted as an error
-				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
-			}	
-			else
+			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
 					conf.substanceLocations.put("SubstanceRecord.companyName", loc);
 				//error messages are already added to conf (this is valid for all other location extractions)
 			}
+			else
+			{	
+				//Missing section is not counted as an error. Same treatment for the other sections
+				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
+			}
+			
+			//COMPANY_UUID
+			loc = extractDataLocation(curNode,"COMPANY_UUID", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					conf.substanceLocations.put("SubstanceRecord.companyUUID", loc);
+			}
 			
 			//OWNER_NAME
 			loc = extractDataLocation(curNode,"OWNER_NAME", conf);
-			if (loc == null)
-			{	
-				//Currently missing section is counted as an error
-				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"OWNER_NAME\" is missing!");
-			}	
-			else
+			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
 					conf.substanceLocations.put("SubstanceRecord.ownerName", loc);
 			}
 			
+			//OWNER_UUID
+			loc = extractDataLocation(curNode,"OWNER_UUID", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					conf.substanceLocations.put("SubstanceRecord.ownerUUID", loc);
+			}
+			
 			//SUBSTANCE_TYPE
 			loc = extractDataLocation(curNode,"SUBSTANCE_TYPE", conf);
-			if (loc == null)
-			{	
-				//Currently missing section is counted as an error
-				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"SUBSTANCE_TYPE\" is missing!");
-			}	
-			else
+			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
 					conf.substanceLocations.put("SubstanceRecord.substanceType", loc);
 			}
 			
+			
+			/*
+			idsubstance;
+			publicName;
+			*/
+			
 		}
+		
+		//Handle (1) external identifies and (2) composition
+		//TODO
 		
 		//Handle Protocol Applications
 		curNode = root.path("PROTOCOL_APPLICATIONS");
