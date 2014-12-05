@@ -206,17 +206,28 @@ public class ExcelParserConfigurator
 			}
 			
 			
-			/*
-			idsubstance;
-			publicName;
-			*/
+			//PUBLIC_NAME
+			loc = extractDataLocation(curNode,"PUBLIC_NAME", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					conf.substanceLocations.put("SubstanceRecord.publicName", loc);
+			}
+			
+			//ID_SUBSTANCE
+			loc = extractDataLocation(curNode,"ID_SUBSTANCE", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					conf.substanceLocations.put("SubstanceRecord.idSubstance", loc);
+			}
 			
 		}
 		
 		//Handle (1) external identifies and (2) composition
 		//TODO
 		
-		//Handle Protocol Applications
+		//Handle Protocol Applications (Measurements)
 		curNode = root.path("PROTOCOL_APPLICATIONS");
 		if (curNode.isMissingNode())
 			conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is missing!");
@@ -279,6 +290,15 @@ public class ExcelParserConfigurator
 			n++;
 		}
 		
+		loc = substanceLocations.get("SubstanceRecord.companyUUID");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
 		loc = substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{
@@ -288,7 +308,34 @@ public class ExcelParserConfigurator
 			n++;
 		}
 		
+		loc = substanceLocations.get("SubstanceRecord.ownerUUID");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
 		loc = substanceLocations.get("SubstanceRecord.substanceType");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
+		loc = substanceLocations.get("SubstanceRecord.publicName");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
+		loc = substanceLocations.get("SubstanceRecord.idSubstance");
 		if (loc != null)
 		{
 			if (n > 0)
