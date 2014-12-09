@@ -221,8 +221,6 @@ public class ExcelParserConfigurator
 			
 		}
 		
-		//Handle (1) external identifies and (2) composition
-		//TODO
 		
 		//Handle Protocol Applications (Measurements)
 		curNode = root.path("PROTOCOL_APPLICATIONS");
@@ -245,6 +243,10 @@ public class ExcelParserConfigurator
 					conf.protocolAppLocations.add(padl);
 			}	
 		}
+		
+		
+		//Handle (1) external identifies and (2) composition
+		//TODO
 		
 		return conf;
 	}
@@ -351,18 +353,16 @@ public class ExcelParserConfigurator
 		
 		sb.append("\t\"PROTOCOL_APPLICATIONS\" : [\n");
 		for (int i = 0; i < protocolAppLocations.size(); i++)
-		{
-			sb.append("\t\t{\n");
-			
-			sb.append("\t\t}");
-			if (i < protocolAppLocations.size()-1)
+		{	
+			sb.append(protocolAppLocations.get(i).toJSONKeyWord("\t\t"));			
+			if (i < protocolAppLocations.size()-1) 
 				sb.append(",\n");
 			sb.append("\n");
-			
 		}
-		sb.append("\t]\n\n"); //end of PROTOCOLS
 		
-		sb.append("}\n");
+		sb.append("\t]\n\n"); //end of PROTOCOLS array
+		
+		sb.append("}\n"); //end of JSON
 		return sb.toString();
 	}
 	
@@ -490,9 +490,74 @@ public class ExcelParserConfigurator
 	
 	public static ProtocolApplicationDataLocation extractProtocolApplicationDataLocations(JsonNode node, int protocolNum, ExcelParserConfigurator conf)
 	{
-		ProtocolApplicationDataLocation protAppDatLoc = new ProtocolApplicationDataLocation();
+		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
+		
+		//CITATION_TITLE
+		ExcelDataLocation loc = extractDataLocation(node,"CITATION_TITLE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.citationTitle = loc;
+		}	
+		
+		//CITATION_YEAR
+		loc = extractDataLocation(node,"CITATION_YEAR", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.citationYear = loc;
+		}
+		
+		//CITATION_OWNER
+		loc = extractDataLocation(node,"CITATION_OWNER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.citationOwner = loc;
+		}
+		
+		//PROTOCOL_TOP_CATEGORY
+		loc = extractDataLocation(node,"PROTOCOL_TOP_CATEGORY", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.protocolTopCategory = loc;
+		}
+		
+		//PROTOCOL_CATEGORY_CODE
+		loc = extractDataLocation(node,"PROTOCOL_CATEGORY_CODE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.protocolCategoryCode = loc;
+		}
+
+		//PROTOCOL_CATEGORY_TITLE
+		loc = extractDataLocation(node,"PROTOCOL_CATEGORY_TITLE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.protocolCategoryTitle = loc;
+		}
+
+		//PROTOCOL_ENDPOINT
+		loc = extractDataLocation(node,"PROTOCOL_ENDPOINT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.protocolEndpoint = loc;
+		}
+		
+		//PROTOCOL_GUIDELINE
+		loc = extractDataLocation(node,"PROTOCOL_GUIDELINE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.protocolGuideline = loc;
+		}
+
 		
 		//TODO
-		return protAppDatLoc;
+		return padl;
 	}
 }

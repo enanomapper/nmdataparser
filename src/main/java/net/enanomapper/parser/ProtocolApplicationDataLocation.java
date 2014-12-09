@@ -48,7 +48,7 @@ public class ProtocolApplicationDataLocation
 		if (citationYear != null)
 		{	
 			if (nSections > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append(citationYear.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
@@ -56,10 +56,57 @@ public class ProtocolApplicationDataLocation
 		if (citationOwner != null)
 		{	
 			if (nSections > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append(citationOwner.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
+		
+		if (protocolTopCategory != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolTopCategory.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		
+		if (protocolCategoryCode != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolCategoryCode.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (protocolCategoryTitle != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolCategoryTitle.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		
+		if (protocolEndpoint != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolEndpoint.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		
+		if (protocolGuideline != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolGuideline.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		
+		if (nSections > 0)
+			sb.append("\n");
 		
 		sb.append(offset + "}\n");
 		return sb.toString();
