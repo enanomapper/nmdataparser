@@ -47,9 +47,6 @@ public class ExcelParserConfigurator
 	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
 	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
 	
-	//Substance record parameters
-	public int numProtocolApplications = 2;
-	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
 	{
@@ -241,9 +238,11 @@ public class ExcelParserConfigurator
 			
 			for (int i = 0; i < curNode.size(); i++)
 			{	
-				int res = handleProtocolDataLocations(curNode.get(i), i);
-				if (res != 0)
+				ProtocolApplicationDataLocation padl = extractProtocolApplicationDataLocations(curNode.get(i), i, conf);
+				if (padl == null)
 					return conf;
+				else
+					conf.protocolAppLocations.add(padl);
 			}	
 		}
 		
@@ -351,12 +350,12 @@ public class ExcelParserConfigurator
 		
 		
 		sb.append("\t\"PROTOCOL_APPLICATIONS\" : [\n");
-		for (int i = 0; i < numProtocolApplications; i++)
+		for (int i = 0; i < protocolAppLocations.size(); i++)
 		{
 			sb.append("\t\t{\n");
 			
 			sb.append("\t\t}");
-			if (i < numProtocolApplications-1)
+			if (i < protocolAppLocations.size()-1)
 				sb.append(",\n");
 			sb.append("\n");
 			
@@ -489,9 +488,11 @@ public class ExcelParserConfigurator
 		return loc;
 	}
 	
-	public static int handleProtocolDataLocations(JsonNode node, int protocolNum)
+	public static ProtocolApplicationDataLocation extractProtocolApplicationDataLocations(JsonNode node, int protocolNum, ExcelParserConfigurator conf)
 	{
+		ProtocolApplicationDataLocation protAppDatLoc = new ProtocolApplicationDataLocation();
+		
 		//TODO
-		return 0;
+		return protAppDatLoc;
 	}
 }
