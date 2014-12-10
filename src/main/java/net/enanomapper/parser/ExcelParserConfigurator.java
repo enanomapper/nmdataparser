@@ -555,9 +555,104 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)							
 				padl.protocolGuideline = loc;
 		}
-
 		
-		//TODO
+		//PARAMETERS
+		//TODO HashMap<String, ExcelDataLocation> parameters
+		
+		
+		//RELIABILITY_IS_ROBUST_STUDY
+		loc = extractDataLocation(node,"RELIABILITY_IS_ROBUST_STUDY", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_isRobustStudy = loc;
+		}
+		
+		
+		//RELIABILITY_IS_USED_FOR_CLASSIFICATION
+		loc = extractDataLocation(node,"RELIABILITY_IS_USED_FOR_CLASSIFICATION", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_isUsedforClassification = loc;
+		}
+		
+		//RELIABILITY_IS_USED_FOR_MSDS
+		loc = extractDataLocation(node,"RELIABILITY_IS_USED_FOR_MSDS", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_isUsedforMSDS = loc;
+		}
+
+		//RELIABILITY_PURPOSE_FLAG
+		loc = extractDataLocation(node,"RELIABILITY_PURPOSE_FLAG", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_purposeFlag = loc;
+		}
+		
+		//RELIABILITY_STUDY_RESULT_TYPE
+		loc = extractDataLocation(node,"RELIABILITY_STUDY_RESULT_TYPE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_studyResultType = loc;
+		}
+
+		//RELIABILITY_VALUE
+		loc = extractDataLocation(node,"RELIABILITY_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.reliability_value = loc;
+		}
+		
+		//INTERPRETATION_RESULT
+		loc = extractDataLocation(node,"INTERPRETATION_RESULT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.interpretationResult = loc;
+		}
+		
+		//INTERPRETATION_CRITERIA
+		loc = extractDataLocation(node,"INTERPRETATION_CRITERIA", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.interpretationCriteria = loc;
+		}
+		
+		//EFFECT_ENDPOINT
+		loc = extractDataLocation(node,"EFFECT_ENDPOINT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.effectsEndpoint = loc;
+		}
+		
+		//EFFECT_RESULT_UNIT
+		loc = extractDataLocation(node,"EFFECT_RESULT_UNIT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.effectsResultUnit = loc;
+		}
+
+		//EFFECT_LO_VALUE
+		loc = extractDataLocation(node,"EFFECT_LO_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				padl.effectsLoValue = loc;
+		}
+				
+		//EFFECT_CONDITIONS
+		//TODO HashMap<String, ExcelDataLocation> effectConditions 
+				
+		
 		return padl;
 	}
 }

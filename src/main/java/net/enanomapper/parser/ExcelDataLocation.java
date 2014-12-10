@@ -5,7 +5,7 @@ package net.enanomapper.parser;
 public class ExcelDataLocation 
 {
 	public enum IterationAccess {
-		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, UNDEFINED;
+		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_POSITION, UNDEFINED;
 		
 		public static IterationAccess fromString(String s)
 		{	 

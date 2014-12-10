@@ -103,7 +103,103 @@ public class ProtocolApplicationDataLocation
 			sb.append(protocolGuideline.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
+		 
 		
+		//TODO  HashMap<String, ExcelDataLocation> parameters
+	
+		
+		if (reliability_isRobustStudy != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_isRobustStudy.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (reliability_isUsedforClassification != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_isUsedforClassification.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (reliability_isUsedforMSDS != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_isUsedforMSDS.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		
+		if (reliability_purposeFlag != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_purposeFlag.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (reliability_studyResultType != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_studyResultType.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (reliability_value != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(reliability_value.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (interpretationResult != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(interpretationResult.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (interpretationCriteria != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(interpretationCriteria.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (effectsEndpoint != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(effectsEndpoint.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (effectsResultUnit != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(effectsResultUnit.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (effectsLoValue != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(effectsLoValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+	
+		
+		//TODO  HashMap<String, ExcelDataLocation> effectConditions 
+
 		
 		if (nSections > 0)
 			sb.append("\n");
