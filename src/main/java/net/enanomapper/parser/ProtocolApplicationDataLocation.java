@@ -103,10 +103,33 @@ public class ProtocolApplicationDataLocation
 			sb.append(protocolGuideline.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
-		 
 		
+		/*
 		//TODO  HashMap<String, ExcelDataLocation> parameters
-	
+		if (!parameters.isEmpty())
+		{
+			if (nSections > 0)
+				sb.append(",\n\n");
+			
+			sb.append(offset + "\tPARAMETERS : [\n" );
+			int nParams = 0;
+			for (String param : parameters.keySet())
+			{
+				sb.append(offset +"\t\t{");
+				ExcelDataLocation loc = parameters.get(param);
+				sb.append(loc.toJSONKeyWord(offset+"\t\t\t"));
+				sb.append("\n");
+				sb.append(offset +"\t\t}");
+				
+				if (nParams < parameters.size())
+					sb.append(",\n");
+				else
+					sb.append("\n");
+				nParams++;
+			}
+			sb.append(offset + "\t]" );
+		}
+		*/
 		
 		if (reliability_isRobustStudy != null)
 		{	

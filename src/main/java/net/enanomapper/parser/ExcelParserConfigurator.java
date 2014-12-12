@@ -218,7 +218,6 @@ public class ExcelParserConfigurator
 				if (loc.nErrors == 0)							
 					conf.substanceLocations.put("SubstanceRecord.idSubstance", loc);
 			}
-			
 		}
 		
 		
@@ -351,7 +350,9 @@ public class ExcelParserConfigurator
 		sb.append("\t},\n\n"); //end of SUBSTANCE_RECORD
 		
 		
-		sb.append("\t\"PROTOCOL_APPLICATIONS\" : [\n");
+		sb.append("\t\"PROTOCOL_APPLICATIONS\":\n");
+		sb.append("\t[\n");
+		
 		for (int i = 0; i < protocolAppLocations.size(); i++)
 		{	
 			sb.append(protocolAppLocations.get(i).toJSONKeyWord("\t\t"));			
@@ -556,8 +557,13 @@ public class ExcelParserConfigurator
 				padl.protocolGuideline = loc;
 		}
 		
+		
 		//PARAMETERS
-		//TODO HashMap<String, ExcelDataLocation> parameters
+		JsonNode parNode = node.path("PARAMETERS");
+		if (!parNode.isMissingNode())
+		{
+			padl.parameters = extractDynamicSection(parNode, conf);
+		}
 		
 		
 		//RELIABILITY_IS_ROBUST_STUDY
@@ -654,5 +660,11 @@ public class ExcelParserConfigurator
 				
 		
 		return padl;
+	}
+	
+	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
+		return null;
 	}
 }
