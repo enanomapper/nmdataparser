@@ -127,7 +127,7 @@ public class ExcelDataLocation
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append(offset + sectionName + ":\n");
+		sb.append(offset + "\"" + sectionName + "\":\n");
 		sb.append(offset + "{\n");
 		
 		if (FlagDataType)

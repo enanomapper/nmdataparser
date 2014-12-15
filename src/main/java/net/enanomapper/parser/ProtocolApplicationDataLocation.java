@@ -217,7 +217,7 @@ public class ProtocolApplicationDataLocation
 			nSections++;
 		}
 		
-		if (parameters != null)
+		if (effectConditions != null)
 		{
 			if (nSections > 0)
 				sb.append(",\n\n");
