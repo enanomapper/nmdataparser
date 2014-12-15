@@ -3,7 +3,9 @@ package net.enanomapper.parser;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
@@ -377,15 +379,27 @@ public class ExcelParserConfigurator
 		return sb.toString();
 	}
 	
+	public static ExcelDataLocation extractDataLocation(JsonNode node, ExcelParserConfigurator conf)
+	{
+		return extractDataLocation(node, null, conf);
+	}
+	
+	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
 	{
 		//Error messages are stored globally in 'conf' variable and are
 		//counted locally in return variable 'loc'
 		
-		JsonNode sectionNode = node.path(jsonSection);
-		if (sectionNode.isMissingNode())
-			return null;
+		JsonNode sectionNode;
 		
+		if (jsonSection == null)
+			sectionNode = node; //The node itself is used
+		else
+		{	
+			sectionNode = node.path(jsonSection);
+			if (sectionNode.isMissingNode())
+				return null;
+		}
 		JsonUtilities jsonUtils = new JsonUtilities();
 		
 		ExcelDataLocation loc = new ExcelDataLocation();
@@ -656,15 +670,27 @@ public class ExcelParserConfigurator
 		}
 				
 		//EFFECT_CONDITIONS
-		//TODO HashMap<String, ExcelDataLocation> effectConditions 
-				
+		JsonNode effCondNode = node.path("EFFECT_CONDITIONS");
+		if (!parNode.isMissingNode())
+		{
+			padl.effectConditions = extractDynamicSection(effCondNode, conf);
+		}		
 		
 		return padl;
 	}
 	
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)
 	{
-		//TODO
-		return null;
+		HashMap<String, ExcelDataLocation> hmap = new HashMap<String, ExcelDataLocation>();
+		
+		Iterator<Entry<String,JsonNode>> it = node.getFields();
+		while (it.hasNext())
+		{
+			Entry<String,JsonNode> entry = it.next();
+			ExcelDataLocation loc = extractDataLocation(entry.getValue(), conf);
+			hmap.put(entry.getKey(), loc);
+		}
+		
+		return hmap;
 	}
 }
