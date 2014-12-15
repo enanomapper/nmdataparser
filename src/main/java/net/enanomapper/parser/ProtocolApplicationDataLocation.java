@@ -15,7 +15,7 @@ public class ProtocolApplicationDataLocation
 	public ExcelDataLocation protocolEndpoint = null;
 	public ExcelDataLocation protocolGuideline = null;  //TODO []?
 	
-	public HashMap<String, ExcelDataLocation> parameters = new HashMap<String, ExcelDataLocation>();
+	public HashMap<String, ExcelDataLocation> parameters = null;
 	
 	public ExcelDataLocation reliability_isRobustStudy = null;
 	public ExcelDataLocation reliability_isUsedforClassification = null;
@@ -28,7 +28,7 @@ public class ProtocolApplicationDataLocation
 	public ExcelDataLocation interpretationCriteria = null;
 	
 	public ExcelDataLocation effectsEndpoint = null;
-	public HashMap<String, ExcelDataLocation> effectConditions = new HashMap<String, ExcelDataLocation>();
+	public HashMap<String, ExcelDataLocation> effectConditions = null;
 	public ExcelDataLocation effectsResultUnit = null;
 	public ExcelDataLocation effectsLoValue = null;
 	
@@ -104,32 +104,29 @@ public class ProtocolApplicationDataLocation
 			nSections++;
 		}
 		
-		/*
-		//TODO  HashMap<String, ExcelDataLocation> parameters
-		if (!parameters.isEmpty())
+		if (parameters != null)
 		{
 			if (nSections > 0)
 				sb.append(",\n\n");
+
+			sb.append(offset + "\t\"PARAMETERS\" : \n" );
+			sb.append(offset + "\t{\n" );
 			
-			sb.append(offset + "\tPARAMETERS : [\n" );
 			int nParams = 0;
 			for (String param : parameters.keySet())
-			{
-				sb.append(offset +"\t\t{");
+			{	
 				ExcelDataLocation loc = parameters.get(param);
-				sb.append(loc.toJSONKeyWord(offset+"\t\t\t"));
-				sb.append("\n");
-				sb.append(offset +"\t\t}");
+				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
 				
 				if (nParams < parameters.size())
-					sb.append(",\n");
+					sb.append(",\n\n");
 				else
 					sb.append("\n");
 				nParams++;
 			}
-			sb.append(offset + "\t]" );
+			sb.append(offset + "\t}" );
 		}
-		*/
+		
 		
 		if (reliability_isRobustStudy != null)
 		{	
@@ -219,9 +216,29 @@ public class ProtocolApplicationDataLocation
 			sb.append(effectsLoValue.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
-	
 		
-		//TODO  HashMap<String, ExcelDataLocation> effectConditions 
+		if (parameters != null)
+		{
+			if (nSections > 0)
+				sb.append(",\n\n");
+
+			sb.append(offset + "\t\"EFFECT_CONDITIONS\" : \n" );
+			sb.append(offset + "\t{\n" );
+			
+			int nEffCond = 0;
+			for (String effCond : effectConditions.keySet())
+			{	
+				ExcelDataLocation loc = effectConditions.get(effCond);
+				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
+				
+				if (nEffCond < effectConditions.size())
+					sb.append(",\n\n");
+				else
+					sb.append("\n");
+				nEffCond++;
+			}
+			sb.append(offset + "\t}" );
+		}
 
 		
 		if (nSections > 0)
