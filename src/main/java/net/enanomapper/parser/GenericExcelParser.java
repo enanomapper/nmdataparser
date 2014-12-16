@@ -347,6 +347,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected List<ProtocolApplication> readProtocolApplications(Row row)
 	{
+		List<ProtocolApplication> protApps = new ArrayList<ProtocolApplication>();
+		for (ProtocolApplicationDataLocation padl : config.protocolAppLocations)
+		{	
+			ProtocolApplication pa = readProtocolApplication(row);
+			protApps.add(pa);
+		}
+		return protApps;
+	}
+	
+	protected ProtocolApplication readProtocolApplication(Row row)
+	{
 		//TODO
 		return null;
 	}

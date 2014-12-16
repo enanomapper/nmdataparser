@@ -3,8 +3,10 @@ package net.enanomapper.parser.test;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
 
@@ -17,10 +19,10 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
-		testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
 		//testExcelParserConfiguration("D:/Projects/nina/eNanoMapper/config01.json");
 		
-		//testExcelTemplate("/Users/nick/Projects/eNanoMapper/template01-NR.xlsx","/Users/nick/Projects/eNanoMapper/config01.json");
+		testExcelTemplate("/Users/nick/Projects/eNanoMapper/template01-NR.xlsx","/Users/nick/Projects/eNanoMapper/config01.json");
 		//testExcelTemplate("D:/Projects/nina/eNanoMapper/template01-NR.xlsx","D:/Projects/nina/eNanoMapper/config01.json");
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
@@ -58,6 +60,11 @@ public class NMParserTestUtils {
 			n++;
 			System.out.println("Record #" + n);
 			System.out.println(r.toJSON(null));
+			List<ProtocolApplication> paList = r.getMeasurements();
+			
+			if (paList != null)
+				for (ProtocolApplication pa : paList)
+					System.out.println(pa.toString());
 		}
 		
 		fin.close();
