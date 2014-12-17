@@ -373,7 +373,23 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		Protocol protocol = readProtocol(padl, row);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
 		
-		//TODO
+		if (padl.citationTitle != null)
+		{	
+			String s = getStringValue(row, padl.citationTitle);
+			pa.setReference(s);  //title is the reference 'itself'
+		}
+		
+		if (padl.citationOwner != null)
+		{	
+			String s = getStringValue(row, padl.citationOwner);
+			pa.setReferenceOwner(s);
+		}
+		
+		if (padl.citationYear != null)
+		{	
+			String s = getStringValue(row, padl.citationYear);
+			pa.setReferenceYear(s);
+		}
 		
 		return pa;
 	}
