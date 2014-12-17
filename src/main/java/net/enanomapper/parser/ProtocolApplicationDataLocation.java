@@ -1,5 +1,6 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -13,7 +14,7 @@ public class ProtocolApplicationDataLocation
 	public ExcelDataLocation protocolCategoryCode = null;
 	public ExcelDataLocation protocolCategoryTitle = null;
 	public ExcelDataLocation protocolEndpoint = null;
-	public ExcelDataLocation protocolGuideline = null;  //TODO []?
+	public ArrayList<ExcelDataLocation> protocolGuideline = null;  
 	
 	public HashMap<String, ExcelDataLocation> parameters = null;
 	
@@ -96,13 +97,30 @@ public class ProtocolApplicationDataLocation
 		}
 		
 		
+		
 		if (protocolGuideline != null)
 		{	
 			if (nSections > 0)
 				sb.append(",\n\n");
-			sb.append(protocolGuideline.toJSONKeyWord(offset+"\t"));
+			
+			sb.append(offset + "\t\"PROTOCOL_GUIDELINE\" : \n" );
+			sb.append(offset + "\t{\n" );
+			
+			for (int i = 0; i < protocolGuideline.size(); i++)
+			{
+				ExcelDataLocation loc = protocolGuideline.get(i);
+				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
+				
+				if (i < parameters.size()-1)
+					sb.append(",\n\n");
+				else
+					sb.append("\n");
+			}
+			
+			sb.append(offset + "\t}" );
 			nSections++;
 		}
+		
 		
 		if (parameters != null)
 		{

@@ -25,6 +25,8 @@ import ambit2.base.data.substance.ExternalIdentifier;
  */
 public class ExcelParserConfigurator 
 {	
+	private static final int numGuideLinesToCheck = 5;
+	private static final String guideLineJSONField = "guideline";
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
 	public ArrayList<String> configWarning = new ArrayList<String> ();
@@ -564,11 +566,19 @@ public class ExcelParserConfigurator
 		}
 		
 		//PROTOCOL_GUIDELINE
-		loc = extractDataLocation(node,"PROTOCOL_GUIDELINE", conf);
-		if (loc != null)
-		{	
-			if (loc.nErrors == 0)							
-				padl.protocolGuideline = loc;
+		JsonNode pglNode = node.path("PROTOCOL_GUIDELINE");
+		if (!pglNode.isMissingNode())
+		{
+			ArrayList<ExcelDataLocation> protGuidline = new ArrayList<ExcelDataLocation>();
+			HashMap<String, ExcelDataLocation> pglLocs = extractDynamicSection(pglNode, conf);
+			for (int i = 1; i < numGuideLinesToCheck; i++)
+			{
+				ExcelDataLocation pglLoc = pglLocs.get(guideLineJSONField + i);
+				if (pglLoc != null)
+					protGuidline.add(pglLoc);
+			}
+			
+			padl.protocolGuideline = protGuidline;
 		}
 		
 		

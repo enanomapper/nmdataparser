@@ -392,15 +392,21 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			protocol.setTopCategory(s);
 		}
 		
-		/*
+		if (padl.protocolCategoryCode != null)
+		{	
+			String s = getStringValue(row, padl.protocolCategoryCode);
+			protocol.setCategory(s);
+		}
+		
+		/* Category title is currently not handled
+		 * 
 		if (padl.protocolCategoryTitle != null)
 		{	
 			String s = getStringValue(row, padl.protocolCategoryTitle);
-			
 		}
 		*/
 		
-		//TODO
+		
 		
 		return protocol;
 	}
