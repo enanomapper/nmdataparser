@@ -64,7 +64,7 @@ public class NMParserTestUtils {
 			
 			if (paList != null)
 				for (ProtocolApplication pa : paList)
-					System.out.println(pa.toString());
+					System.out.println("***Protocol application:\n"+pa.toString());
 		}
 		
 		fin.close();

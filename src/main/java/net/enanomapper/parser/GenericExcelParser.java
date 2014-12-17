@@ -26,6 +26,7 @@ import org.openscience.cdk.io.listener.IChemObjectIOListener;
 import org.openscience.cdk.io.setting.IOSetting;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.core.io.IRawReader;
 
@@ -334,8 +335,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		List<ProtocolApplication> measurements = readProtocolApplications(row);
 		r.setMeasurements(measurements);
 		
-		//TODO handle errors ???
+		putSRInfoToProtocolApplications(r);
+		
 		return r;
+	}
+	
+	protected void putSRInfoToProtocolApplications(SubstanceRecord record)
+	{
+		for (ProtocolApplication pa : record.getMeasurements())
+		{
+			pa.setCompanyName(record.getCompanyName());
+			pa.setCompanyUUID(record.getCompanyUUID());
+			//TODO
+		}
 	}
 	
 	protected SubstanceRecord readSR(ArrayList<Row> rows)
@@ -358,8 +370,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected ProtocolApplication readProtocolApplication(Row row)
 	{
+		Protocol protocol = readProtocol(row);
+		ProtocolApplication pa = new ProtocolApplication(protocol);
+		
+		return pa;
+	}
+	
+	protected Protocol readProtocol(Row row)
+	{
 		//TODO
-		return null;
+		return new Protocol(null);
 	}
 	
 	protected String getStringValue(Row row, ExcelDataLocation loc)
