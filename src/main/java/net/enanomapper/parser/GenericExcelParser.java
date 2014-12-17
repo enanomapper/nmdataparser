@@ -362,24 +362,47 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		List<ProtocolApplication> protApps = new ArrayList<ProtocolApplication>();
 		for (ProtocolApplicationDataLocation padl : config.protocolAppLocations)
 		{	
-			ProtocolApplication pa = readProtocolApplication(row);
+			ProtocolApplication pa = readProtocolApplication(padl, row);
 			protApps.add(pa);
 		}
 		return protApps;
 	}
 	
-	protected ProtocolApplication readProtocolApplication(Row row)
+	protected ProtocolApplication readProtocolApplication(ProtocolApplicationDataLocation padl, Row row)
 	{
-		Protocol protocol = readProtocol(row);
+		Protocol protocol = readProtocol(padl, row);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
+		
+		//TODO
 		
 		return pa;
 	}
 	
-	protected Protocol readProtocol(Row row)
-	{
+	protected Protocol readProtocol(ProtocolApplicationDataLocation padl, Row row)
+	{	
+		String endpoint = "";
+		if (padl.protocolEndpoint != null)
+			endpoint = getStringValue(row, padl.protocolEndpoint);
+		
+		Protocol protocol = new Protocol(endpoint);
+		
+		if (padl.protocolTopCategory != null)
+		{	
+			String s = getStringValue(row, padl.protocolTopCategory);
+			protocol.setTopCategory(s);
+		}
+		
+		/*
+		if (padl.protocolCategoryTitle != null)
+		{	
+			String s = getStringValue(row, padl.protocolCategoryTitle);
+			
+		}
+		*/
+		
 		//TODO
-		return new Protocol(null);
+		
+		return protocol;
 	}
 	
 	protected String getStringValue(Row row, ExcelDataLocation loc)
