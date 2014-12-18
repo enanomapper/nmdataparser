@@ -350,8 +350,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		List<ProtocolApplication> measurements = readProtocolApplications();
 		r.setMeasurements(measurements);
-		
-		
+				
 		putSRInfoToProtocolApplications(r);
 		
 		return r;
@@ -407,7 +406,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{
 			//TODO
 		}
-		
 		
 		
 		return pa;
