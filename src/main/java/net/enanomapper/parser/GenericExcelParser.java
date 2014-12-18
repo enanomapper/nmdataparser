@@ -295,11 +295,27 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		SubstanceRecord r = new SubstanceRecord ();
 		
-		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyName");
+		//Typically companyUUID is not set from the excel file but it is possible if needed.
+		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyUUID");
+		if (loc != null)
+		{	
+			String s = getStringValue(loc);
+			r.setCompanyUUID(s);
+		}
+		
+		loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
 			r.setCompanyName(s);
+		}
+		
+		//Typically ownerUUID is not set from the excel file but it is possible if needed.
+		loc = config.substanceLocations.get("SubstanceRecord.ownerUUID");  
+		if (loc != null)
+		{	
+			String s = getStringValue(loc);
+			r.setOwnerUUID(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.ownerName");
@@ -316,8 +332,25 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			r.setSubstancetype(s);
 		}
 		
+		loc = config.substanceLocations.get("SubstanceRecord.publicName");
+		if (loc != null)
+		{	
+			String s = getStringValue(loc);
+			r.setPublicName(s);
+		}
+		
+		loc = config.substanceLocations.get("SubstanceRecord.idSubstance");
+		if (loc != null)
+		{	
+			Double v = getNumericValue(loc);
+			if (v != null)
+				r.setIdsubstance(v.intValue());
+		}
+		
+		
 		List<ProtocolApplication> measurements = readProtocolApplications();
 		r.setMeasurements(measurements);
+		
 		
 		putSRInfoToProtocolApplications(r);
 		
@@ -369,6 +402,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			String s = getStringValue(padl.citationYear);
 			pa.setReferenceYear(s);
 		}
+		
+		if (padl.effectConditions != null)
+		{
+			//TODO
+		}
+		
+		
 		
 		return pa;
 	}
