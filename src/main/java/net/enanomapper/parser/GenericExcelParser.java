@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -288,25 +289,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected SubstanceRecord getSubstanceRecord()
 	{
-		switch (config.substanceIteration)
-		{
-		case ROW_SINGLE:			
-			return readSR(curRow);
-			
-		case ROW_MULTI_FIXED:			
-			return readSR(curRows);
-			
-		case ROW_MULTI_DYNAMIC:
-			return readSR(curRows);
-				
-		default : 
-			return null;
-		}
-	}
-	
-	protected SubstanceRecord readSR(Row row)
-	{
-		LOGGER.info("Reading row: " + (curRowNum+1));
+		if (config.substanceIteration == IterationAccess.ROW_SINGLE) 
+			LOGGER.info("Reading row: " + (curRowNum+1));
 		//LOGGER.info(row.toString());
 		
 		SubstanceRecord r = new SubstanceRecord ();
@@ -314,25 +298,25 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
-			String s = getStringValue(row, loc);
+			String s = getStringValue(loc);
 			r.setCompanyName(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{	
-			String s = getStringValue(row, loc);
+			String s = getStringValue(loc);
 			r.setOwnerName(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.substanceType");
 		if (loc != null)
 		{	
-			String s = getStringValue(row, loc);
+			String s = getStringValue(loc);
 			r.setSubstancetype(s);
 		}
 		
-		List<ProtocolApplication> measurements = readProtocolApplications(row);
+		List<ProtocolApplication> measurements = readProtocolApplications();
 		r.setMeasurements(measurements);
 		
 		putSRInfoToProtocolApplications(r);
@@ -340,6 +324,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return r;
 	}
 	
+		
 	protected void putSRInfoToProtocolApplications(SubstanceRecord record)
 	{
 		for (ProtocolApplication pa : record.getMeasurements())
@@ -350,67 +335,61 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
-	protected SubstanceRecord readSR(ArrayList<Row> rows)
-	{
-		SubstanceRecord r = new SubstanceRecord ();
-		//TODO
-		return r;
-	}
 	
-	protected List<ProtocolApplication> readProtocolApplications(Row row)
+	protected List<ProtocolApplication> readProtocolApplications()
 	{
 		List<ProtocolApplication> protApps = new ArrayList<ProtocolApplication>();
 		for (ProtocolApplicationDataLocation padl : config.protocolAppLocations)
 		{	
-			ProtocolApplication pa = readProtocolApplication(padl, row);
+			ProtocolApplication pa = readProtocolApplication(padl);
 			protApps.add(pa);
 		}
 		return protApps;
 	}
 	
-	protected ProtocolApplication readProtocolApplication(ProtocolApplicationDataLocation padl, Row row)
+	protected ProtocolApplication readProtocolApplication(ProtocolApplicationDataLocation padl)
 	{
-		Protocol protocol = readProtocol(padl, row);
+		Protocol protocol = readProtocol(padl);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
 		
 		if (padl.citationTitle != null)
 		{	
-			String s = getStringValue(row, padl.citationTitle);
+			String s = getStringValue(padl.citationTitle);
 			pa.setReference(s);  //title is the reference 'itself'
 		}
 		
 		if (padl.citationOwner != null)
 		{	
-			String s = getStringValue(row, padl.citationOwner);
+			String s = getStringValue(padl.citationOwner);
 			pa.setReferenceOwner(s);
 		}
 		
 		if (padl.citationYear != null)
 		{	
-			String s = getStringValue(row, padl.citationYear);
+			String s = getStringValue(padl.citationYear);
 			pa.setReferenceYear(s);
 		}
 		
 		return pa;
 	}
 	
-	protected Protocol readProtocol(ProtocolApplicationDataLocation padl, Row row)
+	protected Protocol readProtocol(ProtocolApplicationDataLocation padl)
 	{	
 		String endpoint = "";
 		if (padl.protocolEndpoint != null)
-			endpoint = getStringValue(row, padl.protocolEndpoint);
+			endpoint = getStringValue(padl.protocolEndpoint);
 		
 		Protocol protocol = new Protocol(endpoint);
 		
 		if (padl.protocolTopCategory != null)
 		{	
-			String s = getStringValue(row, padl.protocolTopCategory);
+			String s = getStringValue(padl.protocolTopCategory);
 			protocol.setTopCategory(s);
 		}
 		
 		if (padl.protocolCategoryCode != null)
 		{	
-			String s = getStringValue(row, padl.protocolCategoryCode);
+			String s = getStringValue(padl.protocolCategoryCode);
 			protocol.setCategory(s);
 		}
 		
@@ -423,13 +402,59 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			List<String> guide = new ArrayList<String>();
 			for (int i = 0; i < padl.protocolGuideline.size(); i++)
 			{	
-				String s = getStringValue(row, padl.protocolGuideline.get(i));
+				String s = getStringValue(padl.protocolGuideline.get(i));
 				guide.add(s);
 			}	
 			protocol.setGuideline(guide);
 		}
 		
 		return protocol;
+	}
+	
+	/*
+	 * Generic function (regardless of the iteration access)
+	 */
+	protected String getStringValue(ExcelDataLocation loc)
+	{
+		switch (config.substanceIteration)
+		{
+		case ROW_SINGLE:			
+			return getStringValue(curRow, loc);
+			
+		case ROW_MULTI_FIXED:
+			//TODO
+			return null;
+			
+		case ROW_MULTI_DYNAMIC:
+			//TODO
+			return null;
+				
+		default : 
+			return null;
+		}
+	}
+	
+	/*
+	 * Generic function (regardless of the iteration access)
+	 */
+	protected Double getNumericValue(ExcelDataLocation loc)
+	{
+		switch (config.substanceIteration)
+		{
+		case ROW_SINGLE:			
+			return getNumericValue(curRow, loc);
+			
+		case ROW_MULTI_FIXED:
+			//TODO
+			return null;
+			
+		case ROW_MULTI_DYNAMIC:
+			//TODO
+			return null;
+				
+		default : 
+			return null;
+		}
 	}
 	
 	protected String getStringValue(Row row, ExcelDataLocation loc)
@@ -460,6 +485,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		return c.getStringCellValue();
 	}
+	
+	
 	
 	protected Double getNumericValue(Row row, ExcelDataLocation loc)
 	{
