@@ -655,6 +655,35 @@ public class ExcelParserConfigurator
 				padl.interpretationCriteria = loc;
 		}
 		
+		
+		
+		//EFFECTS
+		JsonNode effectsNode = node.path("EFFECTS");
+		if (!effectsNode.isMissingNode())
+		{
+			if (!effectsNode.isArray())
+			{	
+				conf.configErrors.add("EFFECTS section is not of type array!");
+				return padl;
+			}
+			
+			padl.effects = new ArrayList<EffectRecordDataLocation>();
+			
+			for (int i = 0; i < effectsNode.size(); i++)
+			{	
+				EffectRecordDataLocation efrdl = extractEffectDataLocation(effectsNode.get(i) ,conf);
+				padl.effects.add(efrdl);
+			}	
+		}
+		
+		return padl;
+	}
+	
+	public static EffectRecordDataLocation extractEffectDataLocation(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
+		
+		/*
 		//EFFECT_ENDPOINT
 		loc = extractDataLocation(node,"EFFECT_ENDPOINT", conf);
 		if (loc != null)
@@ -681,12 +710,12 @@ public class ExcelParserConfigurator
 				
 		//EFFECT_CONDITIONS
 		JsonNode effCondNode = node.path("EFFECT_CONDITIONS");
-		if (!parNode.isMissingNode())
+		if (!effCondNode.isMissingNode())
 		{
 			padl.effectConditions = extractDynamicSection(effCondNode, conf);
-		}		
-		
-		return padl;
+		}
+		*/
+		return null;
 	}
 	
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)

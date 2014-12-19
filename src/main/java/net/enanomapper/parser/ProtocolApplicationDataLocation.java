@@ -28,7 +28,7 @@ public class ProtocolApplicationDataLocation
 	public ExcelDataLocation interpretationResult = null;
 	public ExcelDataLocation interpretationCriteria = null;
 	
-	public ArrayList<ExcelDataLocation> effects = null;  //The other effect related fields to be removed
+	public ArrayList<EffectRecordDataLocation> effects = null;  //The other effect related fields to be removed
 	public ExcelDataLocation effectsEndpoint = null;
 	public HashMap<String, ExcelDataLocation> effectConditions = null;
 	public ExcelDataLocation effectsResultUnit = null;
