@@ -212,53 +212,25 @@ public class ProtocolApplicationDataLocation
 			nSections++;
 		}
 		
-		if (effectsEndpoint != null)
-		{	
-			if (nSections > 0)
-				sb.append(",\n\n");
-			sb.append(effectsEndpoint.toJSONKeyWord(offset+"\t"));
-			nSections++;
-		}
 		
-		if (effectsResultUnit != null)
+		if (effects != null)
 		{	
-			if (nSections > 0)
-				sb.append(",\n\n");
-			sb.append(effectsResultUnit.toJSONKeyWord(offset+"\t"));
-			nSections++;
-		}
-		
-		if (effectsLoValue != null)
-		{	
-			if (nSections > 0)
-				sb.append(",\n\n");
-			sb.append(effectsLoValue.toJSONKeyWord(offset+"\t"));
-			nSections++;
-		}
-		
-		if (effectConditions != null)
-		{
 			if (nSections > 0)
 				sb.append(",\n\n");
 
-			sb.append(offset + "\t\"EFFECT_CONDITIONS\" : \n" );
-			sb.append(offset + "\t{\n" );
-			
-			int nEffCond = 0;
-			for (String effCond : effectConditions.keySet())
+			sb.append(offset + "\t\"EFFECTS\":\n");
+			sb.append(offset + "\t[\n");
+
+			for (int i = 0; i < effects.size(); i++)
 			{	
-				ExcelDataLocation loc = effectConditions.get(effCond);
-				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
-				
-				if (nEffCond < effectConditions.size())
-					sb.append(",\n\n");
-				else
-					sb.append("\n");
-				nEffCond++;
+				sb.append(effects.get(i).toJSONKeyWord(offset + "\t\t"));			
+				if (i < effects.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
 			}
-			sb.append(offset + "\t}" );
+			
+			sb.append(offset + "\t]\n\n"); 
 		}
-
 		
 		if (nSections > 0)
 			sb.append("\n");

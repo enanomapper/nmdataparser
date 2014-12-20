@@ -681,41 +681,41 @@ public class ExcelParserConfigurator
 	
 	public static EffectRecordDataLocation extractEffectDataLocation(JsonNode node, ExcelParserConfigurator conf)
 	{
-		//TODO
+		EffectRecordDataLocation efrdl = new EffectRecordDataLocation();
 		
-		/*
-		//EFFECT_ENDPOINT
-		loc = extractDataLocation(node,"EFFECT_ENDPOINT", conf);
+		//ENDPOINT
+		ExcelDataLocation loc = extractDataLocation(node,"ENDPOINT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				padl.effectsEndpoint = loc;
+				efrdl.endpoint = loc;
 		}
 		
-		//EFFECT_RESULT_UNIT
-		loc = extractDataLocation(node,"EFFECT_RESULT_UNIT", conf);
+		
+		//RESULT_UNIT
+		loc = extractDataLocation(node,"RESULT_UNIT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				padl.effectsResultUnit = loc;
+				efrdl.resultUnit = loc;
 		}
 
-		//EFFECT_LO_VALUE
-		loc = extractDataLocation(node,"EFFECT_LO_VALUE", conf);
+		//LO_VALUE
+		loc = extractDataLocation(node,"LO_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				padl.effectsLoValue = loc;
+				efrdl.loValue = loc;
 		}
 				
-		//EFFECT_CONDITIONS
-		JsonNode effCondNode = node.path("EFFECT_CONDITIONS");
+		//CONDITIONS
+		JsonNode effCondNode = node.path("CONDITIONS");
 		if (!effCondNode.isMissingNode())
 		{
-			padl.effectConditions = extractDynamicSection(effCondNode, conf);
+			efrdl.conditions = extractDynamicSection(effCondNode, conf);
 		}
-		*/
-		return null;
+		
+		return efrdl;
 	}
 	
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)
