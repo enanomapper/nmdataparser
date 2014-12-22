@@ -28,6 +28,8 @@ import org.openscience.cdk.io.setting.IOSetting;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.core.io.IRawReader;
@@ -472,10 +474,42 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected EffectRecord readEffect(EffectRecordDataLocation efrdl)
 	{
-		EffectRecord effRec = new EffectRecord();
+		EffectRecord effect = new EffectRecord();
 		
-		//TODO
-		return effRec;
+		if (efrdl.endpoint != null)
+		{	
+			String s = getStringValue(efrdl.endpoint);
+			effect.setEndpoint(s);
+		}
+		
+		if (efrdl.loValue != null)
+		{	
+			Double d = getNumericValue(efrdl.loValue);
+			if (d!=null)
+				effect.setLoValue(d);
+		}
+		
+		if (efrdl.resultUnit != null)
+		{	
+			String s = getStringValue(efrdl.resultUnit);
+			effect.setUnit(s);  
+		}
+		
+		if (efrdl.conditions != null)
+		{	
+			IParams params = new Params();
+			
+			Set<Entry<String, ExcelDataLocation>> locEntries = efrdl.conditions.entrySet();
+			for (Entry<String, ExcelDataLocation> entry : locEntries )
+			{	
+				String value = getStringValue(entry.getValue());
+				params.put(entry.getKey(), value);
+			}
+			
+			effect.setConditions(params);
+		}
+		
+		return effect;
 	}
 	
 	/*
