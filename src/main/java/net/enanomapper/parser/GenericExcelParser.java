@@ -27,6 +27,7 @@ import org.openscience.cdk.io.listener.IChemObjectIOListener;
 import org.openscience.cdk.io.setting.IOSetting;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.core.io.IRawReader;
@@ -287,6 +288,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return -1;
 	}
 	
+	//This function uses a generic approach (the generic variants of the helper functions)
+	//The iteration access mode is handles in the specific overloads of the functions.
 	protected SubstanceRecord getSubstanceRecord()
 	{
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE) 
@@ -363,7 +366,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{
 			pa.setCompanyName(record.getCompanyName());
 			pa.setCompanyUUID(record.getCompanyUUID());
-			//TODO
+			//TODO 
 		}
 	}
 	
@@ -402,11 +405,29 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			pa.setReferenceYear(s);
 		}
 		
-		if (padl.effectConditions != null)
-		{
-			//TODO
+		
+		if (padl.interpretationCriteria != null)
+		{	
+			String s = getStringValue(padl.interpretationCriteria);
+			pa.setInterpretationCriteria(s);
 		}
 		
+		
+		if (padl.interpretationResult != null)
+		{	
+			String s = getStringValue(padl.interpretationResult);
+			pa.setInterpretationResult(s);
+		}
+		
+		//Read effects array
+		if (padl.effects != null)
+		{
+			for (int i = 0; i < padl.effects.size(); i++)
+			{	
+				EffectRecord effect = readEffect(padl.effects.get(i));
+				pa.addEffect(effect);
+			}	
+		}
 		
 		return pa;
 	}
@@ -447,6 +468,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 		
 		return protocol;
+	}
+	
+	protected EffectRecord readEffect(EffectRecordDataLocation efrdl)
+	{
+		EffectRecord effRec = new EffectRecord();
+		
+		//TODO
+		return effRec;
 	}
 	
 	/*

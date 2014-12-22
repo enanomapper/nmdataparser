@@ -36,7 +36,7 @@ public class EffectRecordDataLocation
 				ExcelDataLocation loc = conditions.get(effCond);
 				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
 				
-				if (nEffCond < conditions.size())
+				if (nEffCond < conditions.size() - 1)
 					sb.append(",\n\n");
 				else
 					sb.append("\n");

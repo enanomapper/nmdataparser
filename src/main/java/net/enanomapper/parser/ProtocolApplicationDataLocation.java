@@ -29,10 +29,6 @@ public class ProtocolApplicationDataLocation
 	public ExcelDataLocation interpretationCriteria = null;
 	
 	public ArrayList<EffectRecordDataLocation> effects = null;  //The other effect related fields to be removed
-	public ExcelDataLocation effectsEndpoint = null;
-	public HashMap<String, ExcelDataLocation> effectConditions = null;
-	public ExcelDataLocation effectsResultUnit = null;
-	public ExcelDataLocation effectsLoValue = null;
 	
 	
 	public String toJSONKeyWord(String offset)
