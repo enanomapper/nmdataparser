@@ -692,4 +692,22 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		// TODO Auto-generated method stub
 	}
 	
+	/**
+	 * Planned Implementation Tasks:
+	 * 
+	 * - Add parsing and reading of some other missing fields in the effect record: upValue ... etc.
+	 * 
+	 * - Define information directly by the JSON config file
+	 *      1. By particular "JSON repository"
+	 *      2. Directly the the current JSON keyword
+	 * 
+	 * - List of all allowed JSON keywords + optional checking
+	 * 
+	 * - Reading on particular sheet + linked parallel reading on several sheets (e.g. ModNanoTox should need this
+	 * 		(eventually more work variables of the kind: curSheet... would be needed)		
+	 * 
+	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered 
+	 * 
+	 */
+	
 }
