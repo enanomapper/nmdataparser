@@ -476,6 +476,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		EffectRecord effect = new EffectRecord();
 		
+		if (efrdl.sampleID != null)
+		{	
+			String s = getStringValue(efrdl.sampleID);
+			effect.setSampleID(s);
+		}
+		
 		if (efrdl.endpoint != null)
 		{	
 			String s = getStringValue(efrdl.endpoint);
@@ -487,6 +493,26 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			Double d = getNumericValue(efrdl.loValue);
 			if (d!=null)
 				effect.setLoValue(d);
+		}
+		
+		if (efrdl.upValue != null)
+		{	
+			Double d = getNumericValue(efrdl.upValue);
+			if (d!=null)
+				effect.setUpValue(d);
+		}
+		
+		if (efrdl.textValue != null)
+		{	
+			String s = getStringValue(efrdl.textValue);
+			effect.setTextValue(s);
+		}
+		
+		if (efrdl.errValue != null)
+		{	
+			Double d = getNumericValue(efrdl.errValue);
+			if (d!=null)
+				effect.setErrorValue(d);
 		}
 		
 		if (efrdl.unit != null)

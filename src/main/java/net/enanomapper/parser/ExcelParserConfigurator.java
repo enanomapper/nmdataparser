@@ -691,6 +691,13 @@ public class ExcelParserConfigurator
 				efrdl.endpoint = loc;
 		}
 		
+		//SAMPLE_ID
+		loc = extractDataLocation(node,"SAMPLE_ID", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.sampleID = loc;
+		}
 		
 		//UNIT
 		loc = extractDataLocation(node,"UNIT", conf);
@@ -707,7 +714,31 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)							
 				efrdl.loValue = loc;
 		}
-				
+		
+		//UP_VALUE
+		loc = extractDataLocation(node,"UP_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.upValue = loc;
+		}
+
+		//TEXT_VALUE
+		loc = extractDataLocation(node,"TEXT_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.textValue = loc;
+		}
+
+		//ERR_VALUE
+		loc = extractDataLocation(node,"ERR_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.errValue = loc;
+		}	
+		
 		//CONDITIONS
 		JsonNode effCondNode = node.path("CONDITIONS");
 		if (!effCondNode.isMissingNode())

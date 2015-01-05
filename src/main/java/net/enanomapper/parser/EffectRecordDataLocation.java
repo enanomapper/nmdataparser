@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class EffectRecordDataLocation 
 {
-	public ExcelDataLocation samleID = null;
+	public ExcelDataLocation sampleID = null;
 	public ExcelDataLocation endpoint = null;
 	public HashMap<String, ExcelDataLocation> conditions = null;
 	public ExcelDataLocation unit = null;
@@ -21,8 +21,17 @@ public class EffectRecordDataLocation
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
+		
+		if (sampleID != null)
+		{	
+			sb.append(sampleID.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
 		if (endpoint != null)
 		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
 			sb.append(endpoint.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
@@ -66,6 +75,30 @@ public class EffectRecordDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(loValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (upValue != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(upValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (textValue != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(textValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (errValue != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(errValue.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		
