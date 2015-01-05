@@ -4,10 +4,16 @@ import java.util.HashMap;
 
 public class EffectRecordDataLocation 
 {
+	public ExcelDataLocation samleID = null;
 	public ExcelDataLocation endpoint = null;
 	public HashMap<String, ExcelDataLocation> conditions = null;
-	public ExcelDataLocation resultUnit = null;
+	public ExcelDataLocation unit = null;
 	public ExcelDataLocation loValue = null;
+	public ExcelDataLocation upValue = null;
+	public ExcelDataLocation textValue = null;
+	public ExcelDataLocation errValue = null;
+	
+	
 	
 	public String toJSONKeyWord(String offset)
 	{	
@@ -47,11 +53,11 @@ public class EffectRecordDataLocation
 		}
 		
 		
-		if (resultUnit != null)
+		if (unit != null)
 		{	
 			if (nSections > 0)
 				sb.append(",\n\n");
-			sb.append(resultUnit.toJSONKeyWord(offset+"\t"));
+			sb.append(unit.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		

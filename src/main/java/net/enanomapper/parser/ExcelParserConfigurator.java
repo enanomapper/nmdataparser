@@ -692,12 +692,12 @@ public class ExcelParserConfigurator
 		}
 		
 		
-		//RESULT_UNIT
-		loc = extractDataLocation(node,"RESULT_UNIT", conf);
+		//UNIT
+		loc = extractDataLocation(node,"UNIT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				efrdl.resultUnit = loc;
+				efrdl.unit = loc;
 		}
 
 		//LO_VALUE

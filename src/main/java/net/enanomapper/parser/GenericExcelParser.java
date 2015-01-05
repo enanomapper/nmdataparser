@@ -489,9 +489,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				effect.setLoValue(d);
 		}
 		
-		if (efrdl.resultUnit != null)
+		if (efrdl.unit != null)
 		{	
-			String s = getStringValue(efrdl.resultUnit);
+			String s = getStringValue(efrdl.unit);
 			effect.setUnit(s);  
 		}
 		
@@ -707,6 +707,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 		(eventually more work variables of the kind: curSheet... would be needed)		
 	 * 
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered 
+	 * 
+	 * - Eventually the EffectRecord qualifiers to be read (mainly) by the JSON file itself. Also default values to be attached to them 
+	 * 
+	 * - define column index in EXCEL fashion as well e.g. "B", "C", "AB"
 	 * 
 	 */
 	
