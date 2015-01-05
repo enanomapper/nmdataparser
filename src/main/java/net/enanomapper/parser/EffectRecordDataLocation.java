@@ -9,10 +9,12 @@ public class EffectRecordDataLocation
 	public HashMap<String, ExcelDataLocation> conditions = null;
 	public ExcelDataLocation unit = null;
 	public ExcelDataLocation loValue = null;
+	public ExcelDataLocation loQualifier = null;
 	public ExcelDataLocation upValue = null;
+	public ExcelDataLocation upQualifier = null;
 	public ExcelDataLocation textValue = null;
 	public ExcelDataLocation errValue = null;
-	
+	public ExcelDataLocation errQualifier = null;
 	
 	
 	public String toJSONKeyWord(String offset)
@@ -78,11 +80,27 @@ public class EffectRecordDataLocation
 			nSections++;
 		}
 		
+		if (loQualifier != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(loQualifier.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
 		if (upValue != null)
 		{	
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(upValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (upQualifier != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(upQualifier.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		
@@ -99,6 +117,14 @@ public class EffectRecordDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(errValue.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (errQualifier != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(errQualifier.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		

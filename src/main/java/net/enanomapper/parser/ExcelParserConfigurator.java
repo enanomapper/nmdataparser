@@ -21,10 +21,12 @@ import ambit2.base.data.substance.ExternalIdentifier;
  * @author nick
  *	Internally all indices/numbers/ of rows, columns and sheets are represented as 0-based integers
  *  while in the JSON configuration and error messages they are 1-based represented (user-friendly style) 
- *  The conversion from 1-based to 0-based and vice versa is done on "parsing", error messages and toJSON() procedures respectively.
+ *  The conversion from 1-based to 0-based and vice versa is done on "parsing", error message generation and toJSON() procedures respectively.
  */
 public class ExcelParserConfigurator 
 {	
+	public static final String[] valueQualifiers = {"<", ">", "<=", ">=", "ca."};
+	
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
 	
@@ -715,12 +717,28 @@ public class ExcelParserConfigurator
 				efrdl.loValue = loc;
 		}
 		
+		//LO_QUALIFIER
+		loc = extractDataLocation(node,"LO_QUALIFIER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.loQualifier = loc;
+		}
+		
 		//UP_VALUE
 		loc = extractDataLocation(node,"UP_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
 				efrdl.upValue = loc;
+		}
+		
+		//UP_QUALIFIER
+		loc = extractDataLocation(node,"UP_QUALIFIER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.upQualifier = loc;
 		}
 
 		//TEXT_VALUE
@@ -737,8 +755,16 @@ public class ExcelParserConfigurator
 		{	
 			if (loc.nErrors == 0)							
 				efrdl.errValue = loc;
-		}	
+		}
 		
+		//ERR_QUALIFIER
+		loc = extractDataLocation(node,"ERR_QUALIFIER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.errQualifier = loc;
+		}
+
 		//CONDITIONS
 		JsonNode effCondNode = node.path("CONDITIONS");
 		if (!effCondNode.isMissingNode())

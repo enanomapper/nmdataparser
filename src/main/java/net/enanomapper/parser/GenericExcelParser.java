@@ -41,7 +41,10 @@ import ambit2.core.io.IRawReader;
  *
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
-{
+{	
+	public boolean FlagAllowQualifierInValueCell = true;
+	public boolean FlagCellValueQualifierTakesPrecedence = true;  
+	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
@@ -735,6 +738,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered 
 	 * 
 	 * - Eventually the EffectRecord qualifiers to be read (mainly) by the JSON file itself. Also default values to be attached to them 
+	 * 
+	 * - automatic recognition of the qualifiers: <, >, <=, >=, ca., ...
 	 * 
 	 * - define column index in EXCEL fashion as well e.g. "B", "C", "AB"
 	 * 
