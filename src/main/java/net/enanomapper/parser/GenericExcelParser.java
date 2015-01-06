@@ -294,13 +294,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	}
 	
 	//This function uses a generic approach (the generic variants of the helper functions)
-	//The iteration access mode is handles in the specific overloads of the functions.
+	//The iteration access mode is handled in the specific overloads of the functions.
 	protected SubstanceRecord getSubstanceRecord()
 	{
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE) 
 			LOGGER.info("Reading row: " + (curRowNum+1));
-		//LOGGER.info(row.toString());
-		
+				
 		SubstanceRecord r = new SubstanceRecord ();
 		
 		//Typically companyUUID is not set from the excel file but it is possible if needed.
@@ -491,11 +490,29 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			effect.setEndpoint(s);
 		}
 		
+		if (efrdl.loQualifier != null)
+		{	
+			String s = getStringValue(efrdl.loQualifier);
+			if (ExcelParserConfigurator.isValidQualifier(s))
+				effect.setLoQualifier(s);
+			else
+				parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] Lo Qualifier \""+ s + "\" is incorrect!");
+		}
+		
 		if (efrdl.loValue != null)
 		{	
 			Double d = getNumericValue(efrdl.loValue);
 			if (d!=null)
 				effect.setLoValue(d);
+		}
+		
+		if (efrdl.upQualifier != null)
+		{	
+			String s = getStringValue(efrdl.upQualifier);
+			if (ExcelParserConfigurator.isValidQualifier(s))
+				effect.setUpQualifier(s);
+			else
+				parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] Up Qualifier \""+ s + "\" is incorrect!");
 		}
 		
 		if (efrdl.upValue != null)
@@ -509,6 +526,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{	
 			String s = getStringValue(efrdl.textValue);
 			effect.setTextValue(s);
+		}
+		
+		if (efrdl.errQualifier != null)
+		{	
+			String s = getStringValue(efrdl.errQualifier);
+			if (ExcelParserConfigurator.isValidQualifier(s))
+				effect.setErrQualifier(s);
+			else
+				parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] Err Qualifier \""+ s + "\" is incorrect!");
 		}
 		
 		if (efrdl.errValue != null)
@@ -647,6 +673,24 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	}
 	
 	
+	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet)
+	{
+		//TODO
+		return "";
+	}
+	
+	public boolean hasErrors()
+	{
+		return (!parseErrors.isEmpty());
+	}
+	
+	public String errorsToString()
+	{
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < parseErrors.size(); i++)
+			sb.append("Error #" + (i+1) + "\n" + parseErrors.get(i) + "\n");
+		return sb.toString();
+	}
 	
 	@Override
 	public void handleError(String arg0) throws CDKException {
@@ -742,6 +786,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - automatic recognition of the qualifiers: <, >, <=, >=, ca., ...
 	 * 
 	 * - define column index in EXCEL fashion as well e.g. "B", "C", "AB"
+	 * 
+	 * - "SMART" value reading (lo and up values at once + qualifiers)
+	 * 
+	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
+	 *  
 	 * 
 	 */
 	

@@ -790,4 +790,12 @@ public class ExcelParserConfigurator
 		
 		return hmap;
 	}
+	
+	public static boolean isValidQualifier(String qualifier)
+	{
+		for (String q : valueQualifiers)
+			if (q.equals(qualifier))
+				return true;
+		return false;
+	}
 }
