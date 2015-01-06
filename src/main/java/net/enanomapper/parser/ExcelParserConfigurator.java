@@ -11,6 +11,7 @@ import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
 import net.enanomapper.parser.json.JsonUtilities;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -472,6 +473,16 @@ public class ExcelParserConfigurator
 		}
 		else
 		{
+			int col_index = extractColumnIndex(sectionNode.path("COLUMN_INDEX"));
+			if (col_index == -1)
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}
+			else
+				loc.columnIndex = col_index;
+			
+			/*
 			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", true);
 			if (intValue == null)
 			{	
@@ -483,6 +494,7 @@ public class ExcelParserConfigurator
 				loc.FlagColumnIndex = true;
 				loc.columnIndex = intValue - 1; //1-based --> 0-based
 			}
+			*/
 		}
 		
 		
@@ -789,6 +801,32 @@ public class ExcelParserConfigurator
 		}
 		
 		return hmap;
+	}
+	
+	public static int extractColumnIndex(JsonNode node)
+	{
+		if (node.isInt())
+		{	
+			Integer intValue = node.asInt();
+			if (intValue == null)
+				return -1;
+			else
+				return intValue - 1;  //1 --> 0
+		}
+		
+		if (node.isTextual())
+		{
+			String s = node.asText();
+			if (s == null)
+				return -1;
+			
+			//TODO better check for the string
+			int col = CellReference.convertColStringToIndex(s);
+			if (col >= 0)			
+				return col;
+		}
+		
+		return -1;
 	}
 	
 	public static boolean isValidQualifier(String qualifier)

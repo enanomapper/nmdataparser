@@ -768,6 +768,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	/**
 	 * Planned Implementation Tasks:
 	 * 
+	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME
 	 * 
 	 * - Define information directly by the JSON config file
 	 *      1. By particular "JSON repository"
