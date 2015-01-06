@@ -87,6 +87,9 @@ public class ExcelDataLocation
 	}
 	
 	private Object absoluteLocationValue = null;
+	private Object jsonValue = null;
+	private String jsonRepositoryKey = null;
+	
 	
 	public int nErrors = 0;
 	public String sectionName = "";
@@ -229,6 +232,20 @@ public class ExcelDataLocation
 	public void setAbsoluteLocationValue(Object absoluteLocationValue) {
 		this.absoluteLocationValue = absoluteLocationValue;
 	}
-	
-	
+
+	public Object getJsonValue() {
+		return jsonValue;
+	}
+
+	public void setJsonValue(Object jsonValue) {
+		this.jsonValue = jsonValue;
+	}
+
+	public String getJsonRepositoryKey() {
+		return jsonRepositoryKey;
+	}
+
+	public void setJsonRepositoryKey(String jsonRepositoryKey) {
+		this.jsonRepositoryKey = jsonRepositoryKey;
+	}
 }

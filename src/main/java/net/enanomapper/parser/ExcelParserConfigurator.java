@@ -53,6 +53,7 @@ public class ExcelParserConfigurator
 	//Specific data locations
 	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
 	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
+	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -72,8 +73,14 @@ public class ExcelParserConfigurator
 		JsonUtilities jsonUtils = new JsonUtilities();
 		ExcelParserConfigurator conf = new ExcelParserConfigurator(); 
 		
+		//Handle Json Repository
+		JsonNode	curNode = root.path("REPOSITORY");
+		if (!curNode.isMissingNode())
+			extractJsonRepository(curNode, conf);
+
+		
 		//Handle template info 
-		JsonNode curNode = root.path("TEMPLATE_INFO");
+		 curNode = root.path("TEMPLATE_INFO");
 		if (curNode.isMissingNode())
 			conf.configWarning.add("JSON Section \"TEMPLATE_INFO\" is missing!");
 		else
@@ -368,7 +375,11 @@ public class ExcelParserConfigurator
 			sb.append("\n");
 		}
 		
-		sb.append("\t]\n\n"); //end of PROTOCOLS array
+		sb.append("\t]\n\n"); //end of PROTOCOL_APPLICATIONS array
+		
+		
+		//TODO append JSON REPOSITORY
+		
 		
 		sb.append("}\n"); //end of JSON
 		return sb.toString();
@@ -801,6 +812,43 @@ public class ExcelParserConfigurator
 		}
 		
 		return hmap;
+	}
+	
+	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf)
+	{
+		Iterator<Entry<String,JsonNode>> it = node.getFields();
+		while (it.hasNext())
+		{
+			Entry<String,JsonNode> entry = it.next();
+			JsonNode nd = entry.getValue();
+			Object o = extractObject (nd);
+			if (o != null)
+				conf.jsonRepository.put(entry.getKey(), o);
+		}
+	}
+	
+	public static Object extractObject (JsonNode node)
+	{
+		if (node.isTextual())
+		{
+			String s = node.asText();
+			if (s != null)
+				return s;
+		}
+		
+		if (node.isInt())
+		{
+			int i = node.asInt();
+			return  new Integer(i);
+		}
+		
+		if (node.isDouble())
+		{
+			double d  = node.asDouble();
+			return new Double(d);
+		}
+		
+		return null;
 	}
 	
 	public static int extractColumnIndex(JsonNode node)
