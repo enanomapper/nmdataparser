@@ -5,7 +5,7 @@ package net.enanomapper.parser;
 public class ExcelDataLocation 
 {
 	public enum IterationAccess {
-		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_POSITION, JSON_VALUE, UNDEFINED;
+		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, UNDEFINED;
 		
 		public static IterationAccess fromString(String s)
 		{	 
@@ -86,6 +86,8 @@ public class ExcelDataLocation
 		}
 	}
 	
+	private Object absoluteLocationValue = null;
+	
 	public int nErrors = 0;
 	public String sectionName = "";
 	
@@ -121,8 +123,7 @@ public class ExcelDataLocation
 	
 	public String rowName = null;
 	public boolean FlagRowName = false;
-	
-	
+		
 	public String toJSONKeyWord(String offset)
 	{
 		int nFields = 0;
@@ -220,5 +221,14 @@ public class ExcelDataLocation
 		
 		return sb.toString();
 	}
+
+	public Object getAbsoluteLocationValue() {
+		return absoluteLocationValue;
+	}
+
+	public void setAbsoluteLocationValue(Object absoluteLocationValue) {
+		this.absoluteLocationValue = absoluteLocationValue;
+	}
+	
 	
 }

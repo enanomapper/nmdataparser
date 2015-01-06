@@ -572,7 +572,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 */
 	protected String getStringValue(ExcelDataLocation loc)
 	{
-		switch (config.substanceIteration)
+		switch (loc.iteration)
 		{
 		case ROW_SINGLE:			
 			return getStringValue(curRow, loc);
@@ -584,7 +584,20 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_MULTI_DYNAMIC:
 			//TODO
 			return null;
-				
+		
+		case ABSOLUTE_LOCATION: 
+		{	
+			Object value = loc.getAbsoluteLocationValue();
+			if (value == null)
+			{	
+				value = getStringFromAbsoluteLocation (loc);
+				loc.setAbsoluteLocationValue(value);
+			}
+			if (value != null)
+				return (String) value;
+			return null;
+		}
+		
 		default : 
 			return null;
 		}
@@ -595,7 +608,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 */
 	protected Double getNumericValue(ExcelDataLocation loc)
 	{
-		switch (config.substanceIteration)
+		switch (loc.iteration)
 		{
 		case ROW_SINGLE:			
 			return getNumericValue(curRow, loc);
@@ -607,10 +620,35 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_MULTI_DYNAMIC:
 			//TODO
 			return null;
-				
+			
+		case ABSOLUTE_LOCATION: 
+		{	
+			Object value = loc.getAbsoluteLocationValue();
+			if (value == null)
+			{	
+				value = getNumericFromAbsoluteLocation (loc);
+				loc.setAbsoluteLocationValue(value);
+			}
+			if (value != null)
+				return (Double) value;
+			return null;
+		}
+			
 		default : 
 			return null;
 		}
+	}
+	
+	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc)
+	{
+		//TODO
+		return null;
+	}
+	
+	protected String getNumericFromAbsoluteLocation(ExcelDataLocation loc)
+	{
+		//TODO
+		return null;
 	}
 	
 	protected String getStringValue(Row row, ExcelDataLocation loc)
@@ -770,7 +808,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME
 	 * 
-	 * - Iteration modes: ...
+	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_POSITION, JSON_VALUE, JSON_REPOSITORY
 	 * 
 	 * - Define information directly by the JSON config file
 	 *      1. By particular "JSON repository"
