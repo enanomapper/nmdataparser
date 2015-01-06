@@ -770,6 +770,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME
 	 * 
+	 * - Iteration modes: ...
+	 * 
 	 * - Define information directly by the JSON config file
 	 *      1. By particular "JSON repository"
 	 *      2. Directly the the current JSON keyword
@@ -784,8 +786,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Eventually the EffectRecord qualifiers to be read (mainly) by the JSON file itself. Also default values to be attached to them 
 	 * 
 	 * - automatic recognition of the qualifiers: <, >, <=, >=, ca., ...
-	 * 
-	 * - define column index in EXCEL fashion as well e.g. "B", "C", "AB"
 	 * 
 	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ...
 	 * 
