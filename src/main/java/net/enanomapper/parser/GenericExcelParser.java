@@ -768,7 +768,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	/**
 	 * Planned Implementation Tasks:
 	 * 
-	 * - Add parsing and reading of some other missing fields in the effect record: upValue ... etc.
 	 * 
 	 * - Define information directly by the JSON config file
 	 *      1. By particular "JSON repository"
@@ -787,7 +786,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - define column index in EXCEL fashion as well e.g. "B", "C", "AB"
 	 * 
-	 * - "SMART" value reading (lo and up values at once + qualifiers)
+	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ...
 	 * 
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
 	 *  
