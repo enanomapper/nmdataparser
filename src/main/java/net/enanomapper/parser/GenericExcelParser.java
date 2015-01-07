@@ -848,9 +848,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	/**
 	 * Planned Implementation Tasks:
 	 * 
-	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME + in ExcelDataLocation class separate 'recognitions' for the Sheet, Row and Column
+	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME 
 	 * 
-	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_POSITION, JSON_VALUE, JSON_REPOSITORY
+	 * - in ExcelDataLocation class separate 'recognitions' for the Sheet, Row and Column
+	 * 
+	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, JSON_VALUE, JSON_REPOSITORY, COLUMN_* ...
 	 * 
 	 * - Define information directly by the JSON config file
 	 *      1. By particular "JSON repository"

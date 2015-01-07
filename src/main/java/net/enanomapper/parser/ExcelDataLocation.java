@@ -155,6 +155,7 @@ public class ExcelDataLocation
 	
 	public String rowName = null;
 	public boolean FlagRowName = false;
+	
 		
 	public String toJSONKeyWord(String offset)
 	{

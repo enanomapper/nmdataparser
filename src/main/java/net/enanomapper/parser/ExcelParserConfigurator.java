@@ -375,10 +375,43 @@ public class ExcelParserConfigurator
 			sb.append("\n");
 		}
 		
-		sb.append("\t]\n\n"); //end of PROTOCOL_APPLICATIONS array
+		sb.append("\t]"); //end of PROTOCOL_APPLICATIONS array
 		
 		
-		//TODO append JSON REPOSITORY
+		if (!jsonRepository.isEmpty())
+		{	
+			sb.append(",\n\n");
+			sb.append("\t\"REPOSITORY\":\n");
+			sb.append("\t{\n");
+
+			int nRepElements = 0;
+			for (String key : jsonRepository.keySet())
+			{	
+				sb.append("\t\t\""+ key+"\" : ");
+				Object o = jsonRepository.get(key);
+				if (o instanceof Integer) 
+					sb.append(o.toString());
+				else
+					if (o instanceof Double) 
+						sb.append(o.toString());
+					else
+						if (o instanceof String) 
+							sb.append("\""+o.toString() + "\"");
+						else
+							sb.append("\"***NOT_SUPPORTED_OBJECT\"");
+				
+				if (nRepElements < jsonRepository.size()-1)
+					sb.append(",\n");
+				else
+					sb.append("\n");
+				nRepElements++;
+			}
+
+			sb.append("\t}"); 
+		}
+		
+		sb.append("\n\n");
+		
 		
 		
 		sb.append("}\n"); //end of JSON
@@ -867,6 +900,8 @@ public class ExcelParserConfigurator
 			double d  = node.asDouble();
 			return new Double(d);
 		}
+		
+		//TODO - eventually add array object extraction
 		
 		return null;
 	}
