@@ -9,6 +9,7 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
+import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 
 
 public class NMParserTestUtils {
@@ -19,11 +20,13 @@ public class NMParserTestUtils {
 	 */
 	public static void main(String[] args)  throws Exception
 	{
+		//IterationAccess.ROW_MULTI_DYNAMIC.test();
+		
 		//testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
 		//testExcelParserConfiguration("D:/Projects/nina/eNanoMapper/config01.json");
 		
-		//testExcelTemplate("/Users/nick/Projects/eNanoMapper/template01-NR.xlsx","/Users/nick/Projects/eNanoMapper/config01.json");
-		testExcelTemplate("D:/Projects/nina/eNanoMapper/template01-NR.xlsx","D:/Projects/nina/eNanoMapper/config01.json");
+		testExcelTemplate("/Users/nick/Projects/eNanoMapper/template01-NR.xlsx","/Users/nick/Projects/eNanoMapper/config01.json");
+		//testExcelTemplate("D:/Projects/nina/eNanoMapper/template01-NR.xlsx","D:/Projects/nina/eNanoMapper/config01.json");
 		
 		//System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		

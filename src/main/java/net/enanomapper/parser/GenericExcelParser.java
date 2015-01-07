@@ -640,14 +640,48 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	}
 	
 	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc)
-	{
-		//TODO
+	{	
+		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		if (sheet != null)
+		{	
+			Row r = sheet.getRow(loc.rowIndex);
+			if (r== null)
+				return null;
+			
+			Cell c = r.getCell(loc.columnIndex);
+			if (c!=null)
+			{
+				if (c.getCellType() != Cell.CELL_TYPE_STRING)
+				{
+					parseErrors.add("["+locationStringForErrorMessage(loc) + "]: Cell is not of type STRING!"); 
+					return null;
+				}
+				return c.getStringCellValue();
+			}
+		}			
 		return null;
 	}
 	
-	protected String getNumericFromAbsoluteLocation(ExcelDataLocation loc)
+	protected Double getNumericFromAbsoluteLocation(ExcelDataLocation loc)
 	{
-		//TODO
+		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		if (sheet != null)
+		{	
+			Row r = sheet.getRow(loc.rowIndex);
+			if (r== null)
+				return null;
+			
+			Cell c = r.getCell(loc.columnIndex);
+			if (c!=null)
+			{
+				if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
+				{
+					parseErrors.add("["+locationStringForErrorMessage(loc) + "]: Cell is not of type NUMERIC!"); 
+					return null;
+				}
+				return c.getNumericCellValue();
+			}
+		}			
 		return null;
 	}
 	
@@ -711,9 +745,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	}
 	
 	
-	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet)
+	private String locationStringForErrorMessage(ExcelDataLocation loc)
 	{
 		//TODO
+		return "";
+	}
+	
+	
+	
+	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet)
+	{
+		//TODO 
 		return "";
 	}
 	
@@ -806,7 +848,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	/**
 	 * Planned Implementation Tasks:
 	 * 
-	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME
+	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME + in ExcelDataLocation class separate 'recognitions' for the Sheet, Row and Column
 	 * 
 	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_POSITION, JSON_VALUE, JSON_REPOSITORY
 	 * 
@@ -819,7 +861,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Reading on particular sheet + linked parallel reading on several sheets (e.g. ModNanoTox should need this
 	 * 		(eventually more work variables of the kind: curSheet... would be needed)		
 	 * 
-	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered 
+	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered.
+	 *   This idea can be further developed to a substance record filtration utility - may be a special class for filtration... 
 	 * 
 	 * - Eventually the EffectRecord qualifiers to be read (mainly) by the JSON file itself. Also default values to be attached to them 
 	 * 

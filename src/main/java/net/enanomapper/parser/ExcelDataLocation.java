@@ -5,7 +5,8 @@ package net.enanomapper.parser;
 public class ExcelDataLocation 
 {
 	public enum IterationAccess {
-		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, UNDEFINED;
+		ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, COLUMN_SINGLE, COLUMN_MULTI_FIXED, COLUMN_MULTI_DYNAMIC,
+		ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, UNDEFINED;
 		
 		public static IterationAccess fromString(String s)
 		{	 
@@ -18,6 +19,34 @@ public class ExcelDataLocation
 			{
 				return IterationAccess.UNDEFINED;
 			}
+		}
+		
+		public boolean isColumnInfoRequired()
+		{	
+			if (this.equals(ROW_SINGLE))
+				return true;
+			if (this.equals(ROW_MULTI_FIXED))
+				return true;
+			if (this.equals(ROW_MULTI_DYNAMIC))
+				return true;
+			if (this.equals(ABSOLUTE_LOCATION))
+				return true;
+			
+			return false;
+		}
+		
+		public boolean isRowInfoRequired()
+		{	
+			if (this.equals(COLUMN_SINGLE))
+				return true;
+			if (this.equals(COLUMN_MULTI_FIXED))
+				return true;
+			if (this.equals(COLUMN_MULTI_DYNAMIC))
+				return true;
+			if (this.equals(ABSOLUTE_LOCATION))
+				return true;
+			
+			return false;
 		}
 	}
 	

@@ -475,12 +475,13 @@ public class ExcelParserConfigurator
 		
 		//COLUMN_INDEX
 		if (sectionNode.path("COLUMN_INDEX").isMissingNode())
-		{
-			if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
-				loc.nErrors++;
-			}	
+		{	
+			if (loc.iteration.isColumnInfoRequired())
+				if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
+					loc.nErrors++;
+				}	
 		}
 		else
 		{
@@ -491,29 +492,22 @@ public class ExcelParserConfigurator
 				loc.nErrors++;
 			}
 			else
-				loc.columnIndex = col_index;
-			
-			/*
-			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "COLUMN_INDEX", true);
-			if (intValue == null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
 			{	
 				loc.FlagColumnIndex = true;
-				loc.columnIndex = intValue - 1; //1-based --> 0-based
-			}
-			*/
+				loc.columnIndex = col_index;
+			}	
 		}
 		
 		
 		//COLUMN_NAME
 		if (sectionNode.path("COLUMN_NAME").isMissingNode())
 		{
-			if (loc.recognition == Recognition.BY_NAME || loc.recognition == Recognition.BY_INDEX_AND_NAME)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
+			if (loc.iteration.isColumnInfoRequired())
+				if (loc.recognition == Recognition.BY_NAME || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
+					loc.nErrors++;
+				}	
 		}
 		else
 		{
@@ -527,8 +521,34 @@ public class ExcelParserConfigurator
 			}
 		}
 		
+		//ROW_INDEX
+		if (sectionNode.path("ROW_INDEX").isMissingNode())
+		{
+			if (loc.iteration.isRowInfoRequired())
+				if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" is missing!");
+					loc.nErrors++;
+				}	
+		}
+		else
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "ROW_INDEX", true);
+			if (intValue == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.FlagRowIndex = true;
+				loc.rowIndex = intValue - 1; //1-based --> 0-based
+			}
+		}
+		
 		return loc;
 	}
+	
 	
 	public static ProtocolApplicationDataLocation extractProtocolApplicationDataLocations(JsonNode node, int protocolNum, ExcelParserConfigurator conf)
 	{
