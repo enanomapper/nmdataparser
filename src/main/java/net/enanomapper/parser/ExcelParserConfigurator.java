@@ -398,7 +398,7 @@ public class ExcelParserConfigurator
 						if (o instanceof String) 
 							sb.append("\""+o.toString() + "\"");
 						else
-							sb.append("\"***NOT_SUPPORTED_OBJECT\"");
+							sb.append("\"***NOT_SUPPORTED_OBJECT***\""); //This line should not be reached
 				
 				if (nRepElements < jsonRepository.size()-1)
 					sb.append(",\n");
@@ -411,8 +411,6 @@ public class ExcelParserConfigurator
 		}
 		
 		sb.append("\n\n");
-		
-		
 		
 		sb.append("}\n"); //end of JSON
 		return sb.toString();
@@ -510,11 +508,21 @@ public class ExcelParserConfigurator
 		if (sectionNode.path("COLUMN_INDEX").isMissingNode())
 		{	
 			if (loc.iteration.isColumnInfoRequired())
-				if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+			{	
+				if (loc.recognition == Recognition.BY_INDEX) 
 				{	
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
 					loc.nErrors++;
-				}	
+				}
+				
+				if (loc.recognition == Recognition.BY_INDEX_AND_NAME && (sectionNode.path("COLUMN_NAME").isMissingNode()) )
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + 
+								"\", both keywords \"COLUMN_INDEX\" and \"COLUMN_NAME\" are missing. "
+								+ "At least one is required for RECOGNITION mode BY_INDEX_AND_NAME!");
+					loc.nErrors++;
+				}
+			}	
 		}
 		else
 		{
@@ -536,11 +544,12 @@ public class ExcelParserConfigurator
 		if (sectionNode.path("COLUMN_NAME").isMissingNode())
 		{
 			if (loc.iteration.isColumnInfoRequired())
-				if (loc.recognition == Recognition.BY_NAME || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+				if (loc.recognition == Recognition.BY_NAME)
 				{	
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
 					loc.nErrors++;
 				}	
+			//Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated in COLUMN_INDEX
 		}
 		else
 		{
@@ -558,11 +567,21 @@ public class ExcelParserConfigurator
 		if (sectionNode.path("ROW_INDEX").isMissingNode())
 		{
 			if (loc.iteration.isRowInfoRequired())
-				if (loc.recognition == Recognition.BY_INDEX || loc.recognition == Recognition.BY_INDEX_AND_NAME)
+			{	
+				if (loc.recognition == Recognition.BY_INDEX)
 				{	
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" is missing!");
 					loc.nErrors++;
-				}	
+				}
+				
+				if (loc.recognition == Recognition.BY_INDEX_AND_NAME && (sectionNode.path("ROW_NAME").isMissingNode()) )
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + 
+								"\", both keywords \"ROW_INDEX\" and \"ROW_NAME\" are missing. "
+								+ "At least one is required for RECOGNITION mode BY_INDEX_AND_NAME!");
+					loc.nErrors++;
+				}
+			}	
 		}
 		else
 		{
@@ -576,6 +595,29 @@ public class ExcelParserConfigurator
 			{	
 				loc.FlagRowIndex = true;
 				loc.rowIndex = intValue - 1; //1-based --> 0-based
+			}
+		}
+		
+		//ROW_NAME
+		if (sectionNode.path("ROW_NAME").isMissingNode())
+		{
+			if (loc.iteration.isRowInfoRequired())
+				if (loc.recognition == Recognition.BY_NAME)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" is missing!");
+					loc.nErrors++;
+				}
+			//Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated in ROW_INDEX
+		}
+		else
+		{
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "ROW_NAME", false);
+			if (stringValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.FlagRowName = true;
+				loc.rowName = stringValue;
 			}
 		}
 		
