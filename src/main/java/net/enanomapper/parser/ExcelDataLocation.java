@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import org.apache.poi.ss.usermodel.Cell;
+
 
 
 public class ExcelDataLocation 
@@ -85,14 +87,44 @@ public class ExcelDataLocation
 		
 		public static CellType fromPOICelType(int poiCellType)
 		{
-			//TODO
-			return null;
+			switch (poiCellType)
+			{
+			case Cell.CELL_TYPE_BLANK:
+				return BLANK;
+			case Cell.CELL_TYPE_BOOLEAN:
+				return BOOLEAN;
+			case Cell.CELL_TYPE_ERROR:
+				return ERROR;
+			case Cell.CELL_TYPE_FORMULA:
+				return FORMULA;
+			case Cell.CELL_TYPE_NUMERIC:
+				return BLANK;
+			case Cell.CELL_TYPE_STRING:
+				return BLANK;
+			}
+			return UNDEFINED;
 		}
 		
 		public static int toPOICellType(CellType type)
 		{
-			//TODO
-			return 0;
+			switch (type)
+			{
+			case BLANK:
+				return Cell.CELL_TYPE_BLANK;
+			case BOOLEAN:
+				return Cell.CELL_TYPE_BOOLEAN;
+			case ERROR:
+				return Cell.CELL_TYPE_ERROR;
+			case FORMULA:
+				return Cell.CELL_TYPE_FORMULA;
+			case NUMERIC:
+				return Cell.CELL_TYPE_NUMERIC;
+			case STRING:
+				return Cell.CELL_TYPE_STRING;
+			case UNDEFINED:
+				return Cell.CELL_TYPE_STRING;
+			}
+			return Cell.CELL_TYPE_BLANK;
 		}
 		
 		
