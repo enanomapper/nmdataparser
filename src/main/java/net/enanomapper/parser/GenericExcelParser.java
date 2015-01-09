@@ -598,6 +598,29 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			return null;
 		}
 		
+		case JSON_VALUE:
+		{	
+			Object value = loc.getJsonValue();
+			if (value != null)
+				if (value instanceof String)
+					return (String) value;
+				else
+					parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_VALUE is not of type STRING!");
+			return null;
+		}
+		
+		case JSON_REPOSITORY:
+		{	
+			String key = loc.getJsonRepositoryKey();
+			Object value = config.jsonRepository.get(key);
+			if (value != null)
+				if (value instanceof String)
+					return (String) value;
+				else
+					parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type STRING!");
+			return null;
+		}
+		
 		default : 
 			return null;
 		}
@@ -631,6 +654,35 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}
 			if (value != null)
 				return (Double) value;
+			return null;
+		}
+		
+		case JSON_VALUE:
+		{	
+			Object value = loc.getJsonValue();
+			if (value != null)
+				if (value instanceof Double)
+					return (Double) value;
+				else
+					if (value instanceof Integer)
+						return new Double((Integer)value); 
+					else 	
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_VALUE is not of type NUMERIC!");
+			return null;
+		}
+		
+		case JSON_REPOSITORY:
+		{	
+			String key = loc.getJsonRepositoryKey();
+			Object value = config.jsonRepository.get(key);
+			if (value != null)
+				if (value instanceof Double)
+					return (Double) value;
+				else
+					if (value instanceof Integer)
+						return new Double((Integer)value); 
+					else 	
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type NUMERIC!");
 			return null;
 		}
 			
@@ -854,14 +906,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, JSON_VALUE, JSON_REPOSITORY, COLUMN_* ...
 	 * 
-	 * - Define information directly by the JSON config file
-	 *      1. By particular "JSON repository"
-	 *      2. Directly the the current JSON keyword
-	 * 
 	 * - List of all allowed JSON keywords + optional checking
 	 * 
 	 * - Reading on particular sheet + linked parallel reading on several sheets (e.g. ModNanoTox should need this
-	 * 		(eventually more work variables of the kind: curSheet... would be needed)		
+	 * 		(eventually more work variables of the kind: curSheet... would be needed) + synchronization ...		
 	 * 
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered.
 	 *   This idea can be further developed to a substance record filtration utility - may be a special class for filtration... 

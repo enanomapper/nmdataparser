@@ -621,6 +621,41 @@ public class ExcelParserConfigurator
 			}
 		}
 		
+		//JSON_VALUE
+		if (sectionNode.path("JSON_VALUE").isMissingNode())
+		{	
+			if (loc.iteration == IterationAccess.JSON_VALUE)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_VALUE\" is missing!");
+				loc.nErrors++;
+			}
+		}
+		else
+		{
+			Object jsonValue = extractObject (sectionNode.path("JSON_VALUE"));
+			loc.setJsonValue(jsonValue); 
+		}
+		
+		//JSON_REPOSITORY_KEY
+		if (sectionNode.path("JSON_REPOSITORY_KEY").isMissingNode())
+		{	
+			if (loc.iteration == IterationAccess.JSON_REPOSITORY)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" is missing!");
+				loc.nErrors++;
+			}
+		}
+		else
+		{
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "JSON_REPOSITORY_KEY", true);
+			if (stringValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.setJsonRepositoryKey(stringValue);
+			}
+		}
+		
 		return loc;
 	}
 	
