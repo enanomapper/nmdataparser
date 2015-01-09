@@ -147,6 +147,9 @@ public class ExcelDataLocation
 		}
 	}
 	
+	private boolean FlagExtractValueQualifier = false;
+	private boolean FlagExtractAsRichValue = false;
+	
 	private Object absoluteLocationValue = null;
 	private Object jsonValue = null;
 	private String jsonRepositoryKey = null;
@@ -309,5 +312,21 @@ public class ExcelDataLocation
 
 	public void setJsonRepositoryKey(String jsonRepositoryKey) {
 		this.jsonRepositoryKey = jsonRepositoryKey;
+	}
+
+	public boolean isFlagExtractValueQualifier() {
+		return FlagExtractValueQualifier;
+	}
+
+	public void setFlagExtractValueQualifier(boolean flagExtractValueQualifier) {
+		FlagExtractValueQualifier = flagExtractValueQualifier;
+	}
+
+	public boolean isFlagExtractAsRichValue() {
+		return FlagExtractAsRichValue;
+	}
+
+	public void setFlagExtractAsRichValue(boolean flagExtractAsRichValue) {
+		FlagExtractAsRichValue = flagExtractAsRichValue;
 	}
 }

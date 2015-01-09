@@ -42,8 +42,6 @@ import ambit2.core.io.IRawReader;
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
-	public boolean FlagAllowQualifierInValueCell = true;
-	public boolean FlagCellValueQualifierTakesPrecedence = true;  
 	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
@@ -914,11 +912,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered.
 	 *   This idea can be further developed to a substance record filtration utility - may be a special class for filtration... 
 	 * 
-	 * - Eventually the EffectRecord qualifiers to be read (mainly) by the JSON file itself. Also default values to be attached to them 
-	 * 
 	 * - automatic recognition of the qualifiers: <, >, <=, >=, ca., ...
 	 * 
-	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ...
+	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ... (RichValue class)
 	 * 
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
 	 *  

@@ -1,7 +1,27 @@
 package net.enanomapper.parser;
 
 public class RecognitionUtils 
-{
+{	
+	public static class QualifierValue
+	{
+		public Double value = null;
+		public String qualifier = null;
+		public String errorMsg = null;
+	}
+	
+	public static class RichValue
+	{
+		public Double loValue = null;
+		public String loQualifier = null;
+		public Double upValue = null;
+		public String upQualifier = null;
+		public String unit = null;
+		public String errorMsg = null;
+	}
+	
+		
+	public static final String[] qualifiers = {"<", ">", "<=", ">=", "ca."};
+	
 	public static boolean matchTokens(String s1, String s2)
 	{	
 		return matchTokens(s1, s2, true);
@@ -37,5 +57,45 @@ public class RecognitionUtils
 		return false;
 	}
 	
+	
+	public static QualifierValue extractQualifierValue(String valueString)
+	{
+		QualifierValue  qvalue = new QualifierValue();
+		String s = valueString.trim();
+		
+		//Handle qualifier
+		for (int i = 0; i < qualifiers.length; i++)
+			if (s.startsWith(qualifiers[i]))
+			{
+				qvalue.qualifier = qualifiers[i];
+				s = s.substring(qualifiers[i].length()).trim();
+				break;
+			}
+		
+		//Handle value
+		try{
+			Double d  = Double.parseDouble(s);
+			qvalue.value = d;
+		}
+		catch (Exception e)
+		{
+			qvalue.errorMsg = e.getMessage();
+		}
+		
+		return qvalue;
+	}
+	
+	/**
+	 * Intelligent extraction of value information from a string representation
+	 * 
+	 * @param richValue
+	 * @return
+	 */
+	public static RichValue extractRichValue(String richValue)
+	{
+		RichValue rvalue = new RichValue();
+		//TODO
+		return rvalue;
+	}
 	
 }

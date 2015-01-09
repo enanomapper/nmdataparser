@@ -26,13 +26,14 @@ import ambit2.base.data.substance.ExternalIdentifier;
  */
 public class ExcelParserConfigurator 
 {	
-	public static final String[] valueQualifiers = {"<", ">", "<=", ">=", "ca."};
-	
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
 	
 	public ArrayList<String> configErrors = new ArrayList<String> ();
 	public ArrayList<String> configWarning = new ArrayList<String> ();
+	
+	//Configuration flags
+	public boolean FlagAllowQualifierInValueCell = true;  //default
 	
 	//Configuration variables
 	public String templateName = null;
@@ -621,6 +622,8 @@ public class ExcelParserConfigurator
 			}
 		}
 		
+		//TODO SHEET_INDEX + SHEET_NAME
+		
 		//JSON_VALUE
 		if (sectionNode.path("JSON_VALUE").isMissingNode())
 		{	
@@ -866,8 +869,12 @@ public class ExcelParserConfigurator
 		loc = extractDataLocation(node,"LO_VALUE", conf);
 		if (loc != null)
 		{	
-			if (loc.nErrors == 0)							
+			if (loc.nErrors == 0)
+			{	
 				efrdl.loValue = loc;
+				if (conf.FlagAllowQualifierInValueCell)
+					efrdl.loValue.setFlagExtractValueQualifier(true);
+			}		
 		}
 		
 		//LO_QUALIFIER
@@ -882,8 +889,12 @@ public class ExcelParserConfigurator
 		loc = extractDataLocation(node,"UP_VALUE", conf);
 		if (loc != null)
 		{	
-			if (loc.nErrors == 0)							
+			if (loc.nErrors == 0)
+			{	
 				efrdl.upValue = loc;
+				if (conf.FlagAllowQualifierInValueCell)
+					efrdl.upValue.setFlagExtractValueQualifier(true);
+			}	
 		}
 		
 		//UP_QUALIFIER
@@ -906,8 +917,12 @@ public class ExcelParserConfigurator
 		loc = extractDataLocation(node,"ERR_VALUE", conf);
 		if (loc != null)
 		{	
-			if (loc.nErrors == 0)							
+			if (loc.nErrors == 0)
+			{	
 				efrdl.errValue = loc;
+				if (conf.FlagAllowQualifierInValueCell)
+					efrdl.errValue.setFlagExtractValueQualifier(true);
+			}	
 		}
 		
 		//ERR_QUALIFIER
@@ -1011,7 +1026,7 @@ public class ExcelParserConfigurator
 	
 	public static boolean isValidQualifier(String qualifier)
 	{
-		for (String q : valueQualifiers)
+		for (String q : RecognitionUtils.qualifiers)
 			if (q.equals(qualifier))
 				return true;
 		return false;
