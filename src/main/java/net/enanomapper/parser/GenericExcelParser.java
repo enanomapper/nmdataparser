@@ -42,7 +42,6 @@ import ambit2.core.io.IRawReader;
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
-	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
@@ -64,6 +63,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 
 	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
 	private SubstanceRecord nextRecordBuffer = null;
+	private boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
 	{
@@ -499,10 +499,35 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		if (efrdl.loValue != null)
 		{	
-			Double d = getNumericValue(efrdl.loValue);
+			Double d = null;
+			if (config.FlagAllowQualifierInValueCell)
+			{
+				FlagAddParserStringError = false; //Temporary switch off parser errors
+				String qstring = getStringValue(efrdl.loValue);
+				FlagAddParserStringError = true;
+				if (qstring != null)
+				{
+					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
+					if (qv.value == null)
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] " 
+								+ qstring + " Lo Value/Qualifier error: " + qv.errorMsg);
+					else
+					{
+						d = qv.value;
+						if (qv.qualifier != null)
+							effect.setLoQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+					}
+				}
+				else
+					d = getNumericValue(efrdl.loValue);
+			}
+			else
+				d = getNumericValue(efrdl.loValue);
+			
 			if (d!=null)
 				effect.setLoValue(d);
 		}
+		
 		
 		if (efrdl.upQualifier != null)
 		{	
@@ -515,7 +540,31 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		if (efrdl.upValue != null)
 		{	
-			Double d = getNumericValue(efrdl.upValue);
+			Double d = null;
+			if (config.FlagAllowQualifierInValueCell)
+			{
+				FlagAddParserStringError = false; //Temporary switch off parser errors
+				String qstring = getStringValue(efrdl.upValue);
+				FlagAddParserStringError = true;
+				if (qstring != null)
+				{
+					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
+					if (qv.value == null)
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] " 
+								+ qstring + " Up Value/Qualifier error: " + qv.errorMsg);
+					else
+					{
+						d = qv.value;
+						if (qv.qualifier != null)
+							effect.setUpQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+					}
+				}
+				else
+					d = getNumericValue(efrdl.upValue);
+			}
+			else
+				d = getNumericValue(efrdl.upValue);
+			
 			if (d!=null)
 				effect.setUpValue(d);
 		}
@@ -537,7 +586,31 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		if (efrdl.errValue != null)
 		{	
-			Double d = getNumericValue(efrdl.errValue);
+			Double d = null;
+			if (config.FlagAllowQualifierInValueCell)
+			{
+				FlagAddParserStringError = false; //Temporary switch off parser errors
+				String qstring = getStringValue(efrdl.errValue);
+				FlagAddParserStringError = true;
+				if (qstring != null)
+				{
+					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
+					if (qv.value == null)
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] " 
+								+ qstring + " Err Value/Qualifier error: " + qv.errorMsg);
+					else
+					{
+						d = qv.value;
+						if (qv.qualifier != null)
+							effect.setErrQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+					}
+				}
+				else
+					d = getNumericValue(efrdl.errValue);
+			}
+			else
+				d = getNumericValue(efrdl.errValue);
+			
 			if (d!=null)
 				effect.setErrorValue(d);
 		}
@@ -603,7 +676,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				if (value instanceof String)
 					return (String) value;
 				else
-					parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_VALUE is not of type STRING!");
+					if (FlagAddParserStringError)
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_VALUE is not of type STRING!");
 			return null;
 		}
 		
@@ -615,7 +689,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				if (value instanceof String)
 					return (String) value;
 				else
-					parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type STRING!");
+					if (FlagAddParserStringError)
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type STRING!");
 			return null;
 		}
 		
@@ -624,9 +699,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
-	/*
-	 * Generic function (regardless of the iteration access)
-	 */
+	
 	protected Double getNumericValue(ExcelDataLocation loc)
 	{
 		switch (loc.iteration)
@@ -689,6 +762,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
+	
 	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc)
 	{	
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
@@ -703,7 +777,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			{
 				if (c.getCellType() != Cell.CELL_TYPE_STRING)
 				{
-					parseErrors.add("["+locationStringForErrorMessage(loc) + "]: Cell is not of type STRING!"); 
+					if (FlagAddParserStringError)
+						parseErrors.add("["+locationStringForErrorMessage(loc) + "]: Cell is not of type STRING!"); 
 					return null;
 				}
 				return c.getStringCellValue();
@@ -725,7 +800,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			if (c!=null)
 			{
 				if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
-				{
+				{	
 					parseErrors.add("["+locationStringForErrorMessage(loc) + "]: Cell is not of type NUMERIC!"); 
 					return null;
 				}
@@ -747,7 +822,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}
 			else
 			{
-				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+				if (FlagAddParserStringError)
+					parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
 						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
 				return null;
 			}
@@ -756,7 +832,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		if (c.getCellType() != Cell.CELL_TYPE_STRING)
 		{
-			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+			if (FlagAddParserStringError)
+				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
 					", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type STRING!"); 
 			return null;
 		}

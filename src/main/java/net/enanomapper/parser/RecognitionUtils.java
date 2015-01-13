@@ -20,7 +20,7 @@ public class RecognitionUtils
 	}
 	
 		
-	public static final String[] qualifiers = {"<", ">", "<=", ">=", "ca."};
+	public static final String[] qualifiers = {"<=", ">=", "<", ">", "ca."};  //It is obligatory that "<=" is before "<" ... because of the order of qualifier checking 
 	
 	public static boolean matchTokens(String s1, String s2)
 	{	
@@ -59,7 +59,7 @@ public class RecognitionUtils
 	
 	
 	public static QualifierValue extractQualifierValue(String valueString)
-	{
+	{	
 		QualifierValue  qvalue = new QualifierValue();
 		String s = valueString.trim();
 		
@@ -68,7 +68,7 @@ public class RecognitionUtils
 			if (s.startsWith(qualifiers[i]))
 			{
 				qvalue.qualifier = qualifiers[i];
-				s = s.substring(qualifiers[i].length()).trim();
+				s = (s.substring(qualifiers[i].length())).trim();
 				break;
 			}
 		
