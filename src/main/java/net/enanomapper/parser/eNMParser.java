@@ -55,6 +55,8 @@ public class eNMParser {
 			}
 		} else if ("nanowiki".equals(command)) {
 			throw new InvalidCommand(command);
+		} else if ("xlsx".equals(command)) {
+			throw new InvalidCommand(command);			
 		} else {
 			throw new InvalidCommand(command);
 		}

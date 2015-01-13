@@ -1,0 +1,131 @@
+{
+    "TEMPLATE_INFO": {
+        "NAME": "ProteinCorona",
+        "VERSION": "TEM",
+        "TYPE": 1
+    },
+    "DATA_ACCESS": {
+        "ITERATION": "ROW_SINGLE",
+        "SHEET_INDEX": 1,
+        "START_ROW": 3,
+        "START_HEADER_ROW": 2,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+        "RECOGNITION": "BY_INDEX"
+    },
+    "SUBSTANCE_RECORD": {
+    
+        "COMPANY_UUID": {
+            "COLUMN_INDEX": 1
+        },
+        "PUBLIC_NAME": {
+            "COLUMN_INDEX": 1
+        },
+        "ID_SUBSTANCE": {
+            "COLUMN_INDEX": 1
+        }
+    },
+    "PROTOCOL_APPLICATIONS": [
+        {
+            "CITATION_TITLE": {
+                "COLUMN_INDEX": 4
+            },
+            "PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "COLUMN_INDEX": 6
+                }
+            },
+            "PARAMETERS": {
+                "Cell": {
+                    "COLUMN_INDEX": 8
+                },
+                "data_gathering_instruments": {
+                    "COLUMN_INDEX": 7
+                }
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "COLUMN_INDEX": 10
+                    },
+                    "LO_QUALIFIER": {
+                        "COLUMN_INDEX": 12
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": 13
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": 14
+                    },
+                    "UNIT": {
+                        "COLUMN_INDEX": 11
+                    },
+                    "CONDITIONS": {
+                        "N": {
+                            "COLUMN_INDEX": 15
+                        }
+                    }
+                },
+                {
+                    "ENDPOINT": {
+                        "COLUMN_INDEX": 16
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": 17
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": 18
+                    }
+                }
+            ]
+        },
+        {
+            "CITATION_TITLE": {
+                "COLUMN_INDEX": 4
+            },
+            "PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "COLUMN_INDEX": 20
+                }
+            },
+            "PARAMETERS": {
+                "Cell": {
+                    "COLUMN_INDEX": 22
+                },
+                "data_gathering_instruments": {
+                    "COLUMN_INDEX": 21
+                }
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "COLUMN_INDEX": 24
+                    },
+                    "LO_QUALIFIER": {
+                        "COLUMN_INDEX": 12
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": 26
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": 28
+                    },
+                    "UNIT": {
+                        "COLUMN_INDEX": 25
+                    }
+                },
+                {
+                    "ENDPOINT": {
+                        "COLUMN_INDEX": 29
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": 31
+                    },
+                    "UNIT": {
+                        "COLUMN_INDEX": 30
+                    }
+                }
+            ]
+        }
+    ]
+}
