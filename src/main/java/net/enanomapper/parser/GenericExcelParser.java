@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
@@ -305,7 +306,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setCompanyUUID(s);
+			r.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.companyName");
@@ -366,8 +367,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		for (ProtocolApplication pa : record.getMeasurements())
 		{
-			pa.setCompanyName(record.getCompanyName());
-			pa.setCompanyUUID(record.getCompanyUUID());
+			//pa.setCompanyName(record.getCompanyName());
+			pa.setSubstanceUUID(record.getCompanyUUID());
+			pa.setCompanyName(record.getOwnerName());
+			pa.setCompanyUUID(record.getOwnerUUID());
 			//TODO 
 		}
 	}

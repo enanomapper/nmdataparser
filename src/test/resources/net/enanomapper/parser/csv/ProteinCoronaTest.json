@@ -21,9 +21,10 @@
         "PUBLIC_NAME": {
             "COLUMN_INDEX": 1
         },
-        "ID_SUBSTANCE": {
-            "COLUMN_INDEX": 1
+        "OWNER_NAME": {
+            "COLUMN_INDEX": 4
         }
+
     },
     "PROTOCOL_APPLICATIONS": [
         {

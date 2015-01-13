@@ -100,10 +100,16 @@ public class NMParserTestUtils {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
 				Assert.assertNotNull(r.getCompanyUUID());
+				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size()>0);
-				
+				System.out.println(r.toJSON("http://localhost/"));
 				System.out.println(r.getMeasurements());
+				for (ProtocolApplication pa : r.getMeasurements()) {
+					Assert.assertEquals(r.getCompanyUUID(),  pa.getSubstanceUUID());
+					Assert.assertEquals(r.getOwnerName(),  pa.getCompanyName());
+					Assert.assertNotNull(pa.getProtocol());
+				}
 			}
 		} finally {
 			parser.close();
