@@ -12,25 +12,57 @@ public class ExcelDataLocation
 		    public boolean isColumnInfoRequired() {
 			return true;
 		    }
-		}
-		, ROW_MULTI_FIXED {
+		}, 
+		
+		ROW_MULTI_FIXED {
 		    @Override
 		    public boolean isColumnInfoRequired() {
 		        return true;
 		    }
-		}
-		, ROW_MULTI_DYNAMIC {
+		},
+		
+		ROW_MULTI_DYNAMIC {
 		    @Override
 		    public boolean isColumnInfoRequired() {
 		        return true;
 		    }
-		}, COLUMN_SINGLE, COLUMN_MULTI_FIXED, COLUMN_MULTI_DYNAMIC,
+		},
+		
+		COLUMN_SINGLE {
+			@Override
+		    public boolean isRowInfoRequired() {
+		    	return true;
+			}
+		}, 
+		
+		COLUMN_MULTI_FIXED {
+			@Override
+			public boolean isRowInfoRequired() {
+		    	return true;
+			}
+		},
+		
+		COLUMN_MULTI_DYNAMIC {
+			@Override
+			public boolean isRowInfoRequired() {
+		    	return true;
+			}
+		},
+		
 		ABSOLUTE_LOCATION {
 		    @Override
 		    public boolean isColumnInfoRequired() {
 		        return true;
 		    }
-		}, JSON_VALUE, JSON_REPOSITORY, UNDEFINED;
+		    @Override
+		    public boolean isRowInfoRequired() {
+		    	return true;
+			}
+		},
+		
+		JSON_VALUE, 
+		JSON_REPOSITORY, 
+		UNDEFINED;
 		
 		public static IterationAccess fromString(String s)
 		{	 
@@ -46,23 +78,13 @@ public class ExcelDataLocation
 		}
 		
 		public boolean isColumnInfoRequired()
-		{	
-
-			return false;
+		{
+			return false; //default value is overridden for some cases
 		}
 		
 		public boolean isRowInfoRequired()
 		{	
-			if (this.equals(COLUMN_SINGLE))
-				return true;
-			if (this.equals(COLUMN_MULTI_FIXED))
-				return true;
-			if (this.equals(COLUMN_MULTI_DYNAMIC))
-				return true;
-			if (this.equals(ABSOLUTE_LOCATION))
-				return true;
-			
-			return false;
+			return false; //default value is overridden for some cases
 		}
 	}
 	

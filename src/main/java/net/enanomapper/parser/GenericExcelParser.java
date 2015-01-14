@@ -1037,9 +1037,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ... (RichValue class)
 	 * 
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
+	 *   keyword suggestion DYNAMIC_SPAN
 	 *  
 	 * - handle ParserConfiguration flags: by JSON + Java Method
 	 * 
+	 * - add to ExcelDataLocation keywords for UUID generation flag + possible processing of data from that location 
 	 * 
 	 */
 	
