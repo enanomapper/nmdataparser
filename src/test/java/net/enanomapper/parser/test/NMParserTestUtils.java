@@ -82,7 +82,7 @@ public class NMParserTestUtils {
 
 	}
 
-	@Test
+	//@Test
 	public void testProteinCoronaXLSX() throws Exception {
 		InputStream xlsx = this
 				.getClass()

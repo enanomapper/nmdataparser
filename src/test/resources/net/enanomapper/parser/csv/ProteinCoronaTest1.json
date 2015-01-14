@@ -33,6 +33,11 @@
                 "COLUMN_INDEX": "E",
                 "ROW_INDEX": 3
             },
+            "PROTOCOL_CATEGORY_CODE" : {
+            		"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "E",
+                    "ROW_INDEX": 1
+            },
             "PROTOCOL_GUIDELINE": {
                 "guideline1": {
                     "ITERATION": "ABSOLUTE_LOCATION",
@@ -41,11 +46,21 @@
                 }
             },
             "PARAMETERS": {
+                "Medium": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 9
+                },             
                 "Cell": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "E",
                     "ROW_INDEX": 8
                 },
+                "type_of_method": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "E",
+                    "ROW_INDEX": 7
+                },                
                 "data_gathering_instruments": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "E",
@@ -119,12 +134,27 @@
                     "ROW_INDEX": 2
                 }
             },
+            "PROTOCOL_CATEGORY_CODE" : {
+            		"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 1
+            },            
             "PARAMETERS": {
+                "Medium": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 9
+                },            
                 "Cell": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
                     "ROW_INDEX": 8
                 },
+                "type_of_method": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 7
+                },                 
                 "data_gathering_instruments": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
