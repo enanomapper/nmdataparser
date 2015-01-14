@@ -624,6 +624,48 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			effect.setUnit(s);  
 		}
 		
+		if (efrdl.value != null)
+		{	
+			//If present this takes precedence over the up/lo values and qualifiers and unit
+			//These are intelligently recognized
+			
+			Double d = null;
+			FlagAddParserStringError = false; //Temporary switch off parser errors
+			String richValueString = getStringValue(efrdl.value);
+			FlagAddParserStringError = true;
+			if (richValueString != null)
+			{
+				RecognitionUtils.RichValue rv = RecognitionUtils.extractRichValue(richValueString);
+				if (rv.errorMsg == null)
+				{
+					if (rv.unit != null)
+						effect.setUnit(rv.unit);
+					if (rv.loValue != null)
+						effect.setLoValue(rv.loValue);
+					if (rv.loQualifier != null)
+						effect.setLoQualifier(rv.loQualifier);
+					if (rv.upValue != null)
+						effect.setUpValue(rv.upValue);
+					if (rv.upQualifier != null)
+						effect.setUpQualifier(rv.upQualifier);
+				}
+				else
+				{	
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.value, curSheetNum) +  "] " 
+							+ richValueString + " Value error: " + rv.errorMsg);
+					d = getNumericValue(efrdl.value);
+				}
+			}
+			else
+				d = getNumericValue(efrdl.value);
+			
+			if (d!=null)
+				effect.setLoValue(d); //This is the default behavior if the cell is of type numeric
+			
+		}
+		
+		
+		
 		if (efrdl.conditions != null)
 		{	
 			IParams params = new Params();
@@ -992,12 +1034,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered.
 	 *   This idea can be further developed to a substance record filtration utility - may be a special class for filtration... 
 	 * 
-	 * - automatic recognition of the qualifiers: <, >, <=, >=, ca., ...
-	 * 
 	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ... (RichValue class)
 	 * 
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
 	 *  
+	 * - handle ParserConfiguration flags: by JSON + Java Method
+	 * 
 	 * 
 	 */
 	

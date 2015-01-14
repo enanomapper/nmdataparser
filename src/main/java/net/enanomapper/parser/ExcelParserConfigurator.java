@@ -932,6 +932,14 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)							
 				efrdl.errQualifier = loc;
 		}
+		
+		//VALUE
+		loc = extractDataLocation(node,"VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.value = loc;
+		}
 
 		//CONDITIONS
 		JsonNode effCondNode = node.path("CONDITIONS");

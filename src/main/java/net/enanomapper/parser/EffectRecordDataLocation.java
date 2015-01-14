@@ -16,6 +16,9 @@ public class EffectRecordDataLocation
 	public ExcelDataLocation errValue = null;
 	public ExcelDataLocation errQualifier = null;
 	
+	public ExcelDataLocation value = null; //It is read as a RichValue object and takes precedent over lo/up values and qualifiers
+	
+	
 	
 	public String toJSONKeyWord(String offset)
 	{	
@@ -125,6 +128,14 @@ public class EffectRecordDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(errQualifier.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (value != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(value.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		
