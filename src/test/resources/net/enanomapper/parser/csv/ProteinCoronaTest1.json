@@ -1,0 +1,184 @@
+{
+    "TEMPLATE_INFO": {
+        "NAME": "ProteinCorona",
+        "VERSION": "original",
+        "TYPE": 1
+    },
+    "DATA_ACCESS": {
+        "ITERATION": "ROW_SINGLE",
+        "SHEET_INDEX": 1,
+        "START_ROW": 13,
+        "START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 12,
+        "ALLOW_EMPTY": true,
+        "RECOGNITION": "BY_INDEX"
+    },
+    "SUBSTANCE_RECORD": {
+        "COMPANY_UUID": {
+            "COLUMN_INDEX": "A"
+        },
+        "PUBLIC_NAME": {
+            "COLUMN_INDEX": "A"
+        },
+        "OWNER_NAME": {
+            "ITERATION": "ABSOLUTE_LOCATION",
+            "COLUMN_INDEX": "E",
+            "ROW_INDEX": 3
+        }
+    },
+    "PROTOCOL_APPLICATIONS": [
+        {
+            "CITATION_TITLE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "E",
+                "ROW_INDEX": 3
+            },
+            "PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "E",
+                    "ROW_INDEX": 2
+                }
+            },
+            "PARAMETERS": {
+                "Cell": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "E",
+                    "ROW_INDEX": 8
+                },
+                "data_gathering_instruments": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "E",
+                    "ROW_INDEX": 6
+                }
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "E",
+                        "ROW_INDEX": 7
+                    },
+                    "LO_QUALIFIER": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "E",
+                        "ROW_INDEX": 11
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": "E"
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": "F"
+                    },
+                    "UNIT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "E",
+                        "ROW_INDEX": 12
+                    },
+                    "CONDITIONS": {
+                        "N": {
+                            "COLUMN_INDEX": "G"
+                        }
+                    }
+                },
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "H",
+                        "ROW_INDEX": 7
+                    },
+                    "LO_QUALIFIER": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "H",
+                        "ROW_INDEX": 11
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": "H"
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": "I"
+                    },
+                    "UNIT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "H",
+                        "ROW_INDEX": 12
+                    }
+                }
+            ]
+        },
+        {
+            "CITATION_TITLE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "E",
+                "ROW_INDEX": 3
+            },
+            "PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 2
+                }
+            },
+            "PARAMETERS": {
+                "Cell": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 8
+                },
+                "data_gathering_instruments": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "J",
+                    "ROW_INDEX": 6
+                }
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "J",
+                        "ROW_INDEX": 7
+                    },
+                    "LO_QUALIFIER": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "J",
+                        "ROW_INDEX": 11
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": "J"
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": "K"
+                    },
+                    "UNIT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "J",
+                        "ROW_INDEX": 12
+                    }
+                },
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "L",
+                        "ROW_INDEX": 7
+                    },
+                    "LO_QUALIFIER": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "L",
+                        "ROW_INDEX": 11
+                    },
+                    "LO_VALUE": {
+                        "COLUMN_INDEX": "L"
+                    },
+                    "ERR_VALUE": {
+                        "COLUMN_INDEX": "M"
+                    },
+                    "UNIT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "L",
+                        "ROW_INDEX": 12
+                    }
+                }
+            ]
+        }
+    ]
+}
