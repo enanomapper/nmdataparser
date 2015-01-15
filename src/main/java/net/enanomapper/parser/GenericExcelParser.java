@@ -424,6 +424,27 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			pa.setInterpretationResult(s);
 		}
 		
+		//Read parameters
+		IParams params = new Params();
+		for (String param : padl.parameters.keySet())
+		{	
+			ExcelDataLocation loc = padl.parameters.get(param);
+			//Param is allowed to be String or Numeric object
+			FlagAddParserStringError = false;
+			String paramStringValue = getStringValue(loc);
+			FlagAddParserStringError = false;
+			if (paramStringValue != null)
+				params.put(param, paramStringValue);
+			else
+			{
+				Double paramDoubleValue = getNumericValue(loc);
+				if (paramDoubleValue != null)
+					params.put(param, paramDoubleValue);
+			}
+		}
+		pa.setParameters(params);
+		
+		
 		//Read effects array
 		if (padl.effects != null)
 		{
