@@ -432,7 +432,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			//Param is allowed to be String or Numeric object
 			FlagAddParserStringError = false;
 			String paramStringValue = getStringValue(loc);
-			FlagAddParserStringError = false;
+			FlagAddParserStringError = true;
 			if (paramStringValue != null)
 				params.put(param, paramStringValue);
 			else
@@ -694,11 +694,26 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			Set<Entry<String, ExcelDataLocation>> locEntries = efrdl.conditions.entrySet();
 			for (Entry<String, ExcelDataLocation> entry : locEntries )
 			{	
-				String value = getStringValue(entry.getValue());
-				params.put(entry.getKey(), value);
+				//String value = getStringValue(entry.getValue());
+				//params.put(entry.getKey(), value);
+				
+				ExcelDataLocation loc = entry.getValue();
+				FlagAddParserStringError = false;
+				String condStrValue = getStringValue(loc);
+				FlagAddParserStringError = true;
+				if (condStrValue != null)
+					params.put(entry.getKey(), condStrValue);
+				else
+				{
+					Double condDoubleValue = getNumericValue(loc);
+					if (condDoubleValue != null)
+						params.put(entry.getKey(), condDoubleValue);
+				}
+				
 			}
 			
 			effect.setConditions(params);
+			
 		}
 		
 		return effect;
