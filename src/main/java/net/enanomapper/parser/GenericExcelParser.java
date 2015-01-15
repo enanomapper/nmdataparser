@@ -306,14 +306,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
+			if (s != null)
+				r.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setCompanyName(s);
+			if (s != null)
+				r.setCompanyName(s);
 		}
 		
 		//Typically ownerUUID is not set from the excel file but it is possible if needed.
@@ -321,28 +323,32 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setOwnerUUID(s);
+			if (s != null)
+				r.setOwnerUUID(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setOwnerName(s);
+			if (s != null)
+				r.setOwnerName(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.substanceType");
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setSubstancetype(s);
+			if (s != null)
+				r.setSubstancetype(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.publicName");
 		if (loc != null)
 		{	
 			String s = getStringValue(loc);
-			r.setPublicName(s);
+			if (s != null)
+				r.setPublicName(s);
 		}
 		
 		loc = config.substanceLocations.get("SubstanceRecord.idSubstance");
@@ -395,33 +401,38 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (padl.citationTitle != null)
 		{	
 			String s = getStringValue(padl.citationTitle);
-			pa.setReference(s);  //title is the reference 'itself'
+			if (s != null)
+				pa.setReference(s);  //title is the reference 'itself'
 		}
 		
 		if (padl.citationOwner != null)
 		{	
 			String s = getStringValue(padl.citationOwner);
-			pa.setReferenceOwner(s);
+			if (s != null)
+				pa.setReferenceOwner(s);
 		}
 		
 		if (padl.citationYear != null)
 		{	
 			String s = getStringValue(padl.citationYear);
-			pa.setReferenceYear(s);
+			if (s != null)
+				pa.setReferenceYear(s);
 		}
 		
 		
 		if (padl.interpretationCriteria != null)
 		{	
 			String s = getStringValue(padl.interpretationCriteria);
-			pa.setInterpretationCriteria(s);
+			if (s != null)
+				pa.setInterpretationCriteria(s);
 		}
 		
 		
 		if (padl.interpretationResult != null)
 		{	
 			String s = getStringValue(padl.interpretationResult);
-			pa.setInterpretationResult(s);
+			if (s != null)	
+				pa.setInterpretationResult(s);
 		}
 		
 		//Read parameters
@@ -460,7 +471,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected Protocol readProtocol(ProtocolApplicationDataLocation padl)
 	{	
-		String endpoint = "";
+		String endpoint = null;
 		if (padl.protocolEndpoint != null)
 			endpoint = getStringValue(padl.protocolEndpoint);
 		
@@ -469,13 +480,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (padl.protocolTopCategory != null)
 		{	
 			String s = getStringValue(padl.protocolTopCategory);
-			protocol.setTopCategory(s);
+			if (s != null)
+				protocol.setTopCategory(s);
 		}
 		
 		if (padl.protocolCategoryCode != null)
 		{	
 			String s = getStringValue(padl.protocolCategoryCode);
-			protocol.setCategory(s);
+			if (s != null)
+				protocol.setCategory(s);
 		}
 		
 		/* 
@@ -488,7 +501,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			for (int i = 0; i < padl.protocolGuideline.size(); i++)
 			{	
 				String s = getStringValue(padl.protocolGuideline.get(i));
-				guide.add(s);
+				if (s != null)
+					guide.add(s);
 			}	
 			protocol.setGuideline(guide);
 		}
@@ -503,22 +517,27 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.sampleID != null)
 		{	
 			String s = getStringValue(efrdl.sampleID);
-			effect.setSampleID(s);
+			if (s != null)
+				effect.setSampleID(s);
 		}
 		
 		if (efrdl.endpoint != null)
 		{	
 			String s = getStringValue(efrdl.endpoint);
-			effect.setEndpoint(s);
+			if (s != null)
+				effect.setEndpoint(s);
 		}
 		
 		if (efrdl.loQualifier != null)
 		{	
 			String s = getStringValue(efrdl.loQualifier);
-			if (ExcelParserConfigurator.isValidQualifier(s))
-				effect.setLoQualifier(s);
-			else
-				parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] Lo Qualifier \""+ s + "\" is incorrect!");
+			if (s != null)
+			{	
+				if (ExcelParserConfigurator.isValidQualifier(s))
+					effect.setLoQualifier(s);
+				else
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] Lo Qualifier \""+ s + "\" is incorrect!");
+			}
 		}
 		
 		if (efrdl.loValue != null)
@@ -556,10 +575,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.upQualifier != null)
 		{	
 			String s = getStringValue(efrdl.upQualifier);
-			if (ExcelParserConfigurator.isValidQualifier(s))
-				effect.setUpQualifier(s);
-			else
-				parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] Up Qualifier \""+ s + "\" is incorrect!");
+			if (s != null)
+			{	
+				if (ExcelParserConfigurator.isValidQualifier(s))
+					effect.setUpQualifier(s);
+				else
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] Up Qualifier \""+ s + "\" is incorrect!");
+			}
 		}
 		
 		if (efrdl.upValue != null)
@@ -596,16 +618,20 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.textValue != null)
 		{	
 			String s = getStringValue(efrdl.textValue);
-			effect.setTextValue(s);
+			if (s != null)
+				effect.setTextValue(s);
 		}
 		
 		if (efrdl.errQualifier != null)
 		{	
 			String s = getStringValue(efrdl.errQualifier);
-			if (ExcelParserConfigurator.isValidQualifier(s))
-				effect.setErrQualifier(s);
-			else
-				parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] Err Qualifier \""+ s + "\" is incorrect!");
+			if (s != null)
+			{
+				if (ExcelParserConfigurator.isValidQualifier(s))
+					effect.setErrQualifier(s);
+				else
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] Err Qualifier \""+ s + "\" is incorrect!");
+			}
 		}
 		
 		if (efrdl.errValue != null)
@@ -642,7 +668,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.unit != null)
 		{	
 			String s = getStringValue(efrdl.unit);
-			effect.setUnit(s);  
+			if (s != null)
+				effect.setUnit(s);  
 		}
 		
 		if (efrdl.value != null)
@@ -709,7 +736,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					if (condDoubleValue != null)
 						params.put(entry.getKey(), condDoubleValue);
 				}
-				
 			}
 			
 			effect.setConditions(params);
@@ -1077,7 +1103,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 *  
 	 * - handle ParserConfiguration flags: by JSON + Java Method
 	 * 
-	 * - add to ExcelDataLocation keywords for UUID generation flag + possible processing of data from that location 
+	 * - add to ExcelDataLocation keywords for UUID generation flag + possible processing of data from that location
+	 * 
+	 * - Read composition !!
 	 * 
 	 */
 	
