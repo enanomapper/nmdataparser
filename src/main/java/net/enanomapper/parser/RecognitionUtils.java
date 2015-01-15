@@ -91,9 +91,10 @@ public class RecognitionUtils
 	 * @param richValue
 	 * @return
 	 */
-	public static RichValue extractRichValue(String richValue)
+	public static RichValue extractRichValue(String rvStr)
 	{
 		RichValue rvalue = new RichValue();
+		
 		//TODO - just temporary code for testing
 		rvalue.upValue = 12345.6789;
 		rvalue.upQualifier = "Mean---";
