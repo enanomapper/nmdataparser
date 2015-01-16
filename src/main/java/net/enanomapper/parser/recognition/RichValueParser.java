@@ -1,6 +1,6 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.recognition;
 
-import net.enanomapper.parser.RecognitionUtils.RichValue;
+
 
 public class RichValueParser 
 {

@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 
 import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
+import net.enanomapper.parser.recognition.RecognitionUtils;
+import net.enanomapper.parser.recognition.RichValue;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -683,7 +685,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			FlagAddParserStringError = true;
 			if (richValueString != null)
 			{
-				RecognitionUtils.RichValue rv = RecognitionUtils.extractRichValue(richValueString);
+				RichValue rv = RecognitionUtils.extractRichValue(richValueString);
 				if (rv.errorMsg == null)
 				{
 					if (rv.unit != null)

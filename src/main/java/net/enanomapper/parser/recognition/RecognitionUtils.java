@@ -1,4 +1,4 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.recognition;
 
 public class RecognitionUtils 
 {	
@@ -6,16 +6,6 @@ public class RecognitionUtils
 	{
 		public Double value = null;
 		public String qualifier = null;
-		public String errorMsg = null;
-	}
-	
-	public static class RichValue
-	{
-		public Double loValue = null;
-		public String loQualifier = null;
-		public Double upValue = null;
-		public String upQualifier = null;
-		public String unit = null;
 		public String errorMsg = null;
 	}
 	
