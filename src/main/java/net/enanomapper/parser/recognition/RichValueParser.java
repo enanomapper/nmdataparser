@@ -243,6 +243,8 @@ public class RichValueParser
 				//For the case (intervalPhase == 2) '+' is treated as part of the unit
 			}
 			
+			
+			//Handle interval midle splitter that is not '-' or '+'
 			if ((token.charAt(curChar) == intervalMiddleSplitter) && 
 					(intervalMiddleSplitter != '-') && (intervalMiddleSplitter != '+') ) 
 			{
@@ -255,14 +257,66 @@ public class RichValueParser
 			}
 			
 			
+			
 			if (FlagAllowIntervalBrackets)
 			{
 				//TODO - handle (, [, ), ]
 			}
 			
-			//default: handle unit
-			//TODO
 			
+			
+			//Default: any other char - typically letter and special symbols
+			switch (intervalPhase)
+			{
+			case 0:	{
+				String qualifier = getQualifierAtCurPos();
+				if (qualifier == null)
+				{
+					errors.add("In Token #" + (curTokenNum + 1) + " " + token + 
+							" Incorrect token!" );
+					return null;
+				}
+				else
+					rv.loQualifier = qualifier;
+			}break;
+			
+			case 1:	{
+				if (FlagMidSplit)
+				{
+					
+					errors.add("In Token #" + (curTokenNum + 1) + " " + token + 
+							" Incorrect symbol for token begining: '" +  token.charAt(curChar) +"'" );
+					return null;
+				}
+				else
+				{
+					//unit is handled: the rest of the string interpreted as a unit
+					String u = token.substring(curChar).trim(); 
+					curChar = token.length(); //end of the token analysis
+					if (checkUnit(u))
+						rv.unit = u;
+					else
+					{
+						errors.add("In Token #" + (curTokenNum + 1) + " " + token + 
+								" Incorrect unit: " + u);
+						return null;
+					}	
+				}
+			}break;
+			
+			default: //intervalPhase = 2
+				//unit is handled: the rest of the string interpreted as a unit
+				String u = token.substring(curChar).trim(); 
+				curChar = token.length(); //end of the token analysis
+				if (checkUnit(u))
+					rv.unit = u;
+				else
+				{
+					errors.add("In Token #" + (curTokenNum + 1) + " " + token + 
+							" Incorrect unit: " + u);
+					return null;
+				}	
+			}
 			
 		} //end of while
 		
@@ -270,7 +324,7 @@ public class RichValueParser
 		//Finalize the RichValue object
 		switch (intervalPhase)
 		{
-		
+			//TODO
 		}
 		
 		return rv;
@@ -282,6 +336,19 @@ public class RichValueParser
 		return null;
 	}
 
+	String getQualifierAtCurPos()
+	{
+		for (int i = 0; i < RecognitionUtils.qualifiers.length; i++)
+		if (curToken.indexOf(RecognitionUtils.qualifiers[i], curChar) == curChar)
+			return RecognitionUtils.qualifiers[i];
+		return null;
+	}
+	
+	boolean checkUnit(String unit)
+	{
+		//TODO - currently does nothing. Everything is allowed for a unit
+		return true;
+	}
 	
 
 	
