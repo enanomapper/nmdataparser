@@ -142,6 +142,7 @@ public class RichValueParser
 		//TODO - check for special token values like N/A ...
 		
 		curToken = token;
+		nChars = token.length();
 		curChar = 0;
 		RichValue rv = new RichValue();
 		
@@ -350,8 +351,104 @@ public class RichValueParser
 	
 	Double extractNumber()
 	{
-		//TODO
-		return null;
+		//System.out.println("extractNumber: " + curToken.substring(curChar));
+		
+		int startPos = curChar;
+		int dotPos = -1;
+		int ePos = -1;
+		boolean FlagContinue = true;
+		
+		while (curChar < nChars)
+		{
+			char ch = curToken.charAt(curChar);
+			//System.out.println(" " + curChar + "  " + ch);
+			
+			if (Character.isDigit(ch))
+			{
+				curChar++;
+				continue;
+			}
+			
+			switch (ch)
+			{
+			case '-':
+			case '+':
+			{
+				if (curChar == startPos) //The opening minus sign 
+				{
+					curChar++;
+					continue;
+				}
+				
+				if (ePos != -1)
+					if (curChar == (ePos + 1)) //Minuse sign after 'E'
+					{
+						curChar++;
+						continue;
+					}
+				
+				//Stop of the number extraction
+				FlagContinue = false;
+			}break;		
+			
+			
+			case 'e':
+			case 'E':	
+			{
+				if (curChar == startPos)  
+				{
+					curChar++;
+					errors.add("In Token #" + (curTokenNum + 1) + " " + curToken + 
+							" Incorrect double number starting with E");
+					FlagContinue = false;
+				}
+				
+				if (ePos == -1) 
+				{
+					ePos = curChar;
+					curChar++;
+					continue;
+				}
+				
+				//Stop of the number extraction since 'E' is found for a second time
+				FlagContinue = false;
+			}break;
+			
+			case '.':	
+			{	
+				if (dotPos == -1) 
+				{
+					dotPos = curChar;
+					curChar++;
+					continue;
+				}
+				
+				//Stop of the number extraction since '.' is found for a second time
+				FlagContinue = false;
+			}break;
+			
+			
+			default:
+				FlagContinue = false;
+				break;
+			}
+			
+			if (!FlagContinue)
+				break;
+		}
+		
+		String dString = curToken.substring(startPos, curChar);
+		
+		try{
+			Double d = Double.parseDouble(dString);
+			return d;
+		}
+		catch(Exception e)
+		{
+			errors.add("In Token #" + (curTokenNum + 1) + " " + curToken + 
+					" Incorrect double number: " + "\"" + dString + "\"");
+			return null;
+		}
 	}
 
 	String getQualifierAtCurPos()
