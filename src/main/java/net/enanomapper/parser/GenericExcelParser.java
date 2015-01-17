@@ -1109,6 +1109,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Read composition !!
 	 * 
+	 * - conditions to be read as RichValue and stored as Value object 
+	 * 
 	 */
 	
 }
