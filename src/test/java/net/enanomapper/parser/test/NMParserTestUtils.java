@@ -8,6 +8,8 @@ import java.util.List;
 import junit.framework.Assert;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
+import net.enanomapper.parser.recognition.RichValue;
+import net.enanomapper.parser.recognition.RichValueParser;
 
 import org.junit.Test;
 
@@ -80,6 +82,24 @@ public class NMParserTestUtils {
 
 		fin.close();
 
+	}
+	
+	public static void testRichValue(String rvString)
+	{
+		System.out.println("Testing RichValue: " + rvString);
+		
+		RichValueParser par = new RichValueParser();
+		RichValue rv = par.parse(rvString);
+		
+		String errors = par.getAllErrorsAsString(); 
+		if (errors != null)
+		{
+			System.out.println("RichValueParser errors:\n" + errors);
+		}
+		else
+		{
+			System.out.println(rv.toString());
+		}
 	}
 
 	//@Test

@@ -27,6 +27,20 @@ public class RichValueParser
 	protected String curToken = null;
 	protected int curTokenNum = 0;
 	
+	public ArrayList<String> getErrors() {
+		return errors;
+	}
+	
+	public String getAllErrorsAsString() {
+		if (errors.isEmpty())
+			return null;
+		
+		StringBuffer sb = new StringBuffer();
+		for (String err : errors)
+			sb.append(err + "\n");
+		return sb.toString();
+	}
+	
 	
 	public String getTokenSplitter() {
 		return tokenSplitter;
@@ -62,6 +76,8 @@ public class RichValueParser
 	
 	public RichValue parse(String rvStr)
 	{
+		errors.clear();
+		
 		if (rvStr == null)
 		{
 			errors.add("Empty string!");
@@ -93,6 +109,8 @@ public class RichValueParser
 	
 	public List<RichValue> parseAsList(String rvStr)
 	{
+		errors.clear();
+		
 		if (rvStr == null)
 		{
 			errors.add("Empty string!");
