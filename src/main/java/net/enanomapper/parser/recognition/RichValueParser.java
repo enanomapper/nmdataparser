@@ -15,7 +15,7 @@ public class RichValueParser
 	
 	public boolean FlagAllowIntervalBrackets = false;
 	public boolean FlagAllowUnit = true;
-	
+	public boolean FlagSetDefaultQualifiersForInterval = true;
 	
 	//Work variables
 	protected String rvString = null;
@@ -152,10 +152,15 @@ public class RichValueParser
 		
 		while (curChar < token.length())
 		{	
-			if (token.charAt(curChar) == ' ')
-				curChar++; //Omitting spaces
+			char ch = token.charAt(curChar);
 			
-			if (Character.isDigit(token.charAt(curChar)))
+			if (ch == ' ')
+			{	
+				curChar++; //Omitting spaces
+				continue;
+			}
+				
+			if (Character.isDigit(ch) || ch == '.')
 			{	
 				Double d = extractNumber();
 				if (d == null)
@@ -189,7 +194,7 @@ public class RichValueParser
 			}//end of digit handling
 			
 			
-			if (token.charAt(curChar) == '-')
+			if (ch == '-')
 			{	
 				if (intervalPhase == 0)
 				{	
@@ -225,7 +230,7 @@ public class RichValueParser
 				//For the case (intervalPhase == 2) '-' is treated as part of the unit
 			}
 			
-			if (token.charAt(curChar) == '+')
+			if (ch == '+')
 			{	
 				if (intervalPhase == 0)
 				{	
@@ -264,7 +269,7 @@ public class RichValueParser
 			
 			
 			//Handle interval midle splitter that is not '-' or '+'
-			if ((token.charAt(curChar) == intervalMiddleSplitter) && 
+			if ((ch == intervalMiddleSplitter) && 
 					(intervalMiddleSplitter != '-') && (intervalMiddleSplitter != '+') ) 
 			{
 				if (intervalPhase == 1)
@@ -283,7 +288,6 @@ public class RichValueParser
 			}
 			
 			
-			
 			//Default: any other char - typically letter and special symbols
 			switch (intervalPhase)
 			{
@@ -295,16 +299,16 @@ public class RichValueParser
 							" Incorrect token!" );
 					return null;
 				}
-				else
-					rv.loQualifier = qualifier;
+				
+				rv.loQualifier = qualifier;
+				curChar += qualifier.length();
 			}break;
 			
 			case 1:	{
 				if (FlagMidSplit)
 				{
-					
 					errors.add("In Token #" + (curTokenNum + 1) + " " + token + 
-							" Incorrect symbol for token begining: '" +  token.charAt(curChar) +"'" );
+							" Incorrect symbol after middle splitter: '" +  token.charAt(curChar) +"'" );
 					return null;
 				}
 				else
@@ -343,7 +347,46 @@ public class RichValueParser
 		//Finalize the RichValue object
 		switch (intervalPhase)
 		{
-			//TODO
+		case 0:{
+			if (rv.unit == null)
+				errors.add("In Token #" + (curTokenNum + 1) + " " + token + " Empty token!");
+			else
+				errors.add("In Token #" + (curTokenNum + 1) + " " + token + " Only unit is specified!");
+			return null;
+		}
+		
+		case 1:{
+			if (rv.loQualifier != null)
+				if (rv.loQualifier.equals("<") || rv.loQualifier.equals("<="))
+				{
+					//The qualifier corresponds to upValue therefore loValue is made to upValue
+					rv.upQualifier = rv.loQualifier;
+					rv.upValue = rv.loValue;
+					rv.loQualifier = null;
+					rv.loValue = null;
+				}
+		}
+		break;
+		
+		default: //case 2
+			if (rv.loQualifier != null)
+			{
+				errors.add("In Token #" + (curTokenNum + 1) + " " + token + " Defined interval and qualifier together!");
+				return null;
+			}
+			
+			if (rv.loValue > rv.upValue)
+			{
+				errors.add("In Token #" + (curTokenNum + 1) + " " + token + " Incorrect interval: loValue > upValue!");
+				return null;
+			}	
+			
+			if (FlagSetDefaultQualifiersForInterval)
+			{
+				rv.loQualifier = defaultIntervalLoQualifier;
+				rv.upQualifier = defaultIntervalUpQualifier;
+			}
+		break;
 		}
 		
 		return rv;
@@ -463,10 +506,7 @@ public class RichValueParser
 	{
 		//TODO - currently does nothing. Everything is allowed for a unit
 		return true;
-	}
-	
-
-	
+	}	
 
 	
 }
