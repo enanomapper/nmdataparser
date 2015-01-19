@@ -15,6 +15,7 @@ import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
 import net.enanomapper.parser.ExcelDataLocation.Recognition;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
+import net.enanomapper.parser.recognition.RichValueParser;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -47,6 +48,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
+	protected RichValueParser rvParser = new RichValueParser ();
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
 	protected ExcelParserConfigurator config = null;
 	protected  InputStream input;
@@ -685,8 +687,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			FlagAddParserStringError = true;
 			if (richValueString != null)
 			{
-				RichValue rv = RecognitionUtils.extractRichValue(richValueString);
-				if (rv.errorMsg == null)
+				RichValue rv = rvParser.parse(richValueString);
+				String rv_error = rvParser.getAllErrorsAsString(); 
+				
+				if (rv_error == null)
 				{
 					if (rv.unit != null)
 						effect.setUnit(rv.unit);
@@ -702,8 +706,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				else
 				{	
 					parseErrors.add("["+ locationStringForErrorMessage(efrdl.value, curSheetNum) +  "] " 
-							+ richValueString + " Value error: " + rv.errorMsg);
-					d = getNumericValue(efrdl.value);
+							+ richValueString + " Value error: " + rv_error);
 				}
 			}
 			else
@@ -711,7 +714,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			
 			if (d!=null)
 				effect.setLoValue(d); //This is the default behavior if the cell is of type numeric
-			
 		}
 		
 		

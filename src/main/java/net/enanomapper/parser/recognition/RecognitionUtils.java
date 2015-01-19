@@ -75,20 +75,4 @@ public class RecognitionUtils
 		return qvalue;
 	}
 	
-	/**
-	 * Intelligent extraction of value information from a string representation
-	 * 
-	 * @param richValue
-	 * @return
-	 */
-	public static RichValue extractRichValue(String rvStr)
-	{
-		RichValue rvalue = new RichValue();
-		
-		//TODO - just temporary code for testing
-		rvalue.upValue = 12345.6789;
-		rvalue.upQualifier = "Mean---";
-		return rvalue;
-	}
-	
 }

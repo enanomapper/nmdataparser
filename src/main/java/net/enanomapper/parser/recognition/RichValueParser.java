@@ -97,12 +97,45 @@ public class RichValueParser
 			curTokenNum = i;
 			RichValue rv = parseToken(tokens[i]);
 			if (errors.isEmpty())
+			{	
+				if (rvalue.additionalValues == null)
+					rvalue.additionalValues = new ArrayList<RichValue>();
+					
 				rvalue.additionalValues.add(rv);
+			}	
 			else
 			{	
 				return null;
 			}	
 		}
+		
+		//Checking the unit definition in all tokens:
+		String u = rvalue.unit;
+		if (rvalue.additionalValues != null)
+			for (RichValue rv : rvalue.additionalValues)
+			{
+				if (rv.unit != null)
+				{
+					if (u == null)
+						u = rv.unit;
+					else
+					{
+						//unit u is already set. Checking consistency with rv.unit
+						if (!u.equalsIgnoreCase(rv.unit))
+							errors.add("Inconsistent unit definitions in different tokens: " + u + "  " + rv.unit);
+					}
+				}
+			}
+		
+		//Typically unit definition would be given in the last token.
+		//Therefore it is transfered to the first token and all other tokens
+		if (rvalue.unit == null)
+			rvalue.unit = u;
+
+		if (rvalue.additionalValues != null)
+			for (RichValue rv : rvalue.additionalValues)
+				if (rv.unit == null)
+					rv.unit = u;
 		
 		return rvalue;
 	}
