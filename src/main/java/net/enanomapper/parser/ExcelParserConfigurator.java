@@ -7,11 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
-import net.enanomapper.parser.ExcelDataLocation.Recognition;
+import net.enanomapper.parser.ParserConstants.IterationAccess;
+import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
-
 
 import org.apache.poi.hssf.util.CellReference;
 import org.codehaus.jackson.JsonNode;
@@ -44,7 +43,7 @@ public class ExcelParserConfigurator
 	
 	//Global configuration for the data access
 	public boolean FlagSkipEmptyRows = true;
-	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
+	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public int rowMultiFixedSize = 1;
 	public int startRow = 2;
 	public int sheetIndex = 0;

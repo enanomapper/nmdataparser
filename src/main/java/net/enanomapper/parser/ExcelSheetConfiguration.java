@@ -1,11 +1,12 @@
 package net.enanomapper.parser;
 
-import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
-import net.enanomapper.parser.ExcelDataLocation.Recognition;
+
+import net.enanomapper.parser.ParserConstants.IterationAccess;
+import net.enanomapper.parser.ParserConstants.Recognition;
 
 public class ExcelSheetConfiguration 
 {
-	public ExcelDataLocation.IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
+	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public int rowMultiFixedSize = 1;
 	public int startRow = 2;
 	public int startHeaderRow = 0;

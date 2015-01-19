@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.enanomapper.parser.ExcelDataLocation.IterationAccess;
-import net.enanomapper.parser.ExcelDataLocation.Recognition;
+import net.enanomapper.parser.ParserConstants.IterationAccess;
+import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
