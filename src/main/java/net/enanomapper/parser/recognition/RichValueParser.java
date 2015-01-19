@@ -166,6 +166,34 @@ public class RichValueParser
 			}	
 		}
 		
+		
+		if (list.isEmpty())
+			return list;
+		
+		//Checking the unit definition in all tokens:
+		String u = list.get(0).unit;
+		for (int i = 1; i < list.size(); i++)
+		{
+			RichValue rv = list.get(i);
+			if (rv.unit != null)
+			{
+				if (u == null)
+					u = rv.unit;
+				else
+				{
+					//unit u is already set. Checking consistency with rv.unit
+					if (!u.equalsIgnoreCase(rv.unit))
+						errors.add("Inconsistent unit definitions in different tokens: " + u + "  " + rv.unit);
+				}
+			}
+		}
+
+		//Typically unit definition would be given in the last token.
+		//Therefore it is transfered to the first token and all other tokens
+		for (RichValue rv : list)
+			if (rv.unit == null)
+				rv.unit = u;
+
 		return list;
 	}
 	
