@@ -55,6 +55,7 @@ public class ExcelParserConfigurator
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
 	//Specific data locations
+	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
 	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
 	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
 	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
@@ -249,6 +250,31 @@ public class ExcelParserConfigurator
 		}
 		
 		
+		//Handle Parallel Sheets
+		curNode = root.path("PARALLEL_SHEETS");
+		if (curNode.isMissingNode())
+		{	
+			//Nothing is done. Missing PARALLEL_SHEETS is not an error.
+		}	
+		else
+		{
+			if (!curNode.isArray())
+			{
+				conf.configErrors.add("JSON Section \"PARALLEL_SHEETS\" is not of type array!");
+				return conf;
+			}
+			
+			for (int i = 0; i < curNode.size(); i++)
+			{	
+				ExcelSheetConfiguration eshc= extractParallelSheet(curNode.get(i), i, conf);
+				if (eshc == null)
+					return conf;
+				else
+					conf.parallelSheets.add(eshc);
+			}	
+		}
+		
+		
 		//Handle Protocol Applications (Measurements)
 		curNode = root.path("PROTOCOL_APPLICATIONS");
 		if (curNode.isMissingNode())
@@ -257,7 +283,7 @@ public class ExcelParserConfigurator
 		{
 			if (!curNode.isArray())
 			{
-				conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is not array!");
+				conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is not of type array!");
 				return conf;
 			}
 			
@@ -307,6 +333,21 @@ public class ExcelParserConfigurator
 		sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
 		sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
 		sb.append("\t},\n\n");
+		
+		if (!parallelSheets.isEmpty())
+		{	
+			sb.append("\t\"PARALLEL_SHEETS\":\n");
+			sb.append("\t[\n");
+			for (int i = 0; i < parallelSheets.size(); i++)
+			{	
+				sb.append(parallelSheets.get(i).toJSONKeyWord("\t\t"));			
+				if (i < parallelSheets.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append("\t],\n\n"); 
+		}
+		
 		
 		sb.append("\t\"SUBSTANCE_RECORD\" : \n");
 		sb.append("\t{\n");
@@ -381,7 +422,6 @@ public class ExcelParserConfigurator
 		
 		sb.append("\t\"PROTOCOL_APPLICATIONS\":\n");
 		sb.append("\t[\n");
-		
 		for (int i = 0; i < protocolAppLocations.size(); i++)
 		{	
 			sb.append(protocolAppLocations.get(i).toJSONKeyWord("\t\t"));			
@@ -389,7 +429,6 @@ public class ExcelParserConfigurator
 				sb.append(",\n");
 			sb.append("\n");
 		}
-		
 		sb.append("\t]"); //end of PROTOCOL_APPLICATIONS array
 		
 		
@@ -963,6 +1002,14 @@ public class ExcelParserConfigurator
 		}
 		
 		return efrdl;
+	}
+	
+	public static ExcelSheetConfiguration extractParallelSheet(JsonNode node, int sheetJsonIndex,  ExcelParserConfigurator conf)
+	{
+		ExcelSheetConfiguration eshc = new ExcelSheetConfiguration();
+		//TODO
+		
+		return eshc;
 	}
 	
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)
