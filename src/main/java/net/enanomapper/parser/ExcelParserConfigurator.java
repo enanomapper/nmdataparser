@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.json.JsonUtilities;
@@ -51,6 +52,7 @@ public class ExcelParserConfigurator
 	public int endHeaderRow = 0;
 	public boolean allowEmpty = true;
 	public Recognition recognition = Recognition.BY_INDEX;
+	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
 	//Specific data locations
 	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
@@ -162,6 +164,16 @@ public class ExcelParserConfigurator
 				conf.recognition = Recognition.fromString(keyword);
 				if (conf.recognition == Recognition.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+			}	
+			//DYNAMIC_ITERATION
+			keyword =  jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION", true);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				conf.dynamicIteration = DynamicIteration.fromString(keyword);
+				if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
 			}	
 			
 		}
@@ -293,6 +305,7 @@ public class ExcelParserConfigurator
 		sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
 		sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
+		sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
 		sb.append("\t},\n\n");
 		
 		sb.append("\t\"SUBSTANCE_RECORD\" : \n");

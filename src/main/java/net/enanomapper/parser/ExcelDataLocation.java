@@ -10,8 +10,6 @@ import org.apache.poi.ss.usermodel.Cell;
 
 public class ExcelDataLocation 
 {
-	
-	
 	private boolean FlagExtractValueQualifier = false;
 	private boolean FlagExtractAsRichValue = false;
 	

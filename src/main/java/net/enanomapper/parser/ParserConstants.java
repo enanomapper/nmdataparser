@@ -179,4 +179,21 @@ public class ParserConstants
 			}
 		}
 	}
+	
+	public enum DynamicIteration {
+		NEXT_NOT_EMPTY, UNDEFINED;
+		
+		public static DynamicIteration fromString(String s)
+		{	 
+			try
+			{
+				DynamicIteration di = DynamicIteration.valueOf(s) ;
+				return (di);
+			}
+			catch (Exception e)
+			{
+				return DynamicIteration.UNDEFINED;
+			}
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 
 
+import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 
@@ -13,4 +14,5 @@ public class ExcelSheetConfiguration
 	public int endHeaderRow = 0;
 	public boolean allowEmpty = true;
 	public Recognition recognition = Recognition.BY_INDEX;
+	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 }
