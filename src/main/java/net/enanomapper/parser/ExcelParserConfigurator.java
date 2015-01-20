@@ -48,6 +48,7 @@ public class ExcelParserConfigurator
 	public int rowMultiFixedSize = 1;
 	public int startRow = 2;
 	public int sheetIndex = 0;
+	public String sheetName = null;
 	public int startHeaderRow = 0;
 	public int endHeaderRow = 0;
 	public boolean allowEmpty = true;

@@ -1113,6 +1113,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - conditions to be read as RichValue and stored as Value object 
 	 * 
+	 * - Add flags for reading the basic fields of the ExcelParserConfiguration (like class ExcelSheetConfiguration)
+	 * 
 	 */
 	
 }

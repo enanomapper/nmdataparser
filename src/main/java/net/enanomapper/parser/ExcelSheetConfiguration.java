@@ -7,19 +7,23 @@ import net.enanomapper.parser.ParserConstants.Recognition;
 
 public class ExcelSheetConfiguration 
 {
+	public int sheetIndex = 1;
+	public boolean FlagSheetIndex = false;
+	
+	public String sheetName = null;
+	public boolean FlagSheetName = false;
+	
 	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public boolean FlagSubstanceIteration = false;
 	
 	public int rowMultiFixedSize = 1;
 	public boolean FlagRowMultiFixedSize = false;
-	//public boolean Flag = false;
 	
 	public int startRow = 2;
 	public boolean FlagStartRow = false;
 	
 	public int startHeaderRow = 0;
 	public boolean FlagStartHeaderRow = false;
-	
 	
 	public int endHeaderRow = 0;
 	public boolean FlagEndHeaderRow = false;
@@ -36,12 +40,99 @@ public class ExcelSheetConfiguration
 	
 	public String toJSONKeyWord(String offset)
 	{	
-		int nSections = 0;
+		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
 		
-		//TODO
+		if (FlagSheetIndex)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SHEET_INDEX\" : \"" + (sheetIndex + 1) + "\"");
+			nFields++;
+		}
+		
+		if (FlagSheetName)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SHEET_NAME\" : \"" + sheetName + "\"");
+			nFields++;
+		}
+		
+		if (FlagSubstanceIteration)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SUBSTANCE_ITERATION\" : \"" + substanceIteration.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagRowMultiFixedSize)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ROW_MULTI_FIXED_SIZE\" : \"" + rowMultiFixedSize + "\"");
+			nFields++;
+		}
+		
+		
+		if (FlagStartRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"START_ROW\" : \"" + (startRow + 1) + "\"");
+			nFields++;
+		}
+		
+		
+		if (FlagStartHeaderRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"START_HEADER_ROW\" : \"" + (startHeaderRow + 1) + "\"");
+			nFields++;
+		}
+		
+		if (FlagEndHeaderRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"END_HEADER_ROW\" : \"" + (endHeaderRow + 1) + "\"");
+			nFields++;
+		}
+		
+		
+		if (FlagAllowEmpty)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\"");
+			nFields++;
+		}
+		
+		
+		if (FlagRecognition)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"RECOGNITION\" : \"" + recognition.toString() + "\"");
+			nFields++;
+		}
+		
+		
+		
+		if (FlagDynamicIteration)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\"");
+			nFields++;
+		}
+		
+		if (nFields > 0)
+			sb.append("\n");
 		
 		sb.append(offset + "}");
 		return sb.toString();
