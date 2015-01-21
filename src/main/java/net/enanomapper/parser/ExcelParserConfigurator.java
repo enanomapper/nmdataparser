@@ -1005,10 +1005,158 @@ public class ExcelParserConfigurator
 		return efrdl;
 	}
 	
-	public static ExcelSheetConfiguration extractParallelSheet(JsonNode node, int sheetJsonIndex,  ExcelParserConfigurator conf)
+	public static ExcelSheetConfiguration extractParallelSheet(JsonNode node, int jsonArrayIndex,  ExcelParserConfigurator conf)
 	{
 		ExcelSheetConfiguration eshc = new ExcelSheetConfiguration();
-		//TODO
+		JsonUtilities jsonUtils = new JsonUtilities();
+		
+		//ITERATION
+		if(!node.path("ITERATION").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(node, "ITERATION", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"ITERATION\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.iteration = IterationAccess.fromString(keyword);
+				if (eshc.iteration == IterationAccess.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+							+ (jsonArrayIndex+1) + " keyword \"ITERATION\" is incorrect or UNDEFINED!");
+				else
+					eshc.FlagIteration = true;
+			}
+		}
+		
+		//SHEET_INDEX
+		if(!node.path("SHEET_INDEX").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "SHEET_INDEX", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"SHEET_INDEX\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.sheetIndex = intValue - 1; //1-based --> 0-based
+				eshc.FlagSheetIndex = true;
+			}
+		}
+		
+		//SHEET_NAME
+		if(!node.path("SHEET_NAME").isMissingNode())
+		{
+			String keyword = jsonUtils.extractStringKeyword(node, "SHEET_NAME", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"SHEET_NAME\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.sheetName = keyword; 
+				eshc.FlagSheetName = true;
+			}
+		}
+		
+		//ROW_MULTI_FIXED_SIZE
+		if(!node.path("ROW_MULTI_FIXED_SIZE").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "ROW_MULTI_FIXED_SIZE", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"ROW_MULTI_FIXED_SIZE\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.rowMultiFixedSize = intValue; 		
+				eshc.FlagRowMultiFixedSize = true;
+			}
+		}
+		
+		//START_ROW
+		if(!node.path("START_ROW").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "START_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"START_ROW\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.startRow = intValue - 1; //1-based --> 0-based		
+				eshc.FlagStartRow = true;
+			}
+		}
+		
+		//START_HEADER_ROW
+		if(!node.path("START_HEADER_ROW").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "START_HEADER_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"START_HEADER_ROW\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.startHeaderRow = intValue - 1; //1-based --> 0-based
+				eshc.FlagStartHeaderRow = true;
+			}
+		}
+		
+		//END_HEADER_ROW
+		if(!node.path("END_HEADER_ROW").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "END_HEADER_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"END_HEADER_ROW\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.endHeaderRow = intValue - 1 ; //1-based --> 0-based
+				eshc.FlagEndHeaderRow = true;
+			}
+		}
+		
+		//ALLOW_EMPTY
+		if(!node.path("ALLOW_EMPTY").isMissingNode())
+		{
+			Boolean boolValue = jsonUtils.extractBooleanKeyword(node, "ALLOW_EMPTY", false);
+			if (boolValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"ALLOW_EMPTY\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.allowEmpty = boolValue;
+				eshc.FlagAllowEmpty = true;
+			}	
+		}
+		
+		//RECOGNITION
+		if(!node.path("RECOGNITION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "RECOGNITION", true);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"RECOGNITION\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.recognition = Recognition.fromString(keyword);
+				if (conf.recognition == Recognition.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+							+ (jsonArrayIndex+1) + " keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+			}
+		}
+		
+		//DYNAMIC_ITERATION
+		if(!node.path("DYNAMIC_ITERATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "DYNAMIC_ITERATION", true);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"DYNAMIC_ITERATION\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.dynamicIteration = DynamicIteration.fromString(keyword);
+				if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+							+ (jsonArrayIndex+1) + " keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
+			}	
+		}
 		
 		return eshc;
 	}

@@ -13,8 +13,8 @@ public class ExcelSheetConfiguration
 	public String sheetName = null;
 	public boolean FlagSheetName = false;
 	
-	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
-	public boolean FlagSubstanceIteration = false;
+	public IterationAccess iteration =  IterationAccess.ROW_SINGLE;
+	public boolean FlagIteration = false;
 	
 	public int rowMultiFixedSize = 1;
 	public boolean FlagRowMultiFixedSize = false;
@@ -61,11 +61,11 @@ public class ExcelSheetConfiguration
 			nFields++;
 		}
 		
-		if (FlagSubstanceIteration)
+		if (FlagIteration)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"SUBSTANCE_ITERATION\" : \"" + substanceIteration.toString() + "\"");
+			sb.append(offset + "\t\"SUBSTANCE_ITERATION\" : \"" + iteration.toString() + "\"");
 			nFields++;
 		}
 		
