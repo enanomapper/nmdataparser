@@ -12,11 +12,11 @@ public class ExcelDataLocation
 {
 	private boolean FlagExtractValueQualifier = false;
 	private boolean FlagExtractAsRichValue = false;
+	private int parallelSheetIndex = -1;  //This is not the sheetIndex. This is the index within array GenericExcelParser.parallelSheets[]
 	
 	private Object absoluteLocationValue = null;
 	private Object jsonValue = null;
 	private String jsonRepositoryKey = null;
-	
 	
 	public int nErrors = 0;
 	public String sectionName = "";
@@ -191,5 +191,17 @@ public class ExcelDataLocation
 
 	public void setFlagExtractAsRichValue(boolean flagExtractAsRichValue) {
 		FlagExtractAsRichValue = flagExtractAsRichValue;
+	}
+
+	public int getParallelSheetIndex() {
+		return parallelSheetIndex;
+	}
+
+	public void setParallelSheetIndex(int parallelSheetIndex) {
+		this.parallelSheetIndex = parallelSheetIndex;
+	}
+	
+	public boolean isFromParallelSheet(){
+		return (parallelSheetIndex >= 0);
 	}
 }

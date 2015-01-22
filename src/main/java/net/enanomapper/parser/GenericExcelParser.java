@@ -111,6 +111,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		handleConfigRecognitions();
 		
+		handleParallelSheetIndices();
+		
 		//Setting of the basic sheet work variables
 		initBasicWorkSheet();
 		
@@ -168,6 +170,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void handleRecognition(ProtocolApplicationDataLocation paLocation)
 	{
+		//TODO
+	}
+	
+	protected void handleParallelSheetIndices()
+	{
+		
 		//TODO
 	}
 
@@ -795,8 +803,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		switch (loc.iteration)
 		{
-		case ROW_SINGLE:			
-			return getStringValue(curRow, loc);
+		case ROW_SINGLE:
+			if (loc.isFromParallelSheet())
+				return getStringValue(parallelSheets[loc.getParallelSheetIndex()].curRow, loc);
+			else
+				return getStringValue(curRow, loc);  //from basic sheet
 			
 		case ROW_MULTI_FIXED:
 			//TODO
@@ -849,13 +860,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
-	
 	protected Double getNumericValue(ExcelDataLocation loc)
 	{
 		switch (loc.iteration)
 		{
-		case ROW_SINGLE:			
-			return getNumericValue(curRow, loc);
+		case ROW_SINGLE:
+			if (loc.isFromParallelSheet())
+				return getNumericValue(parallelSheets[loc.getParallelSheetIndex()].curRow, loc);
+			else
+				return getNumericValue(curRow, loc);
 			
 		case ROW_MULTI_FIXED:
 			//TODO

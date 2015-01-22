@@ -19,7 +19,6 @@ public class EffectRecordDataLocation
 	public ExcelDataLocation value = null; //It is read as a RichValue object and takes precedent over lo/up values and qualifiers
 	
 	
-	
 	public String toJSONKeyWord(String offset)
 	{	
 		int nSections = 0;
