@@ -111,14 +111,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		handleConfigRecognitions();
 		
-		handleParallelSheetIndices();
-		
 		//Setting of the basic sheet work variables
 		initBasicWorkSheet();
 		
 		//Setting the parallel sheets work variables 
 		if (!config.parallelSheets.isEmpty())
+		{	
 			initParallelSheets();
+			handleParallelSheetIndices();
+		}	
 		
 		initialIteration();		
 		FlagNextRecordLoaded = false;
@@ -134,18 +135,24 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		curRowNum = config.startRow;
 	}
 	
-	protected void initParallelSheets()
+	protected void initParallelSheets() throws Exception
 	{
 		parallelSheets = new ParallelSheetState[config.parallelSheets.size()];
 		for (int i = 0; i < config.parallelSheets.size(); i++)
 		{
 			ExcelSheetConfiguration eshc = config.parallelSheets.get(i);
 			parallelSheets[i] = new ParallelSheetState();
-			if (eshc.FlagSheetIndex)
-				parallelSheets[i].sheetNum = eshc.sheetIndex;
+			//if (eshc.FlagSheetIndex) //this check should not be needed because sheetNum must set via sheetName as well
+			parallelSheets[i].sheetNum = eshc.sheetIndex;
+			
+			if (0 <= parallelSheets[i].sheetNum && parallelSheets[i].sheetNum < workbook.getNumberOfSheets())
+				parallelSheets[i].sheet = workbook.getSheetAt(parallelSheets[i].sheetNum);
+			else
+			{	
+				throw new Exception("Incorrect SHEET_INDEX " + (parallelSheets[i].sheetNum +1)+ " in parallel sheet #" + (i+1));
+			}	
 			
 			//TODO
-			parallelSheets[i].sheet = workbook.getSheetAt(parallelSheets[i].sheetNum);
 		}
 	}
 	
@@ -173,12 +180,108 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		//TODO
 	}
 	
-	protected void handleParallelSheetIndices()
+	protected void handleRecognition(EffectRecordDataLocation efrdl)
 	{
-		
 		//TODO
 	}
-
+	
+	protected void handleParallelSheetIndices()
+	{
+		for (String key : config.substanceLocations.keySet())
+		{
+			ExcelDataLocation loc = config.substanceLocations.get(key);
+			setParallelSheet(loc);
+		}
+		
+		for (ProtocolApplicationDataLocation padl : config.protocolAppLocations)
+			setParallelSheets(padl);
+	}
+	
+	protected void setParallelSheet(ExcelDataLocation loc)
+	{
+		if (loc.sheetIndex != curSheetNum)
+		{
+			for (int i = 0; i < parallelSheets.length; i ++)
+				if (loc.sheetIndex == parallelSheets[i].sheetNum)
+				{
+					loc.setParallelSheetIndex(i);
+					return;
+				}
+			
+			if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) //This iteration mode not treated as error
+				parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] Sheet number number not valid parallel sheet!");
+		}
+	}
+	
+	protected void setParallelSheets(ProtocolApplicationDataLocation padl)
+	{
+		if (padl.citationOwner != null)
+			setParallelSheet(padl.citationOwner);
+		
+		if (padl.citationTitle != null)
+			setParallelSheet(padl.citationTitle);
+			
+		if (padl.citationOwner != null)
+			setParallelSheet(padl.citationOwner);
+		
+		if (padl.protocolTopCategory  != null)
+			setParallelSheet(padl.protocolTopCategory );
+		
+		if (padl.protocolCategoryCode  != null)
+			setParallelSheet(padl.protocolCategoryCode );
+		
+		if (padl.protocolCategoryTitle  != null)
+			setParallelSheet(padl.protocolCategoryTitle );
+		
+		if (padl.protocolEndpoint != null)
+			setParallelSheet(padl.protocolEndpoint );
+		
+		if (padl.protocolGuideline != null)
+			for (ExcelDataLocation loc : padl.protocolGuideline)
+				setParallelSheet(loc);
+		
+		if (padl.parameters != null)
+		for (String param : padl.parameters.keySet())
+		{
+			ExcelDataLocation loc = padl.parameters.get(param);
+			setParallelSheet(loc);
+		}
+		
+		if (padl.reliability_isRobustStudy != null)
+			setParallelSheet(padl.reliability_isRobustStudy );
+		
+		if (padl.reliability_isUsedforClassification != null)
+			setParallelSheet(padl.reliability_isUsedforClassification );
+		
+		if (padl.reliability_isUsedforMSDS != null)
+			setParallelSheet(padl.reliability_isUsedforMSDS );
+		
+		if (padl.reliability_purposeFlag != null)
+			setParallelSheet(padl.reliability_purposeFlag );
+		
+		if (padl.reliability_studyResultType != null)
+			setParallelSheet(padl.reliability_studyResultType );
+		
+		if (padl.reliability_value != null)
+			setParallelSheet(padl.reliability_value );
+		
+		if (padl.interpretationResult != null)
+			setParallelSheet(padl.interpretationResult );
+		
+		if (padl.interpretationCriteria != null)
+			setParallelSheet(padl.interpretationCriteria );
+		
+		if (padl.effects != null)
+			for (EffectRecordDataLocation efrdl : padl.effects)
+				setParallelSheets(efrdl);
+			
+	}
+	
+	
+	protected void setParallelSheets(EffectRecordDataLocation efrdl)
+	{
+		//TODO
+	}
 
 	@Override
 	public void setReader(Reader arg0) throws CDKException {

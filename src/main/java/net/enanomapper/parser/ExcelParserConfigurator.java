@@ -42,7 +42,7 @@ public class ExcelParserConfigurator
 	public String templateVersion = null;	
 	public int templateType = 1;
 	
-	//Global configuration for the data access
+	//Global configuration for the data access of the primary sheet
 	public boolean FlagSkipEmptyRows = true;
 	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public int rowMultiFixedSize = 1;
@@ -676,7 +676,37 @@ public class ExcelParserConfigurator
 			}
 		}
 		
-		//TODO SHEET_INDEX + SHEET_NAME
+		
+		//SHEET_INDEX
+		if (!sectionNode.path("SHEET_INDEX").isMissingNode())
+		{	
+			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "SHEET_INDEX", false);
+			if (intValue == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SHEET_INDEX\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.FlagSheetIndex = true;
+				loc.sheetIndex = intValue - 1; //1-based --> 0-based
+			}
+		}
+		
+		
+		//SHEET_NAME
+		if (!sectionNode.path("SHEET_NAME").isMissingNode())
+		{
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "SHEET_NAME", false);
+			if (stringValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SHEET_NAME\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.FlagSheetName = true;
+				loc.sheetName = stringValue;
+			}
+		}
+		
 		
 		//JSON_VALUE
 		if (sectionNode.path("JSON_VALUE").isMissingNode())
