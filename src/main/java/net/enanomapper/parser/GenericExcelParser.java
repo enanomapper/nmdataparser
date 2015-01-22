@@ -46,17 +46,6 @@ import ambit2.core.io.IRawReader;
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
-	 static class ParallelSheetState {
-		public int sheetNum = 0;
-		public int rowNum = 1;
-		public int cellNum = 1;	
-		public Sheet sheet = null;
-		public Row curRow = null;
-		public ArrayList<Row> curRows = null;
-		public Iterator<Row> rowIt = null; 
-		public Cell curCell = null;
-	 }
-	
 	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
@@ -73,10 +62,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	//Helper variables for excel file iteration
 	protected ParallelSheetState parallelSheets[] = null;
-	protected int curSheetNum = 0;
+	
+	//Primary shett
+	protected int primarySheetNum = 0;
+	protected Sheet primarySheet = null;
 	protected int curRowNum = 1;
 	protected int curCellNum = 1;	
-	protected Sheet curSheet = null;
 	protected Row curRow = null;
 	protected ArrayList<Row> curRows = null;
 	protected Iterator<Row> rowIt = null; 
@@ -130,13 +121,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		FlagNextRecordLoaded = false;
 		nextRecordBuffer = null;
 		
-		LOGGER.info("workSheet# = " + (curSheetNum + 1) + "   starRow# = " + (curRowNum + 1));
-		LOGGER.info("Last row# = " + (curSheet.getLastRowNum() + 1));
+		LOGGER.info("workSheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
+		LOGGER.info("Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 	
 	protected void initBasicWorkSheet()
 	{
-		curSheet = workbook.getSheetAt(curSheetNum);
+		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = config.startRow;
 	}
 	
@@ -204,7 +195,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void setParallelSheet(ExcelDataLocation loc)
 	{
-		if (loc.sheetIndex != curSheetNum)
+		if (loc.sheetIndex != primarySheetNum)
 		{
 			for (int i = 0; i < parallelSheets.length; i ++)
 				if (loc.sheetIndex == parallelSheets[i].sheetNum)
@@ -392,14 +383,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 		case ROW_MULTI_DYNAMIC:	
 			//Decision logic: at least one row must be left
-			if (curRowNum <= curSheet.getLastRowNum())
+			if (curRowNum <= primarySheet.getLastRowNum())
 				return true;
 			else
 				return false;
 			
 		case ROW_MULTI_FIXED:
 			//Decision logic: at least config.rowMultiFixedSize rows must be left
-			if (curRowNum <= curSheet.getLastRowNum() - config.rowMultiFixedSize)
+			if (curRowNum <= primarySheet.getLastRowNum() - config.rowMultiFixedSize)
 				return true;
 			else
 				return false;
@@ -433,7 +424,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected void initialIteration()
 	{
 		//TODO - just temporary code
-		curRow = curSheet.getRow(curRowNum);
+		curRow = primarySheet.getRow(curRowNum);
+		
+		//Initial iteration for each parallel sheet 
+		for (int i = 0; i < parallelSheets.length; i++)
+		{
+			parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
+		}
 	}
 		
 	protected int iterateExcel()
@@ -443,12 +440,17 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 			if (config.FlagSkipEmptyRows)
 			{	
-				return iterateToNextNonEmptyRow();
+				int res = iterateToNextNonEmptyRow();
+				for (int i = 0; i < parallelSheets.length; i++)
+				{
+					parallelSheets[i].iterateToNextNonEmptyRow();
+				}	
+				return res;
 			}
 			else
 			{	
 				curRowNum++;
-				curRow = curSheet.getRow(curRowNum);
+				curRow = primarySheet.getRow(curRowNum);
 				if (curRow == null)
 				{	
 					parseErrors.add("Row " + curRowNum + " is empty!");
@@ -456,6 +458,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				}
 				else
 					return curRowNum;
+				
+				//TODO iterate parallel sheets
 			}
 			
 			
@@ -482,9 +486,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected int iterateToNextNonEmptyRow()
 	{	
 		curRowNum++;
-		while (curRowNum <= curSheet.getLastRowNum())
+		while (curRowNum <= primarySheet.getLastRowNum())
 		{
-			curRow = curSheet.getRow(curRowNum);
+			curRow = primarySheet.getRow(curRowNum);
 			if (curRow != null)
 			{	
 				//TODO - to check whether this row is really empty 
@@ -741,7 +745,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				if (ExcelParserConfigurator.isValidQualifier(s))
 					effect.setLoQualifier(s);
 				else
-					parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] Lo Qualifier \""+ s + "\" is incorrect!");
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, primarySheetNum) +  "] Lo Qualifier \""+ s + "\" is incorrect!");
 			}
 		}
 		
@@ -757,7 +761,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				{
 					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
 					if (qv.value == null)
-						parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, curSheetNum) +  "] " 
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.loQualifier, primarySheetNum) +  "] " 
 								+ qstring + " Lo Value/Qualifier error: " + qv.errorMsg);
 					else
 					{
@@ -785,7 +789,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				if (ExcelParserConfigurator.isValidQualifier(s))
 					effect.setUpQualifier(s);
 				else
-					parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] Up Qualifier \""+ s + "\" is incorrect!");
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, primarySheetNum) +  "] Up Qualifier \""+ s + "\" is incorrect!");
 			}
 		}
 		
@@ -801,7 +805,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				{
 					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
 					if (qv.value == null)
-						parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, curSheetNum) +  "] " 
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.upQualifier, primarySheetNum) +  "] " 
 								+ qstring + " Up Value/Qualifier error: " + qv.errorMsg);
 					else
 					{
@@ -835,7 +839,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				if (ExcelParserConfigurator.isValidQualifier(s))
 					effect.setErrQualifier(s);
 				else
-					parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] Err Qualifier \""+ s + "\" is incorrect!");
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, primarySheetNum) +  "] Err Qualifier \""+ s + "\" is incorrect!");
 			}
 		}
 		
@@ -851,7 +855,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				{
 					RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(qstring);
 					if (qv.value == null)
-						parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, curSheetNum) +  "] " 
+						parseErrors.add("["+ locationStringForErrorMessage(efrdl.errQualifier, primarySheetNum) +  "] " 
 								+ qstring + " Err Value/Qualifier error: " + qv.errorMsg);
 					else
 					{
@@ -906,7 +910,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				}
 				else
 				{	
-					parseErrors.add("["+ locationStringForErrorMessage(efrdl.value, curSheetNum) +  "] " 
+					parseErrors.add("["+ locationStringForErrorMessage(efrdl.value, primarySheetNum) +  "] " 
 							+ richValueString + " Value error: " + rv_error);
 				}
 			}
@@ -1140,7 +1144,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			else
 			{
 				if (FlagAddParserStringError)
-					parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+					parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + 
 						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
 				return null;
 			}
@@ -1150,7 +1154,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (c.getCellType() != Cell.CELL_TYPE_STRING)
 		{
 			if (FlagAddParserStringError)
-				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + 
 					", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type STRING!"); 
 			return null;
 		}
@@ -1172,7 +1176,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}
 			else
 			{
-				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+				parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + 
 						", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!"); 
 				return null;
 			}
@@ -1180,7 +1184,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		if (c.getCellType() != Cell.CELL_TYPE_NUMERIC)
 		{
-			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (curSheetNum + 1) + 
+			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + 
 					", row " + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type NUMERIC!"); 
 			return null;
 		}
