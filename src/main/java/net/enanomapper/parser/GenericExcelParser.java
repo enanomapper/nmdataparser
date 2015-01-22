@@ -46,6 +46,18 @@ import ambit2.core.io.IRawReader;
  */
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
+	 static class ParallelSheetState {
+		public int sheetNum = 0;
+		public int rowNum = 1;
+		public int cellNum = 1;	
+		public Sheet sheet = null;
+		public Row curRow = null;
+		public ArrayList<Row> curRows = null;
+		public Iterator<Row> rowIt = null; 
+		public Cell curCell = null;
+	 }
+	
+	
 	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
 	
 	protected RichValueParser rvParser = new RichValueParser ();
@@ -57,6 +69,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected boolean xlsxFormat = false;
 	
 	//Helper variables for excel file iteration
+	protected ParallelSheetState parallelSheets[] = null;
 	protected int curSheetNum = 0;
 	protected int curRowNum = 1;
 	protected int curCellNum = 1;	
@@ -98,14 +111,40 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		handleConfigRecognitions();
 		
-		curSheet = workbook.getSheetAt(curSheetNum);
-		curRowNum = config.startRow;
-		initialIteration();
+		//Setting of the basic sheet work variables
+		initBasicWorkSheet();
+		
+		//Setting the parallel sheets work variables 
+		if (!config.parallelSheets.isEmpty())
+			initParallelSheets();
+		
+		initialIteration();		
 		FlagNextRecordLoaded = false;
 		nextRecordBuffer = null;
 		
 		LOGGER.info("workSheet# = " + (curSheetNum + 1) + "   starRow# = " + (curRowNum + 1));
 		LOGGER.info("Last row# = " + (curSheet.getLastRowNum() + 1));
+	}
+	
+	protected void initBasicWorkSheet()
+	{
+		curSheet = workbook.getSheetAt(curSheetNum);
+		curRowNum = config.startRow;
+	}
+	
+	protected void initParallelSheets()
+	{
+		parallelSheets = new ParallelSheetState[config.parallelSheets.size()];
+		for (int i = 0; i < config.parallelSheets.size(); i++)
+		{
+			ExcelSheetConfiguration eshc = config.parallelSheets.get(i);
+			parallelSheets[i] = new ParallelSheetState();
+			if (eshc.FlagSheetIndex)
+				parallelSheets[i].sheetNum = eshc.sheetIndex;
+			
+			//TODO
+			parallelSheets[i].sheet = workbook.getSheetAt(parallelSheets[i].sheetNum);
+		}
 	}
 	
 	protected  void handleConfigRecognitions()
