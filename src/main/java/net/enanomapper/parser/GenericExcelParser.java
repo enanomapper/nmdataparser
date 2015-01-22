@@ -62,6 +62,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected RichValueParser rvParser = new RichValueParser ();
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
+	protected ArrayList<String> parallelSheetsErrors = new ArrayList<String> ();
+	
+	
 	protected ExcelParserConfigurator config = null;
 	protected  InputStream input;
 	
@@ -119,6 +122,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{	
 			initParallelSheets();
 			handleParallelSheetIndices();
+			if (!parallelSheetsErrors.isEmpty())
+				throw new Exception (paralleSheetsErrorsToString());
 		}	
 		
 		initialIteration();		
@@ -209,7 +214,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				}
 			
 			if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) //This iteration mode not treated as error
-				parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] Sheet number number not valid parallel sheet!");
+				parallelSheetsErrors.add("["+ locationStringForErrorMessage(loc) +  "] Sheet number number not valid parallel sheet!");
 		}
 	}
 	
@@ -274,13 +279,59 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (padl.effects != null)
 			for (EffectRecordDataLocation efrdl : padl.effects)
 				setParallelSheets(efrdl);
-			
+	}
+	
+	protected String paralleSheetsErrorsToString()
+	{
+		StringBuffer sb = new StringBuffer();
+		for (String s : parallelSheetsErrors)
+			sb.append(s + "\n");
+		return sb.toString();
 	}
 	
 	
 	protected void setParallelSheets(EffectRecordDataLocation efrdl)
 	{
-		//TODO
+		if (efrdl.sampleID != null)
+			setParallelSheet(efrdl.sampleID);
+		
+		if (efrdl.endpoint!= null)
+			setParallelSheet(efrdl.endpoint);
+		
+		if (efrdl.conditions != null)
+			for (String key : efrdl.conditions.keySet())
+			{
+				ExcelDataLocation loc = efrdl.conditions.get(key);
+				setParallelSheet(loc);
+			}
+		
+		if (efrdl.unit != null)
+			setParallelSheet(efrdl.unit);
+		
+		if (efrdl.loValue != null)
+			setParallelSheet(efrdl.loValue);
+		
+		if (efrdl.loQualifier != null)
+			setParallelSheet(efrdl.loQualifier);
+		
+		if (efrdl.upValue != null)
+			setParallelSheet(efrdl.upValue);
+		
+		if (efrdl.upQualifier != null)
+			setParallelSheet(efrdl.upQualifier);
+		
+		if (efrdl.textValue != null)
+			setParallelSheet(efrdl.textValue);
+		
+		if (efrdl.errValue != null)
+			setParallelSheet(efrdl.errValue);
+		
+		if (efrdl.errQualifier != null)
+			setParallelSheet(efrdl.errQualifier);
+		
+		if (efrdl.value != null)
+			setParallelSheet(efrdl.value);
+		
 	}
 
 	@Override
