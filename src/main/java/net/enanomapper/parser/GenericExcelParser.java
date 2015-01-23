@@ -19,6 +19,7 @@ import net.enanomapper.parser.recognition.RichValueParser;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -148,7 +149,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				throw new Exception("Incorrect SHEET_INDEX " + (parallelSheets[i].sheetNum +1)+ " in parallel sheet #" + (i+1));
 			}	
 			
-			//TODO
+			parallelSheets[i].curRowNum = eshc.startRow;
+			
 		}
 	}
 	
@@ -423,13 +425,26 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void initialIteration()
 	{
-		//TODO - just temporary code
-		curRow = primarySheet.getRow(curRowNum);
-		
-		//Initial iteration for each parallel sheet 
-		for (int i = 0; i < parallelSheets.length; i++)
+		switch (config.substanceIteration)
 		{
-			parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
+		case ROW_SINGLE :
+		{	
+			curRow = primarySheet.getRow(curRowNum);
+
+			//Initial iteration for each parallel sheet 
+			for (int i = 0; i < parallelSheets.length; i++)
+			{
+				parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
+			}
+		}
+		break;
+		
+		case ROW_MULTI_FIXED :
+		case ROW_MULTI_DYNAMIC :
+		{
+			//TODO
+		}
+		
 		}
 	}
 		
@@ -472,8 +487,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			break;
 			
 		case ROW_MULTI_DYNAMIC:
-			//TODO
-			curRowNum++;
+			iteratedRowMultiDynamic();
+			//curRowNum++;
 			break;	
 				
 		default : 
@@ -489,16 +504,110 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		while (curRowNum <= primarySheet.getLastRowNum())
 		{
 			curRow = primarySheet.getRow(curRowNum);
-			if (curRow != null)
-			{	
-				//TODO - to check whether this row is really empty 
-				//sometimes row looks empty but it is not treated as empty ...
+			if (!isEmpty(curRow))
+			{
 				return curRowNum;
 			}	
 			curRowNum++;
 		}
 		
 		return -1;
+	}
+	
+	protected void iteratedRowMultiDynamic()
+	{	
+		switch (config.dynamicIteration)
+		{
+		case NEXT_NOT_EMPTY:
+		{
+			boolean FlagFirstRow = true;
+			curRowNum++;
+			
+			if (curRowNum <= primarySheet.getLastRowNum())
+				curRows = new ArrayList<Row>();
+			else
+			{
+				curRows = null;
+				return;
+			}
+			
+			while (curRowNum <= primarySheet.getLastRowNum())
+			{
+				curRow = primarySheet.getRow(curRowNum);
+				if (isEmpty(curRow))
+				{	
+					//Empty row is skipped
+					curRowNum++;
+				}
+				else
+				{
+					if (FlagFirstRow)  //The first row is allready checked to be non empty 
+					{
+						curRows.add(curRow);
+						curRowNum++;
+					}
+					else
+					{
+						Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
+						if (isEmpty(c))
+						{
+							curRows.add(curRow);
+							curRowNum++;
+						}
+					}
+				}
+			}
+		}
+		break;
+		
+		case NEXT_DIFFERENT_VALUE:
+		{
+			//TODO
+		}
+		break;
+		
+		default:
+			curRowNum++;
+			curRows = null;
+		}
+		
+		
+	}
+	
+	protected boolean isEmpty (Row row)
+	{
+		if (row == null)
+			return true;
+		else
+		{
+			//TODO - to check whether this row is really empty 
+			//sometimes row looks empty but it is not treated as empty ...
+			return false;
+		}
+	}
+	
+	protected boolean isEmpty (Column  col)
+	{
+		if (col == null)
+			return true;
+		else
+		{
+			//TODO - to check whether this Column is really empty 
+			return false;
+		}
+	}
+	
+	protected boolean isEmpty (Cell cell)
+	{
+		if (cell == null)
+			return true;
+		else
+		{
+			//TODO - to check whether this call is really empty 
+			//if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
+			//	return true;
+			return false;
+		}
 	}
 	
 	//This function uses a generic approach (the generic variants of the helper functions)
@@ -948,7 +1057,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}
 			
 			effect.setConditions(params);
-			
 		}
 		
 		return effect;
@@ -974,11 +1082,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				return getStringValue(curRow, loc);  //from basic sheet
 			
 		case ROW_MULTI_FIXED:
-			//TODO
-			return null;
-			
 		case ROW_MULTI_DYNAMIC:
-			//TODO
+			//Taking the value from the first row
+			ArrayList<Row> rows;
+			if (loc.isFromParallelSheet())
+				rows = parallelSheets[loc.getParallelSheetIndex()].curRows;
+			else	
+				rows = curRows;
+			if (rows != null)
+				if (!rows.isEmpty())
+				return getStringValue(rows.get(0), loc);
 			return null;
 		
 		case ABSOLUTE_LOCATION: 
@@ -1040,12 +1153,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			else
 				return getNumericValue(curRow, loc);
 			
-		case ROW_MULTI_FIXED:
-			//TODO
-			return null;
 			
-		case ROW_MULTI_DYNAMIC:
-			//TODO
+		case ROW_MULTI_FIXED:	//Both treated the same way
+		case ROW_MULTI_DYNAMIC:  
+			//Taking the value from the first row
+			ArrayList<Row> rows;
+			if (loc.isFromParallelSheet())
+				rows = parallelSheets[loc.getParallelSheetIndex()].curRows;
+			else	
+				rows = curRows;
+			if (rows != null)
+				if (!rows.isEmpty())
+				return getNumericValue(rows.get(0), loc);
 			return null;
 			
 		case ABSOLUTE_LOCATION: 

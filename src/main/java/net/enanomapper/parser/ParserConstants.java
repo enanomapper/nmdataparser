@@ -196,4 +196,9 @@ public class ParserConstants
 			}
 		}
 	}
+	
+	public enum SheetSynhronization {
+		NONE, MATCH_KEY, UNDEFINED
+	}
+	
 }
