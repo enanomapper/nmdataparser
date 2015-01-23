@@ -34,6 +34,7 @@ public class ParallelSheetState
 			curRowNum++;
 		}
 		
+		curRow = null;  //This is for the cases when the parallel sheet has less rows than the primary sheet
 		return -1;
 	}
 	

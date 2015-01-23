@@ -963,7 +963,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet())
-				return getStringValue(parallelSheets[loc.getParallelSheetIndex()].curRow, loc);
+			{	
+				Row row = parallelSheets[loc.getParallelSheetIndex()].curRow;
+				if (row != null)
+					return getStringValue(row, loc);
+				else
+					return null;
+			}	
 			else
 				return getStringValue(curRow, loc);  //from basic sheet
 			
@@ -1024,7 +1030,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet())
-				return getNumericValue(parallelSheets[loc.getParallelSheetIndex()].curRow, loc);
+			{	
+				Row row = parallelSheets[loc.getParallelSheetIndex()].curRow;
+				if (row != null)
+					return getNumericValue(row, loc);
+				else
+					return null;
+			}	
 			else
 				return getNumericValue(curRow, loc);
 			
