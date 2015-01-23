@@ -438,7 +438,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE:
-			if (config.FlagSkipEmptyRows)
+			if (config.Fl_SkipEmptyRows)
 			{	
 				int res = iterateToNextNonEmptyRow();
 				for (int i = 0; i < parallelSheets.length; i++)
@@ -752,7 +752,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.loValue != null)
 		{	
 			Double d = null;
-			if (config.FlagAllowQualifierInValueCell)
+			if (config.Fl_AllowQualifierInValueCell)
 			{
 				FlagAddParserStringError = false; //Temporary switch off parser errors
 				String qstring = getStringValue(efrdl.loValue);
@@ -796,7 +796,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.upValue != null)
 		{	
 			Double d = null;
-			if (config.FlagAllowQualifierInValueCell)
+			if (config.Fl_AllowQualifierInValueCell)
 			{
 				FlagAddParserStringError = false; //Temporary switch off parser errors
 				String qstring = getStringValue(efrdl.upValue);
@@ -846,7 +846,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (efrdl.errValue != null)
 		{	
 			Double d = null;
-			if (config.FlagAllowQualifierInValueCell)
+			if (config.Fl_AllowQualifierInValueCell)
 			{
 				FlagAddParserStringError = false; //Temporary switch off parser errors
 				String qstring = getStringValue(efrdl.errValue);
@@ -1300,7 +1300,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - in ExcelDataLocation class separate 'recognitions' for the Sheet, Row and Column
 	 * 
-	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, JSON_VALUE, JSON_REPOSITORY, COLUMN_* ...
+	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, COLUMN_* ...
 	 * 
 	 * - List of all allowed JSON keywords + optional checking
 	 * 
@@ -1309,9 +1309,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Definition of an 'END of reading" region i.e. after that point the excel data is not considered.
 	 *   This idea can be further developed to a substance record filtration utility - may be a special class for filtration... 
-	 * 
-	 * - "SMART" value reading (lo and up values at once + qualifiers) e.g. strings like that: "<=100" or "100,200" ... (RichValue class)
-	 * 
+	 *  
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel: protocol applications, effects, endpoints, conditions
 	 *   keyword suggestion DYNAMIC_SPAN
 	 *  
@@ -1323,8 +1321,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - conditions to be read as RichValue and stored as Value object 
 	 * 
-	 * - Add flags for reading the basic fields of the ExcelParserConfiguration (like class ExcelSheetConfiguration)
-	 * 
+	 *  
 	 */
 	
 }

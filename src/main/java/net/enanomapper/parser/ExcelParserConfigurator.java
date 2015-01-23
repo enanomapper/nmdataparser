@@ -35,25 +35,46 @@ public class ExcelParserConfigurator
 	public ArrayList<String> configWarning = new ArrayList<String> ();
 	
 	//Configuration flags
-	public boolean FlagAllowQualifierInValueCell = true;  //default
+	public boolean Fl_AllowQualifierInValueCell = true;  //default
+	public boolean Fl_SkipEmptyRows = true;
 	
-	//Configuration variables
+	
+	//Template info variables
 	public String templateName = null;
 	public String templateVersion = null;	
 	public int templateType = 1;
 	
 	//Global configuration for the data access of the primary sheet
-	public boolean FlagSkipEmptyRows = true;
 	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
+	public boolean FlagSubstanceIteration = false; 
+	
 	public int rowMultiFixedSize = 1;
+	public boolean FlagRowMultiFixedSize = false;
+	
 	public int startRow = 2;
+	public boolean FlagStartRow = false;
+	
 	public int sheetIndex = 0;
+	public boolean FlagSheetIndex = false;
+	
 	public String sheetName = null;
+	public boolean FlagSheetName = false;
+	
 	public int startHeaderRow = 0;
+	public boolean FlagStartHeaderRow = false;
+	
 	public int endHeaderRow = 0;
+	public boolean FlagEndHeaderRow = false;
+	
 	public boolean allowEmpty = true;
+	public boolean FlagAllowEmpty = false;
+	
 	public Recognition recognition = Recognition.BY_INDEX;
+	public boolean FlagRecognition = false;
+	
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
+	public boolean FlagDynamicIteration = false;
+	
 	
 	//Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
@@ -118,66 +139,128 @@ public class ExcelParserConfigurator
 		else
 		{
 			//ITERATION
-			String keyword =  jsonUtils.extractStringKeyword(curNode, "ITERATION", true);
-			if (keyword == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
+			if (!curNode.path("ITERATION").isMissingNode())
 			{	
-				conf.substanceIteration = IterationAccess.fromString(keyword);
-				if (conf.substanceIteration == IterationAccess.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
-			}			
-			//SHEET_INDEX
-			Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
-			if (intValue == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-				conf.sheetIndex = intValue - 1; //1-based --> 0-based
-			//START_ROW
-			intValue = jsonUtils.extractIntKeyword(curNode, "START_ROW", false);
-			if (intValue == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-				conf.startRow = intValue - 1; //1-based --> 0-based			
-			//START_HEADER_ROW
-			intValue = jsonUtils.extractIntKeyword(curNode, "START_HEADER_ROW", false);
-			if (intValue == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-				conf.startHeaderRow = intValue - 1; //1-based --> 0-based
-			//END_HEADER_ROW
-			intValue = jsonUtils.extractIntKeyword(curNode, "END_HEADER_ROW", false);
-			if (intValue == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-				conf.endHeaderRow = intValue - 1 ; //1-based --> 0-based
-			//ALLOW_EMPTY
-			Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, "ALLOW_EMPTY", false);
-			if (boolValue == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-				conf.allowEmpty = boolValue;
-			//RECOGNITION
-			keyword =  jsonUtils.extractStringKeyword(curNode, "RECOGNITION", true);
-			if (keyword == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-			{	
-				conf.recognition = Recognition.fromString(keyword);
-				if (conf.recognition == Recognition.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
-			}	
-			//DYNAMIC_ITERATION
-			keyword =  jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION", true);
-			if (keyword == null)
-				conf.configErrors.add(jsonUtils.getError());
-			else
-			{	
-				conf.dynamicIteration = DynamicIteration.fromString(keyword);
-				if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
-			}	
+				String keyword =  jsonUtils.extractStringKeyword(curNode, "ITERATION", false);
+				if (keyword == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.substanceIteration = IterationAccess.fromString(keyword);
+					conf.FlagSubstanceIteration = true;
+					if (conf.substanceIteration == IterationAccess.UNDEFINED)
+						conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
+				}
+			}
 			
+			//SHEET_INDEX
+			if (!curNode.path("SHEET_INDEX").isMissingNode())
+			{
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
+				if (intValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.sheetIndex = intValue - 1; //1-based --> 0-based
+					conf.FlagSheetIndex = true;
+				}
+			}
+			
+			//SHEET_NAME
+			if (!curNode.path("SHEET_NAME").isMissingNode())
+			{	
+				String keyword = jsonUtils.extractStringKeyword(curNode, "SHEET_NAME", false);
+				if (keyword == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.sheetName = keyword; 
+					conf.FlagSheetName = true;
+				}
+			}
+			
+			//START_ROW
+			if (!curNode.path("START_ROW").isMissingNode())
+			{
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, "START_ROW", false);
+				if (intValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.startRow = intValue - 1; //1-based --> 0-based
+					conf.FlagStartRow = true;
+				}
+			}
+			
+			//START_HEADER_ROW
+			if (!curNode.path("START_HEADER_ROW").isMissingNode())
+			{
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, "START_HEADER_ROW", false);
+				if (intValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.startHeaderRow = intValue - 1; //1-based --> 0-based
+					conf.FlagStartHeaderRow = true;
+				}	
+			
+			}
+			
+			//END_HEADER_ROW
+			if (!curNode.path("END_HEADER_ROW").isMissingNode())
+			{
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, "END_HEADER_ROW", false);
+				if (intValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.endHeaderRow = intValue - 1 ; //1-based --> 0-based
+					conf.FlagEndHeaderRow = true;
+				}	
+			}
+			
+			//ALLOW_EMPTY
+			if (!curNode.path("ALLOW_EMPTY").isMissingNode())
+			{
+				Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, "ALLOW_EMPTY", false);
+				if (boolValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.allowEmpty = boolValue;
+					conf.FlagAllowEmpty = true;
+				}	
+			}
+			
+			//RECOGNITION
+			if (!curNode.path("RECOGNITION").isMissingNode())
+			{
+				String keyword =  jsonUtils.extractStringKeyword(curNode, "RECOGNITION", true);
+				if (keyword == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.recognition = Recognition.fromString(keyword);
+					conf.FlagRecognition = true;
+					if (conf.recognition == Recognition.UNDEFINED)
+						conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+				}
+			}
+			
+			//DYNAMIC_ITERATION
+			if (!curNode.path("DYNAMIC_ITERATION").isMissingNode())
+			{
+				String keyword =  jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION", true);
+				if (keyword == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.dynamicIteration = DynamicIteration.fromString(keyword);
+					conf.FlagDynamicIteration = true;
+					if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
+						conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
+				}
+			}
 		}
 		
 		//Handle SubstanceRecord data locations
@@ -324,15 +407,29 @@ public class ExcelParserConfigurator
 		sb.append("\t},\n\n");
 		
 		sb.append("\t\"DATA_ACCESS\" : \n");
-		sb.append("\t{\n");		
-		sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
-		sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
-		sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
-		sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
+		sb.append("\t{\n");	
+		if (FlagSubstanceIteration)
+			sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
+		if (FlagRowMultiFixedSize)
+			sb.append("\t\t\"ROW_MULTI_FIXED_SIZE\" : " + rowMultiFixedSize + ",\n" ); 
+		if (FlagSheetIndex)
+			sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1) + ",\n" ); //0-based --> 1-based
+		if (FlagSheetName)
+			sb.append("\t\t\"SHEET_NAME\" : \"" + sheetName + "\",\n" ); 
+		if (FlagStartRow)
+			sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
+		if (FlagStartHeaderRow)
+			sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		if (FlagEndHeaderRow)
+			sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		if (FlagAllowEmpty)
+			sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
+		if (FlagRecognition)
+			sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
+		
+		
+		if (FlagDynamicIteration)
+			sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
 		sb.append("\t},\n\n");
 		
 		if (!parallelSheets.isEmpty())
@@ -956,7 +1053,7 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)
 			{	
 				efrdl.loValue = loc;
-				if (conf.FlagAllowQualifierInValueCell)
+				if (conf.Fl_AllowQualifierInValueCell)
 					efrdl.loValue.setFlagExtractValueQualifier(true);
 			}		
 		}
@@ -976,7 +1073,7 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)
 			{	
 				efrdl.upValue = loc;
-				if (conf.FlagAllowQualifierInValueCell)
+				if (conf.Fl_AllowQualifierInValueCell)
 					efrdl.upValue.setFlagExtractValueQualifier(true);
 			}	
 		}
@@ -1004,7 +1101,7 @@ public class ExcelParserConfigurator
 			if (loc.nErrors == 0)
 			{	
 				efrdl.errValue = loc;
-				if (conf.FlagAllowQualifierInValueCell)
+				if (conf.Fl_AllowQualifierInValueCell)
 					efrdl.errValue.setFlagExtractValueQualifier(true);
 			}	
 		}
