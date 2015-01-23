@@ -181,7 +181,7 @@ public class ParserConstants
 	}
 	
 	public enum DynamicIteration {
-		NEXT_NOT_EMPTY, UNDEFINED;
+		NEXT_NOT_EMPTY, NEXT_DIFFERENT_VALUE, UNDEFINED;
 		
 		public static DynamicIteration fromString(String s)
 		{	 

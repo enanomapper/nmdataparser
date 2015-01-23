@@ -37,6 +37,9 @@ public class ExcelSheetConfiguration
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	public boolean FlagDynamicIteration = false;
 	
+	public int dynamicIterationColumnIndex = 0;
+	public boolean FlagDynamicIterationColumnIndex = false;
+	
 	
 	public String toJSONKeyWord(String offset)
 	{	
@@ -130,6 +133,15 @@ public class ExcelSheetConfiguration
 			sb.append(offset + "\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\"");
 			nFields++;
 		}
+		
+		if (FlagDynamicIterationColumnIndex)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : \"" + (dynamicIterationColumnIndex + 1) + "\"");
+			nFields++;
+		}
+		
 		
 		if (nFields > 0)
 			sb.append("\n");

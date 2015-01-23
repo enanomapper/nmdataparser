@@ -75,6 +75,12 @@ public class ExcelParserConfigurator
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	public boolean FlagDynamicIteration = false;
 	
+	public int dynamicIterationColumnIndex = 0;
+	public boolean FlagDynamicIterationColumnIndex = false;
+	
+	//TODO add DynamicIterationColumnName
+	
+	
 	
 	//Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
@@ -261,6 +267,21 @@ public class ExcelParserConfigurator
 						conf.configErrors.add("In JSON Section \"DATA_ACCESS\", keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
 				}
 			}
+			
+			//DYNAMIC_ITERATION_COLUMN_INDEX
+			if (!curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode())
+			{
+				int col_index = extractColumnIndex(curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+				if (col_index == -1)
+				{
+					conf.configErrors.add("In JSON section \"DATA_ACESS\", keyword \"DYNAMIC_ITERATION_COLUMN_INDEX\" is incorrect! " + jsonUtils.getError());
+				}
+				else
+				{	
+					conf.dynamicIterationColumnIndex = col_index; 
+					conf.FlagDynamicIterationColumnIndex = true;
+				}
+			}
 		}
 		
 		//Handle SubstanceRecord data locations
@@ -425,11 +446,11 @@ public class ExcelParserConfigurator
 		if (FlagAllowEmpty)
 			sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
 		if (FlagRecognition)
-			sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );	
-		
-		
+			sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );			
 		if (FlagDynamicIteration)
 			sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
+		if (FlagDynamicIterationColumnIndex)
+			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) + ",\n" ); //0-based --> 1-based
 		sb.append("\t},\n\n");
 		
 		if (!parallelSheets.isEmpty())
@@ -1283,6 +1304,22 @@ public class ExcelParserConfigurator
 					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
 							+ (jsonArrayIndex+1) + " keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
 			}	
+		}
+		
+		//DYNAMIC_ITERATION_COLUMN_INDEX
+		if (!node.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode())
+		{
+			int col_index = extractColumnIndex(node.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+			if (col_index == -1)
+			{
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"DYNAMIC_ITERATION_COLUMN_INDEX\": " + jsonUtils.getError());
+			}
+			else
+			{	
+				eshc.dynamicIterationColumnIndex = col_index; 
+				eshc.FlagDynamicIterationColumnIndex = true;
+			}
 		}
 		
 		return eshc;
