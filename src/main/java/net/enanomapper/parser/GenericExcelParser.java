@@ -488,7 +488,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			
 		case ROW_MULTI_DYNAMIC:
 			iteratedRowMultiDynamic();
-			//curRowNum++;
 			break;	
 				
 		default : 
@@ -516,12 +515,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void iteratedRowMultiDynamic()
 	{	
+		LOGGER.info("----- Reading at row: " + (curRowNum+1));
 		switch (config.dynamicIteration)
 		{
 		case NEXT_NOT_EMPTY:
 		{
 			boolean FlagFirstRow = true;
-			curRowNum++;
 			
 			if (curRowNum <= primarySheet.getLastRowNum())
 				curRows = new ArrayList<Row>();
@@ -538,13 +537,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				{	
 					//Empty row is skipped
 					curRowNum++;
+					continue;
 				}
 				else
 				{
-					if (FlagFirstRow)  //The first row is allready checked to be non empty 
+					if (FlagFirstRow)  //The first row is already checked to be non empty 
 					{
 						curRows.add(curRow);
 						curRowNum++;
+						FlagFirstRow = false;
+						
+						Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
+						LOGGER.info(c.toString());
 					}
 					else
 					{
@@ -554,9 +558,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 							curRows.add(curRow);
 							curRowNum++;
 						}
+						else
+						{
+							LOGGER.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
+							return; //Reached next record
+						}
 					}
-				}
-			}
+				}				
+			} //end of while
+			
+			LOGGER.info(" read " + curRows.size() + " rows");
 		}
 		break;
 		
@@ -579,9 +590,20 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (row == null)
 			return true;
 		else
-		{
-			//TODO - to check whether this row is really empty 
-			//sometimes row looks empty but it is not treated as empty ...
+		{	
+			if (config.Fl_FullCheckForEmptyColumnsAndRows)
+			{	
+				for (int i = 0; i <= row.getLastCellNum(); i++)
+				{
+					Cell c = row.getCell(i);
+					if (isEmpty(c))
+						continue;
+					else
+						return false;
+				}
+				return true;
+			}
+			
 			return false;
 		}
 	}
@@ -602,10 +624,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (cell == null)
 			return true;
 		else
-		{
-			//TODO - to check whether this call is really empty 
-			//if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
-			//	return true;
+		{	 
+			if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
+				return true;
+			//TODO eventually to check some other 'strange' cases of empty cells
+			
 			return false;
 		}
 	}

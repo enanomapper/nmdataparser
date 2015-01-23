@@ -35,7 +35,8 @@ public class ExcelParserConfigurator
 	public ArrayList<String> configWarning = new ArrayList<String> ();
 	
 	//Configuration flags
-	public boolean Fl_AllowQualifierInValueCell = true;  //default
+	public boolean Fl_FullCheckForEmptyColumnsAndRows = true;
+	public boolean Fl_AllowQualifierInValueCell = true;  
 	public boolean Fl_SkipEmptyRows = true;
 	
 	
