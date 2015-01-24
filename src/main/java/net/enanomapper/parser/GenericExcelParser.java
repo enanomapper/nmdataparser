@@ -369,6 +369,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (hasExcelDataForNextRecord())
 		{
 			//This is the actual reading of next substance record
+			readVariables();
 			nextRecordBuffer = getSubstanceRecord();
 			if (nextRecordBuffer == null)
 				nextRecordBuffer = new SubstanceRecord();
@@ -427,8 +428,54 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			return null;
 	}
 	
-	protected void initialIteration()
+	protected void readVariables()
 	{
+		curVariables.clear();
+		if (config.variableLocations != null)
+		{
+			for (String var : config.variableLocations.keySet())
+			{
+				ExcelDataLocation loc = config.variableLocations.get(var);
+				FlagAddParserStringError = false;
+				String s = getStringValue(loc);
+				FlagAddParserStringError  = true;
+				if (s != null)
+					curVariables.put(var, s);
+				else
+				{
+					Double d = getNumericValue(loc);
+					if (d != null)
+						curVariables.put(var, d);
+				}	
+			}
+		}
+		
+		for (ExcelSheetConfiguration eshc : config.parallelSheets)
+		{
+			if (eshc.variableLocations != null)
+			{	
+				for (String var : eshc.variableLocations.keySet())
+				{
+					ExcelDataLocation loc = eshc.variableLocations.get(var);
+					FlagAddParserStringError = false;
+					String s = getStringValue(loc);
+					FlagAddParserStringError  = true;
+					if (s != null)
+						curVariables.put(var, s);
+					else
+					{
+						Double d = getNumericValue(loc);
+						if (d != null)
+							curVariables.put(var, d);
+					}	
+				}
+			}	
+		}
+		
+	}
+	
+	protected void initialIteration()
+	{	
 		switch (config.substanceIteration)
 		{
 		case ROW_SINGLE :
@@ -585,8 +632,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			curRowNum++;
 			curRows = null;
 		}
-		
-		
 	}
 	
 	protected boolean isEmpty (Row row)
@@ -1159,6 +1204,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			return null;
 		}
 		
+		case VARIABLE:
+		{
+			String key = loc.getVariableKey();
+			Object value = curVariables.get(key);
+			if (value != null)
+				if (value instanceof String)
+					return (String) value;
+				else
+					if (FlagAddParserStringError)
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type STRING!");
+			return null;
+		}
+		
 		default : 
 			return null;
 		}
@@ -1235,6 +1293,21 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type NUMERIC!");
 			return null;
 		}
+		
+		case VARIABLE:
+		{
+			String key = loc.getVariableKey();
+			Object value = curVariables.get(key);
+			if (value != null)
+				if (value instanceof Double)
+					return (Double) value;
+				else
+					if (value instanceof Integer)
+						return new Double((Integer)value); 
+					else 	
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type NUMERIC!");
+			return null;
+		}	
 			
 		default : 
 			return null;
