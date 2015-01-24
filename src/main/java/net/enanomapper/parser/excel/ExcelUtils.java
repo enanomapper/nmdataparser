@@ -6,14 +6,28 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class ExcelUtils 
 {
-	public static HashMap<String, Integer> getRowGroupsByEmptyCell(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
+	public static HashMap<String, Integer> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
+	{	
+		return getRowGroups(sheet, startRowIndex, endRowIndex, keyColumnIndex, true);
+	}
+	
+	
+	public static HashMap<String, Integer> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex, 
+				boolean recognizeGroupByNextNonEmpty)
 	{
 		HashMap<String, Integer> groups = new HashMap<String, Integer>();
-		//TODO
+		
+		if (recognizeGroupByNextNonEmpty)
+		{
+			//TODO
+		}
+		else
+		{
+			//TODO
+		}
 		
 		return groups;
 	}
-	
 	
 	
 }
