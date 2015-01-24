@@ -81,14 +81,12 @@ public class ExcelParserConfigurator
 	
 	//TODO add DynamicIterationColumnName
 	
-	
-	
 	//Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
 	public HashMap<String, ExcelDataLocation> substanceLocations = new HashMap<String, ExcelDataLocation>();
 	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
 	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
-	
+	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
 	{
@@ -1340,6 +1338,11 @@ public class ExcelParserConfigurator
 		}
 		
 		return hmap;
+	}
+	
+	public static void extractCompositionDataLocation(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
 	}
 	
 	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf)

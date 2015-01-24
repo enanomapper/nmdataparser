@@ -201,4 +201,9 @@ public class ParserConstants
 		NONE, MATCH_KEY, UNDEFINED
 	}
 	
+	
+	public enum StructureInfoType {
+		INCHI, INCHI_KEY, FORMULA, SMILES
+	}
+	
 }
