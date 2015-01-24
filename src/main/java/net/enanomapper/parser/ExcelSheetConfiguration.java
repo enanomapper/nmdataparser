@@ -40,6 +40,11 @@ public class ExcelSheetConfiguration
 	public int dynamicIterationColumnIndex = 0;
 	public boolean FlagDynamicIterationColumnIndex = false;
 	
+	//Handling locations dynamically
+	public DynamicIterationSpan dynamicIterationSpan = null;
+	public ColumnSpan columnSpan = null;
+	public RowSpan rowSpan = null;
+	
 	
 	public String toJSONKeyWord(String offset)
 	{	
@@ -140,6 +145,30 @@ public class ExcelSheetConfiguration
 				sb.append(",\n");
 			sb.append(offset + "\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : \"" + (dynamicIterationColumnIndex + 1) + "\"");
 			nFields++;
+		}
+		
+		
+		
+		//Dynamic locations
+		if (dynamicIterationSpan != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			dynamicIterationSpan.toJSONKeyWord(offset + "\t");
+		}
+		
+		if (columnSpan != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			columnSpan.toJSONKeyWord(offset + "\t");
+		}
+		
+		if (rowSpan != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			rowSpan.toJSONKeyWord(offset + "\t");
 		}
 		
 		

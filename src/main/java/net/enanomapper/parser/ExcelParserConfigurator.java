@@ -88,6 +88,12 @@ public class ExcelParserConfigurator
 	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
 	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
 	
+	//Handling locations dynamically
+	public DynamicIterationSpan dynamicIterationSpan = null;
+	public ColumnSpan columnSpan = null;
+	public RowSpan rowSpan = null;
+	
+	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
 	{
 		FileInputStream fin = new FileInputStream(jsonConfig); 
@@ -281,6 +287,29 @@ public class ExcelParserConfigurator
 					conf.FlagDynamicIterationColumnIndex = true;
 				}
 			}
+			
+			
+			//DYNAMIC_ITERATION_SPAN
+			if (!curNode.path("DYNAMIC_ITERATION_SPAN").isMissingNode())
+			{
+				DynamicIterationSpan span = extractDynamicIterationSpan(curNode.path("DYNAMIC_ITERATION_SPAN"), conf);
+				conf.dynamicIterationSpan = span;
+			}
+			
+			//COLUMN_SPAN
+			if (!curNode.path("COLUMN_SPAN").isMissingNode())
+			{
+				ColumnSpan span = extractColumnSpan(curNode.path("COLUMN_SPAN"), conf);
+				conf.columnSpan = span;
+			}
+			
+			//ROW_SPAN
+			if (!curNode.path("ROW_SPAN").isMissingNode())
+			{
+				RowSpan span = extractRowSpan(curNode.path("ROW_SPAN"), conf);
+				conf.rowSpan = span;
+			}
+			
 		}
 		
 		//Handle SubstanceRecord data locations
@@ -351,6 +380,10 @@ public class ExcelParserConfigurator
 				if (loc.nErrors == 0)							
 					conf.substanceLocations.put("SubstanceRecord.idSubstance", loc);
 			}
+			
+			
+			//Handle (1) external identifies and (2) composition
+			//TODO
 		}
 		
 		
@@ -402,8 +435,7 @@ public class ExcelParserConfigurator
 		}
 		
 		
-		//Handle (1) external identifies and (2) composition
-		//TODO
+		
 		
 		return conf;
 	}
@@ -450,7 +482,32 @@ public class ExcelParserConfigurator
 			sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
 		if (FlagDynamicIterationColumnIndex)
 			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) + ",\n" ); //0-based --> 1-based
-		sb.append("\t},\n\n");
+		
+		//TODO fix "," ...
+		
+		//Dynamic locations
+		if (dynamicIterationSpan != null)
+		{
+			//if (nFields > 0)
+			//	sb.append(",\n");
+			dynamicIterationSpan.toJSONKeyWord("\t\t");
+		}
+
+		if (columnSpan != null)
+		{
+			//if (nFields > 0)
+			//	sb.append(",\n");
+			columnSpan.toJSONKeyWord("\t\t");
+		}
+
+		if (rowSpan != null)
+		{
+			//if (nFields > 0)
+			//	sb.append(",\n");
+			rowSpan.toJSONKeyWord("\t\t");
+		}		
+		sb.append("\t},\n\n");  //end of DATA_ACCESS section
+		
 		
 		if (!parallelSheets.isEmpty())
 		{	
@@ -1343,6 +1400,24 @@ public class ExcelParserConfigurator
 	public static void extractCompositionDataLocation(JsonNode node, ExcelParserConfigurator conf)
 	{
 		//TODO
+	}
+	
+	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
+		return null;
+	}
+	
+	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
+		return null;
+	}
+	
+	public static RowSpan extractRowSpan(JsonNode node, ExcelParserConfigurator conf)
+	{
+		//TODO
+		return null;
 	}
 	
 	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf)
