@@ -11,10 +11,11 @@ package net.enanomapper.parser;
  */
 public class DynamicIterationSpan 
 {
-	public boolean handleByRows = true;
-	public boolean FlaghandleByRows = false;
+	public boolean handleByRows = true;    //This variable is logically related to the iteration mode
+	public boolean FlagHandleByRows = false;
 	
 	
+	//groping  
 	
 	public String toJSONKeyWord(String offset)
 	{
@@ -24,15 +25,14 @@ public class DynamicIterationSpan
 		sb.append(offset + "{\n");
 		
 		
-		/*
-		if ()
+		if (FlagHandleByRows)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"ITERATION\" : \"" + iteration.toString() + "\"");
+			sb.append(offset + "\t\"HANDLE_BY_ROWS\" : \"" + handleByRows + "\"");
 			nFields++;
 		}
-		*/
+		
 		
 		
 		if (nFields > 0)

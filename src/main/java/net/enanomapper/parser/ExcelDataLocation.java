@@ -17,6 +17,7 @@ public class ExcelDataLocation
 	private Object absoluteLocationValue = null;
 	private Object jsonValue = null;
 	private String jsonRepositoryKey = null;
+	private String variableKey = null;
 	
 	public int nErrors = 0;
 	public String sectionName = "";
@@ -176,6 +177,14 @@ public class ExcelDataLocation
 	public void setJsonRepositoryKey(String jsonRepositoryKey) {
 		this.jsonRepositoryKey = jsonRepositoryKey;
 	}
+	
+	public String getVariableKey() {
+		return variableKey;
+	}
+
+	public void setVariableKey(String variableKey) {
+		this.variableKey = variableKey;
+	}
 
 	public boolean isFlagExtractValueQualifier() {
 		return FlagExtractValueQualifier;
@@ -203,5 +212,5 @@ public class ExcelDataLocation
 	
 	public boolean isFromParallelSheet(){
 		return (parallelSheetIndex >= 0);
-	}
+	}	
 }

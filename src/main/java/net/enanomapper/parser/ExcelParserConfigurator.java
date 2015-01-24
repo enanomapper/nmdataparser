@@ -88,6 +88,9 @@ public class ExcelParserConfigurator
 	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
 	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
 	
+	//Read data as variables
+	public HashMap<String, ExcelDataLocation> variableLocations = null;
+	
 	//Handling locations dynamically
 	public DynamicIterationSpan dynamicIterationSpan = null;
 	public ColumnSpan columnSpan = null;
@@ -289,6 +292,14 @@ public class ExcelParserConfigurator
 			}
 			
 			
+			//VARIABLES
+			JsonNode varNode = curNode.path("VARIABLES");
+			if (!varNode.isMissingNode())
+			{
+				conf.variableLocations = extractDynamicSection(varNode, conf);
+			}
+			
+			
 			//DYNAMIC_ITERATION_SPAN
 			if (!curNode.path("DYNAMIC_ITERATION_SPAN").isMissingNode())
 			{
@@ -434,9 +445,6 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
-		
-		
-		
 		return conf;
 	}
 	
@@ -484,6 +492,27 @@ public class ExcelParserConfigurator
 			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) + ",\n" ); //0-based --> 1-based
 		
 		//TODO fix "," ...
+		
+		
+		if (variableLocations != null)
+		{	
+			sb.append("\t\t\"VARIABLES\" : \n" );
+			sb.append("\t\t{\n" );
+			
+			int nParams = 0;
+			for (String var : variableLocations.keySet())
+			{	
+				loc = variableLocations.get(var);
+				sb.append(loc.toJSONKeyWord("\t\t\t"));
+				
+				if (nParams < variableLocations.size())
+					sb.append(",\n\n");
+				else
+					sb.append("\n");
+				nParams++;
+			}
+			sb.append("\t}" );
+		}
 		
 		//Dynamic locations
 		if (dynamicIterationSpan != null)
@@ -914,6 +943,27 @@ public class ExcelParserConfigurator
 			else
 			{	
 				loc.setJsonRepositoryKey(stringValue);
+			}
+		}
+		
+		
+		//VARIABLE_KEY
+		if (sectionNode.path("VARIABLE_KEY").isMissingNode())
+		{	
+			if (loc.iteration == IterationAccess.VARIABLE)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" is missing!");
+				loc.nErrors++;
+			}
+		}
+		else
+		{
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "VARIABLE_KEY", false);
+			if (stringValue == null)
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" : " + jsonUtils.getError());
+			else
+			{	
+				loc.setVariableKey(stringValue);
 			}
 		}
 		
@@ -1377,6 +1427,14 @@ public class ExcelParserConfigurator
 				eshc.FlagDynamicIterationColumnIndex = true;
 			}
 		}
+		
+		//VARIABLES
+		JsonNode varNode = node.path("VARIABLES");
+		if (!varNode.isMissingNode())
+		{
+			eshc.variableLocations = extractDynamicSection(varNode, conf);
+		}
+		
 		
 		return eshc;
 	}

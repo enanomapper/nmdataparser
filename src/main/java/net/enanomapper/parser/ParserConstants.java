@@ -61,6 +61,7 @@ public class ParserConstants
 		
 		JSON_VALUE, 
 		JSON_REPOSITORY, 
+		VARIABLE,
 		UNDEFINED;
 		
 		public static IterationAccess fromString(String s)

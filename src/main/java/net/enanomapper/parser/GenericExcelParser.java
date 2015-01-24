@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -64,7 +65,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	//Helper variables for excel file iteration
 	protected ParallelSheetState parallelSheets[] = null;
 	
-	//Primary shett
+	//Primary sheet
 	protected int primarySheetNum = 0;
 	protected Sheet primarySheet = null;
 	protected int curRowNum = 1;
@@ -73,7 +74,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected ArrayList<Row> curRows = null;
 	protected Iterator<Row> rowIt = null; 
 	protected Cell curCell = null;
-	 
+	
+	//All variables read from the primary sheet and all parallel sheets
+	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
+	
 	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
 	private SubstanceRecord nextRecordBuffer = null;
 	private boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases

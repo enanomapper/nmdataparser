@@ -1,6 +1,8 @@
 package net.enanomapper.parser;
 
 
+import java.util.HashMap;
+
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
@@ -39,6 +41,9 @@ public class ExcelSheetConfiguration
 	
 	public int dynamicIterationColumnIndex = 0;
 	public boolean FlagDynamicIterationColumnIndex = false;
+	
+	//Read data as variables
+	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	
 	//Handling locations dynamically
 	public DynamicIterationSpan dynamicIterationSpan = null;
@@ -147,6 +152,29 @@ public class ExcelSheetConfiguration
 			nFields++;
 		}
 		
+		
+		if (variableLocations != null)
+		{	
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"VARIABLES\" : \n" );
+			sb.append(offset + "\t{\n" );
+			
+			int nParams = 0;
+			for (String var : variableLocations.keySet())
+			{	
+				ExcelDataLocation loc = variableLocations.get(var);
+				sb.append(loc.toJSONKeyWord(offset + "\t\t"));
+				
+				if (nParams < variableLocations.size())
+					sb.append(",\n\n");
+				else
+					sb.append("\n");
+				nParams++;
+			}
+			sb.append(offset + "\t}" );
+		}
 		
 		
 		//Dynamic locations
