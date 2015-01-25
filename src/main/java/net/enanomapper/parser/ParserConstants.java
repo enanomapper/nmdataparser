@@ -220,4 +220,8 @@ public class ParserConstants
 		INCHI, INCHI_KEY, FORMULA, SMILES
 	}
 	
+	public enum RecordDataType {
+		SUBSTANCE, PROTOCOL, EFFECT
+	}
+	
 }

@@ -1,5 +1,10 @@
 package net.enanomapper.parser;
 
+import java.util.HashMap;
+
+import net.enanomapper.parser.ParserConstants.RecordDataType;
+
+
 
 /**
  * 
@@ -14,8 +19,9 @@ public class DynamicIterationSpan
 	public boolean handleByRows = true;    //This variable is logically related to the iteration mode
 	public boolean FlagHandleByRows = false;
 	
+	public HashMap <Integer, RecordDataType> fields = new HashMap <Integer, RecordDataType> ();   //may this could be member variable of the grouping class 
 	
-	//groping  
+	//TODO - gropings  on several levels
 	
 	public String toJSONKeyWord(String offset)
 	{
