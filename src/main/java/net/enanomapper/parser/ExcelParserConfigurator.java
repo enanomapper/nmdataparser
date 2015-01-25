@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
+import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
@@ -1406,7 +1407,7 @@ public class ExcelParserConfigurator
 			else
 			{	
 				eshc.dynamicIteration = DynamicIteration.fromString(keyword);
-				if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
+				if (eshc.dynamicIteration == DynamicIteration.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
 							+ (jsonArrayIndex+1) + " keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
 			}	
@@ -1426,6 +1427,22 @@ public class ExcelParserConfigurator
 				eshc.dynamicIterationColumnIndex = col_index; 
 				eshc.FlagDynamicIterationColumnIndex = true;
 			}
+		}
+		
+		//SYNCHRONIZATION
+		if(!node.path("SYNCHRONIZATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "SYNCHRONIZATION", true);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"SYNCHRONIZATION\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.synchronization = SheetSynchronization.fromString(keyword);
+				if (eshc.synchronization == SheetSynchronization.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+							+ (jsonArrayIndex+1) + " keyword \"SYNCHRONIZATION\" is incorrect or UNDEFINED!");
+			}	
 		}
 		
 		//VARIABLES

@@ -198,8 +198,21 @@ public class ParserConstants
 		}
 	}
 	
-	public enum SheetSynhronization {
-		NONE, MATCH_KEY, UNDEFINED
+	public enum SheetSynchronization {
+		NONE, MATCH_KEY, UNDEFINED;
+		
+		public static SheetSynchronization fromString(String s)
+		{	 
+			try
+			{
+				SheetSynchronization synch = SheetSynchronization.valueOf(s) ;
+				return (synch);
+			}
+			catch (Exception e)
+			{
+				return SheetSynchronization.UNDEFINED;
+			}
+		}
 	}
 	
 	

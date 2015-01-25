@@ -6,6 +6,7 @@ import java.util.HashMap;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
+import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 
 public class ExcelSheetConfiguration 
 {
@@ -41,6 +42,9 @@ public class ExcelSheetConfiguration
 	
 	public int dynamicIterationColumnIndex = 0;
 	public boolean FlagDynamicIterationColumnIndex = false;
+	
+	public SheetSynchronization synchronization = SheetSynchronization.NONE;
+	public boolean FlagSynchronization = false;
 	
 	//Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;

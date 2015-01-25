@@ -1,21 +1,21 @@
 package net.enanomapper.parser.excel;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
 public class ExcelUtils 
 {
-	public static HashMap<String, Integer> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
+	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
 	{	
 		return getRowGroups(sheet, startRowIndex, endRowIndex, keyColumnIndex, true);
 	}
 	
 	
-	public static HashMap<String, Integer> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex, 
+	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex, 
 				boolean recognizeGroupByNextNonEmpty)
 	{
-		HashMap<String, Integer> groups = new HashMap<String, Integer>();
+		TreeMap<Integer, String> groups = new TreeMap<Integer, String>();
 		
 		if (recognizeGroupByNextNonEmpty)
 		{

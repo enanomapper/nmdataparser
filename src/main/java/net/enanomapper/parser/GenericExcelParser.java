@@ -483,10 +483,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			curRow = primarySheet.getRow(curRowNum);
 
 			//Initial iteration for each parallel sheet 
-			for (int i = 0; i < parallelSheets.length; i++)
-			{
-				parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
-			}
+			if (parallelSheets != null)
+				for (int i = 0; i < parallelSheets.length; i++)
+				{
+					parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
+				}
 		}
 		break;
 		
@@ -507,10 +508,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			if (config.Fl_SkipEmptyRows)
 			{	
 				int res = iterateToNextNonEmptyRow();
-				for (int i = 0; i < parallelSheets.length; i++)
-				{
-					parallelSheets[i].iterateToNextNonEmptyRow();
-				}	
+				if (parallelSheets != null)
+					for (int i = 0; i < parallelSheets.length; i++)
+					{
+						parallelSheets[i].iterateToNextNonEmptyRow();
+					}	
 				return res;
 			}
 			else
