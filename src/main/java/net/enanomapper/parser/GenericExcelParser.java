@@ -80,6 +80,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
 	private SubstanceRecord nextRecordBuffer = null;
+	private ArrayList<SubstanceRecord> additionalRecordsBuffer = new ArrayList<SubstanceRecord>();
+	
 	private boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception

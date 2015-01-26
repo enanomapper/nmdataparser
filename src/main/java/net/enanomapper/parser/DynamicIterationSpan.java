@@ -3,6 +3,8 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.poi.ss.usermodel.Sheet;
+
 import net.enanomapper.parser.ParserConstants.DataElementType;
 
 
@@ -16,19 +18,33 @@ import net.enanomapper.parser.ParserConstants.DataElementType;
  * 
  */
 public class DynamicIterationSpan 
-{
-	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines the whether basic data elements are rows or columns
+{	
+	public static class Element
+	{
+		public DataElementType type = null;
+		int index = -1;
+		String jsonInfo = null;
+		boolean infoFromHeader = true;
+	}
+	
+	
+	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
 	
-	public HashMap <Integer, DataElementType> fields = new HashMap <Integer, DataElementType> ();   //may this could be member variable of the grouping class 
-	public ArrayList<DynamicGrouping> groupings = new ArrayList<DynamicGrouping>();
+	public DataElementType cumulativeType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
+	public DataElementType rowType = null;  //This is the default row level grouping 
+	//public DataElementType columnType = null;  //This is the default column level grouping
+	public ArrayList<Element> elements = null;  
+	public ArrayList<DynamicGrouping> groupLevels = null;
+		
+	//data synchronization
 	
 	
 	public String toJSONKeyWord(String offset)
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append(offset + "\"DYNAMIC_SPAN\":\n");
+		sb.append(offset + "\"DYNAMIC_ITERATION_SPAN\":\n");
 		sb.append(offset + "{\n");
 		
 		
@@ -40,6 +56,13 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
+		if (cumulativeType != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"CUMULATIVE_TYPE\" : \"" + cumulativeType.toString() + "\"");
+			nFields++;
+		}
 		
 		
 		if (nFields > 0)
@@ -49,4 +72,15 @@ public class DynamicIterationSpan
 		
 		return sb.toString();
 	}
+	
+	
+	public ArrayList<Object> createDataObjectsFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
+	{
+		if (!handleByRows)
+			return null;  //This cannot be done if the basic data element is not a row
+		
+		//TODO
+		return null;
+	}
+	
 }
