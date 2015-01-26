@@ -1,8 +1,9 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.enanomapper.parser.ParserConstants.RecordDataType;
+import net.enanomapper.parser.ParserConstants.DataElementType;
 
 
 
@@ -16,12 +17,12 @@ import net.enanomapper.parser.ParserConstants.RecordDataType;
  */
 public class DynamicIterationSpan 
 {
-	public boolean handleByRows = true;    //This variable is logically related to the iteration mode
+	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines the whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
 	
-	public HashMap <Integer, RecordDataType> fields = new HashMap <Integer, RecordDataType> ();   //may this could be member variable of the grouping class 
+	public HashMap <Integer, DataElementType> fields = new HashMap <Integer, DataElementType> ();   //may this could be member variable of the grouping class 
+	public ArrayList<DynamicGrouping> groupings = new ArrayList<DynamicGrouping>();
 	
-	//TODO - gropings  on several levels
 	
 	public String toJSONKeyWord(String offset)
 	{
