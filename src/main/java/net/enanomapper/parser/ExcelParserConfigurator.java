@@ -469,34 +469,89 @@ public class ExcelParserConfigurator
 		
 		sb.append("\t\"DATA_ACCESS\" : \n");
 		sb.append("\t{\n");	
+		int nDAFields = 0;
 		if (FlagSubstanceIteration)
-			sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\",\n" );	
+		{	
+			sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\"" );
+			nDAFields++;
+		}	
 		if (FlagRowMultiFixedSize)
-			sb.append("\t\t\"ROW_MULTI_FIXED_SIZE\" : " + rowMultiFixedSize + ",\n" ); 
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"ROW_MULTI_FIXED_SIZE\" : " + rowMultiFixedSize); 
+			nDAFields++;
+		}	
 		if (FlagSheetIndex)
-			sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1) + ",\n" ); //0-based --> 1-based
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"SHEET_INDEX\" : " + (sheetIndex + 1)); //0-based --> 1-based
+			nDAFields++;
+		}	
 		if (FlagSheetName)
-			sb.append("\t\t\"SHEET_NAME\" : \"" + sheetName + "\",\n" ); 
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"SHEET_NAME\" : \"" + sheetName + "\"" ); 
+			nDAFields++;
+		}	
 		if (FlagStartRow)
-			sb.append("\t\t\"START_ROW\" : " + (startRow + 1) + ",\n" ); //0-based --> 1-based
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"START_ROW\" : " + (startRow + 1)); //0-based --> 1-based
+			nDAFields++;
+		}	
 		if (FlagStartHeaderRow)
-			sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"START_HEADER_ROW\" : " + (startHeaderRow + 1)); //0-based --> 1-based
+			nDAFields++;
+		}	
 		if (FlagEndHeaderRow)
-			sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1) + ",\n" ); //0-based --> 1-based
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"END_HEADER_ROW\" : " + (endHeaderRow + 1)); //0-based --> 1-based
+			nDAFields++;
+		}	
 		if (FlagAllowEmpty)
-			sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\",\n" );	
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"ALLOW_EMPTY\" : \"" + allowEmpty + "\"" );	
+			nDAFields++;
+		}	
 		if (FlagRecognition)
-			sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\",\n" );			
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"RECOGNITION\" : \"" + recognition.toString() + "\"" );
+			nDAFields++;
+		}	
 		if (FlagDynamicIteration)
-			sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\",\n" );	
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"DYNAMIC_ITERATION\" : \"" + dynamicIteration.toString() + "\"" );	
+			nDAFields++;
+		}	
 		if (FlagDynamicIterationColumnIndex)
-			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) + ",\n" ); //0-based --> 1-based
-		
-		//TODO fix "," ...
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) ); //0-based --> 1-based
+			nDAFields++;
+		}	
 		
 		
 		if (variableLocations != null)
 		{	
+			
+			if (nDAFields > 0)
+				sb.append(",\n");
 			sb.append("\t\t\"VARIABLES\" : \n" );
 			sb.append("\t\t{\n" );
 			
@@ -512,30 +567,38 @@ public class ExcelParserConfigurator
 					sb.append("\n");
 				nParams++;
 			}
-			sb.append("\t}" );
+			sb.append("\t\t}" );
+			nDAFields++;
 		}
 		
 		//Dynamic locations
 		if (dynamicIterationSpan != null)
 		{
-			//if (nFields > 0)
-			//	sb.append(",\n");
-			dynamicIterationSpan.toJSONKeyWord("\t\t");
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append(dynamicIterationSpan.toJSONKeyWord("\t\t"));
+			nDAFields++;
 		}
 
 		if (columnSpan != null)
 		{
-			//if (nFields > 0)
-			//	sb.append(",\n");
-			columnSpan.toJSONKeyWord("\t\t");
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append(columnSpan.toJSONKeyWord("\t\t"));
+			nDAFields++;
 		}
 
 		if (rowSpan != null)
 		{
-			//if (nFields > 0)
-			//	sb.append(",\n");
-			rowSpan.toJSONKeyWord("\t\t");
-		}		
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append(rowSpan.toJSONKeyWord("\t\t"));
+			nDAFields++;
+		}
+		
+		if (nDAFields > 0)
+			sb.append("\n");
+		
 		sb.append("\t},\n\n");  //end of DATA_ACCESS section
 		
 		
