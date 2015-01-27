@@ -11,4 +11,19 @@ public class DynamicGrouping
 	//public DataElementType columnType = null;
 	
 	//data synchronization
+	
+	
+	public String toJSONKeyWord(String offset)
+	{
+		int nFields = 0;
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "{\n");
+		
+		
+
+		sb.append(offset + "}");
+
+		return sb.toString();
+	}
+	
 }

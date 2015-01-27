@@ -21,10 +21,12 @@ public class DynamicIterationSpan
 {	
 	public static class Element
 	{
-		public DataElementType type = null;
-		int index = -1;
-		String jsonInfo = null;
-		boolean infoFromHeader = true;
+		public DataElementType dataType= null;
+		public int index = -1;
+		public String jsonInfo = null;
+		
+		public boolean infoFromHeader = true;
+		public boolean FlagInfoFromHeader = false;
 	}
 	
 	
@@ -52,7 +54,7 @@ public class DynamicIterationSpan
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"HANDLE_BY_ROWS\" : \"" + handleByRows + "\"");
+			sb.append(offset + "\t\"HANDLE_BY_ROWS\" : " + handleByRows + "");
 			nFields++;
 		}
 		
@@ -64,12 +66,58 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
+		if (elements != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");
+			
+			sb.append(offset + "\t\"ELEMENTS\":\n");
+			sb.append(offset + "\t[\n");
+			for (int i = 0; i < elements.size(); i++)
+			{	
+				sb.append(toJSONKeyWord(elements.get(i), offset + "\t\t"));			
+				if (i < elements.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append(offset+"\t],\n\n"); 
+		}
+		
+		if (groupLevels != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");
+			
+			sb.append(offset + "\t\"GROUP_LEVELS\":\n");
+			sb.append(offset + "\t[\n");
+			for (int i = 0; i < groupLevels.size(); i++)
+			{	
+				sb.append(groupLevels.get(i).toJSONKeyWord(offset + "\t\t"));			
+				if (i < groupLevels.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append(offset+"\t],\n\n"); 
+		}
+		
 		
 		if (nFields > 0)
 			sb.append("\n");
 		
 		sb.append(offset + "}");
 		
+		return sb.toString();
+	}
+	
+	
+	public String toJSONKeyWord(Element element, String offset)
+	{
+		int nFields = 0;
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "{\n");
+
+		sb.append(offset + "}");
+
 		return sb.toString();
 	}
 	
