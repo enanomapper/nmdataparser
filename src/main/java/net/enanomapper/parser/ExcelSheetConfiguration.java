@@ -43,6 +43,9 @@ public class ExcelSheetConfiguration
 	public int dynamicIterationColumnIndex = 0;
 	public boolean FlagDynamicIterationColumnIndex = false;
 	
+	public String dynamicIterationColumnName = null;
+	public boolean FlagDynamicIterationColumnName = false;
+	
 	public SheetSynchronization synchronization = SheetSynchronization.NONE;
 	public boolean FlagSynchronization = false;
 	
@@ -152,7 +155,15 @@ public class ExcelSheetConfiguration
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : \"" + (dynamicIterationColumnIndex + 1) + "\"");
+			sb.append(offset + "\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) );
+			nFields++;
+		}
+		
+		if (FlagDynamicIterationColumnName)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DYNAMIC_ITERATION_COLUMN_NAME\" : \"" + dynamicIterationColumnName + "\"" );
 			nFields++;
 		}
 		

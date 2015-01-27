@@ -14,7 +14,7 @@ public class DynamicGrouping
 	public boolean FlagRowType = false;
 	//public ElementDataType columnType = null;
 	
-	//data synchronization --> TODO
+	//element/data synchronization --> TODO
 	
 	
 	public String toJSONKeyWord(String offset)

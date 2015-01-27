@@ -33,8 +33,8 @@ public class ExcelParserConfigurator
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
 	
-	public ArrayList<String> configErrors = new ArrayList<String> ();
-	public ArrayList<String> configWarning = new ArrayList<String> ();
+	public ArrayList<String> configErrors = new ArrayList<String>();
+	public ArrayList<String> configWarnings = new ArrayList<String>();
 	
 	//Configuration flags
 	public boolean Fl_FullCheckForEmptyColumnsAndRows = true;
@@ -48,6 +48,9 @@ public class ExcelParserConfigurator
 	public int templateType = 1;
 	
 	//Global configuration for the data access of the primary sheet
+	public boolean basicIterationLoadSubstanceRecord = true;
+	public boolean FlagBasicIterationLoadSubstanceRecord = false;
+	
 	public IterationAccess substanceIteration =  IterationAccess.ROW_SINGLE;
 	public boolean FlagSubstanceIteration = false; 
 	
@@ -81,7 +84,9 @@ public class ExcelParserConfigurator
 	public int dynamicIterationColumnIndex = 0;
 	public boolean FlagDynamicIterationColumnIndex = false;
 	
-	//TODO add DynamicIterationColumnName
+	public String dynamicIterationColumnName = null;
+	public boolean FlagDynamicIterationColumnName = false;
+	
 	
 	//Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
@@ -125,7 +130,7 @@ public class ExcelParserConfigurator
 		//Handle template info 
 		 curNode = root.path("TEMPLATE_INFO");
 		if (curNode.isMissingNode())
-			conf.configWarning.add("JSON Section \"TEMPLATE_INFO\" is missing!");
+			conf.configWarnings.add("JSON Section \"TEMPLATE_INFO\" is missing!");
 		else
 		{
 			//NAME
@@ -154,6 +159,19 @@ public class ExcelParserConfigurator
 			conf.configErrors.add("JSON Section \"DATA_ACCESS\" is missing!");
 		else
 		{
+			//BASIC_ITERATION_LOAD_SUBSTANCE_RECORD
+			if (!curNode.path("BASIC_ITERATION_LOAD_SUBSTANCE_RECORD").isMissingNode())
+			{	
+				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "BASIC_ITERATION_LOAD_SUBSTANCE_RECORD", false);
+				if (b == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.basicIterationLoadSubstanceRecord = b;
+					conf.FlagBasicIterationLoadSubstanceRecord = true;
+				}
+			}
+			
 			//ITERATION
 			if (!curNode.path("ITERATION").isMissingNode())
 			{	
@@ -290,6 +308,19 @@ public class ExcelParserConfigurator
 				{	
 					conf.dynamicIterationColumnIndex = col_index; 
 					conf.FlagDynamicIterationColumnIndex = true;
+				}
+			}
+			
+			//DYNAMIC_ITERATION_COLUMN_NAME
+			if (!curNode.path("DYNAMIC_ITERATION_COLUMN_NAME").isMissingNode())
+			{	
+				String keyword = jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION_COLUMN_NAME", false);
+				if (keyword == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.dynamicIterationColumnName = keyword; 
+					conf.FlagDynamicIterationColumnName = true;
 				}
 			}
 			
@@ -447,6 +478,8 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
+		conf.checkDynamicConfiguration();
+		
 		return conf;
 	}
 	
@@ -471,8 +504,18 @@ public class ExcelParserConfigurator
 		sb.append("\t\"DATA_ACCESS\" : \n");
 		sb.append("\t{\n");	
 		int nDAFields = 0;
+		
+		if (FlagBasicIterationLoadSubstanceRecord)
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" : " + basicIterationLoadSubstanceRecord); 
+			nDAFields++;
+		}
 		if (FlagSubstanceIteration)
 		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
 			sb.append("\t\t\"ITERATION\" : \"" + substanceIteration.toString() + "\"" );
 			nDAFields++;
 		}	
@@ -545,7 +588,14 @@ public class ExcelParserConfigurator
 				sb.append(",\n");
 			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_INDEX\" : " + (dynamicIterationColumnIndex + 1) ); //0-based --> 1-based
 			nDAFields++;
-		}	
+		}
+		if (FlagDynamicIterationColumnName)
+		{
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_NAME\" : \"" + dynamicIterationColumnName + "\"" );
+			nDAFields++;
+		}
 		
 		
 		if (variableLocations != null)
@@ -1493,6 +1543,19 @@ public class ExcelParserConfigurator
 			}
 		}
 		
+		//DYNAMIC_ITERATION_COLUMN_NAME
+		if (!node.path("DYNAMIC_ITERATION_COLUMN_NAME").isMissingNode())
+		{	
+			String keyword = jsonUtils.extractStringKeyword(node, "DYNAMIC_ITERATION_COLUMN_NAME", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				eshc.dynamicIterationColumnName = keyword; 
+				eshc.FlagDynamicIterationColumnName = true;
+			}
+		}
+		
 		//SYNCHRONIZATION
 		if(!node.path("SYNCHRONIZATION").isMissingNode())
 		{
@@ -1902,5 +1965,41 @@ public class ExcelParserConfigurator
 			if (q.equals(qualifier))
 				return true;
 		return false;
+	}
+	
+	public void checkDynamicConfiguration()
+	{
+		if (!basicIterationLoadSubstanceRecord)
+		{	
+			if (dynamicIterationSpan != null)
+			{	
+				//...
+			}
+			
+			
+			if (parallelSheets == null)
+			{
+				if (dynamicIterationSpan == null)
+				{
+					configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is false and no DYNAMIC_ITERATION_SPAN is present!");
+				}
+			}
+			else
+			{
+				if (parallelSheets.isEmpty())
+				{
+					if (dynamicIterationSpan == null)
+					{
+						configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is false and no DYNAMIC_ITERATION_SPAN is present!");
+					}
+				}
+				else
+				{
+					//TODO
+				}
+			}
+		}
+		
+		//TODO
 	}
 }

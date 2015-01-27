@@ -42,7 +42,7 @@ public class DynamicIterationSpan
 	public ArrayList<Element> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
 		
-	//data synchronization
+	//element/data synchronization --> TODO
 	
 	
 	public String toJSONKeyWord(String offset)
