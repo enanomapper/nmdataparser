@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
-import net.enanomapper.parser.ParserConstants.DataElementType;
+import net.enanomapper.parser.ParserConstants.ElementDataType;
 
 
 
@@ -21,7 +21,7 @@ public class DynamicIterationSpan
 {	
 	public static class Element
 	{
-		public DataElementType dataType= null;
+		public ElementDataType dataType= null;
 		public int index = -1;
 		public String jsonInfo = null;
 		
@@ -33,8 +33,8 @@ public class DynamicIterationSpan
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
 	
-	public DataElementType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
-	public DataElementType rowType = null;  //This is the default row level grouping 
+	public ElementDataType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
+	public ElementDataType rowType = null;  //This is the default row level grouping 
 	//public DataElementType columnType = null;  //This is the default column level grouping
 	public ArrayList<Element> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;

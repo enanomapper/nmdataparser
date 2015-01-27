@@ -220,21 +220,24 @@ public class ParserConstants
 		INCHI, INCHI_KEY, FORMULA, SMILES
 	}
 	
-	public enum DataElementType {
-		SUBSTANCE, SUBSTANCE_ARRAY, PROTOCOL, PROTOCOL_ARRAY, PROTOCOL_APPLICATION, PROTOCOL_APPLICATION_ARRAY, 
-		EFFECT, EFFECT_ARRAY,
+	public enum ElementDataType {
+		
+		EFFECT, EFFECT_ARRAY, 
+		PROTOCOL, PROTOCOL_ARRAY, 
+		PROTOCOL_APPLICATION, PROTOCOL_APPLICATION_ARRAY, 
+		SUBSTANCE, SUBSTANCE_ARRAY,
 		UNDEFINED;
 		
-		public static DataElementType fromString(String s)
+		public static ElementDataType fromString(String s)
 		{	 
 			try
 			{
-				DataElementType type = DataElementType.valueOf(s) ;
+				ElementDataType type = ElementDataType.valueOf(s) ;
 				return (type);
 			}
 			catch (Exception e)
 			{
-				return DataElementType.UNDEFINED;
+				return ElementDataType.UNDEFINED;
 			}
 		}
 	}

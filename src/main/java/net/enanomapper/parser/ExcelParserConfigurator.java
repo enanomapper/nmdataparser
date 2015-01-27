@@ -11,7 +11,7 @@ import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
-import net.enanomapper.parser.ParserConstants.DataElementType;
+import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
@@ -1575,8 +1575,8 @@ public class ExcelParserConfigurator
 						+ "\"CUMULATIVE_OBJECT_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				dis.cumulativeObjectType = DataElementType.fromString(keyword);
-				if (dis.cumulativeObjectType == DataElementType.UNDEFINED)
+				dis.cumulativeObjectType = ElementDataType.fromString(keyword);
+				if (dis.cumulativeObjectType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
 							+ "\"CUMULATIVE_OBJECT_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 			}	
@@ -1595,8 +1595,8 @@ public class ExcelParserConfigurator
 						+ "\"ROW_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				dis.rowType = DataElementType.fromString(keyword);
-				if (dis.rowType == DataElementType.UNDEFINED)
+				dis.rowType = ElementDataType.fromString(keyword);
+				if (dis.rowType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
 							+ "\"ROW_TYPE\" is incorrect or UNDEFINED! --> " + keyword);
 			}	
@@ -1663,8 +1663,8 @@ public class ExcelParserConfigurator
 						+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				element.dataType = DataElementType.fromString(keyword);
-				if (element.dataType == DataElementType.UNDEFINED)
+				element.dataType = ElementDataType.fromString(keyword);
+				if (element.dataType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 			}	

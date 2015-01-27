@@ -1,13 +1,13 @@
 package net.enanomapper.parser;
 
-import net.enanomapper.parser.ParserConstants.DataElementType;
+import net.enanomapper.parser.ParserConstants.ElementDataType;
 
 public class DynamicGrouping 
 {
 	public int groupingElementIndex = -1;
-	public DataElementType groupDataType = DataElementType.SUBSTANCE; 
+	public ElementDataType groupDataType = ElementDataType.SUBSTANCE; 
 	
-	public DataElementType rowType = null;
+	public ElementDataType rowType = null;
 	//public DataElementType columnType = null;
 	
 	//data synchronization
