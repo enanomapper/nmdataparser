@@ -1562,24 +1562,24 @@ public class ExcelParserConfigurator
 		}
 		
 		
-		//CUMULATIVE_TYPE
-		if(node.path("CUMULATIVE_TYPE").isMissingNode())
+		//CUMULATIVE_OBJECT_TYPE
+		if(node.path("CUMULATIVE_OBJECT_TYPE").isMissingNode())
 		{
 			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-					+ "\"CUMULATIVE_TYPE\": is missing!");
+					+ "\"CUMULATIVE_OBJECT_TYPE\": is missing!");
 		}
 		else
 		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_TYPE", false);
+			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_OBJECT_TYPE", false);
 			if (keyword == null)
 				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"CUMULATIVE_TYPE\": " + jsonUtils.getError());
+						+ "\"CUMULATIVE_OBJECT_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				dis.cumulativeType = DataElementType.fromString(keyword);
-				if (dis.cumulativeType == DataElementType.UNDEFINED)
+				dis.cumulativeObjectType = DataElementType.fromString(keyword);
+				if (dis.cumulativeObjectType == DataElementType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-							+ "\"CUMULATIVE_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+							+ "\"CUMULATIVE_OBJECT_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 			}	
 		}
 		

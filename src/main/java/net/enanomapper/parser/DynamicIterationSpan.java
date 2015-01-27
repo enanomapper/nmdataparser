@@ -31,7 +31,7 @@ public class DynamicIterationSpan
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
 	
-	public DataElementType cumulativeType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
+	public DataElementType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
 	public DataElementType rowType = null;  //This is the default row level grouping 
 	//public DataElementType columnType = null;  //This is the default column level grouping
 	public ArrayList<Element> elements = null;  
@@ -56,11 +56,11 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
-		if (cumulativeType != null)
+		if (cumulativeObjectType != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"CUMULATIVE_TYPE\" : \"" + cumulativeType.toString() + "\"");
+			sb.append(offset + "\t\"CUMULATIVE_OBJECT_TYPE\" : \"" + cumulativeObjectType.toString() + "\"");
 			nFields++;
 		}
 		
