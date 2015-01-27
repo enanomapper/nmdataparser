@@ -5,12 +5,15 @@ import net.enanomapper.parser.ParserConstants.ElementDataType;
 public class DynamicGrouping 
 {
 	public int groupingElementIndex = -1;
-	public ElementDataType groupDataType = ElementDataType.SUBSTANCE; 
+	public boolean FlagGroupingElementIndex = false;
+		
+	public ElementDataType groupCumulativeType = ElementDataType.SUBSTANCE; 
+	public boolean FlagGroupCumulativeType = false;
 	
 	public ElementDataType rowType = null;
-	//public DataElementType columnType = null;
+	//public ElementDataType columnType = null;
 	
-	//data synchronization
+	//data synchronization --> TODO
 	
 	
 	public String toJSONKeyWord(String offset)
