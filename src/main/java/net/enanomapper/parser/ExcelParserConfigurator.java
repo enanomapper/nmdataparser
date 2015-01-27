@@ -1660,22 +1660,22 @@ public class ExcelParserConfigurator
 			String keyword =  jsonUtils.extractStringKeyword(node, "DATA_TYPE", false);
 			if (keyword == null)
 				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\": " + jsonUtils.getError());
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\": " + jsonUtils.getError());
 			else
 			{	
 				element.dataType = ElementDataType.fromString(keyword);
 				if (element.dataType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 			}	
 		}
 		
 
-		//DATA_TYPE
+		//INDEX
 		if(node.path("INDEX").isMissingNode())
 		{
 			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-					+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"INDEX\" is missing!");
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INDEX\" is missing!");
 		}
 		else
 		{
@@ -1684,29 +1684,43 @@ public class ExcelParserConfigurator
 			if (col_index == -1)
 			{
 				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"INDEX\" is incorrect!");
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword  \"INDEX\" is incorrect!");
 			}
 			else
 			{	
 				element.index = col_index;
+				element.FlagIndex = true;
 			}
 		}
 		
 		
+		//JSON_INFO
+		if(!node.path("JSON_INFO").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "JSON_INFO", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"JSON_INFO\": " + jsonUtils.getError());
+			else
+			{	
+				element.jsonInfo = keyword;
+			}	
+		}
 		
+		//INFO_FROM_HEADER
+		if(!node.path("INFO_FROM_HEADER").isMissingNode())
+		{
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "INFO_FROM_HEADER", true);
+			if (b == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INFO_FROM_HEADER\": " + jsonUtils.getError());
+			else
+			{	
+				element.infoFromHeader = b;
+				element.FlagInfoFromHeader = true;
+			}	
+		}	
 		
-		//TODO
-		
-		
-		/*
-		 * 
-		 * 
-		public int index = -1;
-		public String jsonInfo = null;
-		
-		public boolean infoFromHeader = true;
-		public boolean FlagInfoFromHeader = false;
-		 */
 		return element;
 	}
 	

@@ -22,7 +22,10 @@ public class DynamicIterationSpan
 	public static class Element
 	{
 		public ElementDataType dataType= null;
+		
 		public int index = -1;
+		public boolean FlagIndex = false;
+		
 		public String jsonInfo = null;
 		
 		public boolean infoFromHeader = true;
@@ -80,7 +83,7 @@ public class DynamicIterationSpan
 					sb.append(",\n");
 				sb.append("\n");
 			}
-			sb.append(offset+"\t],\n\n"); 
+			sb.append(offset+"\t]"); 
 		}
 		
 		if (groupLevels != null)
@@ -115,7 +118,43 @@ public class DynamicIterationSpan
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
-
+		
+		if (element.dataType != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DATA_TYPE\" : \"" + element.dataType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (element.FlagIndex)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"INDEX\" : " + element.index + "");
+			nFields++;
+		}
+		
+		if (element.jsonInfo != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"JSON_INFO\" : \"" + element.jsonInfo + "\"");
+			nFields++;
+		}
+		
+		if (element.FlagInfoFromHeader)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"INFO_FROM_HEADER\" : " + element.infoFromHeader + "");
+			nFields++;
+		}
+		
+		
+		if (nFields > 0)
+			sb.append("\n");
+		
 		sb.append(offset + "}");
 
 		return sb.toString();

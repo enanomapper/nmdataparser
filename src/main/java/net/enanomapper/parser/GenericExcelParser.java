@@ -1556,7 +1556,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - conditions to be read as RichValue and stored as Value object 
 	 * 
-	 *  
+	 * - String_or_Double Excel/Json utils 
 	 */
 	
 }
