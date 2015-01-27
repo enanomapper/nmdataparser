@@ -1771,10 +1771,30 @@ public class ExcelParserConfigurator
 				if (dyngrp.groupCumulativeType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+				else
+					dyngrp.FlagGroupCumulativeType = true;
+			}	
+		}
+		
+		//ROW_TYPE
+		if(!node.path("ROW_TYPE").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "ROW_TYPE", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" :" + jsonUtils.getError());
+			else
+			{	
+				dyngrp.rowType = ElementDataType.fromString(keyword);
+				if (dyngrp.rowType == ElementDataType.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+				else
+					dyngrp.FlagRowType = true;
 			}	
 		}
 
-		//TODO
+		//TODO - some other fields ...
 		return dyngrp;
 	}
 	

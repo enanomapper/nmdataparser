@@ -131,7 +131,7 @@ public class DynamicIterationSpan
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"INDEX\" : " + element.index + "");
+			sb.append(offset + "\t\"INDEX\" : " + (element.index + 1));
 			nFields++;
 		}
 		
