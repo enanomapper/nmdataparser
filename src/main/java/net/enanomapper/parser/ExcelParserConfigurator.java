@@ -312,14 +312,14 @@ public class ExcelParserConfigurator
 			//COLUMN_SPAN
 			if (!curNode.path("COLUMN_SPAN").isMissingNode())
 			{
-				ColumnSpan span = extractColumnSpan(curNode.path("COLUMN_SPAN"), conf);
+				ColumnSpan span = extractColumnSpan(curNode.path("COLUMN_SPAN"), conf, "DATA_ACCESS");
 				conf.columnSpan = span;
 			}
 			
 			//ROW_SPAN
 			if (!curNode.path("ROW_SPAN").isMissingNode())
 			{
-				RowSpan span = extractRowSpan(curNode.path("ROW_SPAN"), conf);
+				RowSpan span = extractRowSpan(curNode.path("ROW_SPAN"), conf, "DATA_ACCESS");
 				conf.rowSpan = span;
 			}
 			
@@ -552,7 +552,7 @@ public class ExcelParserConfigurator
 		{	
 			
 			if (nDAFields > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append("\t\t\"VARIABLES\" : \n" );
 			sb.append("\t\t{\n" );
 			
@@ -576,7 +576,7 @@ public class ExcelParserConfigurator
 		if (dynamicIterationSpan != null)
 		{
 			if (nDAFields > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append(dynamicIterationSpan.toJSONKeyWord("\t\t"));
 			nDAFields++;
 		}
@@ -584,7 +584,7 @@ public class ExcelParserConfigurator
 		if (columnSpan != null)
 		{
 			if (nDAFields > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append(columnSpan.toJSONKeyWord("\t\t"));
 			nDAFields++;
 		}
@@ -592,7 +592,7 @@ public class ExcelParserConfigurator
 		if (rowSpan != null)
 		{
 			if (nDAFields > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			sb.append(rowSpan.toJSONKeyWord("\t\t"));
 			nDAFields++;
 		}
@@ -1516,6 +1516,27 @@ public class ExcelParserConfigurator
 			eshc.variableLocations = extractDynamicSection(varNode, conf);
 		}
 		
+		//DYNAMIC_ITERATION_SPAN
+		if (!node.path("DYNAMIC_ITERATION_SPAN").isMissingNode())
+		{
+			DynamicIterationSpan span = extractDynamicIterationSpan(node.path("DYNAMIC_ITERATION_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex+1) + "]");
+			eshc.dynamicIterationSpan = span;
+		}
+		
+		//COLUMN_SPAN
+		if (!node.path("COLUMN_SPAN").isMissingNode())
+		{
+			ColumnSpan span = extractColumnSpan(node.path("COLUMN_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex+1) + "]");
+			eshc.columnSpan = span;
+		}
+		
+		//ROW_SPAN
+		if (!node.path("ROW_SPAN").isMissingNode())
+		{
+			RowSpan span = extractRowSpan(node.path("ROW_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex+1) + "]");
+			eshc.rowSpan = span;
+		}
+		
 		
 		return eshc;
 	}
@@ -1798,13 +1819,13 @@ public class ExcelParserConfigurator
 		return dyngrp;
 	}
 	
-	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf)
+	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
 	{
 		//TODO
 		return null;
 	}
 	
-	public static RowSpan extractRowSpan(JsonNode node, ExcelParserConfigurator conf)
+	public static RowSpan extractRowSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
 	{
 		//TODO
 		return null;

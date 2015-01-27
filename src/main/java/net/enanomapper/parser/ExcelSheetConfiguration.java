@@ -160,7 +160,7 @@ public class ExcelSheetConfiguration
 		if (variableLocations != null)
 		{	
 			if (nFields > 0)
-				sb.append(",\n");
+				sb.append(",\n\n");
 			
 			sb.append(offset + "\t\"VARIABLES\" : \n" );
 			sb.append(offset + "\t{\n" );
@@ -185,22 +185,22 @@ public class ExcelSheetConfiguration
 		if (dynamicIterationSpan != null)
 		{
 			if (nFields > 0)
-				sb.append(",\n");
-			dynamicIterationSpan.toJSONKeyWord(offset + "\t");
+				sb.append(",\n\n");
+			sb.append(dynamicIterationSpan.toJSONKeyWord(offset + "\t"));
 		}
 		
 		if (columnSpan != null)
 		{
 			if (nFields > 0)
-				sb.append(",\n");
-			columnSpan.toJSONKeyWord(offset + "\t");
+				sb.append(",\n\n");
+			sb.append(columnSpan.toJSONKeyWord(offset + "\t"));
 		}
 		
 		if (rowSpan != null)
 		{
 			if (nFields > 0)
-				sb.append(",\n");
-			rowSpan.toJSONKeyWord(offset + "\t");
+				sb.append(",\n\n");
+			sb.append(rowSpan.toJSONKeyWord(offset + "\t"));
 		}
 		
 		
