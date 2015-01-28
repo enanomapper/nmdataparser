@@ -1985,11 +1985,11 @@ public class ExcelParserConfigurator
 			if (dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
 				return true;
 		
-		if (parallelSheets != null)
-			for (int i = 0; i < parallelSheets.size(); i++)
-				if (parallelSheets.get(i).dynamicIterationSpan != null)
-					if (parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
-						return true;
+		
+		for (int i = 0; i < parallelSheets.size(); i++)
+			if (parallelSheets.get(i).dynamicIterationSpan != null)
+				if (parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
+					return true;
 		
 		return false;
 	}

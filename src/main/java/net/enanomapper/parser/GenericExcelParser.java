@@ -79,8 +79,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
 	
 	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
+	private SubstanceRecord basicSubstanceRecord = null;
 	private SubstanceRecord nextRecordBuffer = null;
-	private ArrayList<SubstanceRecord> additionalRecordsBuffer = new ArrayList<SubstanceRecord>();
+	private int nextRecordIndex = -1;
+	
+	private ArrayList<SubstanceRecord> loadedRecordsBuffer = new ArrayList<SubstanceRecord>();
 	
 	private boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases
 	
@@ -368,20 +371,50 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		if (FlagNextRecordLoaded)  //Next record is already read and loaded to the buffer
 			return true;
 		
-		if (hasExcelDataForNextRecord())
+		
+		if (nextRecordIndex != -1)
 		{
-			//This is the actual reading of next substance record
-			readVariables();
-			nextRecordBuffer = getSubstanceRecord();
-			if (nextRecordBuffer == null)
-				nextRecordBuffer = new SubstanceRecord();
-				
-			FlagNextRecordLoaded = true;
-			iterateExcel();
-			return true;
+			nextRecordIndex++;
+			if (nextRecordIndex < loadedRecordsBuffer.size())
+			{	
+				nextRecordBuffer = loadedRecordsBuffer.get(nextRecordIndex);
+				FlagNextRecordLoaded = true;
+				return true;
+			}
+			else
+				nextRecordIndex = -1; //Reached the end of loadedRecordsBuffer
+		}
+		
+		
+		if (nextRecordIndex == -1)  //Loading new buffer
+		{
+			if (hasExcelDataForNextRecord())
+			{
+				//This is the actual reading of next substance record/records
+				readVariables();
+				loadSubstanceRecords();
+				if (loadedRecordsBuffer.isEmpty())
+					FlagNextRecordLoaded = false;
+				else
+				{
+					nextRecordIndex = 0;
+					nextRecordBuffer = loadedRecordsBuffer.get(nextRecordIndex);
+					FlagNextRecordLoaded = true;
+				}
+					
+				//nextRecordBuffer = getBasicSubstanceRecord();
+				//if (nextRecordBuffer == null)
+				//	nextRecordBuffer = new SubstanceRecord();
+				//FlagNextRecordLoaded = true;
+					
+				iterateExcel();
+				return FlagNextRecordLoaded;
+			}
+			else
+				return false;
 		}
 		else
-			return false;
+			return true;
 	}
 	
 	
@@ -688,7 +721,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	//This function uses a generic approach (the generic variants of the helper functions)
 	//The iteration access mode is handled in the specific overloads of the functions.
-	protected SubstanceRecord getSubstanceRecord()
+	protected SubstanceRecord getBasicSubstanceRecord()
 	{
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE) 
 			LOGGER.info("Reading row: " + (curRowNum+1));
@@ -760,6 +793,19 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		putSRInfoToProtocolApplications(r);
 		
 		return r;
+	}
+	
+	protected void loadSubstanceRecords()
+	{
+		loadedRecordsBuffer.clear();
+		
+		//if (config.basicIterationLoadSubstanceRecord)
+		{	
+			basicSubstanceRecord = getBasicSubstanceRecord();
+			loadedRecordsBuffer.add(basicSubstanceRecord);
+		}
+		
+		//TODO handle dynamic span
 	}
 	
 		
