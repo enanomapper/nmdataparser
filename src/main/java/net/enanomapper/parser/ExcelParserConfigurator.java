@@ -1971,35 +1971,26 @@ public class ExcelParserConfigurator
 	{
 		if (!basicIterationLoadSubstanceRecord)
 		{	
-			if (dynamicIterationSpan != null)
-			{	
-				//...
-			}
-			
-			
-			if (parallelSheets == null)
-			{
-				if (dynamicIterationSpan == null)
-				{
-					configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is false and no DYNAMIC_ITERATION_SPAN is present!");
-				}
-			}
-			else
-			{
-				if (parallelSheets.isEmpty())
-				{
-					if (dynamicIterationSpan == null)
-					{
-						configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is false and no DYNAMIC_ITERATION_SPAN is present!");
-					}
-				}
-				else
-				{
-					//TODO
-				}
-			}
+			if (!haveDynamicSpanOnSubstanceLevel())
+				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to FALSE "
+						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
 		}
 		
 		//TODO
+	}
+	
+	public boolean haveDynamicSpanOnSubstanceLevel()
+	{	
+		if (dynamicIterationSpan != null)
+			if (dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
+				return true;
+		
+		if (parallelSheets != null)
+			for (int i = 0; i < parallelSheets.size(); i++)
+				if (parallelSheets.get(i).dynamicIterationSpan != null)
+					if (parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
+						return true;
+		
+		return false;
 	}
 }
