@@ -1976,6 +1976,32 @@ public class ExcelParserConfigurator
 						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
 		}
 		
+		//Checking the consistency of each dynamic section 
+		if (dynamicIterationSpan != null)
+		{	
+			dynamicIterationSpan.checkConsistency();
+			
+			if (!dynamicIterationSpan.errors.isEmpty())
+				for (int i = 0; i < dynamicIterationSpan.errors.size(); i++)
+					configErrors.add("Section DATA_ACCESS, subsection DYNAMIC_ITERATION_SPAN "
+							+ "incosistency error: " + dynamicIterationSpan.errors.get(i));
+		}
+		
+		for (int k = 0; k < parallelSheets.size(); k++)
+		{	
+			DynamicIterationSpan dis = parallelSheets.get(k).dynamicIterationSpan;
+			if (dis != null)
+			{
+				dis.checkConsistency();
+				
+				if (!dis.errors.isEmpty())
+					for (int i = 0; i < dis.errors.size(); i++)
+						configErrors.add("Section PARALLEL_SHEETS[ " + (k+1) + "], subsection DYNAMIC_ITERATION_SPAN "
+								+ "incosistency error: " + dis.errors.get(i));
+			}
+		}
+		
+		//Checking the interrelated consistency of all dynamic sections together
 		//TODO
 	}
 	
@@ -1993,4 +2019,6 @@ public class ExcelParserConfigurator
 		
 		return false;
 	}
+	
+	
 }

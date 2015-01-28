@@ -32,6 +32,7 @@ public class DynamicIterationSpan
 		public boolean FlagInfoFromHeader = false;
 	}
 	
+	public ArrayList<String> errors = new ArrayList<String>(); 
 	
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
@@ -160,6 +161,52 @@ public class DynamicIterationSpan
 		return sb.toString();
 	}
 	
+	
+	public boolean checkConsistency()
+	{	
+		if (rowType != null)
+			if (rowType.ordinal() >= cumulativeObjectType.ordinal())
+				errors.add("ROW_TYPE "  + rowType.toString() + 
+						" is inconsistent with CULULATIVE_OBJECT_TYPE " + cumulativeObjectType.toString());
+		
+		checkElementConsistency();
+		checkGroupLevelConsistency();
+		
+		return true;
+	}
+	
+	protected boolean checkElementConsistency()
+	{
+		if (elements == null)
+			return true;
+		
+		if (elements.isEmpty())
+			return true;
+		
+		if (rowType != null)
+			for (int i = 0; i < elements.size(); i++)
+			{
+				if (elements.get(i).dataType.ordinal() >= rowType.ordinal())
+					errors.add("Element [" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
+							" is inconsistent with rowType " + rowType.toString());
+			}
+		
+		
+		return true;
+	}
+		
+	protected boolean checkGroupLevelConsistency()
+	{	
+		if (groupLevels == null)
+			return true;
+		
+		if (groupLevels.isEmpty())
+			return true;
+		
+		//TODO		
+				
+		return true;
+	}
 	
 	public ArrayList<Object> createDataObjectsFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
 	{
