@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
+import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
@@ -660,7 +661,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				else
 				{
 					Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
-					if (isEmpty(c))
+					if (ExcelUtils.isEmpty(c))
 					{
 						curRows.add(curRow);
 						curRowNum++;
@@ -700,7 +701,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				for (int i = 0; i <= row.getLastCellNum(); i++)
 				{
 					Cell c = row.getCell(i);
-					if (isEmpty(c))
+					if (ExcelUtils.isEmpty(c))
 						continue;
 					else
 						return false;
@@ -723,19 +724,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
-	protected boolean isEmpty (Cell cell)
-	{
-		if (cell == null)
-			return true;
-		else
-		{	 
-			if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
-				return true;
-			//TODO eventually to check some other 'strange' cases of empty cells
-			
-			return false;
-		}
-	}
+	
+	
 	
 	//This function uses a generic approach (the generic variants of the helper functions)
 	//The iteration access mode is handled in the specific overloads of the functions.
