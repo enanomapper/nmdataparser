@@ -529,9 +529,32 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_MULTI_FIXED :
 		case ROW_MULTI_DYNAMIC :
 		{
-			//TODO
+			//Skip starting empty rows
+			while (curRowNum <= primarySheet.getLastRowNum())
+			{	
+				curRow = primarySheet.getRow(curRowNum);
+				if (isEmpty(curRow))
+				{	
+					//Empty row is skipped
+					curRowNum++;
+					continue;
+				}
+				else
+					break;
+			}	
+			
+			//Initial iteration for each parallel sheet
+			if (parallelSheets != null)
+				for (int i = 0; i < parallelSheets.length; i++)
+				{
+					//TODO
+				}
+			
+			//TODO if needed check the first non empty row
 		}
 		
+		default:
+			break;
 		}
 	}
 		
@@ -607,9 +630,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		switch (config.dynamicIteration)
 		{
 		case NEXT_NOT_EMPTY:
-		{
-			boolean FlagFirstRow = true;
-			
+		{	
 			if (curRowNum <= primarySheet.getLastRowNum())
 				curRows = new ArrayList<Row>();
 			else
@@ -617,6 +638,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				curRows = null;
 				return;
 			}
+			
+			//The first row is already checked to be non empty 
+			curRow = primarySheet.getRow(curRowNum);
+			curRows.add(curRow);
+			curRowNum++;
+			
+			Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
+			LOGGER.info(c0.toString());
+
 			
 			while (curRowNum <= primarySheet.getLastRowNum())
 			{
@@ -629,28 +659,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				}
 				else
 				{
-					if (FlagFirstRow)  //The first row is already checked to be non empty 
+					Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
+					if (isEmpty(c))
 					{
 						curRows.add(curRow);
 						curRowNum++;
-						FlagFirstRow = false;
-						
-						Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
-						LOGGER.info(c.toString());
 					}
 					else
 					{
-						Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
-						if (isEmpty(c))
-						{
-							curRows.add(curRow);
-							curRowNum++;
-						}
-						else
-						{
-							LOGGER.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
-							return; //Reached next record
-						}
+						LOGGER.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
+						return; //Reached next record
 					}
 				}				
 			} //end of while
