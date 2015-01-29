@@ -27,6 +27,8 @@ VARIABLES	Defines an array of excel locations that are read into work variables 
 ##### Example:
 - [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
 - [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
+
+
 --
 
 
