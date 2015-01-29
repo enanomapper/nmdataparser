@@ -240,6 +240,11 @@ public class ParserConstants
 				return ElementDataType.UNDEFINED;
 			}
 		}
+		
+		public boolean isElementOf(ElementDataType type)
+		{
+			return (this.ordinal() < type.ordinal());
+		}
 	}
 	
 }

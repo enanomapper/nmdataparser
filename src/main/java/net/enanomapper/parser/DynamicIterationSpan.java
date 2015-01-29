@@ -165,7 +165,7 @@ public class DynamicIterationSpan
 	public boolean checkConsistency()
 	{	
 		if (rowType != null)
-			if (rowType.ordinal() >= cumulativeObjectType.ordinal())
+			if (rowType.isElementOf(cumulativeObjectType))
 				errors.add("ROW_TYPE "  + rowType.toString() + 
 						" is inconsistent with CULULATIVE_OBJECT_TYPE " + cumulativeObjectType.toString());
 		
@@ -186,7 +186,7 @@ public class DynamicIterationSpan
 		if (rowType != null)
 			for (int i = 0; i < elements.size(); i++)
 			{
-				if (elements.get(i).dataType.ordinal() >= rowType.ordinal())
+				if (elements.get(i).dataType.isElementOf(rowType))
 					errors.add("Element [" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
 							" is inconsistent with rowType " + rowType.toString());
 			}
