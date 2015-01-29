@@ -55,4 +55,13 @@ public class DynamicGrouping
 		return sb.toString();
 	}
 	
+	public boolean checkConsistency()
+	{
+		if (FlagRowType)
+			if (!rowType.isElementOf(groupCumulativeType))
+				return false;
+		return true;
+	}
+	
+	
 }

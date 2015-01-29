@@ -32,6 +32,7 @@ public class DynamicIterationSpan
 		public boolean FlagInfoFromHeader = false;
 	}
 	
+	public String masterErrorString = ""; //This is used for error messaging 
 	public ArrayList<String> errors = new ArrayList<String>(); 
 	
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
@@ -165,8 +166,8 @@ public class DynamicIterationSpan
 	public boolean checkConsistency()
 	{	
 		if (rowType != null)
-			if (rowType.isElementOf(cumulativeObjectType))
-				errors.add("ROW_TYPE "  + rowType.toString() + 
+			if (!rowType.isElementOf(cumulativeObjectType))
+				errors.add(masterErrorString + " ROW_TYPE "  + rowType.toString() + 
 						" is inconsistent with CULULATIVE_OBJECT_TYPE " + cumulativeObjectType.toString());
 		
 		checkElementConsistency();
@@ -186,9 +187,9 @@ public class DynamicIterationSpan
 		if (rowType != null)
 			for (int i = 0; i < elements.size(); i++)
 			{
-				if (elements.get(i).dataType.isElementOf(rowType))
-					errors.add("Element [" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
-							" is inconsistent with rowType " + rowType.toString());
+				if (!elements.get(i).dataType.isElementOf(rowType))
+					errors.add(masterErrorString + " ELEMENTS[" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
+							" is inconsistent with ROW_TYPE " + rowType.toString());
 			}
 		
 		
@@ -203,7 +204,21 @@ public class DynamicIterationSpan
 		if (groupLevels.isEmpty())
 			return true;
 		
-		//TODO		
+		
+		if (!groupLevels.get(0).groupCumulativeType.isElementOf(cumulativeObjectType))
+			errors.add(masterErrorString + " GROUP_LEVELS[1].groupCumulativeType " +  groupLevels.get(0).groupCumulativeType.toString() + 
+					" is not an element of cumulativeObjectType " + cumulativeObjectType.toString());
+
+		for (int i = 0; i < groupLevels.size(); i++)
+		{
+			if (!groupLevels.get(i).checkConsistency())
+				errors.add(masterErrorString + " GROUP_LEVELS[" + (i+1) + "] inconsistency error!");
+			
+			if (i > 0)
+				if (!groupLevels.get(i).groupCumulativeType.isElementOf(groupLevels.get(i-1).groupCumulativeType))
+					errors.add(masterErrorString + " GROUP_LEVELS[" + (i+1) + "].groupCumulativeType " + groupLevels.get(i).groupCumulativeType.toString() 
+							+ " is not an element of GROUP_LEVELS[" + i + "].groupCumulativeType " + groupLevels.get(i-1).groupCumulativeType.toString());
+		}
 				
 		return true;
 	}

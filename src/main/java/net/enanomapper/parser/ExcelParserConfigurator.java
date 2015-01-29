@@ -1974,6 +1974,7 @@ public class ExcelParserConfigurator
 			if (!haveDynamicSpanOnSubstanceLevel())
 				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to FALSE "
 						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
+			
 		}
 		
 		//Checking the consistency of each dynamic section 
