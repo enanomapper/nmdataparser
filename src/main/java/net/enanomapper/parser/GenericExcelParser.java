@@ -814,14 +814,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 		else
 		{	
-			//basicSubstanceRecord = getBasicSubstanceRecord();
-			//loadedRecordsBuffer.add(basicSubstanceRecord);
 			basicSubstanceRecord = null;
 		}	
 		
 		if (!config.FlagDynamicSpan)
 			return;
-			
 		
 		//Handle dynamic span
 		ArrayList<DynamicIterationObject> dios = new ArrayList<DynamicIterationObject>();

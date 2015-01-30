@@ -1,5 +1,6 @@
 package net.enanomapper.parser.excel;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.apache.poi.ss.formula.functions.Column;
@@ -105,6 +106,82 @@ public class ExcelUtils
 			}
 		}
 		
+		return groups;
+	}
+	
+	
+	public static TreeMap<Integer, String> getRowGroups(ArrayList<Row> rows, int keyColumnIndex, boolean recognizeGroupByNextNonEmpty)
+	{		
+		TreeMap<Integer, String> groups = new TreeMap<Integer, String>();
+		int curIndex = 0;
+		Row curRow = null;
+
+		//Skip the starting empty rows
+		while (curIndex < rows.size())
+		{	
+			if (isEmpty(rows.get(curIndex)))
+			{
+				curIndex++;
+				continue;
+			}
+			else
+				break;
+		}
+
+		if (curIndex >= rows.size())
+			return groups; //No groups are added. All rows are empty
+
+		//Add first group info
+		Cell c = curRow.getCell(keyColumnIndex);
+		String value = getStringFromCell(c);
+		String prevValue = value;
+		groups.put(curIndex, value);
+		curIndex++;
+
+		while (curIndex <= rows.size())
+		{	
+			curRow = rows.get(curIndex);
+			
+			//Skip empty row
+			if (isEmpty(curRow))
+			{
+				curIndex++;
+				continue;
+			}
+			else
+			{	
+				c = curRow.getCell(keyColumnIndex);
+				value = getStringFromCell(c);
+
+				if (recognizeGroupByNextNonEmpty)
+				{	
+					if (value.equals(""))
+					{
+						curIndex++;
+					}
+					else
+					{
+						//Next group registration
+						groups.put(curIndex, value);
+						curIndex++;
+					}
+				}
+				else //Recognize group as consequent rows that have the same values in the key column
+				{	
+					if (value.equals(prevValue))
+					{
+						curIndex++;
+					}
+					else
+					{
+						//Next group registration
+						groups.put(curIndex, value);
+						curIndex++;
+						prevValue = value;
+					}
+				}
+			}
+		}
 		return groups;
 	}
 	

@@ -32,6 +32,7 @@ public class DynamicIterationSpan
 		
 		public boolean infoFromHeader = true;
 		public boolean FlagInfoFromHeader = false;
+		
 	}
 	
 	public String masterErrorString = ""; //This is used for error messaging 
@@ -229,10 +230,37 @@ public class DynamicIterationSpan
 	public DynamicIterationObject getDynamicIterationObjectFromRows(ArrayList<Row> rows)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject ();
+		
+		if (groupLevels == null)
+			return handleRows(rows);
+		else
+			return handleGroupsLavels(rows);
+	}
+	
+	
+	protected DynamicIterationObject handleRows(ArrayList<Row> rows)
+	{
+		DynamicIterationObject dio = new DynamicIterationObject ();
 		//TODO
+		
 		return dio;
 	}
 	
+	protected DynamicIterationObject handleGroupsLavels(ArrayList<Row> rows)
+	{
+		DynamicIterationObject dio = new DynamicIterationObject ();
+		//Currently only one level is handled
+		
+		
+		//TODO
+		
+		return dio;
+	}
+	
+	
+	
+	
+	/*
 	
 	public DynamicIterationObject getDynamicIterationObjectFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
 	{
@@ -280,5 +308,7 @@ public class DynamicIterationSpan
 		//TODO
 		return null;
 	}
+	
+	*/
 	
 }
