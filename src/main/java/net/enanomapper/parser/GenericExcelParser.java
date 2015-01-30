@@ -807,13 +807,53 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		loadedRecordsBuffer.clear();
 		
-		//if (config.basicIterationLoadSubstanceRecord)
+		if (config.basicIterationLoadSubstanceRecord)
 		{	
 			basicSubstanceRecord = getBasicSubstanceRecord();
 			loadedRecordsBuffer.add(basicSubstanceRecord);
 		}
+		else
+		{	
+			//basicSubstanceRecord = getBasicSubstanceRecord();
+			//loadedRecordsBuffer.add(basicSubstanceRecord);
+			basicSubstanceRecord = null;
+		}	
 		
-		//TODO handle dynamic span
+		if (!config.FlagDynamicSpan)
+			return;
+			
+		
+		//Handle dynamic span
+		ArrayList<DynamicIterationObject> dios = new ArrayList<DynamicIterationObject>();
+		
+		if (config.dynamicIterationSpan != null)
+		{
+			switch (config.substanceIteration)
+			{
+			case ROW_MULTI_FIXED:
+			case ROW_MULTI_DYNAMIC:
+				DynamicIterationObject dio = config.dynamicIterationSpan.getDynamicIterationObjectFromRows(curRows);
+				dios.add(dio);
+				break;
+			}
+		}
+		
+		if (parallelSheets != null)
+			for (int i = 0; i < parallelSheets.length; i++)
+			{
+				switch (config.parallelSheets.get(i).iteration)
+				{
+				case ROW_MULTI_FIXED:
+				case ROW_MULTI_DYNAMIC:
+					DynamicIterationObject dio = 
+						config.parallelSheets.get(i).dynamicIterationSpan.getDynamicIterationObjectFromRows(parallelSheets[i].curRows);
+					dios.add(dio);
+					break;
+				}
+			}
+		
+		ArrayList<SubstanceRecord> records = DynamicIterationObject.synchronize(dios, basicSubstanceRecord);
+		loadedRecordsBuffer.addAll(records);
 	}
 	
 		
@@ -1611,6 +1651,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - conditions to be read as RichValue and stored as Value object 
 	 * 
 	 * - String_or_Double Excel/Json utils 
+	 * 
+	 * - Check the consistency of the ExcelDataLocation (loc variables) and the global data access/parallel sheet access, ... 
 	 */
 	
 }

@@ -3,8 +3,10 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 
 
@@ -223,11 +225,58 @@ public class DynamicIterationSpan
 		return true;
 	}
 	
-	public ArrayList<Object> createDataObjectsFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
+	
+	public DynamicIterationObject getDynamicIterationObjectFromRows(ArrayList<Row> rows)
+	{
+		DynamicIterationObject dio = new DynamicIterationObject ();
+		//TODO
+		return dio;
+	}
+	
+	
+	public DynamicIterationObject getDynamicIterationObjectFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
+	{
+		DynamicIterationObject dio = new DynamicIterationObject ();
+		//TODO
+		return dio;
+	}
+	
+	
+	public Object[] createDataObjectsFromRows(Sheet sheet, int startRowIndex, int endRowIndex)
 	{
 		if (!handleByRows)
 			return null;  //This cannot be done if the basic data element is not a row
 		
+		switch (cumulativeObjectType)
+		{
+		case SUBSTANCE_ARRAY:
+		{	
+			return getSubstanceRecordArray(sheet, startRowIndex, endRowIndex).toArray();
+		}	
+		case SUBSTANCE:
+		{	
+			SubstanceRecord r = getSubstanceRecord(sheet, startRowIndex, endRowIndex);
+			SubstanceRecord array[] = new SubstanceRecord[] {r};
+			return array;
+		}
+		
+		default:
+			break;
+		}
+		
+		//TODO
+		return null;
+	}
+	
+	
+	public ArrayList<SubstanceRecord> getSubstanceRecordArray (Sheet sheet, int startRowIndex, int endRowIndex)
+	{
+		//TODO
+		return null;
+	}
+	
+	public SubstanceRecord getSubstanceRecord (Sheet sheet, int startRowIndex, int endRowIndex)
+	{
 		//TODO
 		return null;
 	}

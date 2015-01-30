@@ -99,6 +99,7 @@ public class ExcelParserConfigurator
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	
 	//Handling locations dynamically
+	public boolean FlagDynamicSpan = false;
 	public boolean FlagDynamicSpanOnSubtsanceLevel = false;
 	public DynamicIterationSpan dynamicIterationSpan = null;
 	public ColumnSpan columnSpan = null;
@@ -1970,6 +1971,15 @@ public class ExcelParserConfigurator
 	
 	public void checkDynamicConfiguration()
 	{
+		FlagDynamicSpan = haveDynamicSpan();
+		if (!FlagDynamicSpan)
+		{	
+			if (!basicIterationLoadSubstanceRecord)
+				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to FALSE "
+						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
+			return; //No other checks are needed
+		}	
+		
 		FlagDynamicSpanOnSubtsanceLevel = haveDynamicSpanOnSubstanceLevel();
 		
 		if (!basicIterationLoadSubstanceRecord)
@@ -2027,6 +2037,19 @@ public class ExcelParserConfigurator
 			if (parallelSheets.get(i).dynamicIterationSpan != null)
 				if (parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
 					return true;
+		
+		return false;
+	}
+	
+	public boolean haveDynamicSpan()
+	{	
+		if (dynamicIterationSpan != null)
+			return true;
+		
+		
+		for (int i = 0; i < parallelSheets.size(); i++)
+			if (parallelSheets.get(i).dynamicIterationSpan != null)
+				return true;
 		
 		return false;
 	}
