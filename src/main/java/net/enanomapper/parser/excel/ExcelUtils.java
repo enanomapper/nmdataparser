@@ -18,25 +18,29 @@ public class ExcelUtils
 	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex, 
 				boolean recognizeGroupByNextNonEmpty)
 	{
+		int startRI = startRowIndex;
+		int endRI = endRowIndex;
+		
 		//Index consistency check
-		if (startRowIndex > endRowIndex)
-			return null;
+		if (startRI < 0)
+			startRI = 0;
 		
-		if (startRowIndex < 0)
-			return null;
+		if (endRI > sheet.getLastRowNum())
+			endRI = sheet.getLastRowNum();
 		
-		if (endRowIndex > sheet.getLastRowNum())
-			return null;
+		if (endRI < startRI)
+			endRI = startRI;
 		
-		//TODO - check keyColumnIndex
+		
+		//TODO check keyColumnIndex
 		
 		
 		TreeMap<Integer, String> groups = new TreeMap<Integer, String>();
-		int curIndex = startRowIndex;
+		int curIndex = startRI;
 		Row curRow = null;
 		
 		//Skip the starting empty rows
-		while (curIndex <= endRowIndex)
+		while (curIndex <= endRI)
 		{
 			curRow = sheet.getRow(curIndex);
 			if (isEmpty(curRow))
@@ -48,7 +52,7 @@ public class ExcelUtils
 				break;
 		}
 		
-		if (curIndex > endRowIndex)
+		if (curIndex > endRI)
 			return groups; //No groups are added. All rows are empty
 		
 		//Add first group info
@@ -58,7 +62,7 @@ public class ExcelUtils
 		groups.put(curIndex, value);
 		curIndex++;
 			
-		while (curIndex <= endRowIndex)
+		while (curIndex <= endRI)
 		{	
 			curRow = sheet.getRow(curIndex); //Skip empty row
 			if (isEmpty(curRow))
@@ -76,7 +80,6 @@ public class ExcelUtils
 					if (value.equals(""))
 					{
 						curIndex++;
-						continue;
 					}
 					else
 					{
@@ -86,11 +89,10 @@ public class ExcelUtils
 					}
 				}
 				else //Recognize group as consequent rows that have the same values in the key column
-				{
+				{	
 					if (value.equals(prevValue))
 					{
 						curIndex++;
-						continue;
 					}
 					else
 					{

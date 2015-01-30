@@ -4,13 +4,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.TreeMap;
 
 import junit.framework.Assert;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
+import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
 import ambit2.base.data.SubstanceRecord;
@@ -100,6 +106,31 @@ public class NMParserTestUtils {
 		{
 			System.out.println(rv.toString());
 		}
+	}
+	
+	public static void testGetRowGroups(String excelFile, int sheetIndex, int startRowIndex, int endRowIndex, int keyColumnIndex, 
+			boolean recognizeGroupByNextNonEmpty) throws Exception
+	{
+		FileInputStream fin = new FileInputStream(excelFile);
+		boolean isXLSX = excelFile.endsWith("xlsx");
+		System.out.println("isXLSX = " + isXLSX + "\n");
+		
+		Workbook workbook;
+		if (isXLSX)
+			workbook = new XSSFWorkbook(fin);
+		else
+			workbook = new HSSFWorkbook(fin);
+		
+		//All data is expected as 1-based indexed
+		Sheet sheet = workbook.getSheetAt(sheetIndex-1);
+		TreeMap<Integer, String> groups = 
+				ExcelUtils.getRowGroups(sheet, startRowIndex-1, (endRowIndex == -1)?sheet.getLastRowNum():(endRowIndex-1), keyColumnIndex-1, recognizeGroupByNextNonEmpty);
+		
+		for (Integer key : groups.keySet())
+			System.out.println("Group starts at row " + (key+1) + "   " + groups.get(key));
+		
+		
+		fin.close();
 	}
 
 	//@Test
