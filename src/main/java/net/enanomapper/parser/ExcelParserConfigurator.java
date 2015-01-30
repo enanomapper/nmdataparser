@@ -99,6 +99,7 @@ public class ExcelParserConfigurator
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	
 	//Handling locations dynamically
+	public boolean FlagDynamicSpanOnSubtsanceLevel = false;
 	public DynamicIterationSpan dynamicIterationSpan = null;
 	public ColumnSpan columnSpan = null;
 	public RowSpan rowSpan = null;
@@ -1969,13 +1970,22 @@ public class ExcelParserConfigurator
 	
 	public void checkDynamicConfiguration()
 	{
+		FlagDynamicSpanOnSubtsanceLevel = haveDynamicSpanOnSubstanceLevel();
+		
 		if (!basicIterationLoadSubstanceRecord)
 		{	
-			if (!haveDynamicSpanOnSubstanceLevel())
+			if (!FlagDynamicSpanOnSubtsanceLevel)
 				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to FALSE "
 						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
 			
 		}
+		else
+		{
+			if (FlagDynamicSpanOnSubtsanceLevel)
+				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to TRUE "
+						+ "and DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
+		}
+		
 		
 		//Checking the consistency of each dynamic section 
 		if (dynamicIterationSpan != null)
