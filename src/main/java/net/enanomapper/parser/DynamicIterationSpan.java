@@ -21,19 +21,6 @@ import net.enanomapper.parser.ParserConstants.ElementDataType;
  */
 public class DynamicIterationSpan 
 {	
-	public static class Element
-	{
-		public ElementDataType dataType= null;
-		
-		public int index = -1;
-		public boolean FlagIndex = false;
-		
-		public String jsonInfo = null;
-		
-		public boolean infoFromHeader = true;
-		public boolean FlagInfoFromHeader = false;
-		
-	}
 	
 	public String masterErrorString = ""; //This is used for error messaging 
 	public ArrayList<String> errors = new ArrayList<String>(); 
@@ -44,7 +31,7 @@ public class DynamicIterationSpan
 	public ElementDataType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
 	public ElementDataType rowType = null;  //This is the default row level grouping 
 	//public DataElementType columnType = null;  //This is the default column level grouping
-	public ArrayList<Element> elements = null;  
+	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
 		
 	//element/data synchronization --> TODO
@@ -118,7 +105,7 @@ public class DynamicIterationSpan
 	}
 	
 	
-	public String toJSONKeyWord(Element element, String offset)
+	public String toJSONKeyWord(DynamicElement element, String offset)
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();

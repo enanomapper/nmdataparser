@@ -1694,10 +1694,10 @@ public class ExcelParserConfigurator
 			JsonNode elNode = node.path("ELEMENTS");
 			if (elNode.isArray())
 			{
-				dis.elements = new ArrayList<DynamicIterationSpan.Element>();
+				dis.elements = new ArrayList<DynamicElement>();
 				for (int i = 0; i < elNode.size(); i++)
 				{
-					DynamicIterationSpan.Element el = extractDynamicElement(elNode.get(i), conf, masterSection, i);
+					DynamicElement el = extractDynamicElement(elNode.get(i), conf, masterSection, i);
 					if (el != null)
 						dis.elements.add(el);
 				}	
@@ -1729,10 +1729,10 @@ public class ExcelParserConfigurator
 	}
 	
 	 
-	public static DynamicIterationSpan.Element  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
+	public static DynamicElement  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
 				String masterSection, int elNum)
 	{
-		DynamicIterationSpan.Element element = new DynamicIterationSpan.Element();
+		DynamicElement element = new DynamicElement();
 		JsonUtilities jsonUtils = new JsonUtilities();
 		
 		//DATA_TYPE
