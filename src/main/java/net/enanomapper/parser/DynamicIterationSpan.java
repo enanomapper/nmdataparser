@@ -70,7 +70,7 @@ public class DynamicIterationSpan
 			sb.append(offset + "\t[\n");
 			for (int i = 0; i < elements.size(); i++)
 			{	
-				sb.append(toJSONKeyWord(elements.get(i), offset + "\t\t"));			
+				sb.append(elements.get(i).toJSONKeyWord(offset + "\t\t"));			
 				if (i < elements.size()-1) 
 					sb.append(",\n");
 				sb.append("\n");
@@ -105,52 +105,7 @@ public class DynamicIterationSpan
 	}
 	
 	
-	public String toJSONKeyWord(DynamicElement element, String offset)
-	{
-		int nFields = 0;
-		StringBuffer sb = new StringBuffer();
-		sb.append(offset + "{\n");
-		
-		if (element.dataType != null)
-		{
-			if (nFields > 0)
-				sb.append(",\n");
-			sb.append(offset + "\t\"DATA_TYPE\" : \"" + element.dataType.toString() + "\"");
-			nFields++;
-		}
-		
-		if (element.FlagIndex)
-		{
-			if (nFields > 0)
-				sb.append(",\n");
-			sb.append(offset + "\t\"INDEX\" : " + (element.index + 1));
-			nFields++;
-		}
-		
-		if (element.jsonInfo != null)
-		{
-			if (nFields > 0)
-				sb.append(",\n");
-			sb.append(offset + "\t\"JSON_INFO\" : \"" + element.jsonInfo + "\"");
-			nFields++;
-		}
-		
-		if (element.FlagInfoFromHeader)
-		{
-			if (nFields > 0)
-				sb.append(",\n");
-			sb.append(offset + "\t\"INFO_FROM_HEADER\" : " + element.infoFromHeader + "");
-			nFields++;
-		}
-		
-		
-		if (nFields > 0)
-			sb.append("\n");
-		
-		sb.append(offset + "}");
-
-		return sb.toString();
-	}
+	
 	
 	
 	public boolean checkConsistency()

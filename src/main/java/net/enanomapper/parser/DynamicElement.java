@@ -16,4 +16,51 @@ public class DynamicElement
 	
 	public int subElementIndices[] = null;
 	
+	public String toJSONKeyWord(String offset)
+	{
+		int nFields = 0;
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "{\n");
+		
+		if (dataType != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagIndex)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"INDEX\" : " + (index + 1));
+			nFields++;
+		}
+		
+		if (jsonInfo != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"JSON_INFO\" : \"" + jsonInfo + "\"");
+			nFields++;
+		}
+		
+		if (FlagInfoFromHeader)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"INFO_FROM_HEADER\" : " + infoFromHeader + "");
+			nFields++;
+		}
+		
+		
+		if (nFields > 0)
+			sb.append("\n");
+		
+		sb.append(offset + "}");
+
+		return sb.toString();
+	}
+	
 }
