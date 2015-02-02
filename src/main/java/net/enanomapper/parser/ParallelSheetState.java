@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
 
@@ -24,7 +25,7 @@ public class ParallelSheetState
 	public Cell curCell = null;
 	SheetSynchronization synchronization = SheetSynchronization.NONE; 
 	public TreeMap<Integer, String> rowGroups = null;
-	public TreeMap<String, IndexInterval> groupRows = null;
+	public HashMap<String, IndexInterval> groupRows = null;
 	
 	
 	public int initialIterateToNextNonEmptyRow()
@@ -72,10 +73,8 @@ public class ParallelSheetState
 	public int setRowGroups(int keyColumnIndex, boolean recognizeGroupByNextNonEmpty)
 	{
 		rowGroups = ExcelUtils.getRowGroups(sheet, curRowNum, keyColumnIndex, recognizeGroupByNextNonEmpty);
-		groupRows = ExcelUtils.getGroupIndexIntervals(rowGroups);
+		groupRows = ExcelUtils.getGroupIndexIntervals(rowGroups, sheet.getLastRowNum());
 		return 0;
 	}
-	
-	
 
 }

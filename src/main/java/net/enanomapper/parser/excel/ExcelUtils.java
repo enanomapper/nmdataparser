@@ -1,6 +1,8 @@
 package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.poi.ss.formula.functions.Column;
@@ -10,7 +12,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class ExcelUtils 
 {
-	public class IndexInterval {
+	public static class IndexInterval {
+		public IndexInterval(int startIndex, int endIndex) {
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+		}
 		public int startIndex;
 		public int endIndex;
 	}
@@ -197,10 +203,34 @@ public class ExcelUtils
 		return groups;
 	}
 	
-	public static TreeMap<String, IndexInterval> getGroupIndexIntervals(TreeMap<Integer, String> groups)
+	public static HashMap<String, IndexInterval> getGroupIndexIntervals(TreeMap<Integer, String> groups, int lastIndex)
 	{
-		//TODO
-		return null;
+		HashMap<String, IndexInterval> grpIntervals = new HashMap<String, IndexInterval> ();
+		if (groups == null)
+			return grpIntervals;
+		
+		if (groups.isEmpty())
+			return grpIntervals;
+		
+		String prevString = null;
+		Integer prevInt = null;
+		for (Entry<Integer, String> entry : groups.entrySet())
+		{
+			if (prevString != null)
+			{
+				IndexInterval interval = new IndexInterval(prevInt, entry.getKey()-1);
+				grpIntervals.put(prevString, interval);
+			}
+			
+			prevString = entry.getValue();
+			prevInt = entry.getKey();
+		}
+		
+		IndexInterval interval = new IndexInterval(prevInt, lastIndex);
+		grpIntervals.put(prevString, interval);
+		
+		
+		return grpIntervals;
 	}
 	
 	

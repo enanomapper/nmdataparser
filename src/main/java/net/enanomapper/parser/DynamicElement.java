@@ -15,12 +15,15 @@ public class DynamicElement
 	public int index = -1;
 	public boolean FlagIndex = false;
 	
+	public int id = -1;
+	public boolean FlagId = false;  
+	
 	public String jsonInfo = null;
 	
 	public boolean infoFromHeader = true;
 	public boolean FlagInfoFromHeader = false;
 	
-	public int subElementIndices[] = null;
+	public int childElementIds[] = null;
 	
 	public String toJSONKeyWord(String offset)
 	{
