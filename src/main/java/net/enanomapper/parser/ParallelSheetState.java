@@ -76,5 +76,21 @@ public class ParallelSheetState
 		groupRows = ExcelUtils.getGroupIndexIntervals(rowGroups, sheet.getLastRowNum());
 		return 0;
 	}
+	
+	public String rowGroupsToString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("Row groups:\n");
+		for (Integer key : rowGroups.keySet())
+			sb.append("  " + key + "  " + rowGroups.get(key) + "\n");
+		sb.append("Group rows:\n");
+		for (String key : groupRows.keySet())
+		{	
+			IndexInterval intr = groupRows.get(key);
+			sb.append("  " + key + "  " + intr.startIndex + "  " + intr.endIndex + "\n");
+		}	
+		
+		return sb.toString();
+	}
 
 }
