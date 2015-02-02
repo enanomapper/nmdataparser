@@ -2,12 +2,17 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import ambit2.base.data.SubstanceRecord;
+import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.excel.ExcelUtils;
+import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
 
 
 
@@ -21,6 +26,8 @@ import net.enanomapper.parser.ParserConstants.ElementDataType;
  */
 public class DynamicIterationSpan 
 {	
+	public boolean isPrimarySheet = false;
+	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
 	public String masterErrorString = ""; //This is used for error messaging 
 	public ArrayList<String> errors = new ArrayList<String>(); 
@@ -34,7 +41,7 @@ public class DynamicIterationSpan
 	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
 		
-	//element/data synchronization --> TODO
+	//element/data synchronization ??? --> TODO
 	
 	
 	public String toJSONKeyWord(String offset)
@@ -105,9 +112,6 @@ public class DynamicIterationSpan
 	}
 	
 	
-	
-	
-	
 	public boolean checkConsistency()
 	{	
 		if (rowType != null)
@@ -136,7 +140,6 @@ public class DynamicIterationSpan
 					errors.add(masterErrorString + " ELEMENTS[" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
 							" is inconsistent with ROW_TYPE " + rowType.toString());
 			}
-		
 		
 		return true;
 	}
@@ -171,8 +174,6 @@ public class DynamicIterationSpan
 	
 	public DynamicIterationObject getDynamicIterationObjectFromRows(ArrayList<Row> rows)
 	{
-		DynamicIterationObject dio = new DynamicIterationObject ();
-		
 		if (groupLevels == null)
 			return handleRows(rows);
 		else
@@ -190,10 +191,30 @@ public class DynamicIterationSpan
 	
 	protected DynamicIterationObject handleGroupsLavels(ArrayList<Row> rows)
 	{
-		DynamicIterationObject dio = new DynamicIterationObject ();
-		//Currently only one level is handled
+		DynamicIterationObject dio = new DynamicIterationObject();
+		
+		//Currently only one grouping level is handled (element 0)
+		boolean FlagNextNonEmpty = (dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
+		TreeMap<Integer, String> groups = ExcelUtils.getRowGroups(rows, groupLevels.get(0).groupingElementIndex,  FlagNextNonEmpty);
+		
+		Integer prevInt = null;
+		for (Entry<Integer, String> entry : groups.entrySet())
+		{
+			if (prevInt != null)
+			{
+				ArrayList<Row> grpRows = new ArrayList<Row>();
+				for (int i = prevInt; i <= entry.getKey()-1; i++)
+					grpRows.add(rows.get(i));
+				//TODO
+				
+			}
+			prevInt = entry.getKey();
+		}
 		
 		
+		ArrayList<Row> grpRows = new ArrayList<Row>();
+		for (int i = prevInt; i <= rows.size()-1; i++)
+			grpRows.add(rows.get(i));
 		//TODO
 		
 		return dio;

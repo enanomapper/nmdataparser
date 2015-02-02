@@ -233,6 +233,20 @@ public class ExcelUtils
 		return grpIntervals;
 	}
 	
+	public static ArrayList<Row> getNonEmptyRows(Sheet sheet, int startRow, int endRow)
+	{
+		ArrayList<Row> rows = new ArrayList<Row> ();
+		for (int i = startRow; i <= endRow; i++ )
+		{	
+			Row row = sheet.getRow(i);
+			if (!isEmpty(row))
+				rows.add(row);
+		}
+		return rows;
+	}
+	
+	
+	
 	
 	public static boolean isEmpty (Row row)
 	{

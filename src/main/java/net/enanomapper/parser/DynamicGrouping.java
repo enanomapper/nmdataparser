@@ -12,9 +12,10 @@ public class DynamicGrouping
 	
 	public ElementDataType rowType = null;
 	public boolean FlagRowType = false;
+	
 	//public ElementDataType columnType = null;
 	
-	//element/data synchronization --> TODO
+	//element/data synchronization ??? --> TODO
 	
 	
 	public String toJSONKeyWord(String offset)

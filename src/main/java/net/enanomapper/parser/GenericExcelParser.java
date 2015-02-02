@@ -52,7 +52,7 @@ import ambit2.core.io.IRawReader;
 public class GenericExcelParser implements IRawReader<SubstanceRecord>
 {	
 	
-	private final static Logger LOGGER = Logger.getLogger(GenericExcelParser.class.getName());
+	private final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
 	
 	protected RichValueParser rvParser = new RichValueParser ();
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
@@ -135,8 +135,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		FlagNextRecordLoaded = false;
 		nextRecordBuffer = null;
 		
-		LOGGER.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
-		LOGGER.info("Last row# = " + (primarySheet.getLastRowNum() + 1));
+		logger.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
+		logger.info("Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 	
 	protected void initBasicWorkSheet()
@@ -166,7 +166,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}	
 			
 			parallelSheetStates[i].curRowNum = eshc.startRow;
-			
 		}
 	}
 	
@@ -648,7 +647,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void iterateRowMultiDynamic()
 	{	
-		LOGGER.info("----- Primary Sheet - Reading at row: " + (curRowNum+1));
+		logger.info("----- Primary Sheet - Reading at row: " + (curRowNum+1));
 		switch (config.dynamicIteration)
 		{
 		case NEXT_NOT_EMPTY:
@@ -669,7 +668,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			
 			Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
 			primarySheetSynchKey = ExcelUtils.getStringFromCell(c0);
-			LOGGER.info("synch key: " + primarySheetSynchKey);
+			logger.info("synch key: " + primarySheetSynchKey);
 
 			
 			while (curRowNum <= primarySheet.getLastRowNum())
@@ -691,13 +690,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					}
 					else
 					{
-						LOGGER.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
+						logger.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
 						return; //Reached next record
 					}
 				}				
 			} //end of while
 			
-			LOGGER.info(" read " + curRows.size() + " rows");
+			logger.info(" read " + curRows.size() + " rows");
 		}
 		break;
 		
@@ -755,7 +754,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected SubstanceRecord getBasicSubstanceRecord()
 	{
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE) 
-			LOGGER.info("Reading row: " + (curRowNum+1));
+			logger.info("Reading row: " + (curRowNum+1));
 				
 		SubstanceRecord r = new SubstanceRecord ();
 		

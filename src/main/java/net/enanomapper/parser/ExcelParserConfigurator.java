@@ -342,6 +342,7 @@ public class ExcelParserConfigurator
 			{
 				DynamicIterationSpan span = extractDynamicIterationSpan(curNode.path("DYNAMIC_ITERATION_SPAN"), conf, "DATA_ACCESS");
 				conf.dynamicIterationSpan = span;
+				conf.dynamicIterationSpan.isPrimarySheet = true; 
 			}
 			
 			//COLUMN_SPAN

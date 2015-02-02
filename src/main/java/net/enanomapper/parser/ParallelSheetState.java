@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
@@ -16,6 +17,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class ParallelSheetState 
 {	
+	private final static Logger logger = Logger.getLogger(ParallelSheetState.class.getName());
+	
 	public int sheetNum = 0;
 	public Sheet sheet = null;
 	public int curRowNum = 1;
@@ -104,10 +107,11 @@ public class ParallelSheetState
 	
 	protected int iterateRowMultuDynamic_NoSynch()
 	{
+		logger.info("----- Parallel sheet #" + (sheetNum + 1) + " - Reading at row: " + (curRowNum+1));
+		
 		switch (dynamicIteration)
 		{
-		case NEXT_NOT_EMPTY:
-		{	
+		case NEXT_NOT_EMPTY: {	
 			if (curRowNum <= sheet.getLastRowNum())
 				curRows = new ArrayList<Row>();
 			else
@@ -123,6 +127,7 @@ public class ParallelSheetState
 			
 			Cell c0 = curRow.getCell(dynamicIterationColumnIndex);
 			String key = ExcelUtils.getStringFromCell(c0);
+			logger.info("parallel key: " + key);
 						
 			while (curRowNum <= sheet.getLastRowNum())
 			{
@@ -143,6 +148,7 @@ public class ParallelSheetState
 					}
 					else
 					{
+						logger.info("**** Parallel sheet #" + (sheetNum + 1) +  "  next " + c.toString() + "   read " + curRows.size() + " rows");
 						return 0; //Reached next record
 					}
 				}				
@@ -168,6 +174,8 @@ public class ParallelSheetState
 	{
 		rowGroups = ExcelUtils.getRowGroups(sheet, curRowNum, keyColumnIndex, recognizeGroupByNextNonEmpty);
 		groupRows = ExcelUtils.getGroupIndexIntervals(rowGroups, sheet.getLastRowNum());
+		
+		logger.info("Set Row Groups for Parallel sheet #" + (sheetNum + 1) + "\n" + rowGroupsToString());
 		return 0;
 	}
 	
@@ -176,12 +184,12 @@ public class ParallelSheetState
 		StringBuffer sb = new StringBuffer();
 		sb.append("Row groups:\n");
 		for (Integer key : rowGroups.keySet())
-			sb.append("  " + key + "  " + rowGroups.get(key) + "\n");
+			sb.append("  " + (key + 1) + "  " + rowGroups.get(key) + "\n");
 		sb.append("Group rows:\n");
 		for (String key : groupRows.keySet())
 		{	
 			IndexInterval intr = groupRows.get(key);
-			sb.append("  " + key + "  " + intr.startIndex + "  " + intr.endIndex + "\n");
+			sb.append("  " + key + "  " + (intr.startIndex + 1) + "  " + (intr.endIndex + 1) +  "\n");
 		}	
 		
 		return sb.toString();
