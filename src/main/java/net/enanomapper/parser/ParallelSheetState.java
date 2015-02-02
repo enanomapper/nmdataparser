@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
 
+import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
@@ -23,9 +24,12 @@ public class ParallelSheetState
 	public ArrayList<Row> curRows = null;
 	public Iterator<Row> rowIt = null; 
 	public Cell curCell = null;
+	public int dynamicIterationColumnIndex = 0;
+	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	SheetSynchronization synchronization = SheetSynchronization.NONE; 
 	public TreeMap<Integer, String> rowGroups = null;
 	public HashMap<String, IndexInterval> groupRows = null;
+	public ArrayList<String> errors = new ArrayList<String>();
 	
 	
 	public int initialIterateToNextNonEmptyRow()
@@ -64,9 +68,99 @@ public class ParallelSheetState
 		return -1;
 	}
 	
-	public int iterateRowMultiDynamic()
+	public int iterateRowMultiDynamic(String synchKey)
 	{
-		//TODO
+		switch (synchronization)
+		{
+		case NONE:
+			return iterateRowMultuDynamic_NoSynch();
+			
+		case MATCH_KEY:
+			if (synchKey == null)
+				curRows = null;
+			else
+			{
+				IndexInterval intr = groupRows.get(synchKey);
+				if (intr == null)
+					errors.add("Syncronization key " + synchKey + " not found!");
+				else
+				{
+					curRows = new ArrayList<Row>();
+					for (int i = intr.startIndex; i <= intr.endIndex; i++)
+					{
+						Row r = sheet.getRow(i);
+						if (r != null)
+							curRows.add(r);
+					}
+				}
+			}
+			break;
+			
+		default:
+			break;
+		}
+		return 0;
+	}
+	
+	protected int iterateRowMultuDynamic_NoSynch()
+	{
+		switch (dynamicIteration)
+		{
+		case NEXT_NOT_EMPTY:
+		{	
+			if (curRowNum <= sheet.getLastRowNum())
+				curRows = new ArrayList<Row>();
+			else
+			{
+				curRows = null;
+				return -1;
+			}
+			
+			//The first row is already checked to be non empty 
+			curRow = sheet.getRow(curRowNum);
+			curRows.add(curRow);
+			curRowNum++;
+			
+			Cell c0 = curRow.getCell(dynamicIterationColumnIndex);
+			String key = ExcelUtils.getStringFromCell(c0);
+						
+			while (curRowNum <= sheet.getLastRowNum())
+			{
+				curRow = sheet.getRow(curRowNum);
+				if (ExcelUtils.isEmpty(curRow))
+				{	
+					//Empty row is skipped
+					curRowNum++;
+					continue;
+				}
+				else
+				{
+					Cell c = curRow.getCell(dynamicIterationColumnIndex);
+					if (ExcelUtils.isEmpty(c))
+					{
+						curRows.add(curRow);
+						curRowNum++;
+					}
+					else
+					{
+						return 0; //Reached next record
+					}
+				}				
+			} //end of while
+			
+		}
+		break;
+		
+		case NEXT_DIFFERENT_VALUE:
+		{
+			//TODO
+		}
+		break;
+		
+		default:
+			curRowNum++;
+			curRows = null;
+		}
 		return 0;
 	}
 	

@@ -77,6 +77,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected ArrayList<Row> curRows = null;
 	protected Iterator<Row> rowIt = null; 
 	protected Cell curCell = null;
+	protected String primarySheetSynchKey = null;
 	
 	//All variables read from the primary sheet and all parallel sheets
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
@@ -134,7 +135,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		FlagNextRecordLoaded = false;
 		nextRecordBuffer = null;
 		
-		LOGGER.info("workSheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
+		LOGGER.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
 		LOGGER.info("Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 	
@@ -153,6 +154,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			parallelSheetStates[i] = new ParallelSheetState();
 			//if (eshc.FlagSheetIndex) //this check should not be needed because sheetNum must set via sheetName as well
 			parallelSheetStates[i].sheetNum = eshc.sheetIndex;
+			parallelSheetStates[i].synchronization = eshc.synchronization;
+			parallelSheetStates[i].dynamicIteration = eshc.dynamicIteration;
+			parallelSheetStates[i].dynamicIterationColumnIndex = eshc.dynamicIterationColumnIndex;
 			
 			if (0 <= parallelSheetStates[i].sheetNum && parallelSheetStates[i].sheetNum < workbook.getNumberOfSheets())
 				parallelSheetStates[i].sheet = workbook.getSheetAt(parallelSheetStates[i].sheetNum);
@@ -427,14 +431,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		{
 		case ROW_SINGLE:
 		case ROW_MULTI_DYNAMIC:	
-			//Decision logic: at least one row must be left
+			//Decision logic: at least one row must be left on the primary sheet
 			if (curRowNum <= primarySheet.getLastRowNum())
 				return true;
 			else
 				return false;
 			
 		case ROW_MULTI_FIXED:
-			//Decision logic: at least config.rowMultiFixedSize rows must be left
+			//Decision logic: at least config.rowMultiFixedSize rows must be left on the primary sheet
 			if (curRowNum <= primarySheet.getLastRowNum() - config.rowMultiFixedSize)
 				return true;
 			else
@@ -616,7 +620,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			iterateRowMultiDynamic();
 			if (parallelSheetStates != null)
 				for (int i = 0; i < parallelSheetStates.length; i++)
-					parallelSheetStates[i].iterateRowMultiDynamic();				
+					parallelSheetStates[i].iterateRowMultiDynamic(primarySheetSynchKey);				
 			break;	
 				
 		default : 
@@ -644,7 +648,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void iterateRowMultiDynamic()
 	{	
-		LOGGER.info("----- Reading at row: " + (curRowNum+1));
+		LOGGER.info("----- Primary Sheet - Reading at row: " + (curRowNum+1));
 		switch (config.dynamicIteration)
 		{
 		case NEXT_NOT_EMPTY:
@@ -654,6 +658,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			else
 			{
 				curRows = null;
+				primarySheetSynchKey = null;
 				return;
 			}
 			
@@ -663,7 +668,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			curRowNum++;
 			
 			Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
-			LOGGER.info(c0.toString());
+			primarySheetSynchKey = ExcelUtils.getStringFromCell(c0);
+			LOGGER.info("synch key: " + primarySheetSynchKey);
 
 			
 			while (curRowNum <= primarySheet.getLastRowNum())
@@ -1667,6 +1673,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - String_or_Double Excel/Json utils 
 	 * 
 	 * - Check the consistency of the ExcelDataLocation (loc variables) and the global data access/parallel sheet access, ... 
+	 * 
+	 * - dynamic iteration in mode NEXT_DIFFERENT_VALUE (both for primary and parallel sheets)
 	 */
 	
 }
