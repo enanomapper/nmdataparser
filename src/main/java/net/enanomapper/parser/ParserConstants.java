@@ -644,6 +644,23 @@ public class ParserConstants
 			return false;
 		}
 		
+		public ElementDataType getElement()
+		{
+			if (this.isFieldOf(ElementDataType.SUBSTANCE))
+				return ElementDataType.SUBSTANCE;
+			
+			if (this.isFieldOf(ElementDataType.PROTOCOL_APPLICATION))
+				return ElementDataType.PROTOCOL_APPLICATION;
+			
+			if (this.isFieldOf(ElementDataType.PROTOCOL))
+				return ElementDataType.PROTOCOL;
+			
+			if (this.isFieldOf(ElementDataType.EFFECT))
+				return ElementDataType.EFFECT;
+			
+			return ElementDataType.UNDEFINED;
+		}
+		
 		public static ElementField fromString(String s)
 		{	 
 			try

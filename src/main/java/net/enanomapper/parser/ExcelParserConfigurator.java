@@ -1740,8 +1740,10 @@ public class ExcelParserConfigurator
 		//DATA_TYPE
 		if(node.path("DATA_TYPE").isMissingNode())
 		{
-			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-					+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" is missing!");
+			if (node.path("FIELD_TYPE").isMissingNode())
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" and \"FIELD_TYPE\" are missing!"
+								+ " At least one must be specified.");
 		}
 		else
 		{
@@ -1755,6 +1757,8 @@ public class ExcelParserConfigurator
 				if (element.dataType == ElementDataType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+				else
+					element.FlagDataType = true;
 			}	
 		}
 		
@@ -1772,7 +1776,19 @@ public class ExcelParserConfigurator
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 				else
+				{	
 					element.FlagFieldType = true;
+					// Setting dataType / Checking field compatibility with dataType
+					if (element.dataType == null)
+						element.dataType = element.fieldType.getElement();
+					else
+					{
+						if (element.dataType != element.fieldType.getElement())
+							conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+									+" subsection ELEMENT [" +(elNum +1) + "], FIELD_TYPE \"" + element.fieldType.toString() + 
+									"\" is incompatible with DATA_TYPE \"" + element.dataType.toString() + "\"");
+					}
+				}	
 			}	
 		}
 		

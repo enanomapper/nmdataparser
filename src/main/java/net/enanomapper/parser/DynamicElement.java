@@ -6,7 +6,8 @@ import net.enanomapper.parser.ParserConstants.ElementField;
 
 public class DynamicElement 
 {
-	public ElementDataType dataType=  null;
+	public ElementDataType dataType =  null;
+	public boolean FlagDataType = false;
 	
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
@@ -27,7 +28,7 @@ public class DynamicElement
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
-		if (dataType != null)
+		if (FlagDataType)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
