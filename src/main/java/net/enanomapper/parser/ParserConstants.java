@@ -247,4 +247,120 @@ public class ParserConstants
 		}
 	}
 	
+	
+	public enum ElementField {
+		NONE,
+		
+		//Substance record fields
+		COMPANY_NAME {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPANY_UUID{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		OWNER_NAME{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		OWNER_UUID{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		SUBSTANCE_TYPE{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PUBLIC_NAME{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		ID_SUBSTANCE{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPOSITION_STR_TYPE{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPOSITION_STR_INFO{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPOSITION_RELATION{
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},  
+		
+		
+		UNDEFINED;
+		
+		public boolean isFieldOf(ElementDataType type)
+		{
+			return false;
+		}
+	}
+	
+	
+	
 }
