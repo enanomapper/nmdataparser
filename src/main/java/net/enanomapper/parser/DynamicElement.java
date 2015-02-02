@@ -1,10 +1,15 @@
 package net.enanomapper.parser;
 
 import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ElementField;
+
 
 public class DynamicElement 
 {
-	public ElementDataType dataType= null;
+	public ElementDataType dataType=  null;
+	
+	public ElementField fieldType = ElementField.NONE;
+	public boolean FlagFieldType = false;
 	
 	public int index = -1;
 	public boolean FlagIndex = false;
@@ -27,6 +32,14 @@ public class DynamicElement
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagFieldType)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"FIELD_TYPE\" : \"" + fieldType.toString() + "\"");
 			nFields++;
 		}
 		

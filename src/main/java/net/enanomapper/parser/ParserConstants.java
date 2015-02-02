@@ -246,7 +246,7 @@ public class ParserConstants
 			//TODO improve it
 			return (this.ordinal() < type.ordinal());
 		}
-	}
+	};
 	
 	
 	public enum ElementField {
@@ -643,7 +643,20 @@ public class ParserConstants
 		{
 			return false;
 		}
-	}
+		
+		public static ElementField fromString(String s)
+		{	 
+			try
+			{
+				ElementField type = ElementField.valueOf(s) ;
+				return (type);
+			}
+			catch (Exception e)
+			{
+				return ElementField.UNDEFINED;
+			}
+		}
+	};
 	
 	
 	
