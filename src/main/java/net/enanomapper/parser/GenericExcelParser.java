@@ -12,8 +12,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
+import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
@@ -64,7 +66,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected boolean xlsxFormat = false;
 	
 	//Helper variables for excel file iteration
-	protected ParallelSheetState parallelSheets[] = null;
+	protected ParallelSheetState parallelSheetStates[] = null;
 	
 	//Primary sheet
 	protected int primarySheetNum = 0;
@@ -144,22 +146,22 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	protected void initParallelSheets() throws Exception
 	{
-		parallelSheets = new ParallelSheetState[config.parallelSheets.size()];
+		parallelSheetStates = new ParallelSheetState[config.parallelSheets.size()];
 		for (int i = 0; i < config.parallelSheets.size(); i++)
 		{
 			ExcelSheetConfiguration eshc = config.parallelSheets.get(i);
-			parallelSheets[i] = new ParallelSheetState();
+			parallelSheetStates[i] = new ParallelSheetState();
 			//if (eshc.FlagSheetIndex) //this check should not be needed because sheetNum must set via sheetName as well
-			parallelSheets[i].sheetNum = eshc.sheetIndex;
+			parallelSheetStates[i].sheetNum = eshc.sheetIndex;
 			
-			if (0 <= parallelSheets[i].sheetNum && parallelSheets[i].sheetNum < workbook.getNumberOfSheets())
-				parallelSheets[i].sheet = workbook.getSheetAt(parallelSheets[i].sheetNum);
+			if (0 <= parallelSheetStates[i].sheetNum && parallelSheetStates[i].sheetNum < workbook.getNumberOfSheets())
+				parallelSheetStates[i].sheet = workbook.getSheetAt(parallelSheetStates[i].sheetNum);
 			else
 			{	
-				throw new Exception("Incorrect SHEET_INDEX " + (parallelSheets[i].sheetNum +1)+ " in parallel sheet #" + (i+1));
+				throw new Exception("Incorrect SHEET_INDEX " + (parallelSheetStates[i].sheetNum +1)+ " in parallel sheet #" + (i+1));
 			}	
 			
-			parallelSheets[i].curRowNum = eshc.startRow;
+			parallelSheetStates[i].curRowNum = eshc.startRow;
 			
 		}
 	}
@@ -209,8 +211,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	{
 		if (loc.sheetIndex != primarySheetNum)
 		{
-			for (int i = 0; i < parallelSheets.length; i ++)
-				if (loc.sheetIndex == parallelSheets[i].sheetNum)
+			for (int i = 0; i < parallelSheetStates.length; i ++)
+				if (loc.sheetIndex == parallelSheetStates[i].sheetNum)
 				{
 					loc.setParallelSheetIndex(i);
 					return;
@@ -519,10 +521,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			curRow = primarySheet.getRow(curRowNum);
 
 			//Initial iteration for each parallel sheet 
-			if (parallelSheets != null)
-				for (int i = 0; i < parallelSheets.length; i++)
+			if (parallelSheetStates != null)
+				for (int i = 0; i < parallelSheetStates.length; i++)
 				{
-					parallelSheets[i].curRow = parallelSheets[i].sheet.getRow(parallelSheets[i].curRowNum);
+					parallelSheetStates[i].curRow = parallelSheetStates[i].sheet.getRow(parallelSheetStates[i].curRowNum);
 				}
 		}
 		break;
@@ -545,10 +547,22 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}	
 			
 			//Initial iteration for each parallel sheet
-			if (parallelSheets != null)
-				for (int i = 0; i < parallelSheets.length; i++)
+			if (parallelSheetStates != null)
+				for (int i = 0; i < parallelSheetStates.length; i++)
 				{
-					//TODO
+					switch (config.parallelSheets.get(i).synchronization)
+					{
+					case NONE:
+						parallelSheetStates[i].initialIterateToNextNonEmptyRow();
+						break;	
+
+					case MATCH_KEY:
+						boolean FlagNextNonEmpty = (config.parallelSheets.get(i).dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
+						parallelSheetStates[i].setRowGroups(config.parallelSheets.get(i).dynamicIterationColumnIndex, FlagNextNonEmpty);
+						break;
+						
+					default:
+					}
 				}
 			
 			//TODO if needed check the first non empty row
@@ -567,10 +581,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			if (config.Fl_SkipEmptyRows)
 			{	
 				int res = iterateToNextNonEmptyRow();
-				if (parallelSheets != null)
-					for (int i = 0; i < parallelSheets.length; i++)
+				if (parallelSheetStates != null)
+					for (int i = 0; i < parallelSheetStates.length; i++)
 					{
-						parallelSheets[i].iterateToNextNonEmptyRow();
+						parallelSheetStates[i].iterateToNextNonEmptyRow();
 					}	
 				return res;
 			}
@@ -599,7 +613,10 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			break;
 			
 		case ROW_MULTI_DYNAMIC:
-			iteratedRowMultiDynamic();
+			iterateRowMultiDynamic();
+			if (parallelSheetStates != null)
+				for (int i = 0; i < parallelSheetStates.length; i++)
+					parallelSheetStates[i].iterateRowMultiDynamic();				
 			break;	
 				
 		default : 
@@ -625,7 +642,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return -1;
 	}
 	
-	protected void iteratedRowMultiDynamic()
+	protected void iterateRowMultiDynamic()
 	{	
 		LOGGER.info("----- Reading at row: " + (curRowNum+1));
 		switch (config.dynamicIteration)
@@ -835,15 +852,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			}
 		}
 		
-		if (parallelSheets != null)
-			for (int i = 0; i < parallelSheets.length; i++)
+		if (parallelSheetStates != null)
+			for (int i = 0; i < parallelSheetStates.length; i++)
 			{
 				switch (config.parallelSheets.get(i).iteration)
 				{
 				case ROW_MULTI_FIXED:
 				case ROW_MULTI_DYNAMIC:
 					DynamicIterationObject dio = 
-						config.parallelSheets.get(i).dynamicIterationSpan.getDynamicIterationObjectFromRows(parallelSheets[i].curRows);
+						config.parallelSheets.get(i).dynamicIterationSpan.getDynamicIterationObjectFromRows(parallelSheetStates[i].curRows);
 					dios.add(dio);
 					break;
 				}
@@ -1239,7 +1256,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet())
 			{	
-				Row row = parallelSheets[loc.getParallelSheetIndex()].curRow;
+				Row row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
 				if (row != null)
 					return getStringValue(row, loc);
 				else
@@ -1253,7 +1270,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			//Taking the value from the first row
 			ArrayList<Row> rows;
 			if (loc.isFromParallelSheet())
-				rows = parallelSheets[loc.getParallelSheetIndex()].curRows;
+				rows = parallelSheetStates[loc.getParallelSheetIndex()].curRows;
 			else	
 				rows = curRows;
 			if (rows != null)
@@ -1324,7 +1341,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet())
 			{	
-				Row row = parallelSheets[loc.getParallelSheetIndex()].curRow;
+				Row row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
 				if (row != null)
 					return getNumericValue(row, loc);
 				else
@@ -1339,7 +1356,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			//Taking the value from the first row
 			ArrayList<Row> rows;
 			if (loc.isFromParallelSheet())
-				rows = parallelSheets[loc.getParallelSheetIndex()].curRows;
+				rows = parallelSheetStates[loc.getParallelSheetIndex()].curRows;
 			else	
 				rows = curRows;
 			if (rows != null)

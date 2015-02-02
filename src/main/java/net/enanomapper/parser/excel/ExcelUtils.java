@@ -10,9 +10,21 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class ExcelUtils 
 {
+	public class IndexInterval {
+		public int startIndex;
+		public int endIndex;
+	}
+	
+	
 	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
 	{	
 		return getRowGroups(sheet, startRowIndex, endRowIndex, keyColumnIndex, true);
+	}
+	
+	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int keyColumnIndex, 
+			boolean recognizeGroupByNextNonEmpty)
+	{
+		return getRowGroups(sheet, startRowIndex, sheet.getLastRowNum(), keyColumnIndex, recognizeGroupByNextNonEmpty);
 	}
 	
 	
@@ -184,6 +196,13 @@ public class ExcelUtils
 		}
 		return groups;
 	}
+	
+	public static TreeMap<String, IndexInterval> getGroupIndexIntervals(TreeMap<Integer, String> groups)
+	{
+		//TODO
+		return null;
+	}
+	
 	
 	public static boolean isEmpty (Row row)
 	{
