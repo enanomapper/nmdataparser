@@ -243,6 +243,7 @@ public class ParserConstants
 		
 		public boolean isElementOf(ElementDataType type)
 		{
+			//TODO improve it
 			return (this.ordinal() < type.ordinal());
 		}
 	}
@@ -262,7 +263,7 @@ public class ParserConstants
 			}
 		},
 		
-		COMPANY_UUID{
+		COMPANY_UUID {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -272,7 +273,7 @@ public class ParserConstants
 			}
 		},
 		
-		OWNER_NAME{
+		OWNER_NAME {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -282,7 +283,7 @@ public class ParserConstants
 			}
 		},
 		
-		OWNER_UUID{
+		OWNER_UUID {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -292,7 +293,7 @@ public class ParserConstants
 			}
 		},
 		
-		SUBSTANCE_TYPE{
+		SUBSTANCE_TYPE {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -302,7 +303,7 @@ public class ParserConstants
 			}
 		},
 		
-		PUBLIC_NAME{
+		PUBLIC_NAME {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -312,7 +313,7 @@ public class ParserConstants
 			}
 		},
 		
-		ID_SUBSTANCE{
+		ID_SUBSTANCE {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -322,7 +323,7 @@ public class ParserConstants
 			}
 		},
 		
-		COMPOSITION_STR_TYPE{
+		COMPOSITION_STR_TYPE {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -332,7 +333,7 @@ public class ParserConstants
 			}
 		},
 		
-		COMPOSITION_STR_INFO{
+		COMPOSITION_STR_INFO {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -342,7 +343,7 @@ public class ParserConstants
 			}
 		},
 		
-		COMPOSITION_RELATION{
+		COMPOSITION_RELATION {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
 		    	if (type == ElementDataType.SUBSTANCE)
@@ -352,6 +353,289 @@ public class ParserConstants
 			}
 		},  
 		
+		//Protocol fields
+		PROTOCOL_TOP_CATEGORY {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROTOCOL_CATEGORY_CODE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROTOCOL_CATEGORY_TITLE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROTOCOL_GUIDELINE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		//Protocol application fields
+		CITATION_TITLE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		CITATION_YEAR {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		CITATION_OWNER {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PARAMETERS {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_IS_ROBUST_STUDY {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_IS_USED_FOR_CLASSIFICATION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_IS_USED_FOR_MSDS {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_PURPOSE_FLAG {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_STUDY_RESULT_TYPE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		RELIABILITY_VALUE  {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		INTERPRETATION_RESULT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		INTERPRETATION_CRITERIA {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		//Effect fields
+		ENDPOINT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		SAMPLE_ID {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		UNIT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		LO_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		LO_QUALIFIER {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		UP_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		UP_QUALIFIER {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		TEXT_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		ERR_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		ERR_QUALIFIER {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		VALUE {      //Used for reach value approach (setting lo/up/err + qualifiers + unit at once)
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		
+		CONDITIONS {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.EFFECT)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
 		
 		UNDEFINED;
 		
