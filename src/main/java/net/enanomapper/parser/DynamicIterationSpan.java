@@ -43,6 +43,11 @@ public class DynamicIterationSpan
 		
 	//element/data synchronization ??? --> TODO
 	
+	//Work variables
+	private Row firstRow = null;
+	private Row firstGroupRow = null;
+	
+	
 	
 	public String toJSONKeyWord(String offset)
 	{
@@ -184,13 +189,7 @@ public class DynamicIterationSpan
 	}
 	
 	
-	protected DynamicIterationObject handleRows(ArrayList<Row> rows, ElementDataType resultType)
-	{
-		DynamicIterationObject dio = new DynamicIterationObject ();
-		//TODO
-		
-		return dio;
-	}
+	
 	
 	protected DynamicIterationObject handleGroupsLavels(ArrayList<Row> rows)
 	{
@@ -225,6 +224,39 @@ public class DynamicIterationSpan
 		
 		return dio;
 	}
+	
+	
+	protected DynamicIterationObject handleRows(ArrayList<Row> rows, ElementDataType resultType)
+	{
+		DynamicIterationObject dio = new DynamicIterationObject ();
+		
+		
+		//TODO
+		
+		return dio;
+	}
+	
+	
+	protected Object getRowObject(Row row, ElementDataType resultType)
+	{
+		switch (resultType)
+		{
+		case SUBSTANCE: {
+			
+		}
+		break;
+		
+		default:
+		} 
+		
+		//Iterate all elements - TODO
+		
+		
+		//TODO
+		
+		return null;
+	}
+	
 	
 	
 	

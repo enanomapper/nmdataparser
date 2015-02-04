@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import ambit2.base.data.SubstanceRecord;
 
 public class DynamicIterationObject 
-{
-	//public int id = -1; //default which corresponds to the primary sheet 
-	
+{	
 	public DynamicIterationSpan dynamicIterationSpan = null;  //pointer to the DynamicIterationSpan corresponding to this object
 	
 	public ArrayList<Object> rowObjects = new ArrayList<Object>(); 
@@ -15,6 +13,8 @@ public class DynamicIterationObject
 	
 	public ArrayList<SubstanceRecord> substanceRecords = null;
 	public SubstanceRecord substanceRecord = null;
+	
+	public ArrayList<String> errors = new ArrayList<String>();
 	
 	
 	public DynamicIterationObject(){
