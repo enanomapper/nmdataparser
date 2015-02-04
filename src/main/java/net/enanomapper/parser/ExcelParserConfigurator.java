@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
@@ -13,7 +14,6 @@ import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
-
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
@@ -32,6 +32,7 @@ import ambit2.base.data.substance.ExternalIdentifier;
  */
 public class ExcelParserConfigurator 
 {	
+	private final static Logger logger = Logger.getLogger(ExcelParserConfigurator.class.getName());
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
 	
@@ -2069,15 +2070,12 @@ public class ExcelParserConfigurator
 	
 	public boolean haveDynamicSpanOnSubstanceLevel()
 	{	
-		if (dynamicIterationSpan != null)
-			if (dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
-				return true;
 		
+		logger.info("dynamicSpanInfo:\n" + dynamicSpanInfo.toString());
 		
-		for (int i = 0; i < parallelSheets.size(); i++)
-			if (parallelSheets.get(i).dynamicIterationSpan != null)
-				if (parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType.ordinal() >= ElementDataType.SUBSTANCE.ordinal())
-					return true;
+		if ((dynamicSpanInfo.substanceArrayIndex != DynamicSpanInfo.INDEX_NONE) || 
+				(dynamicSpanInfo.substanceIndices != null)  )
+			return true;
 		
 		return false;
 	}
@@ -2095,12 +2093,72 @@ public class ExcelParserConfigurator
 		return false;
 	}
 	
+	
 	public void analyzeDynamicSpanInfo()
 	{
 		dynamicSpanInfo = new DynamicSpanInfo();
 		
-		//TODO
+		ArrayList<Integer> substanceArrayIndices = new ArrayList<Integer>(); 
+		ArrayList<Integer> substanceIndices = new ArrayList<Integer>();
+		
+		if (dynamicIterationSpan != null)
+		{	
+			switch(dynamicIterationSpan.cumulativeObjectType)
+			{
+			case SUBSTANCE_ARRAY:
+				substanceArrayIndices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				break;
+			case SUBSTANCE:
+				substanceIndices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				break;
+				
+			default:
+				break;
+			}
+			
+		}		
+		
+		
+		for (int i = 0; i < parallelSheets.size(); i++)
+			if (parallelSheets.get(i).dynamicIterationSpan != null)
+			{	
+				switch(parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType)
+				{
+				case SUBSTANCE_ARRAY:
+					substanceArrayIndices.add(i);
+					break;
+				case SUBSTANCE:
+					substanceIndices.add(i);
+					break;
+					
+				default:
+					break;
+				}
+			}
+		
+		
+		if (!substanceArrayIndices.isEmpty())
+		{	
+			if (substanceArrayIndices.size() == 1)
+				dynamicSpanInfo.substanceArrayIndex = substanceArrayIndices.get(0);
+			else
+			{	
+				configErrors.add("Dynamic span on SUBSTANCE_ARRAY level is duplicated in following sheets: " 
+						+ DynamicSpanInfo.indicesToSheetMessageString(substanceArrayIndices));
+			}	
+		}
+		
+		
+		if (!substanceIndices.isEmpty())
+		{
+			dynamicSpanInfo.substanceIndices = new int[substanceIndices.size()];
+			for (int i = 0; i < substanceIndices.size(); i++)
+				dynamicSpanInfo.substanceIndices[i] = substanceIndices.get(i);
+		}
+		
 	}
+	
+	
 	
 	
 }
