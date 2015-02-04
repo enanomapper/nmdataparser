@@ -22,6 +22,7 @@ public class ParallelSheetState
 	public int sheetNum = 0;
 	public Sheet sheet = null;
 	public int curRowNum = 1;
+	public int curReadRowNum = 1;
 	public int curCellNum = 1;	
 	public Row curRow = null;
 	public ArrayList<Row> curRows = null;
@@ -72,20 +73,32 @@ public class ParallelSheetState
 	}
 	
 	public int iterateRowMultiDynamic(String synchKey)
+	{	
+		curRowNum = curReadRowNum;
+		return readRowsMultiDynamic(synchKey);
+	}
+	
+	
+	public int readRowsMultiDynamic(String synchKey)
 	{
 		switch (synchronization)
 		{
 		case NONE:
-			return iterateRowMultuDynamic_NoSynch();
+			return readRowMultuDynamic_NoSynch();
 			
 		case MATCH_KEY:
 			if (synchKey == null)
 				curRows = null;
 			else
 			{
+				logger.info("----- Parallel sheet #" + (sheetNum + 1) + " - Reading synch key: " + synchKey);
+				
 				IndexInterval intr = groupRows.get(synchKey);
 				if (intr == null)
+				{	
 					errors.add("Syncronization key " + synchKey + " not found!");
+					return -1;
+				}	
 				else
 				{
 					curRows = new ArrayList<Row>();
@@ -95,6 +108,7 @@ public class ParallelSheetState
 						if (r != null)
 							curRows.add(r);
 					}
+					curRow = curRows.get(0);
 				}
 			}
 			break;
@@ -102,10 +116,13 @@ public class ParallelSheetState
 		default:
 			break;
 		}
+		
 		return 0;
 	}
 	
-	protected int iterateRowMultuDynamic_NoSynch()
+	
+	
+	protected int readRowMultuDynamic_NoSynch()
 	{
 		logger.info("----- Parallel sheet #" + (sheetNum + 1) + " - Reading at row: " + (curRowNum+1));
 		
@@ -117,42 +134,48 @@ public class ParallelSheetState
 			else
 			{
 				curRows = null;
+				logger.info("----- read no rows ");
 				return -1;
 			}
 			
 			//The first row is already checked to be non empty 
 			curRow = sheet.getRow(curRowNum);
-			curRows.add(curRow);
-			curRowNum++;
-			
 			Cell c0 = curRow.getCell(dynamicIterationColumnIndex);
 			String key = ExcelUtils.getStringFromCell(c0);
 			logger.info("parallel key: " + key);
-						
-			while (curRowNum <= sheet.getLastRowNum())
+			
+			curReadRowNum = curRowNum;  //curRowNum is not changed here. It is updated by the iteration functions
+			Row r = curRow;
+			curRows.add(r);
+			curReadRowNum++;
+			
+			
+			while (curReadRowNum <= sheet.getLastRowNum())
 			{
-				curRow = sheet.getRow(curRowNum);
-				if (ExcelUtils.isEmpty(curRow))
+				r = sheet.getRow(curReadRowNum);
+				if (ExcelUtils.isEmpty(r))
 				{	
 					//Empty row is skipped
-					curRowNum++;
+					curReadRowNum++;
 					continue;
 				}
 				else
 				{
-					Cell c = curRow.getCell(dynamicIterationColumnIndex);
+					Cell c = r.getCell(dynamicIterationColumnIndex);
 					if (ExcelUtils.isEmpty(c))
 					{
-						curRows.add(curRow);
-						curRowNum++;
+						curRows.add(r);
+						curReadRowNum++;
 					}
 					else
 					{
-						logger.info("**** Parallel sheet #" + (sheetNum + 1) +  "  next " + c.toString() + "   read " + curRows.size() + " rows");
+						logger.info("**** Parallel sheet #" + (sheetNum + 1) + "   read " + curRows.size() + " rows /   next key: " + c.toString());
 						return 0; //Reached next record
 					}
 				}				
 			} //end of while
+			
+			logger.info("Parallel sheet #" + (sheetNum + 1) + " read " + curRows.size() + " rows");
 			
 		}
 		break;

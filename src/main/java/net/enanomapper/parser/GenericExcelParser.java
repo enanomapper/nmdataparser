@@ -54,6 +54,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	
 	private final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
 	
+	public static String key00 = "";
 	protected RichValueParser rvParser = new RichValueParser ();
 	protected ArrayList<String> parseErrors = new ArrayList<String> ();
 	protected ArrayList<String> parallelSheetsErrors = new ArrayList<String> ();
@@ -71,7 +72,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	//Primary sheet
 	protected int primarySheetNum = 0;
 	protected Sheet primarySheet = null;
-	protected int curRowNum = 1;
+	protected int curRowNum = 1;     //This is used by the iteration logic
+	protected int curReadRowNum = 1; //This shows the actual read rows in multi-dynamic iteration mode
 	protected int curCellNum = 1;	
 	protected Row curRow = null;
 	protected ArrayList<Row> curRows = null;
@@ -549,10 +551,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					break;
 			}	
 			
-			iterateRowMultiDynamic();
-			
-				
-					
+			readRowsMultiDynamic();
 			
 			//Initial iteration for each parallel sheet
 			if (parallelSheetStates != null)
@@ -562,14 +561,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					{
 					case NONE:
 						parallelSheetStates[i].initialIterateToNextNonEmptyRow();
-						parallelSheetStates[i].iterateRowMultiDynamic(primarySheetSynchKey);
+						parallelSheetStates[i].readRowsMultiDynamic(primarySheetSynchKey);
 						break;	
 
 					case MATCH_KEY:
 						parallelSheetStates[i].initialIterateToNextNonEmptyRow();
 						boolean FlagNextNonEmpty = (config.parallelSheets.get(i).dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
 						parallelSheetStates[i].setRowGroups(config.parallelSheets.get(i).dynamicIterationColumnIndex, FlagNextNonEmpty);
-						parallelSheetStates[i].iterateRowMultiDynamic(primarySheetSynchKey);
+						parallelSheetStates[i].readRowsMultiDynamic(primarySheetSynchKey);
 						break;
 						
 					default:
@@ -653,52 +652,63 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return -1;
 	}
 	
+	
 	protected void iterateRowMultiDynamic()
 	{	
+		curRowNum = curReadRowNum;
+		readRowsMultiDynamic();
+	}
+	
+	protected void readRowsMultiDynamic()
+	{
 		logger.info("----- Primary Sheet - Reading at row: " + (curRowNum+1));
+		
 		switch (config.dynamicIteration)
 		{
 		case NEXT_NOT_EMPTY:
-		{	
+		{
 			if (curRowNum <= primarySheet.getLastRowNum())
 				curRows = new ArrayList<Row>();
 			else
 			{
 				curRows = null;
 				primarySheetSynchKey = null;
+				logger.info("----- read no rows ");
 				return;
 			}
 			
 			//The first row is already checked to be non empty 
 			curRow = primarySheet.getRow(curRowNum);
-			curRows.add(curRow);
-			curRowNum++;
-			
 			Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
 			primarySheetSynchKey = ExcelUtils.getStringFromCell(c0);
 			logger.info("synch key: " + primarySheetSynchKey);
-
+			key00 = primarySheetSynchKey;
 			
-			while (curRowNum <= primarySheet.getLastRowNum())
+			curReadRowNum = curRowNum;  //curRowNum is not changed here. It is updated by the iteration functions
+			Row r = curRow;
+			curRows.add(r);
+			curReadRowNum++;
+						
+			while (curReadRowNum <= primarySheet.getLastRowNum())
 			{
-				curRow = primarySheet.getRow(curRowNum);
-				if (isEmpty(curRow))
+				r = primarySheet.getRow(curReadRowNum);
+				if (isEmpty(r))
 				{	
 					//Empty row is skipped
-					curRowNum++;
+					curReadRowNum++;
 					continue;
 				}
 				else
 				{
-					Cell c = curRow.getCell(config.dynamicIterationColumnIndex);
+					Cell c = r.getCell(config.dynamicIterationColumnIndex);
 					if (ExcelUtils.isEmpty(c))
 					{
-						curRows.add(curRow);
-						curRowNum++;
+						curRows.add(r);
+						curReadRowNum++;
 					}
 					else
 					{
-						logger.info("**** next " + c.toString() + "   read " + curRows.size() + " rows");
+						logger.info("****  read " + curRows.size() + " rows /  next key: " + c.toString());
 						return; //Reached next record
 					}
 				}				
@@ -706,19 +716,18 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			
 			logger.info(" read " + curRows.size() + " rows");
 		}
-		break;
-		
+
 		case NEXT_DIFFERENT_VALUE:
 		{
 			//TODO
 		}
 		break;
-		
+
 		default:
-			curRowNum++;
-			curRows = null;
+			break;
 		}
 	}
+	
 	
 	protected boolean isEmpty (Row row)
 	{

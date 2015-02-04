@@ -29,7 +29,9 @@ public class DynamicIterationObject
 		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 		
 		//TODO - temporary code
-		records.add(new SubstanceRecord());
+		SubstanceRecord r = new SubstanceRecord();
+		r.setCompanyName(GenericExcelParser.key00);
+		records.add(r);
 		
 		return records;
 	}
