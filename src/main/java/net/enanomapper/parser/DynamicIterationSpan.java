@@ -208,8 +208,9 @@ public class DynamicIterationSpan
 				ArrayList<Row> grpRows = new ArrayList<Row>();
 				for (int i = prevInt; i <= entry.getKey()-1; i++)
 					grpRows.add(rows.get(i));
-				//TODO
 				
+				DynamicIterationObject grpDio = handleRows(grpRows);
+				dio.groupDIOs.add(grpDio);
 			}
 			prevInt = entry.getKey();
 		}
@@ -218,7 +219,9 @@ public class DynamicIterationSpan
 		ArrayList<Row> grpRows = new ArrayList<Row>();
 		for (int i = prevInt; i <= rows.size()-1; i++)
 			grpRows.add(rows.get(i));
-		//TODO
+		
+		DynamicIterationObject grpDio = handleRows(grpRows);
+		dio.groupDIOs.add(grpDio);
 		
 		return dio;
 	}

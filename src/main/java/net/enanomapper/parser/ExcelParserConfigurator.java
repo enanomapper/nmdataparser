@@ -104,8 +104,10 @@ public class ExcelParserConfigurator
 	public boolean FlagDynamicSpan = false;
 	public boolean FlagDynamicSpanOnSubtsanceLevel = false;
 	public DynamicIterationSpan dynamicIterationSpan = null;
+	public DynamicSpanInfo dynamicSpanInfo = null; //All dynamic span information is analyzed and stored here
 	public ColumnSpan columnSpan = null;
 	public RowSpan rowSpan = null;
+	
 	
 	
 	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
@@ -2015,7 +2017,9 @@ public class ExcelParserConfigurator
 				configErrors.add("\"BASIC_ITERATION_LOAD_SUBSTANCE_RECORD\" is set to FALSE "
 						+ "and no DYNAMIC_ITERATION_SPAN is present on SUBSTANCE level!");
 			return; //No other checks are needed
-		}	
+		}
+		
+		analyzeDynamicSpanInfo();
 		
 		FlagDynamicSpanOnSubtsanceLevel = haveDynamicSpanOnSubstanceLevel();
 		
@@ -2089,6 +2093,13 @@ public class ExcelParserConfigurator
 				return true;
 		
 		return false;
+	}
+	
+	public void analyzeDynamicSpanInfo()
+	{
+		dynamicSpanInfo = new DynamicSpanInfo();
+		
+		//TODO
 	}
 	
 	
