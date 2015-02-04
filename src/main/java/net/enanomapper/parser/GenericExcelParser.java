@@ -137,14 +137,15 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		FlagNextRecordLoaded = false;
 		nextRecordBuffer = null;
 		
-		logger.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1));
-		logger.info("Last row# = " + (primarySheet.getLastRowNum() + 1));
+		
 	}
 	
 	protected void initBasicWorkSheet()
 	{
+		primarySheetNum = config.sheetIndex;
 		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = config.startRow;
+		logger.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n" + "Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 	
 	protected void initParallelSheets() throws Exception
@@ -401,6 +402,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				//This is the actual reading of next substance record/records
 				readVariables();
 				loadSubstanceRecords();
+				logger.info("#### Loaded " + loadedRecordsBuffer.size() + " substances into the buffer");
 				if (loadedRecordsBuffer.isEmpty())
 					FlagNextRecordLoaded = false;
 				else

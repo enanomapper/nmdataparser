@@ -175,16 +175,16 @@ public class DynamicIterationSpan
 	public DynamicIterationObject getDynamicIterationObjectFromRows(ArrayList<Row> rows)
 	{	
 		if (rows == null)
-			System.out.println("getDynamicIterationObjectFromRows: rows is null");
+			return null;
 		
 		if (groupLevels == null)
-			return handleRows(rows);
+			return handleRows(rows, cumulativeObjectType);
 		else
 			return handleGroupsLavels(rows);
 	}
 	
 	
-	protected DynamicIterationObject handleRows(ArrayList<Row> rows)
+	protected DynamicIterationObject handleRows(ArrayList<Row> rows, ElementDataType resultType)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject ();
 		//TODO
@@ -209,7 +209,7 @@ public class DynamicIterationSpan
 				for (int i = prevInt; i <= entry.getKey()-1; i++)
 					grpRows.add(rows.get(i));
 				
-				DynamicIterationObject grpDio = handleRows(grpRows);
+				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 				dio.groupDIOs.add(grpDio);
 			}
 			prevInt = entry.getKey();
@@ -220,7 +220,7 @@ public class DynamicIterationSpan
 		for (int i = prevInt; i <= rows.size()-1; i++)
 			grpRows.add(rows.get(i));
 		
-		DynamicIterationObject grpDio = handleRows(grpRows);
+		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 		dio.groupDIOs.add(grpDio);
 		
 		return dio;
