@@ -549,6 +549,11 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					break;
 			}	
 			
+			iterateRowMultiDynamic();
+			
+				
+					
+			
 			//Initial iteration for each parallel sheet
 			if (parallelSheetStates != null)
 				for (int i = 0; i < parallelSheetStates.length; i++)
@@ -557,11 +562,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					{
 					case NONE:
 						parallelSheetStates[i].initialIterateToNextNonEmptyRow();
+						parallelSheetStates[i].iterateRowMultiDynamic(primarySheetSynchKey);
 						break;	
 
 					case MATCH_KEY:
+						parallelSheetStates[i].initialIterateToNextNonEmptyRow();
 						boolean FlagNextNonEmpty = (config.parallelSheets.get(i).dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
 						parallelSheetStates[i].setRowGroups(config.parallelSheets.get(i).dynamicIterationColumnIndex, FlagNextNonEmpty);
+						parallelSheetStates[i].iterateRowMultiDynamic(primarySheetSynchKey);
 						break;
 						
 					default:

@@ -137,7 +137,8 @@ public class ExcelUtils
 		//Skip the starting empty rows
 		while (curIndex < rows.size())
 		{	
-			if (isEmpty(rows.get(curIndex)))
+			curRow = rows.get(curIndex);
+			if (isEmpty(curRow))
 			{
 				curIndex++;
 				continue;
@@ -156,7 +157,7 @@ public class ExcelUtils
 		groups.put(curIndex, value);
 		curIndex++;
 
-		while (curIndex <= rows.size())
+		while (curIndex < rows.size())
 		{	
 			curRow = rows.get(curIndex);
 			
@@ -298,6 +299,15 @@ public class ExcelUtils
 		}
 		
 		return "";
+	}
+	
+	public static String rowToString(Row row)
+	{
+		StringBuffer sb = new StringBuffer();
+		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++)
+			sb.append(getStringFromCell(row.getCell(i))+ " ");
+		
+		return sb.toString();
 	}
 	
 	

@@ -173,7 +173,10 @@ public class DynamicIterationSpan
 	
 	
 	public DynamicIterationObject getDynamicIterationObjectFromRows(ArrayList<Row> rows)
-	{
+	{	
+		if (rows == null)
+			System.out.println("getDynamicIterationObjectFromRows: rows is null");
+		
 		if (groupLevels == null)
 			return handleRows(rows);
 		else
