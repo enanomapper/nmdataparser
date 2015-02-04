@@ -23,6 +23,14 @@ public class DynamicElement
 	public boolean infoFromHeader = true;
 	public boolean FlagInfoFromHeader = false;
 	
+	public String infoFromVariables[] = null; //The information is constructed form the variables defined by their keys
+	
+	public boolean infoFromFirstRow = false;
+	public boolean FlagInfoFromFirstRow = false;
+	
+	public boolean infoFromFirstGroupRow = false;
+	public boolean FlagInfoFromFirstGroupRow = false;
+	
 	public int childElementIds[] = null;
 	
 	public String toJSONKeyWord(String offset)
