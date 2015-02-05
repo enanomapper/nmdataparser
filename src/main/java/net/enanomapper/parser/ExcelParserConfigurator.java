@@ -1675,28 +1675,81 @@ public class ExcelParserConfigurator
 			String keyword =  jsonUtils.extractStringKeyword(node, "STRUCTURE_RELATION", true);
 			if (keyword == null)
 				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
-						+ (jsonArrayIndex+1) + " keyword \"SYNCHRONIZATION\": " + jsonUtils.getError());
+						+ (jsonArrayIndex+1) + " keyword \"STRUCTURE_RELATION\": " + jsonUtils.getError());
 			else
 			{	
 				cdl.structureRelation = CompositionDataLocation.structureRelationFromString(keyword);
 				if (cdl.structureRelation == null)
 					conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subesction \"COMPOSITION\", array element " 
 							+ (jsonArrayIndex+1) + ", keyword \"STRUCTURE_RELATION\" is incorrect! --> " + keyword);
+				else
+					cdl.FlagStructureRelation = true;
 			}	
 		}
-
 		
-		/*
-		//ENDPOINT
-		ExcelDataLocation loc = extractDataLocation(node,"ENDPOINT", conf);
+		//CONTENT
+		ExcelDataLocation loc = extractDataLocation(node,"CONTENT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				efrdl.endpoint = loc;
+				cdl.content = loc;
 		}
-		*/
 		
-		//TODO
+		if (!node.path("CONTENT").isMissingNode())
+		{	
+			if (node.path("FORMAT").isMissingNode())
+				conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subesction \"COMPOSITION\", array element " 
+						+ (jsonArrayIndex+1) + ", keyword \"FORMAT\" is missing!");
+		}		
+		
+		//FORMAT
+		loc = extractDataLocation(node,"FORMAT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				cdl.format = loc;
+		}
+		
+		//INCHI_KEY
+		loc = extractDataLocation(node,"INCHI_KEY", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				cdl.inchiKey = loc;
+		}
+		
+		//INCHI
+		loc = extractDataLocation(node,"INCHI", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				cdl.inchi = loc;
+		}
+		
+		//FORMULA
+		loc = extractDataLocation(node,"FORMULA", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				cdl.formula = loc;
+		}
+		
+		//SMILES
+		loc = extractDataLocation(node,"SMILES", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				cdl.smiles = loc;
+		}
+		
+		//PROPERTIES
+		JsonNode propNode = node.path("PROPERTIES");
+		if (!propNode.isMissingNode())
+		{
+			cdl.properties = extractDynamicSection(propNode, conf);
+		}
+		
+		//TODO - proportions locations
 		
 		return cdl;
 	}
