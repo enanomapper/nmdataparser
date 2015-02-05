@@ -216,9 +216,11 @@ public class ParserConstants
 	}
 	
 	
+	/*
 	public enum StructureInfoType {
 		INCHI, INCHI_KEY, FORMULA, SMILES
 	}
+	*/
 	
 	public enum ElementPosition {
 		ANY_ROW, FIRST_ROW, NON_FIRST_ROW, ANY_GROUP_ROW, FIRST_GROUP_ROW, NON_FIRST_GROUP_ROW, UNDEFINED;

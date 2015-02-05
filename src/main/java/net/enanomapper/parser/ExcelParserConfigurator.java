@@ -435,7 +435,24 @@ public class ExcelParserConfigurator
 			}
 			
 			
-			//Handle (1) external identifies and (2) composition
+			//COMPOSITION
+			JsonNode composNode = curNode.path("COMPOSITION");
+			if (!composNode.isMissingNode())
+			{
+				if (composNode.isArray())
+				{
+					for (int i = 0; i < composNode.size(); i++)
+					{	
+						CompositionDataLocation compDL = extractCompositionDataLocation(composNode.get(i), conf, i);
+						conf.composition.add(compDL);
+					}	
+				}
+				else
+					conf.configErrors.add("Section \"COMPOSITION\" is not an array!");
+			}
+			
+			
+			//Handle external identifies 
 			//TODO
 		}
 		
@@ -741,6 +758,23 @@ public class ExcelParserConfigurator
 			sb.append(loc.toJSONKeyWord("\t\t"));
 			n++;
 		}
+		
+		if (!composition.isEmpty())
+		{	
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append("\t\t\"COMPOSITION\":\n");
+			sb.append("\t\t[\n");
+			for (int i = 0; i < composition.size(); i++)
+			{	
+				sb.append(composition.get(i).toJSONKeyWord("\t\t\t"));			
+				if (i < composition.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append("\t\t]"); 
+		}
+		
 		
 		if (n > 0)
 			sb.append("\n");
@@ -1629,9 +1663,42 @@ public class ExcelParserConfigurator
 		return hmap;
 	}
 	
-	public static void extractCompositionDataLocation(JsonNode node, ExcelParserConfigurator conf)
+	public static CompositionDataLocation extractCompositionDataLocation(JsonNode node, ExcelParserConfigurator conf, int jsonArrayIndex)
 	{
+		CompositionDataLocation cdl = new CompositionDataLocation();
+		JsonUtilities jsonUtils = new JsonUtilities();
+	
+
+		//STRUCTURE_RELATION
+		if(!node.path("STRUCTURE_RELATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "STRUCTURE_RELATION", true);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"SYNCHRONIZATION\": " + jsonUtils.getError());
+			else
+			{	
+				cdl.structureRelation = CompositionDataLocation.structureRelationFromString(keyword);
+				if (cdl.structureRelation == null)
+					conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subesction \"COMPOSITION\", array element " 
+							+ (jsonArrayIndex+1) + ", keyword \"STRUCTURE_RELATION\" is incorrect! --> " + keyword);
+			}	
+		}
+
+		
+		/*
+		//ENDPOINT
+		ExcelDataLocation loc = extractDataLocation(node,"ENDPOINT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				efrdl.endpoint = loc;
+		}
+		*/
+		
 		//TODO
+		
+		return cdl;
 	}
 	
 	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
