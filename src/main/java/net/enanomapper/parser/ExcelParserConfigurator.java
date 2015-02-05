@@ -14,6 +14,7 @@ import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
+import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
@@ -1796,6 +1797,25 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
+		
+		//POSITION
+		if(!node.path("POSITION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "POSITION", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\": " + jsonUtils.getError());
+			else
+			{	
+				element.position = ElementPosition.fromString(keyword);
+				if (element.position == ElementPosition.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\" is incorrect or UNDEFINED!  -->"  + keyword);
+				else
+					element.FlagPosition = true;
+			}	
+		}
+
 
 		//INDEX
 		if(node.path("INDEX").isMissingNode())

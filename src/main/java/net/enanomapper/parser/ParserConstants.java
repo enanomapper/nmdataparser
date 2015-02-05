@@ -220,12 +220,30 @@ public class ParserConstants
 		INCHI, INCHI_KEY, FORMULA, SMILES
 	}
 	
+	public enum ElementPosition {
+		ANY_ROW, FIRST_ROW, NON_FIRST_ROW, ANY_GROUP_ROW, FIRST_GROUP_ROW, NON_FIRST_GROUP_ROW, UNDEFINED;
+		
+		public static ElementPosition fromString(String s)
+		{	 
+			try
+			{
+				ElementPosition pos = ElementPosition.valueOf(s) ;
+				return (pos);
+			}
+			catch (Exception e)
+			{
+				return ElementPosition.UNDEFINED;
+			}
+		}
+	}
+	
 	public enum ElementDataType {
 		
 		EFFECT, EFFECT_ARRAY, 
 		PROTOCOL, PROTOCOL_ARRAY, 
 		PROTOCOL_APPLICATION, PROTOCOL_APPLICATION_ARRAY, 
 		SUBSTANCE, SUBSTANCE_ARRAY,
+		VARIABLE, VARIABLE_CONTAINER,
 		UNDEFINED;
 		
 		public static ElementDataType fromString(String s)

@@ -181,14 +181,18 @@ public class DynamicIterationSpan
 	{	
 		if (rows == null)
 			return null;
+		else
+			if (rows.isEmpty())
+				return null;
 		
 		if (groupLevels == null)
+		{	
+			firstRow = rows.get(0);
 			return handleRows(rows, cumulativeObjectType);
+		}	
 		else
 			return handleGroupsLavels(rows);
 	}
-	
-	
 	
 	
 	protected DynamicIterationObject handleGroupsLavels(ArrayList<Row> rows)
@@ -196,6 +200,7 @@ public class DynamicIterationSpan
 		DynamicIterationObject dio = new DynamicIterationObject();
 		
 		//Currently only one grouping level is handled (element 0)
+		firstRow = rows.get(0);
 		boolean FlagNextNonEmpty = (dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
 		TreeMap<Integer, String> groups = ExcelUtils.getRowGroups(rows, groupLevels.get(0).groupingElementIndex,  FlagNextNonEmpty);
 		
@@ -208,6 +213,7 @@ public class DynamicIterationSpan
 				for (int i = prevInt; i <= entry.getKey()-1; i++)
 					grpRows.add(rows.get(i));
 				
+				firstGroupRow = grpRows.get(0);
 				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 				dio.groupDIOs.add(grpDio);
 			}
@@ -219,6 +225,7 @@ public class DynamicIterationSpan
 		for (int i = prevInt; i <= rows.size()-1; i++)
 			grpRows.add(rows.get(i));
 		
+		firstGroupRow = grpRows.get(0);
 		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 		dio.groupDIOs.add(grpDio);
 		
@@ -229,9 +236,12 @@ public class DynamicIterationSpan
 	protected DynamicIterationObject handleRows(ArrayList<Row> rows, ElementDataType resultType)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject ();
+		for (int i = 0; i < rows.size(); i ++)
+		{
+			Object obj = getRowObject(rows.get(i), resultType);
+			dio.rowObjects.add(obj);
+		}
 		
-		
-		//TODO
 		
 		return dio;
 	}

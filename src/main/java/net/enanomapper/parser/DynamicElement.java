@@ -2,6 +2,7 @@ package net.enanomapper.parser;
 
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
+import net.enanomapper.parser.ParserConstants.ElementPosition;
 
 
 public class DynamicElement 
@@ -11,6 +12,9 @@ public class DynamicElement
 	
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
+	
+	public ElementPosition position = ElementPosition.ANY_ROW;
+	public boolean FlagPosition = false;
 	
 	public int index = -1;
 	public boolean FlagIndex = false;
@@ -24,12 +28,6 @@ public class DynamicElement
 	public boolean FlagInfoFromHeader = false;
 	
 	public String infoFromVariables[] = null; //The information is constructed form the variables defined by their keys
-	
-	public boolean infoFromFirstRow = false;
-	public boolean FlagInfoFromFirstRow = false;
-	
-	public boolean infoFromFirstGroupRow = false;
-	public boolean FlagInfoFromFirstGroupRow = false;
 	
 	public int childElementIds[] = null;
 	
@@ -52,6 +50,14 @@ public class DynamicElement
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"FIELD_TYPE\" : \"" + fieldType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagPosition)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"POSITION\" : \"" + position.toString() + "\"");
 			nFields++;
 		}
 		
