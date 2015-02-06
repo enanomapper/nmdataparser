@@ -35,12 +35,16 @@ import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.listener.IChemObjectIOListener;
 import org.openscience.cdk.io.setting.IOSetting;
 
+import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.interfaces.IStructureRecord;
+import ambit2.base.relation.composition.CompositionRelation;
+import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
 
 
@@ -757,6 +761,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		}
 	}
 	
+	/*
 	protected boolean isEmpty (Column  col)
 	{
 		if (col == null)
@@ -767,7 +772,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			return false;
 		}
 	}
-	
+	*/
 	
 	
 	
@@ -838,11 +843,16 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				r.setIdsubstance(v.intValue());
 		}
 		
-		
 		List<ProtocolApplication> measurements = readProtocolApplications();
 		r.setMeasurements(measurements);
 				
 		putSRInfoToProtocolApplications(r);
+		
+		for (CompositionDataLocation cdl : config.composition)
+		{	
+			CompositionRelation relation = readCompositionRelation(cdl, r);
+			r.addStructureRelation(relation);
+		}
 		
 		return r;
 	}
@@ -1273,6 +1283,52 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		return effect;
 	}
 	
+	protected CompositionRelation readCompositionRelation(CompositionDataLocation cdl, SubstanceRecord record)
+	{	
+		IStructureRecord structure = new StructureRecord();
+		Proportion proportion = new Proportion();
+		
+		if (cdl.content != null)
+		{
+			String s = getStringValue(cdl.content);
+			structure.setContent(s);
+		}
+		
+		if (cdl.format != null)
+		{
+			String s = getStringValue(cdl.format);
+			structure.setFormat(s);
+		}
+		
+		if (cdl.formula != null)
+		{
+			String s = getStringValue(cdl.formula);
+			structure.setFormula(s);
+		}
+		
+		if (cdl.smiles != null)
+		{
+			String s = getStringValue(cdl.smiles);
+			structure.setSmiles(s);
+		}
+		
+		if (cdl.inchi != null)
+		{
+			String s = getStringValue(cdl.inchi);
+			structure.setInchi(s);
+		}
+		
+		if (cdl.inchiKey != null)
+		{
+			String s = getStringValue(cdl.inchiKey);
+			structure.setInchiKey(s);
+		}
+		
+		
+		CompositionRelation relation = new CompositionRelation(record, structure, cdl.structureRelation, proportion);
+		return relation;
+	}
+	
 	/*
 	 * Generic function (regardless of the iteration access)
 	 */
@@ -1699,6 +1755,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - Move some of the "extraction" functions from class ExcelParserConfiguration to the corresponding *DataLocation class 
 	 * - analogously: Move handling of parallel sheets to the corresponding classes +  move some functionality as static to ExcelParserUtils
+	 * 
+	 * - add function getString(ExcelDataLocation) and replace most of the function calls of getStringValue() so that numeric cell would not give error
 	 * 
 	 */
 	

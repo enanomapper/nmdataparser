@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.interfaces.IStructureRecord;
+import ambit2.base.relation.composition.CompositionRelation;
 
 public class NMParserTestUtils {
 
@@ -80,6 +82,14 @@ public class NMParserTestUtils {
 				for (ProtocolApplication pa : paList)
 					System.out.println("***Protocol application:\n"
 							+ pa.toString());
+			
+			List<CompositionRelation> composition = r.getRelatedStructures();
+			if (composition != null)
+				for (CompositionRelation relation : composition)
+					//System.out.println(" ### Composition " + structureRecordToString(relation.getSecondStructure()));
+					System.out.println(" ### Composition \n" + compositionRelationStructureToString(relation));  //both give the same result
+			
+			
 		}
 
 		if (parser.hasErrors())
@@ -131,6 +141,29 @@ public class NMParserTestUtils {
 		
 		
 		fin.close();
+	}
+	
+	public static String structureRecordToString(IStructureRecord str)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("Content : " + str.getContent());
+		sb.append("  Format : " + str.getFormat());
+		sb.append("  Smiles : " + str.getSmiles());
+		sb.append("  Inchi : " + str.getInchi());
+		sb.append("  InchiKey : " + str.getInchiKey());
+		return sb.toString();
+	}
+	
+	public static String compositionRelationStructureToString(CompositionRelation rel)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("  Content : \"" + rel.getContent() + "\"\n");
+		sb.append("  Format : \"" + rel.getFormat() + "\"\n");
+		sb.append("  Smiles : \"" + rel.getSmiles() + "\"\n");
+		sb.append("  Formula : \"" + rel.getFormula() + "\"\n");
+		sb.append("  Inchi : \"" + rel.getInchi() + "\"\n");
+		sb.append("  InchiKey : \"" + rel.getInchiKey() + "\"\n");
+		return sb.toString();
 	}
 
 	//@Test
