@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import net.enanomapper.parser.json.JsonUtilities;
+
 import org.codehaus.jackson.JsonNode;
 
 public class ProportionDataLocation 
@@ -19,6 +21,89 @@ public class ProportionDataLocation
 	public static ProportionDataLocation extractProportion(JsonNode node, ExcelParserConfigurator conf)
 	{
 		ProportionDataLocation pdl = new ProportionDataLocation();
+		//JsonUtilities jsonUtils = new JsonUtilities();
+		
+		//FUNCTION
+		ExcelDataLocation loc = ExcelParserConfigurator.extractDataLocation(node,"FUNCTION", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.function = loc;
+		}
+		
+		//TYPICAL
+		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.typical = loc;
+		}
+		
+		//TYPICAL_VALUE
+		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.typical_value = loc;
+		}
+		
+		//TYPICAL_UNIT
+		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_UNIT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.typical_unit = loc;
+		}
+		
+		//REAL_VALUE
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_value = loc;
+		}
+		
+		//REAL_LOWER
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_lower = loc;
+		}
+		
+		//REAL_LOWER_VALUE
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_lowervalue = loc;
+		}
+		
+		//REAL_UPPER
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_upper = loc;
+		}
+
+		//REAL_UPPER_VALUE
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER_VALUE", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_uppervalue = loc;
+		}
+		
+		//REAL_UNIT
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UNIT", conf);
+		if (loc != null)
+		{	
+			if (loc.nErrors == 0)							
+				pdl.real_unit = loc;
+		}
+
+
 		
 		
 		//TODO
