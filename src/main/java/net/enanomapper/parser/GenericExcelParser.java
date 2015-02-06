@@ -211,6 +211,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		for (ProtocolApplicationDataLocation padl : config.protocolAppLocations)
 			setParallelSheets(padl);
+		
+		for (CompositionDataLocation cdl : config.composition)
+			cdl.setParallelSheets(parallelSheetStates, primarySheetNum, parallelSheetsErrors);
 	}
 	
 	protected void setParallelSheet(ExcelDataLocation loc)
@@ -224,7 +227,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 					return;
 				}
 			
-			if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) //This iteration mode not treated as error
+			if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) //This iteration mode is not treated as error
 				parallelSheetsErrors.add("["+ locationStringForErrorMessage(loc) +  "] Sheet number number not valid parallel sheet!");
 		}
 	}
@@ -1694,7 +1697,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - dynamic iteration in mode NEXT_DIFFERENT_VALUE (both for primary and parallel sheets)
 	 * 
-	 * - Move some of the "extraction" functions from class ExcelParserConfiguration to the corresponding *DataLocation class
+	 * - Move some of the "extraction" functions from class ExcelParserConfiguration to the corresponding *DataLocation class 
+	 * - analogously: Move handling of parallel sheets to the corresponding classes +  move some functionality as static to ExcelParserUtils
 	 * 
 	 */
 	

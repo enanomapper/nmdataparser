@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
+
 import net.enanomapper.parser.json.JsonUtilities;
 
 import org.codehaus.jackson.JsonNode;
@@ -103,11 +105,41 @@ public class ProportionDataLocation
 				pdl.real_unit = loc;
 		}
 
-
-		
-		
-		//TODO
 		return pdl;
+	}
+	
+	
+	public void setParallelSheets(ParallelSheetState parSheets[], int primarySheetNum, ArrayList<String> errors)
+	{
+		if (function != null)
+			ExcelParserUtils.setParallelSheet(function, parSheets, primarySheetNum, errors);
+		
+		if (typical != null)
+			ExcelParserUtils.setParallelSheet(typical, parSheets, primarySheetNum, errors);
+		
+		if (typical_value != null)
+			ExcelParserUtils.setParallelSheet(typical_value, parSheets, primarySheetNum, errors);
+		
+		if (typical_unit != null)
+			ExcelParserUtils.setParallelSheet(typical_unit, parSheets, primarySheetNum, errors);
+		
+		if (real_value != null)
+			ExcelParserUtils.setParallelSheet(real_value, parSheets, primarySheetNum, errors);
+		
+		if (real_lower != null)
+			ExcelParserUtils.setParallelSheet(real_lower, parSheets, primarySheetNum, errors);
+		
+		if (real_lowervalue != null)
+			ExcelParserUtils.setParallelSheet(real_lowervalue, parSheets, primarySheetNum, errors);
+		
+		if (real_upper != null)
+			ExcelParserUtils.setParallelSheet(real_upper, parSheets, primarySheetNum, errors);
+		
+		if (real_uppervalue != null)
+			ExcelParserUtils.setParallelSheet(real_uppervalue, parSheets, primarySheetNum, errors);
+		
+		if (real_unit != null)
+			ExcelParserUtils.setParallelSheet(real_unit, parSheets, primarySheetNum, errors);
 	}
 	
 	

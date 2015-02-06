@@ -1,5 +1,6 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ambit2.base.relation.STRUCTURE_RELATION;
@@ -20,6 +21,37 @@ public class CompositionDataLocation
 	public HashMap<String, ExcelDataLocation> properties = null;
 	public ProportionDataLocation proportion = null;
 	
+	
+	public void setParallelSheets(ParallelSheetState parSheets[], int primarySheetNum, ArrayList<String> errors)
+	{
+		if (content != null)
+			ExcelParserUtils.setParallelSheet(content, parSheets, primarySheetNum, errors);
+		
+		if (format != null)
+			ExcelParserUtils.setParallelSheet(format, parSheets, primarySheetNum, errors);
+		
+		if (inchiKey != null)
+			ExcelParserUtils.setParallelSheet(inchiKey, parSheets, primarySheetNum, errors);
+		
+		if (inchi != null)
+			ExcelParserUtils.setParallelSheet(inchi, parSheets, primarySheetNum, errors);
+		
+		if (formula != null)		
+			ExcelParserUtils.setParallelSheet(formula, parSheets, primarySheetNum, errors);
+		
+		if (smiles != null)
+			ExcelParserUtils.setParallelSheet(smiles, parSheets, primarySheetNum, errors);
+		
+		if (properties != null)
+			for (String key : properties.keySet())
+			{
+				ExcelDataLocation loc = properties.get(key);
+				ExcelParserUtils.setParallelSheet(loc, parSheets, primarySheetNum, errors);
+			}
+
+		if (proportion != null)
+			proportion.setParallelSheets(parSheets, primarySheetNum, errors);
+	}
 	
 	public String toJSONKeyWord(String offset)
 	{
