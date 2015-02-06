@@ -18,9 +18,7 @@ public class CompositionDataLocation
 	public ExcelDataLocation formula = null;
 	public ExcelDataLocation smiles = null;
 	public HashMap<String, ExcelDataLocation> properties = null;
-	
-	//Proportion data locations
-	
+	public ProportionDataLocation proportion = null;
 	
 	
 	public String toJSONKeyWord(String offset)
@@ -109,6 +107,13 @@ public class CompositionDataLocation
 			sb.append(offset + "\t}" );
 			nFields++;
 		}
+		
+		if (proportion != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");
+			sb.append(proportion.toJSONKeyWord(offset + "\t" ));
+		}	
 		
 		if (nFields > 0)
 			sb.append("\n");

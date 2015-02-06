@@ -1749,10 +1749,18 @@ public class ExcelParserConfigurator
 			cdl.properties = extractDynamicSection(propNode, conf);
 		}
 		
-		//TODO - proportions locations
+		
+		//PROPORTION
+		JsonNode proportionNode = node.path("PROPORTION");
+		if (!proportionNode.isMissingNode())
+		{
+			cdl.proportion = ProportionDataLocation.extractProportion(proportionNode, conf);
+		}
 		
 		return cdl;
 	}
+	
+	
 	
 	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
 	{

@@ -1693,6 +1693,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - Check the consistency of the ExcelDataLocation (loc variables) and the global data access/parallel sheet access, ... 
 	 * 
 	 * - dynamic iteration in mode NEXT_DIFFERENT_VALUE (both for primary and parallel sheets)
+	 * 
+	 * - Move some of the "extraction" functions from class ExcelParserConfiguration to the corresponding *DataLocation class
+	 * 
 	 */
 	
 }
