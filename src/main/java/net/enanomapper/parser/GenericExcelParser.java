@@ -35,6 +35,7 @@ import org.openscience.cdk.io.formats.IResourceFormat;
 import org.openscience.cdk.io.listener.IChemObjectIOListener;
 import org.openscience.cdk.io.setting.IOSetting;
 
+import ambit2.base.data.Property;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
@@ -1323,6 +1324,86 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			String s = getStringValue(cdl.inchiKey);
 			structure.setInchiKey(s);
 		}
+		
+		if (cdl.properties != null)
+		{
+			for (String propName : cdl.properties.keySet())
+			{
+				ExcelDataLocation loc = cdl.properties.get(propName);
+				String s = getStringValue(loc);
+				if (s != null)
+				{	
+					Property property = new Property(propName, "", "");
+					structure.setProperty(property, s);
+				}
+			}
+		}
+		
+		if (cdl.proportion != null)
+		{
+			if (cdl.proportion.function != null)  //TODO eventually to check a list of predefined functions
+			{
+				String s = getStringValue(cdl.proportion.function);
+				proportion.setFunction(s);
+			}
+			
+			if (cdl.proportion.typical_precision != null)
+			{
+				String s = getStringValue(cdl.proportion.typical_precision);
+				proportion.setTypical(s);
+			}
+			
+			if (cdl.proportion.typical_value != null)
+			{
+				Double d = getNumericValue(cdl.proportion.typical_value);
+				proportion.setTypical_value(d);
+			}
+			
+			if (cdl.proportion.typical_unit != null)
+			{
+				String s = getStringValue(cdl.proportion.typical_unit);
+				proportion.setTypical_unit(s);
+			}
+			
+			if (cdl.proportion.real_value != null)
+			{
+				Double d = getNumericValue(cdl.proportion.real_value);
+				proportion.setReal_value(d);
+			}
+			
+			if (cdl.proportion.real_lower_precision != null)
+			{
+				String s = getStringValue(cdl.proportion.real_lower_precision);
+				proportion.setReal_lower(s);
+			}
+			
+			if (cdl.proportion.real_lower_value != null)
+			{
+				Double d = getNumericValue(cdl.proportion.real_lower_value);
+				proportion.setReal_lowervalue(d);
+			}
+			
+			if (cdl.proportion.real_upper_precision != null)
+			{
+				String s = getStringValue(cdl.proportion.real_upper_precision);
+				proportion.setReal_upper(s);
+			}
+			
+			if (cdl.proportion.real_upper_value != null)
+			{
+				Double d = getNumericValue(cdl.proportion.real_upper_value);
+				proportion.setReal_uppervalue(d);
+			}
+			
+			if (cdl.proportion.real_unit != null)
+			{
+				String s = getStringValue(cdl.proportion.real_unit);
+				proportion.setReal_unit(s);
+			}
+			
+			
+		}//end of proportion
+		
 		
 		
 		CompositionRelation relation = new CompositionRelation(record, structure, cdl.structureRelation, proportion);

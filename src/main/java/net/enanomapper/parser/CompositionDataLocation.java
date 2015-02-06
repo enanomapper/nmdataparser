@@ -8,7 +8,7 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 
 public class CompositionDataLocation 
 {	
-	public STRUCTURE_RELATION structureRelation = STRUCTURE_RELATION.HAS_CORE;
+	public STRUCTURE_RELATION structureRelation = STRUCTURE_RELATION.HAS_CONSTITUENT;
 	public boolean FlagStructureRelation = false;
 	
 	//Locations for the Structure Record
