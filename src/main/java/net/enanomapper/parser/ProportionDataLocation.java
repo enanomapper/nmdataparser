@@ -9,14 +9,16 @@ import org.codehaus.jackson.JsonNode;
 public class ProportionDataLocation 
 {
 	public ExcelDataLocation function = null;
-	public ExcelDataLocation typical = null;
+	
+	public ExcelDataLocation typical_precision = null;  //analog to the qualifier
 	public ExcelDataLocation typical_value = null;
 	public ExcelDataLocation typical_unit = null;
+	
 	public ExcelDataLocation real_value = null;
-	public ExcelDataLocation real_lower = null;
-	public ExcelDataLocation real_lowervalue = null;
-	public ExcelDataLocation real_upper = null;
-	public ExcelDataLocation real_uppervalue = null;
+	public ExcelDataLocation real_lower_precision = null;
+	public ExcelDataLocation real_lower_value = null;
+	public ExcelDataLocation real_upper_precision = null;
+	public ExcelDataLocation real_upper_value = null;
 	public ExcelDataLocation real_unit = null;
 	
 	
@@ -33,12 +35,12 @@ public class ProportionDataLocation
 				pdl.function = loc;
 		}
 		
-		//TYPICAL
-		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL", conf);
+		//TYPICAL_PRECISION
+		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				pdl.typical = loc;
+				pdl.typical_precision = loc;
 		}
 		
 		//TYPICAL_VALUE
@@ -65,12 +67,12 @@ public class ProportionDataLocation
 				pdl.real_value = loc;
 		}
 		
-		//REAL_LOWER
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER", conf);
+		//REAL_LOWER_PRECISION
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				pdl.real_lower = loc;
+				pdl.real_lower_precision = loc;
 		}
 		
 		//REAL_LOWER_VALUE
@@ -78,15 +80,15 @@ public class ProportionDataLocation
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				pdl.real_lowervalue = loc;
+				pdl.real_lower_value = loc;
 		}
 		
-		//REAL_UPPER
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER", conf);
+		//REAL_UPPER_PRECISION
+		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				pdl.real_upper = loc;
+				pdl.real_upper_precision = loc;
 		}
 
 		//REAL_UPPER_VALUE
@@ -94,7 +96,7 @@ public class ProportionDataLocation
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
-				pdl.real_uppervalue = loc;
+				pdl.real_upper_value = loc;
 		}
 		
 		//REAL_UNIT
@@ -114,8 +116,8 @@ public class ProportionDataLocation
 		if (function != null)
 			ExcelParserUtils.setParallelSheet(function, parSheets, primarySheetNum, errors);
 		
-		if (typical != null)
-			ExcelParserUtils.setParallelSheet(typical, parSheets, primarySheetNum, errors);
+		if (typical_precision != null)
+			ExcelParserUtils.setParallelSheet(typical_precision, parSheets, primarySheetNum, errors);
 		
 		if (typical_value != null)
 			ExcelParserUtils.setParallelSheet(typical_value, parSheets, primarySheetNum, errors);
@@ -126,17 +128,17 @@ public class ProportionDataLocation
 		if (real_value != null)
 			ExcelParserUtils.setParallelSheet(real_value, parSheets, primarySheetNum, errors);
 		
-		if (real_lower != null)
-			ExcelParserUtils.setParallelSheet(real_lower, parSheets, primarySheetNum, errors);
+		if (real_lower_precision != null)
+			ExcelParserUtils.setParallelSheet(real_lower_precision, parSheets, primarySheetNum, errors);
 		
-		if (real_lowervalue != null)
-			ExcelParserUtils.setParallelSheet(real_lowervalue, parSheets, primarySheetNum, errors);
+		if (real_lower_value != null)
+			ExcelParserUtils.setParallelSheet(real_lower_value, parSheets, primarySheetNum, errors);
 		
-		if (real_upper != null)
-			ExcelParserUtils.setParallelSheet(real_upper, parSheets, primarySheetNum, errors);
+		if (real_upper_precision != null)
+			ExcelParserUtils.setParallelSheet(real_upper_precision, parSheets, primarySheetNum, errors);
 		
-		if (real_uppervalue != null)
-			ExcelParserUtils.setParallelSheet(real_uppervalue, parSheets, primarySheetNum, errors);
+		if (real_upper_value != null)
+			ExcelParserUtils.setParallelSheet(real_upper_value, parSheets, primarySheetNum, errors);
 		
 		if (real_unit != null)
 			ExcelParserUtils.setParallelSheet(real_unit, parSheets, primarySheetNum, errors);
@@ -158,11 +160,11 @@ public class ProportionDataLocation
 			nFields++;
 		}
 		
-		if (typical != null)
+		if (typical_precision != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(typical.toJSONKeyWord(offset + "\t"));
+			sb.append(typical_precision.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
@@ -190,36 +192,36 @@ public class ProportionDataLocation
 			nFields++;
 		}
 		
-		if (real_lower != null)
+		if (real_lower_precision != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(real_lower.toJSONKeyWord(offset + "\t"));
+			sb.append(real_lower_precision.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
-		if (real_lowervalue != null)
+		if (real_lower_value != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(real_lowervalue.toJSONKeyWord(offset + "\t"));
+			sb.append(real_lower_value.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
 		
-		if (real_upper != null)
+		if (real_upper_precision != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(real_upper.toJSONKeyWord(offset + "\t"));
+			sb.append(real_upper_precision.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
-		if (real_uppervalue != null)
+		if (real_upper_value != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(real_uppervalue.toJSONKeyWord(offset + "\t"));
+			sb.append(real_upper_value.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
