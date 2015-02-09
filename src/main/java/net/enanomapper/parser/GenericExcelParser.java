@@ -1475,7 +1475,7 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				loc.setAbsoluteLocationValue(value);
 			}
 			if (value != null)
-				return (String) value;
+				return value.toString();
 			return null;
 		}
 		
