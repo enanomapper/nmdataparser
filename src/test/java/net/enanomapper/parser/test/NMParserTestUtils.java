@@ -222,6 +222,10 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size()>0);
 				//System.out.println(r.toJSON("http://localhost/"));
+				Assert.assertNotNull(r.getExternalids());
+				Assert.assertTrue(r.getExternalids().size()>0);
+				Assert.assertEquals("Classification",r.getExternalids().get(0).getSystemDesignator());
+				Assert.assertNotNull(r.getRelatedStructures());
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
 					Assert.assertEquals(r.getCompanyUUID(),  pa.getSubstanceUUID());
