@@ -24,7 +24,24 @@
             "ITERATION": "ABSOLUTE_LOCATION",
             "COLUMN_INDEX": "E",
             "ROW_INDEX": 3
-        }
+        },
+        "SUBSTANCE_TYPE": {
+            "ITERATION": "JSON_VALUE",
+            "JSON_VALUE": "Nanoparticle"
+        },
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                "ID": {
+                    "COLUMN_INDEX": "D",
+                     "ITERATION": "ROW_SINGLE"
+                },
+                "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "D",
+                    "ROW_INDEX" : 7
+                }
+            }
+        ]
     },
     "PROTOCOL_APPLICATIONS": [
         {
@@ -33,10 +50,10 @@
                 "COLUMN_INDEX": "E",
                 "ROW_INDEX": 3
             },
-            "PROTOCOL_CATEGORY_CODE" : {
-            		"ITERATION": "ABSOLUTE_LOCATION",
-                    "COLUMN_INDEX": "E",
-                    "ROW_INDEX": 1
+            "PROTOCOL_CATEGORY_CODE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "E",
+                "ROW_INDEX": 1
             },
             "PROTOCOL_GUIDELINE": {
                 "guideline1": {
@@ -50,7 +67,7 @@
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
                     "ROW_INDEX": 9
-                },             
+                },
                 "Cell": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "E",
@@ -60,7 +77,7 @@
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "E",
                     "ROW_INDEX": 7
-                },                
+                },
                 "data_gathering_instruments": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "E",
@@ -134,17 +151,17 @@
                     "ROW_INDEX": 2
                 }
             },
-            "PROTOCOL_CATEGORY_CODE" : {
-            		"ITERATION": "ABSOLUTE_LOCATION",
-                    "COLUMN_INDEX": "J",
-                    "ROW_INDEX": 1
-            },            
+            "PROTOCOL_CATEGORY_CODE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "J",
+                "ROW_INDEX": 1
+            },
             "PARAMETERS": {
                 "Medium": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
                     "ROW_INDEX": 9
-                },            
+                },
                 "Cell": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
@@ -154,7 +171,7 @@
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
                     "ROW_INDEX": 7
-                },                 
+                },
                 "data_gathering_instruments": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "J",
