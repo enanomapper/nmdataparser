@@ -98,6 +98,7 @@ public class ExcelParserConfigurator
 	public ArrayList<ProtocolApplicationDataLocation> protocolAppLocations = new ArrayList<ProtocolApplicationDataLocation>();
 	public HashMap<String,Object> jsonRepository = new HashMap<String,Object>();
 	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
+	public ArrayList<ExternalIdentifierDataLocation> externalIdentifiers = new ArrayList<ExternalIdentifierDataLocation>();
 	
 	//Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
@@ -451,9 +452,21 @@ public class ExcelParserConfigurator
 					conf.configErrors.add("Section \"COMPOSITION\" is not an array!");
 			}
 			
-			
-			//Handle external identifies 
-			//TODO
+			//EXTERNAL_IDENTIFIERS
+			JsonNode extIdNode = curNode.path("EXTERNAL_IDENTIFIERS");
+			if (!extIdNode.isMissingNode())
+			{
+				if (extIdNode.isArray())
+				{
+					for (int i = 0; i < extIdNode.size(); i++)
+					{	
+						ExternalIdentifierDataLocation eidl = ExternalIdentifierDataLocation.extractExternalIdentifier(extIdNode.get(i), conf);
+						conf.externalIdentifiers.add(eidl);
+					}	
+				}
+				else
+					conf.configErrors.add("Section \"EXTERNAL_IDENTIFIERS\" is not an array!");
+			}
 		}
 		
 		
@@ -757,6 +770,22 @@ public class ExcelParserConfigurator
 				sb.append(",\n\n");
 			sb.append(loc.toJSONKeyWord("\t\t"));
 			n++;
+		}
+		
+		if (!externalIdentifiers.isEmpty())
+		{	
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append("\t\t\"EXTERNAL_IDENTIFIERS\":\n");
+			sb.append("\t\t[\n");
+			for (int i = 0; i < externalIdentifiers.size(); i++)
+			{	
+				sb.append(externalIdentifiers.get(i).toJSONKeyWord("\t\t\t"));			
+				if (i < externalIdentifiers.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append("\t\t]"); 
 		}
 		
 		if (!composition.isEmpty())

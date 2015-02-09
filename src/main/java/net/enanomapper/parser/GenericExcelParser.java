@@ -43,6 +43,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
@@ -219,6 +220,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		
 		for (CompositionDataLocation cdl : config.composition)
 			cdl.setParallelSheets(parallelSheetStates, primarySheetNum, parallelSheetsErrors);
+		
+		for (ExternalIdentifierDataLocation eidl : config.externalIdentifiers)
+			eidl.setParallelSheets(parallelSheetStates, primarySheetNum, parallelSheetsErrors);
 	}
 	
 	protected void setParallelSheet(ExcelDataLocation loc)
@@ -379,9 +383,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		input = null;
 		workbook = null;
 	}
-
-
-
+	
+	
 	@Override
 	public boolean hasNext() {
 		
@@ -854,6 +857,25 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 			CompositionRelation relation = readCompositionRelation(cdl, r);
 			r.addStructureRelation(relation);
 		}
+		
+		
+		if (!config.externalIdentifiers.isEmpty())
+		{	
+			List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
+			for (ExternalIdentifierDataLocation eidl : config.externalIdentifiers)
+			{	
+				String id = null;
+				String type = null;
+				if (eidl.id != null)
+					id = getStringValue(eidl.id);
+				if (eidl.type != null)
+					type = getStringValue(eidl.type);
+				
+				if ((id != null) && (type != null))
+					ids.add(new ExternalIdentifier(type, id));
+			}
+			r.setExternalids(ids);
+		}	
 		
 		return r;
 	}
@@ -1365,11 +1387,13 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				proportion.setTypical_unit(s);
 			}
 			
+			/*
 			if (cdl.proportion.real_value != null)
 			{
 				Double d = getNumericValue(cdl.proportion.real_value);
 				proportion.setReal_value(d);
 			}
+			*/
 			
 			if (cdl.proportion.real_lower_precision != null)
 			{
