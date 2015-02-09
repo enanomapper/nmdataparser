@@ -41,6 +41,29 @@
                     "ROW_INDEX" : 7
                 }
             }
+        ],
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+                "CONTENT": {
+                    "COLUMN_INDEX": "B"
+                },
+                "FORMAT": {
+                    "COLUMN_INDEX": "B",
+                    "JSON_VALUE": "INC"
+                },
+                "SMILES": {
+                    "COLUMN_INDEX": "B"
+                }
+            },
+            {
+                "STRUCTURE_RELATION": "HAS_COATING",
+                "PROPERTIES": {
+                    "NAME": {
+                        "COLUMN_INDEX": "C"
+                    }
+                }
+            }            
         ]
     },
     "PROTOCOL_APPLICATIONS": [
