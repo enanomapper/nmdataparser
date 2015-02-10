@@ -64,6 +64,9 @@ public class ExcelParserConfigurator
 	public int startRow = 2;
 	public boolean FlagStartRow = false;
 	
+	public int endRow = -1;
+	public boolean FlagEndRow = false;
+	
 	public int sheetIndex = 0;
 	public boolean FlagSheetIndex = false;
 	
@@ -232,6 +235,19 @@ public class ExcelParserConfigurator
 				{	
 					conf.startRow = intValue - 1; //1-based --> 0-based
 					conf.FlagStartRow = true;
+				}
+			}
+			
+			//END_ROW
+			if (!curNode.path("END_ROW").isMissingNode())
+			{
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, "END_ROW", false);
+				if (intValue == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else
+				{	
+					conf.endRow = intValue - 1; //1-based --> 0-based
+					conf.FlagEndRow = true;
 				}
 			}
 			
@@ -585,7 +601,14 @@ public class ExcelParserConfigurator
 				sb.append(",\n");
 			sb.append("\t\t\"START_ROW\" : " + (startRow + 1)); //0-based --> 1-based
 			nDAFields++;
-		}	
+		}
+		if (FlagEndRow)
+		{	
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"END_ROW\" : " + (endRow + 1)); //0-based --> 1-based
+			nDAFields++;
+		}
 		if (FlagStartHeaderRow)
 		{	
 			if (nDAFields > 0)
@@ -1522,6 +1545,20 @@ public class ExcelParserConfigurator
 			{	
 				eshc.startRow = intValue - 1; //1-based --> 0-based		
 				eshc.FlagStartRow = true;
+			}
+		}
+		
+		//END_ROW
+		if(!node.path("END_ROW").isMissingNode())
+		{
+			Integer intValue = jsonUtils.extractIntKeyword(node, "END_ROW", false);
+			if (intValue == null)
+				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
+						+ (jsonArrayIndex+1) + " keyword \"END_ROW\": " + jsonUtils.getError());
+			else
+			{	
+				eshc.endRow = intValue - 1; //1-based --> 0-based		
+				eshc.FlagEndRow = true;
 			}
 		}
 		

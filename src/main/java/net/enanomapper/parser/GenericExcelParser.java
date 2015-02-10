@@ -80,7 +80,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	protected Sheet primarySheet = null;
 	protected int curRowNum = 1;     //This is used by the iteration logic
 	protected int curReadRowNum = 1; //This shows the actual read rows in multi-dynamic iteration mode
-	protected int curCellNum = 1;	
+	protected int curCellNum = 1;
+	protected int iterationLastRowNum = 1;
 	protected Row curRow = null;
 	protected ArrayList<Row> curRows = null;
 	protected Iterator<Row> rowIt = null; 
@@ -151,6 +152,12 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		primarySheetNum = config.sheetIndex;
 		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = config.startRow;
+		
+		iterationLastRowNum = primarySheet.getLastRowNum();
+		if (config.FlagEndRow)
+			if (config.endRow < iterationLastRowNum)
+				iterationLastRowNum = config.endRow;
+		
 		logger.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n" + "Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 	
@@ -446,14 +453,14 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 		case ROW_SINGLE:
 		case ROW_MULTI_DYNAMIC:	
 			//Decision logic: at least one row must be left on the primary sheet
-			if (curRowNum <= primarySheet.getLastRowNum())
+			if (curRowNum <= iterationLastRowNum  /*primarySheet.getLastRowNum()*/ )
 				return true;
 			else
 				return false;
 			
 		case ROW_MULTI_FIXED:
 			//Decision logic: at least config.rowMultiFixedSize rows must be left on the primary sheet
-			if (curRowNum <= primarySheet.getLastRowNum() - config.rowMultiFixedSize)
+			if (curRowNum <= iterationLastRowNum - config.rowMultiFixedSize)
 				return true;
 			else
 				return false;
@@ -1355,7 +1362,9 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 				String s = getStringValue(loc);
 				if (s != null)
 				{	
+					String sameas = Property.guessLabel(propName);
 					Property property = new Property(propName, "", "");
+					property.setLabel(sameas);
 					structure.setProperty(property, s);
 				}
 			}
@@ -1848,8 +1857,6 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * 
 	 * - add to ExcelDataLocation keywords for UUID generation flag + possible processing of data from that location
 	 * 
-	 * - Read composition !!
-	 * 
 	 * - conditions to be read as RichValue and stored as Value object 
 	 * 
 	 * - String_or_Double Excel/Json utils 
@@ -1862,6 +1869,8 @@ public class GenericExcelParser implements IRawReader<SubstanceRecord>
 	 * - analogously: Move handling of parallel sheets to the corresponding classes +  move some functionality as static to ExcelParserUtils
 	 * 
 	 * - add function getString(ExcelDataLocation) and replace most of the function calls of getStringValue() so that numeric cell would not give error
+	 * 
+	 * - Error messages to be logged out /option to switch off memory storage of the error messages
 	 * 
 	 */
 	

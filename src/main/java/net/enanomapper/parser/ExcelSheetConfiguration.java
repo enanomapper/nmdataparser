@@ -25,6 +25,9 @@ public class ExcelSheetConfiguration
 	public int startRow = 2;
 	public boolean FlagStartRow = false;
 	
+	public int endRow = -1;
+	public boolean FlagEndRow = false;
+	
 	public int startHeaderRow = 0;
 	public boolean FlagStartHeaderRow = false;
 	
@@ -103,6 +106,14 @@ public class ExcelSheetConfiguration
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"START_ROW\" : \"" + (startRow + 1) + "\"");
+			nFields++;
+		}
+		
+		if (FlagEndRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"END_ROW\" : \"" + (endRow + 1) + "\"");
 			nFields++;
 		}
 		
