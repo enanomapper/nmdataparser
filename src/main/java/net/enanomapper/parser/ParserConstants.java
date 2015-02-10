@@ -242,6 +242,7 @@ public class ParserConstants
 	public enum ElementDataType {
 		
 		EFFECT, EFFECT_ARRAY, 
+		COMPOSITION, COMPOSITION_ARRAY,
 		PROTOCOL, PROTOCOL_ARRAY, 
 		PROTOCOL_APPLICATION, PROTOCOL_APPLICATION_ARRAY, 
 		SUBSTANCE, SUBSTANCE_ARRAY,
@@ -657,6 +658,179 @@ public class ParserConstants
 			}
 		},
 		
+		//Composition fields
+		CONTENT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		FORMAT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		INCHI_KEY {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		INCHI {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		FORMULA {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		SMILES {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPERTY {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_FUNCTION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+
+		PROPORTION_TYPICAL_PRECISION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_TYPICAL_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_TYPICAL_UNIT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		/*
+		PROPORTION_REAL_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		*/
+		
+		PROPORTION_REAL_LOWER_PRECISION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_REAL_LOWER_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_REAL_UPPER_PRECISION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_REAL_UPPER_VALUE {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		PROPORTION_REAL_UNIT {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
 		UNDEFINED;
 		
 		public boolean isFieldOf(ElementDataType type)
@@ -677,6 +851,10 @@ public class ParserConstants
 			
 			if (this.isFieldOf(ElementDataType.EFFECT))
 				return ElementDataType.EFFECT;
+			
+			if (this.isFieldOf(ElementDataType.COMPOSITION))
+				return ElementDataType.COMPOSITION;
+			
 			
 			return ElementDataType.UNDEFINED;
 		}
