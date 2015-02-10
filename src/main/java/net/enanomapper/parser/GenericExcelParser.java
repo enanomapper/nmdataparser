@@ -55,7 +55,7 @@ import ambit2.core.io.IRawReader;
  * @author nick
  *
  */
-public class GenericExcelParser implements IRawReader<SubstanceRecord>
+public class GenericExcelParser implements IRawReader<IStructureRecord>
 {	
 	
 	private final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
