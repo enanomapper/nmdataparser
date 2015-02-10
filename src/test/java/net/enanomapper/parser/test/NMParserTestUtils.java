@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
+import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
@@ -86,8 +87,11 @@ public class NMParserTestUtils {
 			List<CompositionRelation> composition = r.getRelatedStructures();
 			if (composition != null)
 				for (CompositionRelation relation : composition)
+				{	
 					//System.out.println(" ### Composition " + structureRecordToString(relation.getSecondStructure()));
 					System.out.println(" ### Composition \n" + compositionRelationStructureToString(relation));  //both give the same result
+					System.out.println(" ### Properties: " + structureRecordProperties(relation.getSecondStructure()));
+				}	
 			
 			
 		}
@@ -154,6 +158,16 @@ public class NMParserTestUtils {
 		return sb.toString();
 	}
 	
+	public static String structureRecordProperties(IStructureRecord str)
+	{
+		StringBuffer sb = new StringBuffer();
+		for (Property p : str.getProperties())
+		{
+			sb.append("    " + p.getName() + ": " + str.getProperty(p));
+		}
+		return sb.toString();
+	}
+	
 	public static String compositionRelationStructureToString(CompositionRelation rel)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -165,7 +179,7 @@ public class NMParserTestUtils {
 		sb.append("  InchiKey : \"" + rel.getInchiKey() + "\"\n");
 		return sb.toString();
 	}
-
+	
 	//@Test
 	public void testProteinCoronaXLSX() throws Exception {
 		InputStream xlsx = this

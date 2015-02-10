@@ -800,7 +800,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyUUID");
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
 		}
@@ -808,7 +808,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setCompanyName(s);
 		}
@@ -817,7 +817,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		loc = config.substanceLocations.get("SubstanceRecord.ownerUUID");  
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setOwnerUUID(s);
 		}
@@ -825,7 +825,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		loc = config.substanceLocations.get("SubstanceRecord.ownerName");
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setOwnerName(s);
 		}
@@ -833,7 +833,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		loc = config.substanceLocations.get("SubstanceRecord.substanceType");
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setSubstancetype(s);
 		}
@@ -841,7 +841,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		loc = config.substanceLocations.get("SubstanceRecord.publicName");
 		if (loc != null)
 		{	
-			String s = getStringValue(loc);
+			String s = getString(loc);
 			if (s != null)
 				r.setPublicName(s);
 		}
@@ -874,9 +874,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 				String id = null;
 				String type = null;
 				if (eidl.id != null)
-					id = getStringValue(eidl.id);
+					id = getString(eidl.id);
 				if (eidl.type != null)
-					type = getStringValue(eidl.type);
+					type = getString(eidl.type);
 				
 				if ((id != null) && (type != null))
 					ids.add(new ExternalIdentifier(type, id));
@@ -969,21 +969,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (padl.citationTitle != null)
 		{	
-			String s = getStringValue(padl.citationTitle);
+			String s = getString(padl.citationTitle);
 			if (s != null)
 				pa.setReference(s);  //title is the reference 'itself'
 		}
 		
 		if (padl.citationOwner != null)
 		{	
-			String s = getStringValue(padl.citationOwner);
+			String s = getString(padl.citationOwner);
 			if (s != null)
 				pa.setReferenceOwner(s);
 		}
 		
 		if (padl.citationYear != null)
 		{	
-			String s = getStringValue(padl.citationYear);
+			String s = getString(padl.citationYear);
 			if (s != null)
 				pa.setReferenceYear(s);
 		}
@@ -991,7 +991,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (padl.interpretationCriteria != null)
 		{	
-			String s = getStringValue(padl.interpretationCriteria);
+			String s = getString(padl.interpretationCriteria);
 			if (s != null)
 				pa.setInterpretationCriteria(s);
 		}
@@ -999,7 +999,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (padl.interpretationResult != null)
 		{	
-			String s = getStringValue(padl.interpretationResult);
+			String s = getString(padl.interpretationResult);
 			if (s != null)	
 				pa.setInterpretationResult(s);
 		}
@@ -1042,20 +1042,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 	{	
 		String endpoint = null;
 		if (padl.protocolEndpoint != null)
-			endpoint = getStringValue(padl.protocolEndpoint);
+			endpoint = getString(padl.protocolEndpoint);
 		
 		Protocol protocol = new Protocol(endpoint);
 		
 		if (padl.protocolTopCategory != null)
 		{	
-			String s = getStringValue(padl.protocolTopCategory);
+			String s = getString(padl.protocolTopCategory);
 			if (s != null)
 				protocol.setTopCategory(s);
 		}
 		
 		if (padl.protocolCategoryCode != null)
 		{	
-			String s = getStringValue(padl.protocolCategoryCode);
+			String s = getString(padl.protocolCategoryCode);
 			if (s != null)
 				protocol.setCategory(s);
 		}
@@ -1069,7 +1069,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			List<String> guide = new ArrayList<String>();
 			for (int i = 0; i < padl.protocolGuideline.size(); i++)
 			{	
-				String s = getStringValue(padl.protocolGuideline.get(i));
+				String s = getString(padl.protocolGuideline.get(i));
 				if (s != null)
 					guide.add(s);
 			}	
@@ -1085,21 +1085,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (efrdl.sampleID != null)
 		{	
-			String s = getStringValue(efrdl.sampleID);
+			String s = getString(efrdl.sampleID);
 			if (s != null)
 				effect.setSampleID(s);
 		}
 		
 		if (efrdl.endpoint != null)
 		{	
-			String s = getStringValue(efrdl.endpoint);
+			String s = getString(efrdl.endpoint);
 			if (s != null)
 				effect.setEndpoint(s);
 		}
 		
 		if (efrdl.loQualifier != null)
 		{	
-			String s = getStringValue(efrdl.loQualifier);
+			String s = getString(efrdl.loQualifier);
 			if (s != null)
 			{	
 				if (ExcelParserConfigurator.isValidQualifier(s))
@@ -1143,7 +1143,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (efrdl.upQualifier != null)
 		{	
-			String s = getStringValue(efrdl.upQualifier);
+			String s = getString(efrdl.upQualifier);
 			if (s != null)
 			{	
 				if (ExcelParserConfigurator.isValidQualifier(s))
@@ -1186,14 +1186,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (efrdl.textValue != null)
 		{	
-			String s = getStringValue(efrdl.textValue);
+			String s = getString(efrdl.textValue);
 			if (s != null)
 				effect.setTextValue(s);
 		}
 		
 		if (efrdl.errQualifier != null)
 		{	
-			String s = getStringValue(efrdl.errQualifier);
+			String s = getString(efrdl.errQualifier);
 			if (s != null)
 			{
 				if (ExcelParserConfigurator.isValidQualifier(s))
@@ -1236,7 +1236,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (efrdl.unit != null)
 		{	
-			String s = getStringValue(efrdl.unit);
+			String s = getString(efrdl.unit);
 			if (s != null)
 				effect.setUnit(s);  
 		}
@@ -1290,9 +1290,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			Set<Entry<String, ExcelDataLocation>> locEntries = efrdl.conditions.entrySet();
 			for (Entry<String, ExcelDataLocation> entry : locEntries )
 			{	
-				//String value = getStringValue(entry.getValue());
-				//params.put(entry.getKey(), value);
+				String value = getString(entry.getValue());
+				params.put(entry.getKey(), value);
 				
+				/*
 				ExcelDataLocation loc = entry.getValue();
 				FlagAddParserStringError = false;
 				String condStrValue = getStringValue(loc);
@@ -1305,6 +1306,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 					if (condDoubleValue != null)
 						params.put(entry.getKey(), condDoubleValue);
 				}
+				*/
 			}
 			
 			effect.setConditions(params);
@@ -1320,37 +1322,37 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		
 		if (cdl.content != null)
 		{
-			String s = getStringValue(cdl.content);
+			String s = getString(cdl.content);
 			structure.setContent(s);
 		}
 		
 		if (cdl.format != null)
 		{
-			String s = getStringValue(cdl.format);
+			String s = getString(cdl.format);
 			structure.setFormat(s);
 		}
 		
 		if (cdl.formula != null)
 		{
-			String s = getStringValue(cdl.formula);
+			String s = getString(cdl.formula);
 			structure.setFormula(s);
 		}
 		
 		if (cdl.smiles != null)
 		{
-			String s = getStringValue(cdl.smiles);
+			String s = getString(cdl.smiles);
 			structure.setSmiles(s);
 		}
 		
 		if (cdl.inchi != null)
 		{
-			String s = getStringValue(cdl.inchi);
+			String s = getString(cdl.inchi);
 			structure.setInchi(s);
 		}
 		
 		if (cdl.inchiKey != null)
 		{
-			String s = getStringValue(cdl.inchiKey);
+			String s = getString(cdl.inchiKey);
 			structure.setInchiKey(s);
 		}
 		
@@ -1359,13 +1361,23 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			for (String propName : cdl.properties.keySet())
 			{
 				ExcelDataLocation loc = cdl.properties.get(propName);
-				String s = getStringValue(loc);
-				if (s != null)
+				
+				FlagAddParserStringError = false;
+				Object propObj = getStringValue(loc);
+				if (propObj != null)
+					propObj = ((String)propObj).trim();  
+				FlagAddParserStringError = true;
+				if (propObj == null)
+				{
+					propObj = getNumericValue(loc);
+				}
+				  
+				if (propObj != null)
 				{	
 					String sameas = Property.guessLabel(propName);
 					Property property = new Property(propName, "", "");
 					property.setLabel(sameas);
-					structure.setProperty(property, s);
+					structure.setProperty(property, propObj);
 				}
 			}
 		}
@@ -1374,13 +1386,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		{
 			if (cdl.proportion.function != null)  //TODO eventually to check a list of predefined functions
 			{
-				String s = getStringValue(cdl.proportion.function);
+				String s = getString(cdl.proportion.function);
 				proportion.setFunction(s);
 			}
 			
 			if (cdl.proportion.typical_precision != null)
 			{
-				String s = getStringValue(cdl.proportion.typical_precision);
+				String s = getString(cdl.proportion.typical_precision);
 				proportion.setTypical(s);
 			}
 			
@@ -1392,7 +1404,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			
 			if (cdl.proportion.typical_unit != null)
 			{
-				String s = getStringValue(cdl.proportion.typical_unit);
+				String s = getString(cdl.proportion.typical_unit);
 				proportion.setTypical_unit(s);
 			}
 			
@@ -1406,7 +1418,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			
 			if (cdl.proportion.real_lower_precision != null)
 			{
-				String s = getStringValue(cdl.proportion.real_lower_precision);
+				String s = getString(cdl.proportion.real_lower_precision);
 				proportion.setReal_lower(s);
 			}
 			
@@ -1418,7 +1430,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			
 			if (cdl.proportion.real_upper_precision != null)
 			{
-				String s = getStringValue(cdl.proportion.real_upper_precision);
+				String s = getString(cdl.proportion.real_upper_precision);
 				proportion.setReal_upper(s);
 			}
 			
@@ -1430,13 +1442,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			
 			if (cdl.proportion.real_unit != null)
 			{
-				String s = getStringValue(cdl.proportion.real_unit);
+				String s = getString(cdl.proportion.real_unit);
 				proportion.setReal_unit(s);
 			}
 			
 			
 		}//end of proportion
-		
 		
 		
 		CompositionRelation relation = new CompositionRelation(record, structure, cdl.structureRelation, proportion);
