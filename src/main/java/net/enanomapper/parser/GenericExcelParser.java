@@ -1445,6 +1445,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 	
 	/*
 	 * Generic function (regardless of the iteration access)
+	 * Reads a string value from a cell which is of type String
+	 * If cell is not of type 'String' error is generated
+	 * 
 	 */
 	protected String getStringValue(ExcelDataLocation loc)
 	{
@@ -1480,7 +1483,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			Object value = loc.getAbsoluteLocationValue();
 			if (value == null)
 			{	
-				value = getStringFromAbsoluteLocation (loc);
+				value = getStringValueFromAbsoluteLocation (loc);
 				loc.setAbsoluteLocationValue(value);
 			}
 			if (value != null)
@@ -1531,6 +1534,95 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		}
 	}
 	
+	
+	/*
+	 * Generic function (regardless of the iteration access)
+	 */
+	protected String getString(ExcelDataLocation loc)
+	{
+		switch (loc.iteration)
+		{
+		case ROW_SINGLE:
+			if (loc.isFromParallelSheet())
+			{	
+				Row row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
+				if (row != null)
+					return getString(row, loc);
+				else
+					return null;
+			}	
+			else
+				return getString(curRow, loc);  //from basic sheet
+			
+		case ROW_MULTI_FIXED:
+		case ROW_MULTI_DYNAMIC:
+			//Taking the value from the first row
+			ArrayList<Row> rows;
+			if (loc.isFromParallelSheet())
+				rows = parallelSheetStates[loc.getParallelSheetIndex()].curRows;
+			else	
+				rows = curRows;
+			if (rows != null)
+				if (!rows.isEmpty())
+				return getString(rows.get(0), loc);
+			return null;
+		
+		case ABSOLUTE_LOCATION: 
+		{	
+			Object value = loc.getAbsoluteLocationValue();
+			if (value == null)
+			{	
+				value = getStringFromAbsoluteLocation (loc);
+				loc.setAbsoluteLocationValue(value);
+			}
+			if (value != null)
+				return value.toString();
+			return null;
+		}
+		
+		case JSON_VALUE:
+		{	
+			Object value = loc.getJsonValue();
+			if (value != null)
+				if (value instanceof String)
+					return (String) value;
+				else
+					if (FlagAddParserStringError)
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_VALUE is not of type STRING!");
+			return null;
+		}
+		
+		case JSON_REPOSITORY:
+		{	
+			String key = loc.getJsonRepositoryKey();
+			Object value = config.jsonRepository.get(key);
+			if (value != null)
+				if (value instanceof String)
+					return (String) value;
+				else
+					if (FlagAddParserStringError)
+						parseErrors.add("["+ locationStringForErrorMessage(loc) +  "] JSON_REPOSITORY value for key \"" + key + "\" is not of type STRING!");
+			return null;
+		}
+		
+		case VARIABLE:
+		{
+			String key = loc.getVariableKey();
+			Object value = curVariables.get(key);
+			if (value != null)
+				return value.toString();
+			return null;
+		}
+		
+		default : 
+			return null;
+		}
+	}
+	
+	
+	/*
+	 * Generic function (regardless of the iteration access)
+	 */
 	protected Double getNumericValue(ExcelDataLocation loc)
 	{
 		switch (loc.iteration)
@@ -1624,7 +1716,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 	}
 	
 	
-	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc)
+	protected String getStringValueFromAbsoluteLocation(ExcelDataLocation loc)
 	{	
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
 		if (sheet != null)
@@ -1644,6 +1736,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 				}
 				return c.getStringCellValue();
 			}
+		}			
+		return null;
+	}
+	
+	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc)
+	{	
+		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		if (sheet != null)
+		{	
+			Row r = sheet.getRow(loc.rowIndex);
+			if (r== null)
+				return null;
+			
+			Cell c = r.getCell(loc.columnIndex);
+			return ExcelUtils.getStringFromCell(c);
 		}			
 		return null;
 	}
@@ -1671,6 +1778,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		return null;
 	}
 	
+	/*
+	 * Returns null if cell is not of string type (i.e. numerics are treated as errors)
+	 */
 	protected String getStringValue(Row row, ExcelDataLocation loc)
 	{
 		Cell c = row.getCell(loc.columnIndex);
@@ -1702,7 +1812,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		return c.getStringCellValue();
 	}
 	
-	
+	protected String getString(Row row, ExcelDataLocation loc)
+	{
+		Cell c = row.getCell(loc.columnIndex);
+		return ExcelUtils.getStringFromCell(c);
+	}
 	
 	protected Double getNumericValue(Row row, ExcelDataLocation loc)
 	{
