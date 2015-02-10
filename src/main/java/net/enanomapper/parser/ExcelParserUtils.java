@@ -2,8 +2,38 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
+import org.apache.poi.hssf.util.CellReference;
+import org.codehaus.jackson.JsonNode;
+
 public class ExcelParserUtils 
 {
+	
+	public static int extractColumnIndex(JsonNode node)
+	{
+		if (node.isInt())
+		{	
+			Integer intValue = node.asInt();
+			if (intValue == null)
+				return -1;
+			else
+				return intValue - 1;  //1 --> 0
+		}
+		
+		if (node.isTextual())
+		{
+			String s = node.asText();
+			if (s == null)
+				return -1;
+			
+			//TODO better check for the string
+			int col = CellReference.convertColStringToIndex(s);
+			if (col >= 0)			
+				return col;
+		}
+		
+		return -1;
+	}
+	
 	public static void setParallelSheet(ExcelDataLocation loc, ParallelSheetState parallelSheetStates[], 
 					int primarySheetNum, ArrayList<String> errors)
 	{

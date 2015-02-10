@@ -7,12 +7,14 @@ import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
+import net.enanomapper.parser.json.JsonUtilities;
 
 
 
@@ -47,6 +49,106 @@ public class DynamicIterationSpan
 	private Row firstRow = null;
 	private Row firstGroupRow = null;
 	
+	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
+	{
+		DynamicIterationSpan dis = new DynamicIterationSpan(); 
+		JsonUtilities jsonUtils = new JsonUtilities();
+		
+		//HANDLE_BY_ROWS
+		if(!node.path("HANDLE_BY_ROWS").isMissingNode())
+		{
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "HANDLE_BY_ROWS", true);
+			if (b == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"HANDLE_BY_ROWS\": " + jsonUtils.getError());
+			else
+			{	
+				dis.handleByRows = b;
+				dis.FlagHandleByRows = true;
+			}	
+		}
+		
+		
+		//CUMULATIVE_OBJECT_TYPE
+		if(node.path("CUMULATIVE_OBJECT_TYPE").isMissingNode())
+		{
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+					+ "\"CUMULATIVE_OBJECT_TYPE\": is missing!");
+		}
+		else
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_OBJECT_TYPE", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"CUMULATIVE_OBJECT_TYPE\": " + jsonUtils.getError());
+			else
+			{	
+				dis.cumulativeObjectType = ElementDataType.fromString(keyword);
+				if (dis.cumulativeObjectType == ElementDataType.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"CUMULATIVE_OBJECT_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+			}	
+		}
+		
+		//ROW_TYPE
+		if(node.path("ROW_TYPE").isMissingNode())
+		{
+			//Not treated as an error.
+		}
+		else
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "ROW_TYPE", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"ROW_TYPE\": " + jsonUtils.getError());
+			else
+			{	
+				dis.rowType = ElementDataType.fromString(keyword);
+				if (dis.rowType == ElementDataType.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"ROW_TYPE\" is incorrect or UNDEFINED! --> " + keyword);
+			}	
+		}
+		
+		
+		if(!node.path("ELEMENTS").isMissingNode())
+		{
+			JsonNode elNode = node.path("ELEMENTS");
+			if (elNode.isArray())
+			{
+				dis.elements = new ArrayList<DynamicElement>();
+				for (int i = 0; i < elNode.size(); i++)
+				{
+					DynamicElement el = DynamicElement.extractDynamicElement(elNode.get(i), conf, masterSection, i);
+					if (el != null)
+						dis.elements.add(el);
+				}	
+			}
+			else
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"ELEMENTS\" is not an array!");
+		}
+		
+		if(!node.path("GROUP_LEVELS").isMissingNode())
+		{
+			JsonNode elNode = node.path("GROUP_LEVELS");
+			if (elNode.isArray())
+			{
+				dis.groupLevels = new ArrayList<DynamicGrouping>();
+				for (int i = 0; i < elNode.size(); i++)
+				{
+					DynamicGrouping grp = DynamicGrouping.extractDynamicGrouping(elNode.get(i), conf, masterSection, i);
+					if (grp != null)
+						dis.groupLevels.add(grp);
+				}	
+			}
+			else
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"GROUP_LEVELS\" is not an array!");
+		}
+		
+		return dis;
+	}
 	
 	
 	public String toJSONKeyWord(String offset)

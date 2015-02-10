@@ -1,8 +1,11 @@
 package net.enanomapper.parser;
 
+import org.codehaus.jackson.JsonNode;
+
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
+import net.enanomapper.parser.json.JsonUtilities;
 
 
 public class DynamicElement 
@@ -30,6 +33,141 @@ public class DynamicElement
 	public String infoFromVariables[] = null; //The information is constructed form the variables defined by their keys
 	
 	public int childElementIds[] = null;
+	
+	public static DynamicElement  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
+			String masterSection, int elNum)
+{
+	DynamicElement element = new DynamicElement();
+	JsonUtilities jsonUtils = new JsonUtilities();
+	
+	//DATA_TYPE
+	if(node.path("DATA_TYPE").isMissingNode())
+	{
+		if (node.path("FIELD_TYPE").isMissingNode())
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" and \"FIELD_TYPE\" are missing!"
+							+ " At least one must be specified.");
+	}
+	else
+	{
+		String keyword =  jsonUtils.extractStringKeyword(node, "DATA_TYPE", false);
+		if (keyword == null)
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\": " + jsonUtils.getError());
+		else
+		{	
+			element.dataType = ElementDataType.fromString(keyword);
+			if (element.dataType == ElementDataType.UNDEFINED)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+			else
+				element.FlagDataType = true;
+		}	
+	}
+	
+	//FIELD_TYPE
+	if(!node.path("FIELD_TYPE").isMissingNode())
+	{
+		String keyword =  jsonUtils.extractStringKeyword(node, "FIELD_TYPE", false);
+		if (keyword == null)
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_TYPE\": " + jsonUtils.getError());
+		else
+		{	
+			element.fieldType = ElementField.fromString(keyword);
+			if (element.fieldType == ElementField.UNDEFINED)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+			else
+			{	
+				element.FlagFieldType = true;
+				// Setting dataType / Checking field compatibility with dataType
+				if (element.dataType == null)
+					element.dataType = element.fieldType.getElement();
+				else
+				{
+					if (element.dataType != element.fieldType.getElement())
+						conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+								+" subsection ELEMENT [" +(elNum +1) + "], FIELD_TYPE \"" + element.fieldType.toString() + 
+								"\" is incompatible with DATA_TYPE \"" + element.dataType.toString() + "\"");
+				}
+			}	
+		}	
+	}
+	
+	
+	//POSITION
+	if(!node.path("POSITION").isMissingNode())
+	{
+		String keyword =  jsonUtils.extractStringKeyword(node, "POSITION", false);
+		if (keyword == null)
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\": " + jsonUtils.getError());
+		else
+		{	
+			element.position = ElementPosition.fromString(keyword);
+			if (element.position == ElementPosition.UNDEFINED)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\" is incorrect or UNDEFINED!  -->"  + keyword);
+			else
+				element.FlagPosition = true;
+		}	
+	}
+
+
+	//INDEX
+	if(node.path("INDEX").isMissingNode())
+	{
+		conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+				+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INDEX\" is missing!");
+	}
+	else
+	{
+		//Index is extracted as column index (but it may be a row as well)
+		int col_index = ExcelParserUtils.extractColumnIndex(node.path("INDEX"));
+		if (col_index == -1)
+		{
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword  \"INDEX\" is incorrect!");
+		}
+		else
+		{	
+			element.index = col_index;
+			element.FlagIndex = true;
+		}
+	}
+	
+	
+	//JSON_INFO
+	if(!node.path("JSON_INFO").isMissingNode())
+	{
+		String keyword =  jsonUtils.extractStringKeyword(node, "JSON_INFO", false);
+		if (keyword == null)
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"JSON_INFO\": " + jsonUtils.getError());
+		else
+		{	
+			element.jsonInfo = keyword;
+		}	
+	}
+	
+	//INFO_FROM_HEADER
+	if(!node.path("INFO_FROM_HEADER").isMissingNode())
+	{
+		Boolean b =  jsonUtils.extractBooleanKeyword(node, "INFO_FROM_HEADER", true);
+		if (b == null)
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INFO_FROM_HEADER\": " + jsonUtils.getError());
+		else
+		{	
+			element.infoFromHeader = b;
+			element.FlagInfoFromHeader = true;
+		}	
+	}	
+	
+	return element;
+}
+	
 	
 	public String toJSONKeyWord(String offset)
 	{

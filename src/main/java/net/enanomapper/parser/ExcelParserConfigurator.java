@@ -324,7 +324,7 @@ public class ExcelParserConfigurator
 			//DYNAMIC_ITERATION_COLUMN_INDEX
 			if (!curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode())
 			{
-				int col_index = extractColumnIndex(curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+				int col_index = ExcelParserUtils.extractColumnIndex(curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
 				if (col_index == -1)
 				{
 					conf.configErrors.add("In JSON section \"DATA_ACESS\", keyword \"DYNAMIC_ITERATION_COLUMN_INDEX\" is incorrect! " + jsonUtils.getError());
@@ -361,7 +361,8 @@ public class ExcelParserConfigurator
 			//DYNAMIC_ITERATION_SPAN
 			if (!curNode.path("DYNAMIC_ITERATION_SPAN").isMissingNode())
 			{
-				DynamicIterationSpan span = extractDynamicIterationSpan(curNode.path("DYNAMIC_ITERATION_SPAN"), conf, "DATA_ACCESS");
+				DynamicIterationSpan span = 
+						DynamicIterationSpan.extractDynamicIterationSpan(curNode.path("DYNAMIC_ITERATION_SPAN"), conf, "DATA_ACCESS");
 				conf.dynamicIterationSpan = span;
 				conf.dynamicIterationSpan.isPrimarySheet = true; 
 			}
@@ -994,7 +995,7 @@ public class ExcelParserConfigurator
 		}
 		else
 		{
-			int col_index = extractColumnIndex(sectionNode.path("COLUMN_INDEX"));
+			int col_index = ExcelParserUtils.extractColumnIndex(sectionNode.path("COLUMN_INDEX"));
 			if (col_index == -1)
 			{
 				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
@@ -1639,7 +1640,7 @@ public class ExcelParserConfigurator
 		//DYNAMIC_ITERATION_COLUMN_INDEX
 		if (!node.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode())
 		{
-			int col_index = extractColumnIndex(node.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+			int col_index = ExcelParserUtils.extractColumnIndex(node.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
 			if (col_index == -1)
 			{
 				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " 
@@ -1691,7 +1692,8 @@ public class ExcelParserConfigurator
 		//DYNAMIC_ITERATION_SPAN
 		if (!node.path("DYNAMIC_ITERATION_SPAN").isMissingNode())
 		{
-			DynamicIterationSpan span = extractDynamicIterationSpan(node.path("DYNAMIC_ITERATION_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex+1) + "]");
+			DynamicIterationSpan span = 
+					DynamicIterationSpan.extractDynamicIterationSpan(node.path("DYNAMIC_ITERATION_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex+1) + "]");
 			eshc.dynamicIterationSpan = span;
 		}
 		
@@ -1828,315 +1830,6 @@ public class ExcelParserConfigurator
 	
 	
 	
-	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
-	{
-		DynamicIterationSpan dis = new DynamicIterationSpan(); 
-		JsonUtilities jsonUtils = new JsonUtilities();
-		
-		//HANDLE_BY_ROWS
-		if(!node.path("HANDLE_BY_ROWS").isMissingNode())
-		{
-			Boolean b =  jsonUtils.extractBooleanKeyword(node, "HANDLE_BY_ROWS", true);
-			if (b == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"HANDLE_BY_ROWS\": " + jsonUtils.getError());
-			else
-			{	
-				dis.handleByRows = b;
-				dis.FlagHandleByRows = true;
-			}	
-		}
-		
-		
-		//CUMULATIVE_OBJECT_TYPE
-		if(node.path("CUMULATIVE_OBJECT_TYPE").isMissingNode())
-		{
-			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-					+ "\"CUMULATIVE_OBJECT_TYPE\": is missing!");
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_OBJECT_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"CUMULATIVE_OBJECT_TYPE\": " + jsonUtils.getError());
-			else
-			{	
-				dis.cumulativeObjectType = ElementDataType.fromString(keyword);
-				if (dis.cumulativeObjectType == ElementDataType.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-							+ "\"CUMULATIVE_OBJECT_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
-			}	
-		}
-		
-		//ROW_TYPE
-		if(node.path("ROW_TYPE").isMissingNode())
-		{
-			//Not treated as an error.
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "ROW_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"ROW_TYPE\": " + jsonUtils.getError());
-			else
-			{	
-				dis.rowType = ElementDataType.fromString(keyword);
-				if (dis.rowType == ElementDataType.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-							+ "\"ROW_TYPE\" is incorrect or UNDEFINED! --> " + keyword);
-			}	
-		}
-		
-		
-		if(!node.path("ELEMENTS").isMissingNode())
-		{
-			JsonNode elNode = node.path("ELEMENTS");
-			if (elNode.isArray())
-			{
-				dis.elements = new ArrayList<DynamicElement>();
-				for (int i = 0; i < elNode.size(); i++)
-				{
-					DynamicElement el = extractDynamicElement(elNode.get(i), conf, masterSection, i);
-					if (el != null)
-						dis.elements.add(el);
-				}	
-			}
-			else
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"ELEMENTS\" is not an array!");
-		}
-		
-		if(!node.path("GROUP_LEVELS").isMissingNode())
-		{
-			JsonNode elNode = node.path("GROUP_LEVELS");
-			if (elNode.isArray())
-			{
-				dis.groupLevels = new ArrayList<DynamicGrouping>();
-				for (int i = 0; i < elNode.size(); i++)
-				{
-					DynamicGrouping grp = extractDynamicGrouping(elNode.get(i), conf, masterSection, i);
-					if (grp != null)
-						dis.groupLevels.add(grp);
-				}	
-			}
-			else
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
-						+ "\"GROUP_LEVELS\" is not an array!");
-		}
-		
-		return dis;
-	}
-	
-	 
-	public static DynamicElement  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
-				String masterSection, int elNum)
-	{
-		DynamicElement element = new DynamicElement();
-		JsonUtilities jsonUtils = new JsonUtilities();
-		
-		//DATA_TYPE
-		if(node.path("DATA_TYPE").isMissingNode())
-		{
-			if (node.path("FIELD_TYPE").isMissingNode())
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword + \"DATA_TYPE\" and \"FIELD_TYPE\" are missing!"
-								+ " At least one must be specified.");
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "DATA_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\": " + jsonUtils.getError());
-			else
-			{	
-				element.dataType = ElementDataType.fromString(keyword);
-				if (element.dataType == ElementDataType.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
-				else
-					element.FlagDataType = true;
-			}	
-		}
-		
-		//FIELD_TYPE
-		if(!node.path("FIELD_TYPE").isMissingNode())
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "FIELD_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_TYPE\": " + jsonUtils.getError());
-			else
-			{	
-				element.fieldType = ElementField.fromString(keyword);
-				if (element.fieldType == ElementField.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
-				else
-				{	
-					element.FlagFieldType = true;
-					// Setting dataType / Checking field compatibility with dataType
-					if (element.dataType == null)
-						element.dataType = element.fieldType.getElement();
-					else
-					{
-						if (element.dataType != element.fieldType.getElement())
-							conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-									+" subsection ELEMENT [" +(elNum +1) + "], FIELD_TYPE \"" + element.fieldType.toString() + 
-									"\" is incompatible with DATA_TYPE \"" + element.dataType.toString() + "\"");
-					}
-				}	
-			}	
-		}
-		
-		
-		//POSITION
-		if(!node.path("POSITION").isMissingNode())
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "POSITION", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\": " + jsonUtils.getError());
-			else
-			{	
-				element.position = ElementPosition.fromString(keyword);
-				if (element.position == ElementPosition.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"POSITION\" is incorrect or UNDEFINED!  -->"  + keyword);
-				else
-					element.FlagPosition = true;
-			}	
-		}
-
-
-		//INDEX
-		if(node.path("INDEX").isMissingNode())
-		{
-			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INDEX\" is missing!");
-		}
-		else
-		{
-			//Index is extracted as column index (but it may be a row as well)
-			int col_index = extractColumnIndex(node.path("INDEX"));
-			if (col_index == -1)
-			{
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword  \"INDEX\" is incorrect!");
-			}
-			else
-			{	
-				element.index = col_index;
-				element.FlagIndex = true;
-			}
-		}
-		
-		
-		//JSON_INFO
-		if(!node.path("JSON_INFO").isMissingNode())
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "JSON_INFO", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"JSON_INFO\": " + jsonUtils.getError());
-			else
-			{	
-				element.jsonInfo = keyword;
-			}	
-		}
-		
-		//INFO_FROM_HEADER
-		if(!node.path("INFO_FROM_HEADER").isMissingNode())
-		{
-			Boolean b =  jsonUtils.extractBooleanKeyword(node, "INFO_FROM_HEADER", true);
-			if (b == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"INFO_FROM_HEADER\": " + jsonUtils.getError());
-			else
-			{	
-				element.infoFromHeader = b;
-				element.FlagInfoFromHeader = true;
-			}	
-		}	
-		
-		return element;
-	}
-	
-	
-	public static DynamicGrouping  extractDynamicGrouping(JsonNode node, ExcelParserConfigurator conf, 
-			String masterSection, int groupNum)
-	{
-		DynamicGrouping dyngrp = new DynamicGrouping();
-		JsonUtilities jsonUtils = new JsonUtilities();
-		
-		//GROUPING_ELEMENT_INDEX
-		if(node.path("GROUPING_ELEMENT_INDEX").isMissingNode())
-		{
-			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-					+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUPING_ELEMENT_INDEX\" is missing!");
-		}
-		else
-		{
-			//Index is extracted as column index (but it may be a row as well)
-			int col_index = extractColumnIndex(node.path("GROUPING_ELEMENT_INDEX"));
-			if (col_index == -1)
-			{
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUPING_ELEMENT_INDEX\" is incorrect!");
-			}
-			else
-			{	
-				dyngrp.groupingElementIndex = col_index;
-				dyngrp.FlagGroupingElementIndex = true;
-			}
-		}
-		
-		//GROUP_CUMULATIVE_TYPE
-		if(node.path("GROUP_CUMULATIVE_TYPE").isMissingNode())
-		{
-			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-					+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" is missing!");
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "GROUP_CUMULATIVE_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" :" + jsonUtils.getError());
-			else
-			{	
-				dyngrp.groupCumulativeType = ElementDataType.fromString(keyword);
-				if (dyngrp.groupCumulativeType == ElementDataType.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
-				else
-					dyngrp.FlagGroupCumulativeType = true;
-			}	
-		}
-		
-		//ROW_TYPE
-		if(!node.path("ROW_TYPE").isMissingNode())
-		{
-			String keyword =  jsonUtils.extractStringKeyword(node, "ROW_TYPE", false);
-			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" :" + jsonUtils.getError());
-			else
-			{	
-				dyngrp.rowType = ElementDataType.fromString(keyword);
-				if (dyngrp.rowType == ElementDataType.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
-				else
-					dyngrp.FlagRowType = true;
-			}	
-		}
-
-		//TODO - some other fields ...
-		return dyngrp;
-	}
 	
 	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
 	{
@@ -2189,31 +1882,7 @@ public class ExcelParserConfigurator
 		return null;
 	}
 	
-	public static int extractColumnIndex(JsonNode node)
-	{
-		if (node.isInt())
-		{	
-			Integer intValue = node.asInt();
-			if (intValue == null)
-				return -1;
-			else
-				return intValue - 1;  //1 --> 0
-		}
-		
-		if (node.isTextual())
-		{
-			String s = node.asText();
-			if (s == null)
-				return -1;
-			
-			//TODO better check for the string
-			int col = CellReference.convertColStringToIndex(s);
-			if (col >= 0)			
-				return col;
-		}
-		
-		return -1;
-	}
+	
 	
 	public static boolean isValidQualifier(String qualifier)
 	{
@@ -2371,8 +2040,6 @@ public class ExcelParserConfigurator
 		}
 		
 	}
-	
-	
 	
 	
 }
