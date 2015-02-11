@@ -36,7 +36,8 @@ public class DynamicIterationSpan
 		public Object rowObject = null;
 	}
 	
-	
+	public int sheetNum = 0;
+	public int parallelSheetNum = -1;
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
@@ -320,6 +321,8 @@ public class DynamicIterationSpan
 		boolean FlagNextNonEmpty = (dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
 		TreeMap<Integer, String> groups = ExcelUtils.getRowGroups(rows, groupLevels.get(0).groupingElementIndex,  FlagNextNonEmpty);
 		
+		System.out.println("#### Iteration object: " + ExcelUtils.rowToString(firstRow) + "\n## nGroups = " + groups.size());
+		
 		Integer prevInt = null;
 		for (Entry<Integer, String> entry : groups.entrySet())
 		{
@@ -330,6 +333,7 @@ public class DynamicIterationSpan
 					grpRows.add(rows.get(i));
 				
 				firstGroupRow = grpRows.get(0);
+				System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 				dio.groupDIOs.add(grpDio);
 			}
@@ -342,8 +346,10 @@ public class DynamicIterationSpan
 			grpRows.add(rows.get(i));
 		
 		firstGroupRow = grpRows.get(0);
+		System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 		dio.groupDIOs.add(grpDio);
+		
 		
 		return dio;
 	}
@@ -355,9 +361,9 @@ public class DynamicIterationSpan
 		for (int i = 0; i < rows.size(); i ++)
 		{
 			RowObject obj = getRowObject(rows.get(i), resultType);
+			System.out.println("RowObject: " + rowObjectToString(obj));
 			dio.rowObjects.add(obj);
 		}
-		
 		
 		return dio;
 	}
@@ -435,6 +441,24 @@ public class DynamicIterationSpan
 		if (logger != null)
 			logger.info(errorMsg);
 	}
+	
+	
+	public String rowObjectToString (RowObject ro)
+	{
+		StringBuffer sb = new StringBuffer();
+		if (ro.elementObjects != null)
+			for (int i = 0; i < ro.elementObjects.size(); i++)
+			{	
+				if (ro.elementObjects.get(i) != null)
+					sb.append(ro.elementObjects.get(i).toString() + ",  ");
+				else
+					sb.append("null,  ");
+			}	
+		return sb.toString();
+	}
+	
+	
+	
 	
 	
 	/*

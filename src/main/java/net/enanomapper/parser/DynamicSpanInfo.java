@@ -7,22 +7,24 @@ public class DynamicSpanInfo
 	public static final int INDEX_NONE = -100000;
 	public static final int INDEX_PRIMARY_SHEET = -1;
 	
-	int substanceArrayIndex = INDEX_NONE;
-	int substanceIndices[] = null;
+	public int substanceArray_Index = INDEX_NONE;
+	public DynamicIterationSpan substanceArray_DS = null;
 	
+	public int substance_Indices[] = null;
+	public DynamicIterationSpan substance_DS[] = null;
 	
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("substanceArrayIndex = " + indexToMsgString(substanceArrayIndex)+"\n");
+		sb.append("substanceArrayIndex = " + indexToMsgString(substanceArray_Index)+"\n");
 		
-		if (substanceIndices == null) 
+		if (substance_Indices == null) 
 			sb.append("substanceIndices = null");
 		else
 		{	
 			sb.append("substanceIndices =");
-			for (int i = 0; i < substanceIndices.length; i++)
-				sb.append(" " + indexToMsgString(substanceIndices[i]));
+			for (int i = 0; i < substance_Indices.length; i++)
+				sb.append(" " + indexToMsgString(substance_Indices[i]));
 			sb.append("\n");
 		}
 		return sb.toString();

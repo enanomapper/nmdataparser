@@ -38,6 +38,16 @@ public class DynamicIterationObject
 		return records;
 	}
 	
+	/*
+	 * Creates the basic object from the DynamicIterationObject
+	 */
+	public Object getObject()
+	{
+		
+		
+		return null;
+	}
+	
 	
 	
 }

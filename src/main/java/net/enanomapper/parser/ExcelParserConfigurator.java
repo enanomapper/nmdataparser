@@ -1956,8 +1956,8 @@ public class ExcelParserConfigurator
 		
 		logger.info("dynamicSpanInfo:\n" + dynamicSpanInfo.toString());
 		
-		if ((dynamicSpanInfo.substanceArrayIndex != DynamicSpanInfo.INDEX_NONE) || 
-				(dynamicSpanInfo.substanceIndices != null)  )
+		if ((dynamicSpanInfo.substanceArray_Index != DynamicSpanInfo.INDEX_NONE) || 
+				(dynamicSpanInfo.substance_Indices != null)  )
 			return true;
 		
 		return false;
@@ -1981,18 +1981,23 @@ public class ExcelParserConfigurator
 	{
 		dynamicSpanInfo = new DynamicSpanInfo();
 		
-		ArrayList<Integer> substanceArrayIndices = new ArrayList<Integer>(); 
-		ArrayList<Integer> substanceIndices = new ArrayList<Integer>();
+		ArrayList<Integer> substanceArray_Indices = new ArrayList<Integer>(); 
+		ArrayList<DynamicIterationSpan> substanceArray_DS = new ArrayList<DynamicIterationSpan>();
+		
+		ArrayList<Integer> substance_Indices = new ArrayList<Integer>();
+		ArrayList<DynamicIterationSpan> substance_DS = new ArrayList<DynamicIterationSpan>();
 		
 		if (dynamicIterationSpan != null)
 		{	
 			switch(dynamicIterationSpan.cumulativeObjectType)
 			{
 			case SUBSTANCE_ARRAY:
-				substanceArrayIndices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				substanceArray_Indices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				substanceArray_DS.add(dynamicIterationSpan);
 				break;
 			case SUBSTANCE:
-				substanceIndices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				substance_Indices.add(DynamicSpanInfo.INDEX_PRIMARY_SHEET);
+				substance_DS.add(dynamicIterationSpan);
 				break;
 				
 			default:
@@ -2008,10 +2013,12 @@ public class ExcelParserConfigurator
 				switch(parallelSheets.get(i).dynamicIterationSpan.cumulativeObjectType)
 				{
 				case SUBSTANCE_ARRAY:
-					substanceArrayIndices.add(i);
+					substanceArray_Indices.add(i);
+					substanceArray_DS.add(parallelSheets.get(i).dynamicIterationSpan);
 					break;
 				case SUBSTANCE:
-					substanceIndices.add(i);
+					substance_Indices.add(i);
+					substance_DS.add(parallelSheets.get(i).dynamicIterationSpan);
 					break;
 					
 				default:
@@ -2020,23 +2027,30 @@ public class ExcelParserConfigurator
 			}
 		
 		
-		if (!substanceArrayIndices.isEmpty())
+		if (!substanceArray_Indices.isEmpty())
 		{	
-			if (substanceArrayIndices.size() == 1)
-				dynamicSpanInfo.substanceArrayIndex = substanceArrayIndices.get(0);
+			if (substanceArray_Indices.size() == 1)
+			{	
+				dynamicSpanInfo.substanceArray_Index = substanceArray_Indices.get(0);
+				dynamicSpanInfo.substanceArray_DS = substanceArray_DS.get(0);
+			}	
 			else
 			{	
 				configErrors.add("Dynamic span on SUBSTANCE_ARRAY level is duplicated in following sheets: " 
-						+ DynamicSpanInfo.indicesToSheetMessageString(substanceArrayIndices));
+						+ DynamicSpanInfo.indicesToSheetMessageString(substanceArray_Indices));
 			}	
 		}
 		
 		
-		if (!substanceIndices.isEmpty())
+		if (!substance_Indices.isEmpty())
 		{
-			dynamicSpanInfo.substanceIndices = new int[substanceIndices.size()];
-			for (int i = 0; i < substanceIndices.size(); i++)
-				dynamicSpanInfo.substanceIndices[i] = substanceIndices.get(i);
+			dynamicSpanInfo.substance_Indices = new int[substance_Indices.size()];
+			dynamicSpanInfo.substance_DS = new DynamicIterationSpan[substance_Indices.size()];
+			for (int i = 0; i < substance_Indices.size(); i++)
+			{	
+				dynamicSpanInfo.substance_Indices[i] = substance_Indices.get(i);
+				dynamicSpanInfo.substance_DS[i] = substance_DS.get(i);
+			}	
 		}
 		
 	}
