@@ -933,7 +933,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 				}
 			}
 		
-		ArrayList<SubstanceRecord> records = DynamicIterationObject.synchronize(dios, basicSubstanceRecord);
+		ArrayList<SubstanceRecord> records = DynamicIterationObject.synchronize(dios, basicSubstanceRecord, config.dynamicSpanInfo);
 		loadedRecordsBuffer.addAll(records);
 	}
 	

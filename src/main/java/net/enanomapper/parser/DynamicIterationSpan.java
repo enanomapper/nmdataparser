@@ -36,8 +36,8 @@ public class DynamicIterationSpan
 		public Object rowObject = null;
 	}
 	
-	public int sheetNum = 0;
-	public int parallelSheetNum = -1;
+	//public int sheetNum = 0;
+	//public int parallelSheetNum = -1;
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
@@ -302,13 +302,17 @@ public class DynamicIterationSpan
 			if (rows.isEmpty())
 				return null;
 		
+		DynamicIterationObject dio = null;
 		if (groupLevels == null)
 		{	
 			firstRow = rows.get(0);
-			return handleRows(rows, cumulativeObjectType);
+			dio = handleRows(rows, cumulativeObjectType);
 		}	
 		else
-			return handleGroupsLavels(rows);
+			dio = handleGroupsLavels(rows);
+		
+		dio.dynamicIterationSpan = this;
+		return dio;
 	}
 	
 	
@@ -324,6 +328,7 @@ public class DynamicIterationSpan
 		System.out.println("#### Iteration object: " + ExcelUtils.rowToString(firstRow) + "\n## nGroups = " + groups.size());
 		
 		Integer prevInt = null;
+		int groupIndex = 0;
 		for (Entry<Integer, String> entry : groups.entrySet())
 		{
 			if (prevInt != null)
@@ -335,9 +340,12 @@ public class DynamicIterationSpan
 				firstGroupRow = grpRows.get(0);
 				System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
+				grpDio.groupIndex = groupIndex;
+				grpDio.dynamicIterationSpan = this;
 				dio.groupDIOs.add(grpDio);
 			}
 			prevInt = entry.getKey();
+			groupIndex++;
 		}
 		
 		
@@ -348,6 +356,8 @@ public class DynamicIterationSpan
 		firstGroupRow = grpRows.get(0);
 		System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
+		grpDio.groupIndex = groupIndex;
+		grpDio.dynamicIterationSpan = this;
 		dio.groupDIOs.add(grpDio);
 		
 		

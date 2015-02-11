@@ -3,11 +3,13 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 
 import net.enanomapper.parser.DynamicIterationSpan.RowObject;
+import net.enanomapper.parser.ParserConstants.ElementDataType;
 import ambit2.base.data.SubstanceRecord;
 
 public class DynamicIterationObject 
 {	
 	public DynamicIterationSpan dynamicIterationSpan = null;  //pointer to the DynamicIterationSpan corresponding to this object
+	public int groupIndex = -1; //if groupIndex >= 0 then this DIO is a group within dynamicIterationSpan
 	
 	public ArrayList<RowObject> rowObjects = new ArrayList<RowObject>(); 
 	public ArrayList<DynamicIterationObject> groupDIOs = new ArrayList<DynamicIterationObject>(); 
@@ -26,7 +28,7 @@ public class DynamicIterationObject
 	}
 	
 	
-	public static ArrayList<SubstanceRecord> synchronize(ArrayList<DynamicIterationObject> diObjects, SubstanceRecord basicRecord)
+	public static ArrayList<SubstanceRecord> synchronize(ArrayList<DynamicIterationObject> diObjects, SubstanceRecord basicRecord, DynamicSpanInfo dsInfo)
 	{
 		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 		
@@ -43,7 +45,22 @@ public class DynamicIterationObject
 	 */
 	public Object getObject()
 	{
-		
+		if (groupIndex >= 0)
+		{	
+			//TODO
+			return null;
+		}	
+			
+		switch (dynamicIterationSpan.cumulativeObjectType)
+		{
+		case SUBSTANCE_ARRAY:
+			//TODO
+			break;
+			
+		case SUBSTANCE:
+			//TODO
+			break;	
+		}
 		
 		return null;
 	}
