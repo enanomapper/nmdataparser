@@ -2,13 +2,14 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
+import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import ambit2.base.data.SubstanceRecord;
 
 public class DynamicIterationObject 
 {	
 	public DynamicIterationSpan dynamicIterationSpan = null;  //pointer to the DynamicIterationSpan corresponding to this object
 	
-	public ArrayList<Object> rowObjects = new ArrayList<Object>(); 
+	public ArrayList<RowObject> rowObjects = new ArrayList<RowObject>(); 
 	public ArrayList<DynamicIterationObject> groupDIOs = new ArrayList<DynamicIterationObject>(); 
 	
 	public ArrayList<SubstanceRecord> substanceRecords = null;

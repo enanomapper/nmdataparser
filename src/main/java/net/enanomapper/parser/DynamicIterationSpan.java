@@ -28,6 +28,13 @@ import net.enanomapper.parser.json.JsonUtilities;
  */
 public class DynamicIterationSpan 
 {	
+	
+	public static class RowObject{
+		public ArrayList<Object> elementObjects = null;
+		public Object rowObject = null;
+	}
+	
+	
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
@@ -340,7 +347,7 @@ public class DynamicIterationSpan
 		DynamicIterationObject dio = new DynamicIterationObject ();
 		for (int i = 0; i < rows.size(); i ++)
 		{
-			Object obj = getRowObject(rows.get(i), resultType);
+			RowObject obj = getRowObject(rows.get(i), resultType);
 			dio.rowObjects.add(obj);
 		}
 		
@@ -349,21 +356,37 @@ public class DynamicIterationSpan
 	}
 	
 	
-	protected Object getRowObject(Row row, ElementDataType resultType)
-	{
+	protected RowObject getRowObject(Row row, ElementDataType resultType)
+	{	
+		RowObject robj = new RowObject();
+		robj.elementObjects = getElementObjects(row);
+		
 		switch (resultType)
 		{
 		case SUBSTANCE: {
-			
+			SubstanceRecord r = new  SubstanceRecord();
+			robj.rowObject = r;
 		}
 		break;
 		
 		default:
 		} 
 		
-		//Iterate all elements - TODO
-		
-		
+		return robj;
+	}
+	
+	
+	protected ArrayList<Object> getElementObjects(Row row)
+	{
+		ArrayList<Object> elements = new ArrayList<Object>();
+		//TODO
+		return elements;
+	}
+	
+	
+	protected Object getElementObject(Row row, DynamicElement element)
+	{
+		Object elObj = null;
 		//TODO
 		
 		return null;

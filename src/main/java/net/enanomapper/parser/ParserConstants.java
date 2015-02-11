@@ -216,12 +216,10 @@ public class ParserConstants
 	}
 	
 	
-	/*
-	public enum StructureInfoType {
-		INCHI, INCHI_KEY, FORMULA, SMILES
-	}
-	*/
 	
+	/*
+	 * Determines how the Element information is taken from the dynamic span rows/columns 
+	 */
 	public enum ElementPosition {
 		ANY_ROW, FIRST_ROW, NON_FIRST_ROW, ANY_GROUP_ROW, FIRST_GROUP_ROW, NON_FIRST_GROUP_ROW, UNDEFINED;
 		
@@ -241,6 +239,7 @@ public class ParserConstants
 	
 	public enum ElementDataType {
 		
+		NONE,
 		EFFECT, EFFECT_ARRAY, 
 		COMPOSITION, COMPOSITION_ARRAY,
 		PROTOCOL, PROTOCOL_ARRAY, 
