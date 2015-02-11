@@ -294,11 +294,27 @@ public class ExcelUtils
 			return "" + c.getNumericCellValue();
 		case Cell.CELL_TYPE_STRING:
 			return c.getStringCellValue();
-			
 			//TODO
 		}
-		
 		return "";
+	}
+	
+	public static Object getObjectFromCell(Cell c)
+	{
+		if (c == null)
+			return null;
+		
+		switch (c.getCellType())
+		{
+		case Cell.CELL_TYPE_BLANK:
+			return null;
+		case Cell.CELL_TYPE_NUMERIC:
+			return new Double(c.getNumericCellValue());
+		case Cell.CELL_TYPE_STRING:
+			return c.getStringCellValue();
+			//TODO
+		}
+		return null;
 	}
 	
 	public static String rowToString(Row row)

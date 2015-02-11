@@ -22,8 +22,8 @@ public class DynamicElement
 	public int index = -1;
 	public boolean FlagIndex = false;
 	
-	public int id = -1;
-	public boolean FlagId = false;  
+	//public int id = -1;
+	//public boolean FlagId = false;  
 	
 	public String jsonInfo = null;
 	
@@ -32,7 +32,7 @@ public class DynamicElement
 	
 	public String infoFromVariables[] = null; //The information is constructed form the variables defined by their keys
 	
-	public int childElementIds[] = null;
+	//public int childElementIds[] = null; 
 	
 	public static DynamicElement  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
 			String masterSection, int elNum)

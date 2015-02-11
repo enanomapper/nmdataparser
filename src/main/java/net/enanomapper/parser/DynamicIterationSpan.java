@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.codehaus.jackson.JsonNode;
@@ -38,8 +40,7 @@ public class DynamicIterationSpan
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
-	public String masterErrorString = ""; //This is used for error messaging 
-	public ArrayList<String> errors = new ArrayList<String>(); 
+	
 	
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
@@ -49,12 +50,18 @@ public class DynamicIterationSpan
 	//public DataElementType columnType = null;  //This is the default column level grouping
 	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
-		
-	//element/data synchronization ??? --> TODO
+	
+	
+	//Error handling
+	public boolean FlagStoreErrors = true;
+	Logger logger = null;
+	public String masterErrorString = ""; //This is used for error messaging 
+	public ArrayList<String> errors = new ArrayList<String>(); 
 	
 	//Work variables
 	private Row firstRow = null;
 	private Row firstGroupRow = null;
+	
 	
 	public static DynamicIterationSpan extractDynamicIterationSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection)
 	{
@@ -230,7 +237,7 @@ public class DynamicIterationSpan
 	{	
 		if (rowType != null)
 			if (!rowType.isElementOf(cumulativeObjectType))
-				errors.add(masterErrorString + " ROW_TYPE "  + rowType.toString() + 
+				addError(masterErrorString + " ROW_TYPE "  + rowType.toString() + 
 						" is inconsistent with CULULATIVE_OBJECT_TYPE " + cumulativeObjectType.toString());
 		
 		checkElementConsistency();
@@ -251,7 +258,7 @@ public class DynamicIterationSpan
 			for (int i = 0; i < elements.size(); i++)
 			{
 				if (!elements.get(i).dataType.isElementOf(rowType))
-					errors.add(masterErrorString + " ELEMENTS[" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
+					addError(masterErrorString + " ELEMENTS[" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
 							" is inconsistent with ROW_TYPE " + rowType.toString());
 			}
 		
@@ -268,17 +275,17 @@ public class DynamicIterationSpan
 		
 		
 		if (!groupLevels.get(0).groupCumulativeType.isElementOf(cumulativeObjectType))
-			errors.add(masterErrorString + " GROUP_LEVELS[1].groupCumulativeType " +  groupLevels.get(0).groupCumulativeType.toString() + 
+			addError(masterErrorString + " GROUP_LEVELS[1].groupCumulativeType " +  groupLevels.get(0).groupCumulativeType.toString() + 
 					" is not an element of cumulativeObjectType " + cumulativeObjectType.toString());
 
 		for (int i = 0; i < groupLevels.size(); i++)
 		{
 			if (!groupLevels.get(i).checkConsistency())
-				errors.add(masterErrorString + " GROUP_LEVELS[" + (i+1) + "] inconsistency error!");
+				addError(masterErrorString + " GROUP_LEVELS[" + (i+1) + "] inconsistency error!");
 			
 			if (i > 0)
 				if (!groupLevels.get(i).groupCumulativeType.isElementOf(groupLevels.get(i-1).groupCumulativeType))
-					errors.add(masterErrorString + " GROUP_LEVELS[" + (i+1) + "].groupCumulativeType " + groupLevels.get(i).groupCumulativeType.toString() 
+					addError(masterErrorString + " GROUP_LEVELS[" + (i+1) + "].groupCumulativeType " + groupLevels.get(i).groupCumulativeType.toString() 
 							+ " is not an element of GROUP_LEVELS[" + i + "].groupCumulativeType " + groupLevels.get(i-1).groupCumulativeType.toString());
 		}
 				
@@ -361,6 +368,7 @@ public class DynamicIterationSpan
 		RowObject robj = new RowObject();
 		robj.elementObjects = getElementObjects(row);
 		
+		/*
 		switch (resultType)
 		{
 		case SUBSTANCE: {
@@ -371,6 +379,7 @@ public class DynamicIterationSpan
 		
 		default:
 		} 
+		*/
 		
 		return robj;
 	}
@@ -378,22 +387,54 @@ public class DynamicIterationSpan
 	
 	protected ArrayList<Object> getElementObjects(Row row)
 	{
-		ArrayList<Object> elements = new ArrayList<Object>();
-		//TODO
-		return elements;
+		ArrayList<Object> elementObjects = new ArrayList<Object>();
+		if (elements != null)
+			for (int i = 0; i < elements.size(); i++)
+			{
+				Object obj = getElementObject(row, elements.get(i));
+				elementObjects.add(obj);
+			}
+		return elementObjects;
 	}
 	
 	
 	protected Object getElementObject(Row row, DynamicElement element)
-	{
-		Object elObj = null;
-		//TODO
+	{	
+		Cell c = null;
 		
-		return null;
+		switch (element.position)
+		{
+		case ANY_GROUP_ROW:
+		case ANY_ROW: 
+			//Information is taken from the row itself
+			c = row.getCell(element.index);
+			break;
+			
+		case FIRST_ROW: 
+			//Information is taken from the row itself
+			c = firstRow.getCell(element.index);
+			break;
+			
+		case FIRST_GROUP_ROW: 
+			//Information is taken from the row itself
+			c = firstGroupRow.getCell(element.index);
+			break;
+		}
+		
+		Object elObj  = ExcelUtils.getObjectFromCell(c);
+		return elObj;
 	}
 	
 	
 	
+	
+	public void addError(String errorMsg)
+	{
+		if (FlagStoreErrors)
+			errors.add(errorMsg);
+		if (logger != null)
+			logger.info(errorMsg);
+	}
 	
 	
 	/*
