@@ -29,17 +29,6 @@ public class DynamicIterationObject
 	}
 	
 	
-	public static ArrayList<SubstanceRecord> synchronize(HashMap<DynamicIterationSpan,DynamicIterationObject> diObjects, SubstanceRecord basicRecord, DynamicSpanInfo dsInfo)
-	{	
-		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
-		
-		//TODO - temporary code
-		SubstanceRecord r = new SubstanceRecord();
-		r.setCompanyName(GenericExcelParser.key00);
-		records.add(r);
-		
-		return records;
-	}
 	
 	/*
 	 * Creates the basic object from the DynamicIterationObject

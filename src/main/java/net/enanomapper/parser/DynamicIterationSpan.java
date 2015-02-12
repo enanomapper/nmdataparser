@@ -417,7 +417,7 @@ public class DynamicIterationSpan
 		RowObject robj = new RowObject();
 		robj.elementObjects = getElementObjects(row);
 		
-		/*
+		
 		switch (resultType)
 		{
 		case SUBSTANCE: {
@@ -428,7 +428,7 @@ public class DynamicIterationSpan
 		
 		default:
 		} 
-		*/
+		
 		
 		return robj;
 	}

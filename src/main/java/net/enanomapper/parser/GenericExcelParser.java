@@ -905,7 +905,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			return;
 		
 		//Handle dynamic span
-		HashMap<DynamicIterationSpan,DynamicIterationObject> dios = new HashMap<DynamicIterationSpan,DynamicIterationObject> ();
+		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo);
 		
 		
 		if (config.dynamicIterationSpan != null)
@@ -915,7 +915,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 			case ROW_MULTI_FIXED:
 			case ROW_MULTI_DYNAMIC:
 				DynamicIterationObject dio = config.dynamicIterationSpan.getDynamicIterationObjectFromRows(curRows);
-				dios.put(config.dynamicIterationSpan, dio);
+				dioSynch.addDIO(config.dynamicIterationSpan, dio);
 				break;
 			}
 		}
@@ -929,12 +929,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 				case ROW_MULTI_DYNAMIC:
 					DynamicIterationObject dio = 
 						config.parallelSheets.get(i).dynamicIterationSpan.getDynamicIterationObjectFromRows(parallelSheetStates[i].curRows);
-					dios.put(config.parallelSheets.get(i).dynamicIterationSpan, dio);
+					dioSynch.addDIO(config.parallelSheets.get(i).dynamicIterationSpan, dio);
 					break;
 				}
 			}
 		
-		ArrayList<SubstanceRecord> records = DynamicIterationObject.synchronize(dios, basicSubstanceRecord, config.dynamicSpanInfo);
+		ArrayList<SubstanceRecord> records = dioSynch.synchronize(); 
 		loadedRecordsBuffer.addAll(records);
 	}
 	
