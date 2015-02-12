@@ -263,6 +263,39 @@ public class DynamicIterationSpan
 							" is inconsistent with ROW_TYPE " + rowType.toString());
 			}
 		
+		//Check element children consistency
+		ArrayList<Integer> chElements = new ArrayList<Integer>();
+		for (int i = 0; i < elements.size(); i++)
+		{
+			if (elements.get(i).childElements != null)
+				chElements.add(new Integer(i));
+		}
+		
+		for (int i = 0; i < elements.size(); i++)
+		{
+			if (elements.get(i).childElements != null)
+				for (int k = 0; k < elements.get(i).childElements.length; k++)
+				{
+					int chIndex = elements.get(i).childElements[k];
+					if ((chIndex < 0) || (chIndex >= elements.size()))
+						addError(masterErrorString + " ELEMENTS[" + (i+1) + "], CHILD_ELEMENTS[" + (k+1) + 
+								"] is outside array range! --> " +(chIndex + 1));
+					
+					if (chIndex == i)
+					{
+						addError(masterErrorString + " ELEMENTS[" + (i+1) + "], CHILD_ELEMENTS[" + (k+1) + 
+								"] points to the element itself! --> " + (chIndex + 1));
+					}
+					else
+					{
+						for (Integer ii : chElements)
+							if (ii.intValue() == chIndex)
+								addError(masterErrorString + " ELEMENTS[" + (i+1) + "], CHILD_ELEMENTS[" + (k+1) + 
+										"] points to an elements that has child elements! --> " + (chIndex + 1));
+					}	
+				}
+		}
+		
 		return true;
 	}
 		
@@ -418,6 +451,8 @@ public class DynamicIterationSpan
 	{	
 		Cell c = null;
 		Object positionObj = null;
+		String jsonInfo = null;
+		ArrayList<Object> variables = null;
 		
 		if (element.FlagIndex)
 		{	
@@ -442,11 +477,13 @@ public class DynamicIterationSpan
 			positionObj  = ExcelUtils.getObjectFromCell(c);
 		}
 		
+		
 		//Information is taken from tree different sources: 
 		//(1) excel position (defined by index) 
 		//(2) JSON_INFO
 		//(3) VARIABLE_KEYS
-		//If more than one present the information is concatenated in following order (1) + (2) + (3)  
+		//(4) ChildrenElements
+		//If more than one present the information is concatenated in following order (1) + (2) + (3) + (4) 
 		
 		//TODO
 		
