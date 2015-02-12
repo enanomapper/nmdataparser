@@ -417,27 +417,40 @@ public class DynamicIterationSpan
 	protected Object getElementObject(Row row, DynamicElement element)
 	{	
 		Cell c = null;
+		Object positionObj = null;
 		
-		switch (element.position)
-		{
-		case ANY_GROUP_ROW:
-		case ANY_ROW: 
-			//Information is taken from the row itself
-			c = row.getCell(element.index);
-			break;
-			
-		case FIRST_ROW: 
-			//Information is taken from the row itself
-			c = firstRow.getCell(element.index);
-			break;
-			
-		case FIRST_GROUP_ROW: 
-			//Information is taken from the row itself
-			c = firstGroupRow.getCell(element.index);
-			break;
+		if (element.FlagIndex)
+		{	
+			switch (element.position)
+			{
+			case ANY_GROUP_ROW:
+			case ANY_ROW: 
+				//Information is taken from the row itself
+				c = row.getCell(element.index);
+				break;
+
+			case FIRST_ROW: 
+				//Information is taken from the row itself
+				c = firstRow.getCell(element.index);
+				break;
+
+			case FIRST_GROUP_ROW: 
+				//Information is taken from the row itself
+				c = firstGroupRow.getCell(element.index);
+				break;
+			}
+			positionObj  = ExcelUtils.getObjectFromCell(c);
 		}
 		
-		Object elObj  = ExcelUtils.getObjectFromCell(c);
+		//Information is taken from tree different sources: 
+		//(1) excel position (defined by index) 
+		//(2) JSON_INFO
+		//(3) VARIABLE_KEYS
+		//If more than one present the information is concatenated in following order (1) + (2) + (3)  
+		
+		//TODO
+		
+		Object elObj  = positionObj;
 		return elObj;
 	}
 	

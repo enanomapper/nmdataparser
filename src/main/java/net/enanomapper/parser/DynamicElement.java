@@ -2,6 +2,7 @@ package net.enanomapper.parser;
 
 import org.codehaus.jackson.JsonNode;
 
+import ambit2.base.relation.STRUCTURE_RELATION;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
@@ -22,6 +23,9 @@ public class DynamicElement
 	public int index = -1;
 	public boolean FlagIndex = false;
 	
+	//public int arrayNum = -1;             //This is used only for array elements
+	//public boolean FlagArrayNum = false;
+	
 	//public int id = -1;
 	//public boolean FlagId = false;  
 	
@@ -30,7 +34,7 @@ public class DynamicElement
 	public boolean infoFromHeader = true;
 	public boolean FlagInfoFromHeader = false;
 	
-	public String infoFromVariables[] = null; //The information is constructed form the variables defined by their keys
+	public String variableKeys[] = null; //The information is taken (constructed) form the variables defined by their keys
 	
 	//public int childElementIds[] = null; 
 	
@@ -163,8 +167,43 @@ public class DynamicElement
 			element.infoFromHeader = b;
 			element.FlagInfoFromHeader = true;
 		}	
-	}	
-	
+	}
+
+	//VARIABLE_KEYS
+	JsonNode vkeys = node.path("VARIABLE_KEYS");
+	if(!vkeys.isMissingNode())
+	{
+		if (vkeys.isArray())
+		{	
+			element.variableKeys = new String[vkeys.size()];
+			for (int i = 0; i < vkeys.size(); i++)
+			{	
+				JsonNode keyNode = vkeys.get(i);
+				if (keyNode.isTextual())
+				{	
+					String keyword =  keyNode.asText();
+					if (keyword == null)
+						conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+								+" subsection ELEMENT [" +(elNum +1) + "], keyword VARIABLE_KEYS [" + (i+1)+"]: is incorrect!");
+					else
+						element.variableKeys[i] = keyword;
+				}
+				else
+				{	
+					String keyword =  jsonUtils.extractStringKeyword(node, "JSON_INFO", false);
+					if (keyword == null)
+						conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+								+" subsection ELEMENT [" +(elNum +1) + "], keyword VARIABLE_KEYS [" + (i+1)+"]: is not textual!");
+				}
+			}
+		}
+		else
+		{
+			conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+					+" subsection ELEMENT [" +(elNum +1) + "], keyword \"VARIABLE_KEYS\" is not an array!");
+		}
+	}
+
 	return element;
 }
 	
@@ -223,6 +262,20 @@ public class DynamicElement
 			nFields++;
 		}
 		
+		if (variableKeys != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"VARIABLE_KEYS\" : [" );
+			for (int i = 0; i < variableKeys.length; i++)
+			{	
+				sb.append("\"" + variableKeys[i] + "\"");
+				if (i < (variableKeys.length -1))
+					sb.append(", ");
+			}	
+			sb.append("]");
+			nFields++;
+		}
 		
 		if (nFields > 0)
 			sb.append("\n");

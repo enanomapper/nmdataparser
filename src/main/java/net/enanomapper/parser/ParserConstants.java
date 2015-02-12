@@ -658,6 +658,16 @@ public class ParserConstants
 		},
 		
 		//Composition fields
+		STRUCTURE_RELATION {
+			@Override
+		    public boolean isFieldOf(ElementDataType type) {
+		    	if (type == ElementDataType.COMPOSITION)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
 		CONTENT {
 			@Override
 		    public boolean isFieldOf(ElementDataType type) {
