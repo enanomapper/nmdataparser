@@ -467,13 +467,14 @@ public class DynamicIterationSpan
 			if (elementObjects == null) 
 				return null; //This is the first round and nothing is done. This element has children and it will be processed on the second round.
 		
-		Cell c = null;
+		int nInfoSources = 0;
 		Object positionObj = null;
-		String jsonInfo = null;
-		ArrayList<Object> variables = null;
+		Object variablesObj = null;
+		Object childrenObj = null;
 		
-		if (element.FlagIndex)
+		if (element.FlagIndex)  //Getting value from a position defined by the index
 		{	
+			Cell c = null;
 			switch (element.position)
 			{
 			case ANY_GROUP_ROW:
@@ -483,30 +484,89 @@ public class DynamicIterationSpan
 				break;
 
 			case FIRST_ROW: 
-				//Information is taken from the row itself
 				c = firstRow.getCell(element.index);
 				break;
 
 			case FIRST_GROUP_ROW: 
-				//Information is taken from the row itself
 				c = firstGroupRow.getCell(element.index);
 				break;
 			}
+			
 			positionObj  = ExcelUtils.getObjectFromCell(c);
+			nInfoSources++;
 		}
 		
+		if (element.jsonInfo != null)
+			nInfoSources++;
 		
-		//Information is taken from tree different sources: 
+		if (element.variableKeys != null)
+		{
+			//TODO
+			variablesObj = ""; //temporary code
+			nInfoSources++;
+		}
+		
+		if (element.childElements != null)
+		{	
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < element.childElements.length; i++)
+			{	
+				int chIndex = element.childElements[i];
+				if (elementObjects[chIndex] != null)
+					sb.append(elementObjects[chIndex].toString());
+				if (i < element.childElements.length -1)
+					sb.append(" ");
+			}	
+			childrenObj = sb.toString();
+			nInfoSources++;
+		}	
+		
+		
+		//Information is taken from various sources: 
 		//(1) excel position (defined by index) 
 		//(2) JSON_INFO
 		//(3) VARIABLE_KEYS
 		//(4) ChildrenElements
-		//If more than one present the information is concatenated in following order (1) + (2) + (3) + (4) 
+		//If more than one source present, the information is concatenated in following order (1) + (2) + (3) + (4) 
 		
-		//TODO
+		if (nInfoSources == 0)
+			return null;
 		
-		Object elObj  = positionObj;
-		return elObj;
+		
+		if (nInfoSources == 1)
+		{
+			if (positionObj != null)
+				return positionObj;
+			
+			if (element.jsonInfo != null)
+				return element.jsonInfo;
+			
+			if (variablesObj != null)
+				return variablesObj;
+			
+			if (childrenObj != null)
+				return childrenObj;
+		}
+		else
+		{
+			//More than one source.
+			StringBuffer sb = new StringBuffer();
+			if (positionObj != null)
+				sb.append(positionObj.toString());
+			
+			if (element.jsonInfo != null)
+				sb.append(element.jsonInfo);
+			
+			if (variablesObj != null)
+				sb.append(variablesObj.toString());
+			
+			if (childrenObj != null)
+				sb.append(childrenObj.toString());
+			
+			return sb.toString();
+		}
+		
+		return null;
 	}
 	
 	
