@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
@@ -28,8 +29,8 @@ public class DynamicIterationObject
 	}
 	
 	
-	public static ArrayList<SubstanceRecord> synchronize(ArrayList<DynamicIterationObject> diObjects, SubstanceRecord basicRecord, DynamicSpanInfo dsInfo)
-	{
+	public static ArrayList<SubstanceRecord> synchronize(HashMap<DynamicIterationSpan,DynamicIterationObject> diObjects, SubstanceRecord basicRecord, DynamicSpanInfo dsInfo)
+	{	
 		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 		
 		//TODO - temporary code
@@ -45,25 +46,28 @@ public class DynamicIterationObject
 	 */
 	public Object getObject()
 	{
+		ElementDataType returnType = dynamicIterationSpan.cumulativeObjectType;
+		
 		if (groupIndex >= 0)
 		{	
-			//TODO
-			return null;
+			//Current DIO is from a group defined in dynamicIterationSpan
+			returnType = dynamicIterationSpan.groupLevels.get(0).groupCumulativeType;
 		}	
 			
-		switch (dynamicIterationSpan.cumulativeObjectType)
+		switch (returnType)
 		{
 		case SUBSTANCE_ARRAY:
-			//TODO
-			break;
+			ArrayList<SubstanceRecord> list = new ArrayList<SubstanceRecord>();
+			return list;
 			
 		case SUBSTANCE:
-			//TODO
-			break;	
+			SubstanceRecord r = new SubstanceRecord();
+			return r;
 		}
 		
 		return null;
 	}
+	
 	
 	
 	
