@@ -32,7 +32,7 @@ public class DynamicIterationSpan
 {	
 	
 	public static class RowObject{
-		public ArrayList<Object> elementObjects = null;
+		public Object elementObjects[] = null;
 		public Object rowObject = null;
 	}
 	
@@ -434,21 +434,39 @@ public class DynamicIterationSpan
 	}
 	
 	
-	protected ArrayList<Object> getElementObjects(Row row)
-	{
-		ArrayList<Object> elementObjects = new ArrayList<Object>();
+	protected Object[] getElementObjects(Row row)
+	{	
 		if (elements != null)
+		{	
+			Object elementObjects[] = new Object[elements.size()];
+			
+			//First round: handle all elements that have no children
 			for (int i = 0; i < elements.size(); i++)
 			{
-				Object obj = getElementObject(row, elements.get(i));
-				elementObjects.add(obj);
+				Object obj = getElementObject(row, elements.get(i), null);
+				elementObjects[i] = obj;
 			}
-		return elementObjects;
+			
+			//Second round: handle only the elements that have children
+			for (int i = 0; i < elements.size(); i++)
+				if (elementObjects[i] == null)
+				{
+					Object obj = getElementObject(row, elements.get(i), elementObjects);
+					elementObjects[i] = obj;
+				}
+			
+			return elementObjects;
+		}	
+		return null;
 	}
 	
 	
-	protected Object getElementObject(Row row, DynamicElement element)
+	protected Object getElementObject(Row row, DynamicElement element, Object elementObjects[])
 	{	
+		if (element.childElements != null)
+			if (elementObjects == null) 
+				return null; //This is the first round and nothing is done. This element has children and it will be processed on the second round.
+		
 		Cell c = null;
 		Object positionObj = null;
 		String jsonInfo = null;
@@ -507,10 +525,10 @@ public class DynamicIterationSpan
 	{
 		StringBuffer sb = new StringBuffer();
 		if (ro.elementObjects != null)
-			for (int i = 0; i < ro.elementObjects.size(); i++)
+			for (int i = 0; i < ro.elementObjects.length; i++)
 			{	
-				if (ro.elementObjects.get(i) != null)
-					sb.append(ro.elementObjects.get(i).toString() + ",  ");
+				if (ro.elementObjects[i] != null)
+					sb.append(ro.elementObjects[i].toString() + ",  ");
 				else
 					sb.append("null,  ");
 			}	
