@@ -10,6 +10,11 @@ public class DIOSynchronization
 	private SubstanceRecord basicRecord = null;
 	private DynamicSpanInfo dsInfo = null;
 	private HashMap<DynamicIterationSpan,DynamicIterationObject> dios = new HashMap<DynamicIterationSpan,DynamicIterationObject>();
+	
+	//Work variables
+	private SubstanceRecord curRecord = null;
+	private int curSubstArrIndex = -1;
+	
 
 	public DIOSynchronization()
 	{	
@@ -60,32 +65,80 @@ public class DIOSynchronization
 	
 	public ArrayList<SubstanceRecord> synchronize()
 	{	
+		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 		
-		if (basicRecord != null)
+		if (basicRecord != null)  //Dynamic span in this case supplies additional info to the primary (static) iteration method 
 		{
-			
+			curRecord = basicRecord;
+			assembleCurrentRecord();
+			records.add(curRecord);
+			return records;
 		}
+		
 		
 		if (dsInfo.substanceArray_DS == null)
 		{
-			//Currently only one substance DIS should be used
-			
+			//Currently only one substance DIS should is used
+			DynamicIterationSpan substDIS = dsInfo.substance_DS[0];
+			DynamicIterationObject substDIO = dios.get(substDIS);
+			curRecord = (SubstanceRecord) substDIO.getObject();
+			assembleCurrentRecord();
+			records.add(curRecord);
+			return records;
 		}
 		else
 		{
-			
+			//Handle substance array
+			records = assembleRecordArray();
+			return records;
 		}
 		
-		
-		
-		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
-		
-		//TODO - temporary code
+		/*
+		//temporary code
 		SubstanceRecord r = new SubstanceRecord();
 		r.setCompanyName(GenericExcelParser.key00);
 		records.add(r);
+		return records;
+		*/
+	}
+	
+	
+	protected void assembleCurrentRecord()
+	{
+		//TODO
+		
+		//temporary code
+		curRecord.setCompanyName(GenericExcelParser.key00 + " #" + (curSubstArrIndex + 1));
+	}
+	
+	
+	protected ArrayList<SubstanceRecord> assembleRecordArray()
+	{
+		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
+		
+		DynamicIterationSpan saDIS = dsInfo.substanceArray_DS;
+		DynamicIterationObject saDIO = dios.get(saDIS);
+		
+		if (saDIO.groupDIOs.isEmpty())
+		{
+			//Handle rows
+			//TODO
+		}
+		else
+		{
+			//Handle groups
+			for (int i = 0; i < saDIO.groupDIOs.size(); i++)
+			{
+				curRecord = (SubstanceRecord) saDIO.groupDIOs.get(i).getObject();
+				curSubstArrIndex = i;
+				assembleCurrentRecord();
+				records.add(curRecord);
+			}
+			
+		}
 		
 		return records;
 	}
+	
 	
 }
