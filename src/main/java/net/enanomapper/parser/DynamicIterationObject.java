@@ -35,13 +35,7 @@ public class DynamicIterationObject
 	 */
 	public Object getObject()
 	{
-		ElementDataType returnType = dynamicIterationSpan.cumulativeObjectType;
-		
-		if (groupIndex >= 0)
-		{	
-			//Current DIO is from a group defined in dynamicIterationSpan
-			returnType = dynamicIterationSpan.groupLevels.get(0).groupCumulativeType;
-		}	
+		ElementDataType returnType = getResultObjectType();
 			
 		switch (returnType)
 		{
@@ -55,6 +49,19 @@ public class DynamicIterationObject
 		}
 		
 		return null;
+	}
+	
+	
+	public ElementDataType getResultObjectType()
+	{
+		ElementDataType resType = dynamicIterationSpan.cumulativeObjectType;
+		
+		if (groupIndex >= 0)
+		{	
+			//Current DIO is from a group defined in dynamicIterationSpan
+			resType = dynamicIterationSpan.groupLevels.get(0).groupCumulativeType;
+		}
+		return resType;
 	}
 	
 	

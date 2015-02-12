@@ -3,6 +3,7 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import ambit2.base.data.SubstanceRecord;
 
 public class DIOSynchronization 
@@ -13,6 +14,7 @@ public class DIOSynchronization
 	
 	//Work variables
 	private SubstanceRecord curRecord = null;
+	private DynamicIterationObject curDIO = null;
 	private int curSubstArrIndex = -1;
 	
 
@@ -70,6 +72,7 @@ public class DIOSynchronization
 		if (basicRecord != null)  //Dynamic span in this case supplies additional info to the primary (static) iteration method 
 		{
 			curRecord = basicRecord;
+			curDIO = null;
 			assembleCurrentRecord();
 			records.add(curRecord);
 			return records;
@@ -79,9 +82,9 @@ public class DIOSynchronization
 		if (dsInfo.substanceArray_DS == null)
 		{
 			//Currently only one substance DIS should is used
-			DynamicIterationSpan substDIS = dsInfo.substance_DS[0];
-			DynamicIterationObject substDIO = dios.get(substDIS);
-			curRecord = (SubstanceRecord) substDIO.getObject();
+			DynamicIterationSpan substanceDIS = dsInfo.substance_DS[0];
+			curDIO = dios.get(substanceDIS);
+			curRecord = (SubstanceRecord) curDIO.getObject();
 			assembleCurrentRecord();
 			records.add(curRecord);
 			return records;
@@ -104,13 +107,39 @@ public class DIOSynchronization
 	
 	
 	protected void assembleCurrentRecord()
-	{
+	{	
+		
+		for (int i = 0; i < curDIO.rowObjects.size(); i++)
+		{
+			//Handle row objects
+			
+			
+		}
+		
+		
+		
+		
+		
 		//TODO
 		
 		//temporary code
 		curRecord.setCompanyName(GenericExcelParser.key00 + " #" + (curSubstArrIndex + 1));
 	}
 	
+	protected void processRowObjects(DynamicIterationObject dio)
+	{
+		//TODO
+	}
+	
+	
+	
+	
+	
+	boolean isNull (RowObject ro)
+	{
+		//TODO
+		return true;
+	}
 	
 	protected ArrayList<SubstanceRecord> assembleRecordArray()
 	{
@@ -129,7 +158,8 @@ public class DIOSynchronization
 			//Handle groups
 			for (int i = 0; i < saDIO.groupDIOs.size(); i++)
 			{
-				curRecord = (SubstanceRecord) saDIO.groupDIOs.get(i).getObject();
+				curDIO = saDIO.groupDIOs.get(i);
+				curRecord = (SubstanceRecord) curDIO.getObject();
 				curSubstArrIndex = i;
 				assembleCurrentRecord();
 				records.add(curRecord);

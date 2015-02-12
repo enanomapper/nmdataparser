@@ -371,7 +371,7 @@ public class DynamicIterationSpan
 					grpRows.add(rows.get(i));
 				
 				firstGroupRow = grpRows.get(0);
-				System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+				//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 				grpDio.groupIndex = groupIndex;
 				grpDio.dynamicIterationSpan = this;
@@ -387,7 +387,7 @@ public class DynamicIterationSpan
 			grpRows.add(rows.get(i));
 		
 		firstGroupRow = grpRows.get(0);
-		System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+		//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
 		grpDio.groupIndex = groupIndex;
 		grpDio.dynamicIterationSpan = this;
@@ -404,7 +404,7 @@ public class DynamicIterationSpan
 		for (int i = 0; i < rows.size(); i ++)
 		{
 			RowObject obj = getRowObject(rows.get(i), resultType);
-			System.out.println("RowObject: " + rowObjectToString(obj));
+			//System.out.println("RowObject: " + rowObjectToString(obj));
 			dio.rowObjects.add(obj);
 		}
 		
@@ -581,7 +581,7 @@ public class DynamicIterationSpan
 	}
 	
 	
-	public String rowObjectToString (RowObject ro)
+	public static String rowObjectToString (RowObject ro)
 	{
 		StringBuffer sb = new StringBuffer();
 		if (ro.elementObjects != null)
