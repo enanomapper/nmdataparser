@@ -6,6 +6,7 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
+import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 
 
@@ -16,6 +17,9 @@ public class DynamicElement
 
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
+	
+	public ElementSynchronization synchType = ElementSynchronization.NONE;
+	public boolean FlagSynchType = false;
 
 	public ElementPosition position = ElementPosition.ANY_ROW;
 	public boolean FlagPosition = false;
@@ -92,6 +96,26 @@ public class DynamicElement
 									+" subsection ELEMENT [" +(elNum +1) + "], FIELD_TYPE \"" + element.fieldType.toString() + 
 									"\" is incompatible with DATA_TYPE \"" + element.dataType.toString() + "\"");
 					}
+				}	
+			}	
+		}
+		
+		//SYNCH_TYPE
+		if(!node.path("SYNCH_TYPE").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "SYNCH_TYPE", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"SYNCH_TYPE\": " + jsonUtils.getError());
+			else
+			{	
+				element.synchType = ElementSynchronization.fromString(keyword);
+				if (element.synchType == ElementSynchronization.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"SYNCH_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
+				else
+				{	
+					element.FlagSynchType = true;
 				}	
 			}	
 		}
@@ -256,6 +280,14 @@ public class DynamicElement
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"FIELD_TYPE\" : \"" + fieldType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagSynchType)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SYNCH_TYPE\" : \"" + synchType.toString() + "\"");
 			nFields++;
 		}
 

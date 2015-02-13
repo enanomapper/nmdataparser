@@ -14,6 +14,7 @@ import org.codehaus.jackson.JsonNode;
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
 import net.enanomapper.parser.json.JsonUtilities;
@@ -41,12 +42,12 @@ public class DynamicIterationSpan
 		public Object groupObject = null;
 	}
 	
+	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
 	
 	//public int sheetNum = 0;
 	//public int parallelSheetNum = -1;
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
-	
 	
 	
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
@@ -57,6 +58,16 @@ public class DynamicIterationSpan
 	//public DataElementType columnType = null;  //This is the default column level grouping
 	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
+	
+	public ElementSynchronization cumulativeObjectSynch = ElementSynchronization.NONE;
+	public boolean FlagCumulativeObjectSynch = false;
+	
+	public ElementSynchronization groupSynch = ElementSynchronization.NONE;
+	public boolean FlagGroupSynch = false;
+	
+	public ElementSynchronization rowSynch = ElementSynchronization.NONE;
+	public boolean FlagRowSynch = false;
+	
 	
 	
 	//Error handling
@@ -132,6 +143,62 @@ public class DynamicIterationSpan
 		}
 		
 		
+		
+		//CUMULATIVE_OBJECT_SYNCH
+		if(!node.path("CUMULATIVE_OBJECT_SYNCH").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_OBJECT_SYNCH", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"CUMULATIVE_OBJECT_SYNCH\": " + jsonUtils.getError());
+			else
+			{	
+				dis.cumulativeObjectSynch = ElementSynchronization.fromString(keyword);
+				if (dis.cumulativeObjectSynch == ElementSynchronization.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"CUMULATIVE_OBJECT_SYNCH\" is incorrect or UNDEFINED! --> " + keyword);
+				else
+					dis.FlagCumulativeObjectSynch = true;
+			}	
+		}
+		
+		//GROUP_SYNCH
+		if(!node.path("GROUP_SYNCH").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "GROUP_SYNCH", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"GROUP_SYNCH\": " + jsonUtils.getError());
+			else
+			{	
+				dis.groupSynch = ElementSynchronization.fromString(keyword);
+				if (dis.groupSynch == ElementSynchronization.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"GROUP_SYNCH\" is incorrect or UNDEFINED! --> " + keyword);
+				else
+					dis.FlagGroupSynch = true;
+			}	
+		}
+		
+		//ROW_SYNCH
+		if(!node.path("ROW_SYNCH").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "GROUP_SYNCH", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"ROW_SYNCH\": " + jsonUtils.getError());
+			else
+			{	
+				dis.rowSynch = ElementSynchronization.fromString(keyword);
+				if (dis.rowSynch == ElementSynchronization.UNDEFINED)
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"ROW_SYNCH\" is incorrect or UNDEFINED! --> " + keyword);
+				else
+					dis.FlagRowSynch = true;
+			}	
+		}
+
+
 		if(!node.path("ELEMENTS").isMissingNode())
 		{
 			JsonNode elNode = node.path("ELEMENTS");
@@ -193,6 +260,30 @@ public class DynamicIterationSpan
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"CUMULATIVE_OBJECT_TYPE\" : \"" + cumulativeObjectType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagCumulativeObjectSynch)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"CUMULATIVE_OBJECT_SYNCH\" : \"" + cumulativeObjectSynch.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagGroupSynch)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"GROUP_SYNCH\" : \"" + groupSynch.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagRowSynch)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ROW_SYNCH\" : \"" + rowSynch.toString() + "\"");
 			nFields++;
 		}
 		
