@@ -1,8 +1,8 @@
 package net.enanomapper.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
+import net.enanomapper.parser.DynamicIterationSpan.GroupObject;
 import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import ambit2.base.data.SubstanceRecord;
@@ -13,7 +13,7 @@ public class DynamicIterationObject
 	public int groupIndex = -1; //if groupIndex >= 0 then this DIO is a group within dynamicIterationSpan
 	
 	public ArrayList<RowObject> rowObjects = new ArrayList<RowObject>(); 
-	public ArrayList<DynamicIterationObject> groupDIOs = new ArrayList<DynamicIterationObject>(); 
+	public ArrayList<GroupObject> groupObjects = new ArrayList<GroupObject>(); 
 	
 	public ArrayList<SubstanceRecord> substanceRecords = null;
 	public SubstanceRecord substanceRecord = null;

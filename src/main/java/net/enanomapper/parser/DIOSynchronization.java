@@ -109,14 +109,14 @@ public class DIOSynchronization
 	protected void assembleCurrentRecord()
 	{	
 		
+		/*
 		for (int i = 0; i < curDIO.rowObjects.size(); i++)
 		{
 			//Handle row objects
 			
 			
 		}
-		
-		
+		*/
 		
 		
 		
@@ -132,9 +132,6 @@ public class DIOSynchronization
 	}
 	
 	
-	
-	
-	
 	boolean isNull (RowObject ro)
 	{
 		//TODO
@@ -148,7 +145,7 @@ public class DIOSynchronization
 		DynamicIterationSpan saDIS = dsInfo.substanceArray_DS;
 		DynamicIterationObject saDIO = dios.get(saDIS);
 		
-		if (saDIO.groupDIOs.isEmpty())
+		if (saDIO.groupObjects.isEmpty())
 		{
 			//Handle rows
 			//TODO
@@ -156,10 +153,10 @@ public class DIOSynchronization
 		else
 		{
 			//Handle groups
-			for (int i = 0; i < saDIO.groupDIOs.size(); i++)
+			for (int i = 0; i < saDIO.groupObjects.size(); i++)
 			{
-				curDIO = saDIO.groupDIOs.get(i);
-				curRecord = (SubstanceRecord) curDIO.getObject();
+				//curDIO = saDIO.groupDIOs.get(i);
+				curRecord = new SubstanceRecord(); //(SubstanceRecord) curDIO.getObject();
 				curSubstArrIndex = i;
 				assembleCurrentRecord();
 				records.add(curRecord);
@@ -169,6 +166,8 @@ public class DIOSynchronization
 		
 		return records;
 	}
+	
+	
 	
 	
 }

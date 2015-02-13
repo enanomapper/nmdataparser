@@ -36,6 +36,12 @@ public class DynamicIterationSpan
 		public Object rowObject = null;
 	}
 	
+	public static class GroupObject{
+		public RowObject rowObjects[] = null;
+		public Object groupObject = null;
+	}
+	
+	
 	//public int sheetNum = 0;
 	//public int parallelSheetNum = -1;
 	public boolean isPrimarySheet = false;
@@ -339,7 +345,7 @@ public class DynamicIterationSpan
 		if (groupLevels == null)
 		{	
 			firstRow = rows.get(0);
-			dio = handleRows(rows, cumulativeObjectType);
+			dio = rowsToDIO(rows, cumulativeObjectType);
 		}	
 		else
 			dio = handleGroupsLavels(rows);
@@ -372,10 +378,8 @@ public class DynamicIterationSpan
 				
 				firstGroupRow = grpRows.get(0);
 				//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
-				DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
-				grpDio.groupIndex = groupIndex;
-				grpDio.dynamicIterationSpan = this;
-				dio.groupDIOs.add(grpDio);
+				GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
+				dio.groupObjects.add(grpObj);
 			}
 			prevInt = entry.getKey();
 			groupIndex++;
@@ -388,17 +392,31 @@ public class DynamicIterationSpan
 		
 		firstGroupRow = grpRows.get(0);
 		//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
-		DynamicIterationObject grpDio = handleRows(grpRows, groupLevels.get(0).groupCumulativeType);
-		grpDio.groupIndex = groupIndex;
-		grpDio.dynamicIterationSpan = this;
-		dio.groupDIOs.add(grpDio);
+		GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
+		//grpDio.groupIndex = groupIndex;
+		//grpDio.dynamicIterationSpan = this;
+		dio.groupObjects.add(grpObj);
 		
 		
 		return dio;
 	}
 	
 	
-	protected DynamicIterationObject handleRows(ArrayList<Row> rows, ElementDataType resultType)
+	protected GroupObject rowsToGroupObject(ArrayList<Row> rows, ElementDataType resultType)
+	{
+		GroupObject gObj = new GroupObject ();
+		gObj.rowObjects = new RowObject[rows.size()];
+		for (int i = 0; i < rows.size(); i ++)
+		{
+			RowObject obj = getRowObject(rows.get(i), resultType);
+			//System.out.println("RowObject: " + rowObjectToString(obj));
+			gObj.rowObjects[i] = obj;
+		}
+		
+		return gObj;
+	}
+	
+	protected DynamicIterationObject rowsToDIO(ArrayList<Row> rows, ElementDataType resultType)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject ();
 		for (int i = 0; i < rows.size(); i ++)
@@ -407,7 +425,6 @@ public class DynamicIterationSpan
 			//System.out.println("RowObject: " + rowObjectToString(obj));
 			dio.rowObjects.add(obj);
 		}
-		
 		return dio;
 	}
 	

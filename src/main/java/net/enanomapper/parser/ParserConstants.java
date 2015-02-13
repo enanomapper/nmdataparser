@@ -237,6 +237,27 @@ public class ParserConstants
 		}
 	}
 	
+	/*
+	 * Determines how the element/row/group/... is synchronized/assembled into larger elements.
+	 */
+	public enum ElementSynchronization {
+		NONE, USE_ONLY_FIRST_ROW, UNDEFINED;
+		
+		public static ElementSynchronization fromString(String s)
+		{	 
+			try
+			{
+				ElementSynchronization synch = ElementSynchronization.valueOf(s) ;
+				return (synch);
+			}
+			catch (Exception e)
+			{
+				return ElementSynchronization.UNDEFINED;
+			}
+		}
+		
+	}
+	
 	public enum ElementDataType {
 		
 		NONE,
