@@ -69,8 +69,6 @@ public class DIOSynchronization
 	
 	public ArrayList<SubstanceRecord> synchronize()
 	{	
-		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
-		
 		if (basicRecord != null)  //Dynamic span in this case supplies additional info to the primary (static) iteration method 
 		{
 			curRecord = basicRecord;
@@ -79,6 +77,7 @@ public class DIOSynchronization
 			
 			handleDIOs();
 			
+			ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 			records.add(curRecord);
 			return records;
 		}
@@ -94,23 +93,17 @@ public class DIOSynchronization
 			
 			handleDIOs();
 			
+			ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 			records.add(curRecord);
 			return records;
 		}
 		else
 		{
 			//Handle substance array
-			records = assembleRecordArray();
+			ArrayList<SubstanceRecord> records = assembleRecordArray();
+			handleDIOs();
 			return records;
 		}
-		
-		/*
-		//temporary code
-		SubstanceRecord r = new SubstanceRecord();
-		r.setCompanyName(GenericExcelParser.key00);
-		records.add(r);
-		return records;
-		*/
 	}
 	
 	
@@ -155,24 +148,29 @@ public class DIOSynchronization
 			handleDIO(entry.getValue());
 		}
 		
-		
-		
-		//TODO 
-		
-		//Second round ...
+		//Second round ...if needed.
 	}
 	
 	
 	
 	protected void handleDIO(DynamicIterationObject dio)
 	{
-		//TODO
+		if (primaryDIO.groupObjects.isEmpty())
+		{
+			
+		}
+		else
+		{
+			
+		}
 	}
 	
+	/*
 	protected void processRowObjects(DynamicIterationObject dio)
 	{
 		//TODO
 	}
+	*/
 	
 	
 	boolean isNull (RowObject ro)
@@ -180,22 +178,6 @@ public class DIOSynchronization
 		//TODO
 		return true;
 	}
-	
-	/*
-	protected void assembleCurrentRecord()
-	{	
-		if (curDIO != null)
-			for (int i = 0; i < curDIO.rowObjects.size(); i++)
-			{
-				//Handle row objects
-			}
-		
-		//TODO
-		
-		//temporary code
-		curRecord.setCompanyName(GenericExcelParser.key00 + " #" + (curSubstArrIndex + 1));
-	}
-	*/
 	
 	
 }
