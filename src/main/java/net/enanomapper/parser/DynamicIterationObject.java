@@ -2,7 +2,7 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
-import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ObjectType;
 import ambit2.base.data.SubstanceRecord;
 
 public class DynamicIterationObject 
@@ -49,9 +49,9 @@ public class DynamicIterationObject
 	}
 	*/
 	
-	public ElementDataType getResultObjectType()
+	public ObjectType getResultObjectType()
 	{
-		ElementDataType resType = dynamicIterationSpan.cumulativeObjectType;
+		ObjectType resType = dynamicIterationSpan.cumulativeObjectType;
 		
 		if (groupIndex >= 0)
 		{	

@@ -2,7 +2,7 @@ package net.enanomapper.parser;
 
 import org.codehaus.jackson.JsonNode;
 
-import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.json.JsonUtilities;
 
 public class DynamicGrouping 
@@ -10,10 +10,10 @@ public class DynamicGrouping
 	public int groupingElementIndex = -1;
 	public boolean FlagGroupingElementIndex = false;
 		
-	public ElementDataType groupCumulativeType = null; 
+	public ObjectType groupCumulativeType = null; 
 	public boolean FlagGroupCumulativeType = false;
 	
-	public ElementDataType rowType = null;
+	public ObjectType rowType = null;
 	public boolean FlagRowType = false;
 	
 	//public ElementDataType columnType = null;
@@ -63,8 +63,8 @@ public class DynamicGrouping
 						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" :" + jsonUtils.getError());
 			else
 			{	
-				dyngrp.groupCumulativeType = ElementDataType.fromString(keyword);
-				if (dyngrp.groupCumulativeType == ElementDataType.UNDEFINED)
+				dyngrp.groupCumulativeType = ObjectType.fromString(keyword);
+				if (dyngrp.groupCumulativeType == ObjectType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"GROUP_CUMULATIVE_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 				else
@@ -81,8 +81,8 @@ public class DynamicGrouping
 						+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" :" + jsonUtils.getError());
 			else
 			{	
-				dyngrp.rowType = ElementDataType.fromString(keyword);
-				if (dyngrp.rowType == ElementDataType.UNDEFINED)
+				dyngrp.rowType = ObjectType.fromString(keyword);
+				if (dyngrp.rowType == ObjectType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection GROUP_LEVEL [" +(groupNum +1) + "], keyword \"ROW_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 				else

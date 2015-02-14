@@ -17,7 +17,7 @@ import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
-import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
@@ -35,28 +35,6 @@ import net.enanomapper.parser.json.JsonUtilities;
  */
 public class DynamicIterationSpan 
 {	
-	/*
-	public static class RowObject{
-		public Object elementObjects[] = null;
-		//public Object rowObject = null;
-		public SubstanceRecord substanceRecord = null;
-		public ProtocolApplication protocolApplication = null;
-		public EffectRecord effect = null;
-		public CompositionRelation composition = null;
-		public Protocol protocol = null;
-		
-	}
-	
-	public static class GroupObject{
-		public RowObject rowObjects[] = null;
-		//public Object groupObject = null;
-		public SubstanceRecord substanceRecord = null;
-		public ProtocolApplication protocolApplication = null;
-		public EffectRecord effect = null;
-		public CompositionRelation composition = null;
-		public Protocol protocol = null;
-	}
-	*/
 	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
 	
 	//public int sheetNum = 0;
@@ -68,8 +46,8 @@ public class DynamicIterationSpan
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
 	
-	public ElementDataType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
-	public ElementDataType rowType = null;  //This is the default row level grouping 
+	public ObjectType cumulativeObjectType = null; //This is what type of object is formed by the cumulative effect of all of rows/columns
+	public ObjectType rowType = null;  //This is the default row level grouping 
 	//public DataElementType columnType = null;  //This is the default column level grouping
 	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
@@ -130,8 +108,8 @@ public class DynamicIterationSpan
 						+ "\"CUMULATIVE_OBJECT_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				dis.cumulativeObjectType = ElementDataType.fromString(keyword);
-				if (dis.cumulativeObjectType == ElementDataType.UNDEFINED)
+				dis.cumulativeObjectType = ObjectType.fromString(keyword);
+				if (dis.cumulativeObjectType == ObjectType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
 							+ "\"CUMULATIVE_OBJECT_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 			}	
@@ -150,8 +128,8 @@ public class DynamicIterationSpan
 						+ "\"ROW_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				dis.rowType = ElementDataType.fromString(keyword);
-				if (dis.rowType == ElementDataType.UNDEFINED)
+				dis.rowType = ObjectType.fromString(keyword);
+				if (dis.rowType == ObjectType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
 							+ "\"ROW_TYPE\" is incorrect or UNDEFINED! --> " + keyword);
 			}	
@@ -508,7 +486,7 @@ public class DynamicIterationSpan
 	}
 	
 	
-	protected GroupObject rowsToGroupObject(ArrayList<Row> rows, ElementDataType resultType)
+	protected GroupObject rowsToGroupObject(ArrayList<Row> rows, ObjectType resultType)
 	{
 		GroupObject gObj = new GroupObject ();
 		gObj.rowObjects = new RowObject[rows.size()];
@@ -522,7 +500,7 @@ public class DynamicIterationSpan
 		return gObj;
 	}
 	
-	protected DynamicIterationObject rowsToDIO(ArrayList<Row> rows, ElementDataType resultType)
+	protected DynamicIterationObject rowsToDIO(ArrayList<Row> rows, ObjectType resultType)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject ();
 		for (int i = 0; i < rows.size(); i ++)
@@ -536,7 +514,7 @@ public class DynamicIterationSpan
 	
 	
 	
-	protected RowObject getRowObject(Row row, ElementDataType resultType)
+	protected RowObject getRowObject(Row row, ObjectType resultType)
 	{	
 		RowObject robj = new RowObject();
 		robj.elementObjects = getElementObjects(row);

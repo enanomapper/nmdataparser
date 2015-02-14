@@ -258,7 +258,7 @@ public class ParserConstants
 		
 	}
 	
-	public enum ElementDataType {
+	public enum ObjectType {
 		
 		NONE,
 		EFFECT, EFFECT_ARRAY, 
@@ -269,20 +269,20 @@ public class ParserConstants
 		VARIABLE, VARIABLE_CONTAINER,
 		UNDEFINED;
 		
-		public static ElementDataType fromString(String s)
+		public static ObjectType fromString(String s)
 		{	 
-			try
+			try			
 			{
-				ElementDataType type = ElementDataType.valueOf(s) ;
+				ObjectType type = ObjectType.valueOf(s) ;
 				return (type);
 			}
 			catch (Exception e)
 			{
-				return ElementDataType.UNDEFINED;
+				return ObjectType.UNDEFINED;
 			}
 		}
 		
-		public boolean isElementOf(ElementDataType type)
+		public boolean isElementOf(ObjectType type)
 		{
 			//TODO improve it
 			return (this.ordinal() < type.ordinal());
@@ -296,8 +296,8 @@ public class ParserConstants
 		//Substance record fields
 		COMPANY_NAME {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -306,8 +306,8 @@ public class ParserConstants
 		
 		COMPANY_UUID {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -316,8 +316,8 @@ public class ParserConstants
 		
 		OWNER_NAME {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -326,8 +326,8 @@ public class ParserConstants
 		
 		OWNER_UUID {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -336,8 +336,8 @@ public class ParserConstants
 		
 		SUBSTANCE_TYPE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -346,8 +346,8 @@ public class ParserConstants
 		
 		PUBLIC_NAME {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -356,8 +356,8 @@ public class ParserConstants
 		
 		ID_SUBSTANCE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -366,8 +366,8 @@ public class ParserConstants
 		
 		COMPOSITION_STR_TYPE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -376,8 +376,8 @@ public class ParserConstants
 		
 		COMPOSITION_STR_INFO {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -386,8 +386,8 @@ public class ParserConstants
 		
 		COMPOSITION_RELATION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.SUBSTANCE)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
 		    		return true;
 		    	else
 		    		return false;
@@ -397,8 +397,8 @@ public class ParserConstants
 		//Protocol fields
 		PROTOCOL_TOP_CATEGORY {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL)
 		    		return true;
 		    	else
 		    		return false;
@@ -407,8 +407,8 @@ public class ParserConstants
 		
 		PROTOCOL_CATEGORY_CODE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL)
 		    		return true;
 		    	else
 		    		return false;
@@ -417,8 +417,8 @@ public class ParserConstants
 		
 		PROTOCOL_CATEGORY_TITLE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL)
 		    		return true;
 		    	else
 		    		return false;
@@ -427,8 +427,8 @@ public class ParserConstants
 		
 		PROTOCOL_GUIDELINE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL)
 		    		return true;
 		    	else
 		    		return false;
@@ -438,8 +438,8 @@ public class ParserConstants
 		//Protocol application fields
 		CITATION_TITLE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -448,8 +448,8 @@ public class ParserConstants
 		
 		CITATION_YEAR {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -458,8 +458,8 @@ public class ParserConstants
 		
 		CITATION_OWNER {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -468,8 +468,8 @@ public class ParserConstants
 		
 		PARAMETERS {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -478,8 +478,8 @@ public class ParserConstants
 		
 		RELIABILITY_IS_ROBUST_STUDY {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -488,8 +488,8 @@ public class ParserConstants
 		
 		RELIABILITY_IS_USED_FOR_CLASSIFICATION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -498,8 +498,8 @@ public class ParserConstants
 		
 		RELIABILITY_IS_USED_FOR_MSDS {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -508,8 +508,8 @@ public class ParserConstants
 		
 		RELIABILITY_PURPOSE_FLAG {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -518,8 +518,8 @@ public class ParserConstants
 		
 		RELIABILITY_STUDY_RESULT_TYPE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -528,8 +528,8 @@ public class ParserConstants
 		
 		RELIABILITY_VALUE  {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -538,8 +538,8 @@ public class ParserConstants
 		
 		INTERPRETATION_RESULT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -548,8 +548,8 @@ public class ParserConstants
 		
 		INTERPRETATION_CRITERIA {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.PROTOCOL_APPLICATION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.PROTOCOL_APPLICATION)
 		    		return true;
 		    	else
 		    		return false;
@@ -559,8 +559,8 @@ public class ParserConstants
 		//Effect fields
 		ENDPOINT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -569,8 +569,8 @@ public class ParserConstants
 		
 		SAMPLE_ID {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -579,8 +579,8 @@ public class ParserConstants
 		
 		UNIT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -589,8 +589,8 @@ public class ParserConstants
 		
 		LO_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -599,8 +599,8 @@ public class ParserConstants
 		
 		LO_QUALIFIER {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -609,8 +609,8 @@ public class ParserConstants
 		
 		UP_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -619,8 +619,8 @@ public class ParserConstants
 		
 		UP_QUALIFIER {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -629,8 +629,8 @@ public class ParserConstants
 		
 		TEXT_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -639,8 +639,8 @@ public class ParserConstants
 		
 		ERR_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -649,8 +649,8 @@ public class ParserConstants
 		
 		ERR_QUALIFIER {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -659,8 +659,8 @@ public class ParserConstants
 		
 		VALUE {      //Used for reach value approach (setting lo/up/err + qualifiers + unit at once)
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -670,8 +670,8 @@ public class ParserConstants
 		
 		CONDITIONS {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.EFFECT)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.EFFECT)
 		    		return true;
 		    	else
 		    		return false;
@@ -681,8 +681,8 @@ public class ParserConstants
 		//Composition fields
 		STRUCTURE_RELATION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -691,8 +691,8 @@ public class ParserConstants
 		
 		CONTENT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -701,8 +701,8 @@ public class ParserConstants
 		
 		FORMAT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -711,8 +711,8 @@ public class ParserConstants
 		
 		INCHI_KEY {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -721,8 +721,8 @@ public class ParserConstants
 		
 		INCHI {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -731,8 +731,8 @@ public class ParserConstants
 		
 		FORMULA {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -741,8 +741,8 @@ public class ParserConstants
 		
 		SMILES {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -751,8 +751,8 @@ public class ParserConstants
 		
 		PROPERTY {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -761,8 +761,8 @@ public class ParserConstants
 		
 		PROPORTION_FUNCTION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -771,8 +771,8 @@ public class ParserConstants
 
 		PROPORTION_TYPICAL_PRECISION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -781,8 +781,8 @@ public class ParserConstants
 		
 		PROPORTION_TYPICAL_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -791,8 +791,8 @@ public class ParserConstants
 		
 		PROPORTION_TYPICAL_UNIT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -813,8 +813,8 @@ public class ParserConstants
 		
 		PROPORTION_REAL_LOWER_PRECISION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -823,8 +823,8 @@ public class ParserConstants
 		
 		PROPORTION_REAL_LOWER_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -833,8 +833,8 @@ public class ParserConstants
 		
 		PROPORTION_REAL_UPPER_PRECISION {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -843,8 +843,8 @@ public class ParserConstants
 		
 		PROPORTION_REAL_UPPER_VALUE {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -853,8 +853,8 @@ public class ParserConstants
 		
 		PROPORTION_REAL_UNIT {
 			@Override
-		    public boolean isFieldOf(ElementDataType type) {
-		    	if (type == ElementDataType.COMPOSITION)
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.COMPOSITION)
 		    		return true;
 		    	else
 		    		return false;
@@ -863,30 +863,30 @@ public class ParserConstants
 		
 		UNDEFINED;
 		
-		public boolean isFieldOf(ElementDataType type)
+		public boolean isFieldOf(ObjectType type)
 		{
 			return false;
 		}
 		
-		public ElementDataType getElement()
+		public ObjectType getElement()
 		{
-			if (this.isFieldOf(ElementDataType.SUBSTANCE))
-				return ElementDataType.SUBSTANCE;
+			if (this.isFieldOf(ObjectType.SUBSTANCE))
+				return ObjectType.SUBSTANCE;
 			
-			if (this.isFieldOf(ElementDataType.PROTOCOL_APPLICATION))
-				return ElementDataType.PROTOCOL_APPLICATION;
+			if (this.isFieldOf(ObjectType.PROTOCOL_APPLICATION))
+				return ObjectType.PROTOCOL_APPLICATION;
 			
-			if (this.isFieldOf(ElementDataType.PROTOCOL))
-				return ElementDataType.PROTOCOL;
+			if (this.isFieldOf(ObjectType.PROTOCOL))
+				return ObjectType.PROTOCOL;
 			
-			if (this.isFieldOf(ElementDataType.EFFECT))
-				return ElementDataType.EFFECT;
+			if (this.isFieldOf(ObjectType.EFFECT))
+				return ObjectType.EFFECT;
 			
-			if (this.isFieldOf(ElementDataType.COMPOSITION))
-				return ElementDataType.COMPOSITION;
+			if (this.isFieldOf(ObjectType.COMPOSITION))
+				return ObjectType.COMPOSITION;
 			
 			
-			return ElementDataType.UNDEFINED;
+			return ObjectType.UNDEFINED;
 		}
 		
 		public static ElementField fromString(String s)

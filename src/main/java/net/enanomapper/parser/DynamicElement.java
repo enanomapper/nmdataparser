@@ -3,7 +3,7 @@ package net.enanomapper.parser;
 import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.relation.STRUCTURE_RELATION;
-import net.enanomapper.parser.ParserConstants.ElementDataType;
+import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
@@ -12,7 +12,7 @@ import net.enanomapper.parser.json.JsonUtilities;
 
 public class DynamicElement 
 {
-	public ElementDataType dataType =  null;
+	public ObjectType dataType =  null;
 	public boolean FlagDataType = false;
 
 	public ElementField fieldType = ElementField.NONE;
@@ -61,8 +61,8 @@ public class DynamicElement
 						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\": " + jsonUtils.getError());
 			else
 			{	
-				element.dataType = ElementDataType.fromString(keyword);
-				if (element.dataType == ElementDataType.UNDEFINED)
+				element.dataType = ObjectType.fromString(keyword);
+				if (element.dataType == ObjectType.UNDEFINED)
 					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"DATA_TYPE\" is incorrect or UNDEFINED!  -->"  + keyword);
 				else
@@ -362,9 +362,9 @@ public class DynamicElement
 	}
 	
 	
-	public void putElementObjectInRow(Object elObj, RowObject rowObj)
+	public void putElementInRow(Object elObj, RowObject rowObj)
 	{
-		
+		//if (fieldType)
 	}
 
 }

@@ -12,9 +12,6 @@ import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
-import net.enanomapper.parser.ParserConstants.ElementDataType;
-import net.enanomapper.parser.ParserConstants.ElementField;
-import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
