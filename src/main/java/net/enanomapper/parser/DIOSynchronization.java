@@ -180,7 +180,7 @@ public class DIOSynchronization
 	protected void processRowObject(DynamicIterationObject dio, RowObject ro, int phase)
 	{
 		for (int i = 0; i < ro.elementObjects.length; i++)
-			processElementObject(dio, ro, i, phase);
+			processElementObject(dio, null, ro, i, phase);
 	}
 	
 	protected void processGroupObject(DynamicIterationObject dio, GroupObject go, int phase)
@@ -190,13 +190,34 @@ public class DIOSynchronization
 			RowObject ro = go.rowObjects[i];
 			if (ro != null)
 				for (int k = 0; k < ro.elementObjects.length; k++)
-					processElementObject(dio, ro, k, phase); //??? call another special function
+					processElementObject(dio, go, ro, k, phase); //??? call another special function
 		}	
 	}
 	
-	protected void processElementObject(DynamicIterationObject dio, RowObject ro, int nObj, int phase)
+	protected void processElementObject(DynamicIterationObject dio, GroupObject go, RowObject ro, int nElement, int phase)
 	{
-		//TODO
+		DynamicElement de = dio.dynamicIterationSpan.elements.get(nElement);
+		Object elObj = ro.elementObjects[nElement];
+		
+		switch (de.synchType)
+		{
+		case PUT_IN_CUMULATIVE_OBJECT:
+			de.putElementInUniversalObject(elObj, dio);
+			break;
+			
+		case PUT_IN_GROUP:
+			if (go != null)
+				de.putElementInUniversalObject(elObj, go);
+			break;
+		
+		case PUT_IN_ROW:
+			de.putElementInUniversalObject(elObj, ro);
+			break;
+		
+		default:	
+			//does nothing
+		}
+		
 	}
 	
 	
