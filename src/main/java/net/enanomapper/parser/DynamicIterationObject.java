@@ -31,8 +31,7 @@ public class DynamicIterationObject
 	
 	
 	/*
-	 * Creates the basic object from the DynamicIterationObject
-	 */
+	 
 	public Object getObject()
 	{
 		ElementDataType returnType = getResultObjectType();
@@ -50,7 +49,7 @@ public class DynamicIterationObject
 		
 		return null;
 	}
-	
+	*/
 	
 	public ElementDataType getResultObjectType()
 	{

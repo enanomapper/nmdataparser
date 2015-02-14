@@ -2,6 +2,7 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import ambit2.base.data.SubstanceRecord;
@@ -14,8 +15,9 @@ public class DIOSynchronization
 	
 	//Work variables
 	private SubstanceRecord curRecord = null;
-	private DynamicIterationObject curDIO = null;
-	private int curSubstArrIndex = -1;
+	private ArrayList<SubstanceRecord> curRecords = null;
+	
+	private DynamicIterationObject primaryDIO = null;  //It is used for the definition of SubstanceRecord or an array of SubstanceRecords
 	
 
 	public DIOSynchronization()
@@ -72,8 +74,11 @@ public class DIOSynchronization
 		if (basicRecord != null)  //Dynamic span in this case supplies additional info to the primary (static) iteration method 
 		{
 			curRecord = basicRecord;
-			curDIO = null;
-			assembleCurrentRecord();
+			curRecords = null;
+			primaryDIO = null;
+			
+			handleDIOs();
+			
 			records.add(curRecord);
 			return records;
 		}
@@ -81,11 +86,14 @@ public class DIOSynchronization
 		
 		if (dsInfo.substanceArray_DS == null)
 		{
-			//Currently only one substance DIS should is used
+			//Currently only one substance DIS is used
 			DynamicIterationSpan substanceDIS = dsInfo.substance_DS[0];
-			curDIO = dios.get(substanceDIS);
-			curRecord = (SubstanceRecord) curDIO.getObject();
-			assembleCurrentRecord();
+			primaryDIO = dios.get(substanceDIS);
+			curRecord = new SubstanceRecord();
+			curRecords = null;
+			
+			handleDIOs();
+			
 			records.add(curRecord);
 			return records;
 		}
@@ -106,24 +114,59 @@ public class DIOSynchronization
 	}
 	
 	
-	protected void assembleCurrentRecord()
-	{	
+	protected ArrayList<SubstanceRecord> assembleRecordArray()
+	{
+		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 		
-		/*
-		for (int i = 0; i < curDIO.rowObjects.size(); i++)
+		DynamicIterationSpan saDIS = dsInfo.substanceArray_DS;
+		primaryDIO = dios.get(saDIS);
+		curRecords = records;
+		curRecord = null;
+		
+		if (primaryDIO.groupObjects.isEmpty())
 		{
-			//Handle row objects
-			
-			
+			//Create SubstanceRecord for each row
+			for (int i = 0; i < primaryDIO.rowObjects.size(); i++)
+			{
+				SubstanceRecord r = new SubstanceRecord(); 
+				r.setCompanyName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
+				records.add(r);
+			}
 		}
-		*/
+		else
+		{
+			//Create SubstanceRecord for each group
+			for (int i = 0; i < primaryDIO.groupObjects.size(); i++)
+			{	
+				SubstanceRecord r = new SubstanceRecord(); 
+				r.setCompanyName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
+				records.add(r);
+			}
+		}
+		
+		return records;
+	}
+	
+	
+	protected void handleDIOs()
+	{
+		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
+		{
+			handleDIO(entry.getValue());
+		}
 		
 		
 		
+		//TODO 
+		
+		//Second round ...
+	}
+	
+	
+	
+	protected void handleDIO(DynamicIterationObject dio)
+	{
 		//TODO
-		
-		//temporary code
-		curRecord.setCompanyName(GenericExcelParser.key00 + " #" + (curSubstArrIndex + 1));
 	}
 	
 	protected void processRowObjects(DynamicIterationObject dio)
@@ -138,36 +181,21 @@ public class DIOSynchronization
 		return true;
 	}
 	
-	protected ArrayList<SubstanceRecord> assembleRecordArray()
-	{
-		ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
-		
-		DynamicIterationSpan saDIS = dsInfo.substanceArray_DS;
-		DynamicIterationObject saDIO = dios.get(saDIS);
-		
-		if (saDIO.groupObjects.isEmpty())
-		{
-			//Handle rows
-			//TODO
-		}
-		else
-		{
-			//Handle groups
-			for (int i = 0; i < saDIO.groupObjects.size(); i++)
+	/*
+	protected void assembleCurrentRecord()
+	{	
+		if (curDIO != null)
+			for (int i = 0; i < curDIO.rowObjects.size(); i++)
 			{
-				//curDIO = saDIO.groupDIOs.get(i);
-				curRecord = new SubstanceRecord(); //(SubstanceRecord) curDIO.getObject();
-				curSubstArrIndex = i;
-				assembleCurrentRecord();
-				records.add(curRecord);
+				//Handle row objects
 			}
-			
-		}
 		
-		return records;
+		//TODO
+		
+		//temporary code
+		curRecord.setCompanyName(GenericExcelParser.key00 + " #" + (curSubstArrIndex + 1));
 	}
-	
-	
+	*/
 	
 	
 }
