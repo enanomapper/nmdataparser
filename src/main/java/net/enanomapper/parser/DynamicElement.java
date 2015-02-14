@@ -2,6 +2,10 @@ package net.enanomapper.parser;
 
 import org.codehaus.jackson.JsonNode;
 
+import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.Protocol;
+import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.ParserConstants.ObjectType;
@@ -370,19 +374,59 @@ public class DynamicElement
 	}
 	
 	
-	public void putElementInRow(Object elObj, RowObject rowObj)
+	public void putElementInUniversalObject(Object elObj, UniversalObject uniObj)
 	{
 		ObjectType otype = fieldType.getObjectType();
 		switch (otype)
 		{
+		case SUBSTANCE:
+			SubstanceRecord sr = uniObj.getSubstanceRecord();
+			putElementInSubstanceRecord(elObj, sr);
+			break;
+			
+		case PROTOCOL_APPLICATION:
+			ProtocolApplication pa = uniObj.getProtocolApplication();
+			putElementInProtocolApplication(elObj, pa);
+			break;
+			
+		case PROTOCOL:
+			Protocol protocol = uniObj.getProtocol();
+			putElementInProtocol(elObj, protocol);
+			break;
+			
+		case EFFECT:
+			EffectRecord er = uniObj.getEffect();
+			putElementInEffectRecord(elObj, er);
+			break;	
+			
 		case COMPOSITION:
-			//CompositionRelation comp = rowObj.getComposition();
-			putElementInComposition(elObj, null);
+			CompositionRelation comp = uniObj.getComposition();
+			putElementInComposition(elObj, comp);
 			break;
 		
 		default:
 			//does noting
 		}
+	}
+	
+	public void putElementInSubstanceRecord(Object elObj, SubstanceRecord substanceRecord)
+	{
+		//TODO
+	}
+	
+	public void putElementInProtocolApplication(Object elObj, ProtocolApplication protocolApplication)
+	{
+		//TODO
+	}
+	
+	public void putElementInProtocol(Object elObj, Protocol protocol)
+	{
+		//TODO
+	}
+	
+	public void putElementInEffectRecord(Object elObj, EffectRecord effect)
+	{
+		//TODO
 	}
 	
 	public void putElementInComposition(Object elObj, CompositionRelation composition)
