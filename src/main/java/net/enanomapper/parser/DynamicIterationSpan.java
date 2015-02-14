@@ -348,9 +348,11 @@ public class DynamicIterationSpan
 		if (rowType != null)
 			for (int i = 0; i < elements.size(); i++)
 			{
+				/*
 				if (!elements.get(i).dataType.isElementOf(rowType))
 					addError(masterErrorString + " ELEMENTS[" + (i+1) + "] type " + elements.get(i).dataType.toString() + 
 							" is inconsistent with ROW_TYPE " + rowType.toString());
+				*/			
 			}
 		
 		//Check element children consistency

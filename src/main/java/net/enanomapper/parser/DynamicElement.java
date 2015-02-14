@@ -12,8 +12,8 @@ import net.enanomapper.parser.json.JsonUtilities;
 
 public class DynamicElement 
 {
-	public ObjectType dataType =  null;
-	public boolean FlagDataType = false;
+	//public ObjectType dataType =  null;   //it may be used if needed!
+	//public boolean FlagDataType = false;
 
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
@@ -45,6 +45,7 @@ public class DynamicElement
 		DynamicElement element = new DynamicElement();
 		JsonUtilities jsonUtils = new JsonUtilities();
 
+		/*
 		//DATA_TYPE
 		if(node.path("DATA_TYPE").isMissingNode())
 		{
@@ -69,6 +70,7 @@ public class DynamicElement
 					element.FlagDataType = true;
 			}	
 		}
+		*/
 
 		//FIELD_TYPE
 		if(!node.path("FIELD_TYPE").isMissingNode())
@@ -86,6 +88,8 @@ public class DynamicElement
 				else
 				{	
 					element.FlagFieldType = true;
+					
+					/*
 					// Setting dataType / Checking field compatibility with dataType
 					if (element.dataType == null)
 						element.dataType = element.fieldType.getElement();
@@ -96,6 +100,7 @@ public class DynamicElement
 									+" subsection ELEMENT [" +(elNum +1) + "], FIELD_TYPE \"" + element.fieldType.toString() + 
 									"\" is incompatible with DATA_TYPE \"" + element.dataType.toString() + "\"");
 					}
+					*/
 				}	
 			}	
 		}
@@ -267,6 +272,7 @@ public class DynamicElement
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 
+		/*
 		if (FlagDataType)
 		{
 			if (nFields > 0)
@@ -274,6 +280,7 @@ public class DynamicElement
 			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
 			nFields++;
 		}
+		*/
 
 		if (FlagFieldType)
 		{
@@ -364,7 +371,11 @@ public class DynamicElement
 	
 	public void putElementInRow(Object elObj, RowObject rowObj)
 	{
-		//if (fieldType)
+		ObjectType otype = fieldType.getObjectType();
+		switch (otype)
+		{
+			//TODO
+		}
 	}
 
 }

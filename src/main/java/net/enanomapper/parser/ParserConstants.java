@@ -868,7 +868,7 @@ public class ParserConstants
 			return false;
 		}
 		
-		public ObjectType getElement()
+		public ObjectType getObjectType()
 		{
 			if (this.isFieldOf(ObjectType.SUBSTANCE))
 				return ObjectType.SUBSTANCE;
@@ -886,7 +886,7 @@ public class ParserConstants
 				return ObjectType.COMPOSITION;
 			
 			
-			return ObjectType.UNDEFINED;
+			return ObjectType.NONE;
 		}
 		
 		public static ElementField fromString(String s)
