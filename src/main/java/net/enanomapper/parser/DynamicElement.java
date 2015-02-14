@@ -3,6 +3,7 @@ package net.enanomapper.parser;
 import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.relation.STRUCTURE_RELATION;
+import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
@@ -374,8 +375,19 @@ public class DynamicElement
 		ObjectType otype = fieldType.getObjectType();
 		switch (otype)
 		{
-			//TODO
+		case COMPOSITION:
+			//CompositionRelation comp = rowObj.getComposition();
+			putElementInComposition(elObj, null);
+			break;
+		
+		default:
+			//does noting
 		}
+	}
+	
+	public void putElementInComposition(Object elObj, CompositionRelation composition)
+	{
+		//TODO
 	}
 
 }
