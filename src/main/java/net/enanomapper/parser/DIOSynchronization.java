@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.enanomapper.parser.DynamicIterationSpan.GroupObject;
 import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import ambit2.base.data.SubstanceRecord;
 
@@ -122,6 +123,7 @@ public class DIOSynchronization
 			for (int i = 0; i < primaryDIO.rowObjects.size(); i++)
 			{
 				SubstanceRecord r = new SubstanceRecord(); 
+				primaryDIO.rowObjects.get(i).substanceRecord = r;  
 				r.setCompanyName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
 				records.add(r);
 			}
@@ -132,6 +134,7 @@ public class DIOSynchronization
 			for (int i = 0; i < primaryDIO.groupObjects.size(); i++)
 			{	
 				SubstanceRecord r = new SubstanceRecord(); 
+				primaryDIO.groupObjects.get(i).substanceRecord = r;
 				r.setCompanyName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
 				records.add(r);
 			}
@@ -143,34 +146,64 @@ public class DIOSynchronization
 	
 	protected void handleDIOs()
 	{
+		//First round (phase = 0)
 		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
 		{
-			handleDIO(entry.getValue());
+			handleDIO(entry.getValue(), 0);
 		}
 		
-		//Second round ...if needed.
+		/*
+		//Second round (phase = 1)...if needed.
+		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
+		{
+			handleDIO(entry.getValue(), 1);
+		}
+		*/
 	}
 	
 	
 	
-	protected void handleDIO(DynamicIterationObject dio)
+	protected void handleDIO(DynamicIterationObject dio, int phase)
 	{
 		if (primaryDIO.groupObjects.isEmpty())
 		{
-			
+			//Handle the row objects
+			for (int i = 0; i < dio.rowObjects.size(); i++)
+				processRowObject(dio, dio.rowObjects.get(i), phase);
 		}
 		else
 		{
-			
+			//Handle the group objects
+			for (int i = 0; i < dio.groupObjects.size(); i++)
+				processGroupObject(dio, dio.groupObjects.get(i), phase);
 		}
 	}
 	
-	/*
-	protected void processRowObjects(DynamicIterationObject dio)
+	protected void processRowObject(DynamicIterationObject dio, RowObject ro, int phase)
+	{
+		for (int i = 0; i < ro.elementObjects.length; i++)
+			processElementObject(dio, ro, i, phase);
+	}
+	
+	protected void processGroupObject(DynamicIterationObject dio, GroupObject go, int phase)
+	{
+		for (int i = 0; i < go.rowObjects.length; i++)
+		{	
+			RowObject ro = go.rowObjects[i];
+			if (ro != null)
+				for (int k = 0; k < ro.elementObjects.length; k++)
+					processElementObject(dio, ro, k, phase); //??? call another special function
+		}	
+	}
+	
+	protected void processElementObject(DynamicIterationObject dio, RowObject ro, int nObj, int phase)
 	{
 		//TODO
 	}
-	*/
+	
+	
+	
+	
 	
 	
 	boolean isNull (RowObject ro)

@@ -241,7 +241,7 @@ public class ParserConstants
 	 * Determines how the current element/row/group/... is synchronized/assembled into larger elements (i.e. it is a sort of destination).
 	 */
 	public enum ElementSynchronization {
-		NONE, PUT_IN_ROW, PUT_IN_GROUP, PUT_IN_CUMULATIVE_OBJECT, /*USE_ONLY_FIRST_ROW, */ UNDEFINED;
+		NONE, PUT_IN_ELEMENT, PUT_IN_ROW, PUT_IN_GROUP, PUT_IN_CUMULATIVE_OBJECT, /*USE_ONLY_FIRST_ROW, */ UNDEFINED;
 		
 		public static ElementSynchronization fromString(String s)
 		{	 

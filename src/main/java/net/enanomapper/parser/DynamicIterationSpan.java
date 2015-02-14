@@ -12,6 +12,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.Protocol;
+import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
@@ -34,12 +38,23 @@ public class DynamicIterationSpan
 	
 	public static class RowObject{
 		public Object elementObjects[] = null;
-		public Object rowObject = null;
+		//public Object rowObject = null;
+		public SubstanceRecord substanceRecord = null;
+		public ProtocolApplication protocolApplication = null;
+		public EffectRecord effect = null;
+		public CompositionRelation composition = null;
+		public Protocol protocol = null;
+		
 	}
 	
 	public static class GroupObject{
 		public RowObject rowObjects[] = null;
-		public Object groupObject = null;
+		//public Object groupObject = null;
+		public SubstanceRecord substanceRecord = null;
+		public ProtocolApplication protocolApplication = null;
+		public EffectRecord effect = null;
+		public CompositionRelation composition = null;
+		public Protocol protocol = null;
 	}
 	
 	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
@@ -520,12 +535,14 @@ public class DynamicIterationSpan
 	}
 	
 	
+	
 	protected RowObject getRowObject(Row row, ElementDataType resultType)
 	{	
 		RowObject robj = new RowObject();
 		robj.elementObjects = getElementObjects(row);
 		
 		
+		/*
 		switch (resultType)
 		{
 		case SUBSTANCE: {
@@ -536,10 +553,12 @@ public class DynamicIterationSpan
 		
 		default:
 		} 
-		
+		*/
 		
 		return robj;
 	}
+	
+	
 	
 	
 	protected Object[] getElementObjects(Row row)
