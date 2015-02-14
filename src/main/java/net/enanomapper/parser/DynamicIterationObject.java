@@ -2,8 +2,6 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
-import net.enanomapper.parser.DynamicIterationSpan.GroupObject;
-import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import net.enanomapper.parser.ParserConstants.ElementDataType;
 import ambit2.base.data.SubstanceRecord;
 

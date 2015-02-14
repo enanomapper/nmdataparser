@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.enanomapper.parser.DynamicIterationSpan.GroupObject;
-import net.enanomapper.parser.DynamicIterationSpan.RowObject;
 import ambit2.base.data.SubstanceRecord;
 
 public class DIOSynchronization 

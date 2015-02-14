@@ -360,5 +360,11 @@ public class DynamicElement
 
 		return sb.toString();
 	}
+	
+	
+	public void putElementObjectInRow(Object elObj, RowObject rowObj)
+	{
+		
+	}
 
 }

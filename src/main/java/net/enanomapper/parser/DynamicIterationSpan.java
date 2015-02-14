@@ -35,7 +35,7 @@ import net.enanomapper.parser.json.JsonUtilities;
  */
 public class DynamicIterationSpan 
 {	
-	
+	/*
 	public static class RowObject{
 		public Object elementObjects[] = null;
 		//public Object rowObject = null;
@@ -56,7 +56,7 @@ public class DynamicIterationSpan
 		public CompositionRelation composition = null;
 		public Protocol protocol = null;
 	}
-	
+	*/
 	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
 	
 	//public int sheetNum = 0;
