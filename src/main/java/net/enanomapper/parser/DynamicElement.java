@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import java.util.UUID;
+
 import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.data.SubstanceRecord;
@@ -414,6 +416,31 @@ public class DynamicElement
 	
 	public void putElementInSubstanceRecord(Object elObj, SubstanceRecord substanceRecord)
 	{
+		if (elObj == null)
+			return;
+		
+		switch (fieldType)
+		{
+		case COMPANY_NAME:
+			substanceRecord.setCompanyName(elObj.toString());
+			break;
+		case COMPANY_UUID:
+			String s = elObj.toString();
+			substanceRecord.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
+			break;	
+		case OWNER_NAME:
+			substanceRecord.setOwnerName(elObj.toString());
+			break;
+		case OWNER_UUID:
+			substanceRecord.setCompanyUUID(elObj.toString()); 
+			break;	
+			
+		//TODO	
+			
+		default:
+		}
+		
+		
 		//TODO
 	}
 	
