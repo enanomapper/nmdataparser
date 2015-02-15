@@ -39,6 +39,7 @@ public class DynamicIterationSpan
 	{
 		public String targetID = null;
 		public DynamicIterationSpan targetDIS = null;
+		public String error = null; 
 	}
 	
 	
@@ -73,6 +74,9 @@ public class DynamicIterationSpan
 	public boolean FlagRowSynch = false;
 	
 	public SynchTarget rowSynchTarget = null;
+	
+	public String id = null;  //Typically this is automatically defined
+	public boolean FlagId = false;  
 	
 	
 	//Error handling
@@ -202,6 +206,20 @@ public class DynamicIterationSpan
 					dis.FlagRowSynch = true;
 			}	
 		}
+		
+		//ID
+		if(!node.path("ID").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "ID", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"ID\": " + jsonUtils.getError());
+			else
+			{	
+				dis.id = keyword;
+				dis.FlagId = true;
+			}	
+		}
 
 
 		if(!node.path("ELEMENTS").isMissingNode())
@@ -250,6 +268,14 @@ public class DynamicIterationSpan
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "\"DYNAMIC_ITERATION_SPAN\":\n");
 		sb.append(offset + "{\n");
+		
+		if (FlagId)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ID\" : \"" + id + "\"");
+			nFields++;
+		}
 		
 		
 		if (FlagHandleByRows)
@@ -712,6 +738,16 @@ public class DynamicIterationSpan
 					sb.append("null,  ");
 			}	
 		return sb.toString();
+	}
+	
+	public static SynchTarget extractSynchTarget(String stStr)
+	{
+		SynchTarget st = new SynchTarget();
+		//Parse target in the following syntax   DIS_ID:GROUP:ROW:ELEMENT 
+		
+		
+		//TODO
+		return st;
 	}
 	
 	

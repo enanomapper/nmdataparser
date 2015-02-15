@@ -1939,10 +1939,65 @@ public class ExcelParserConfigurator
 				
 				if (!dis.errors.isEmpty())
 					for (int i = 0; i < dis.errors.size(); i++)
-						configErrors.add("Section PARALLEL_SHEETS[ " + (k+1) + "], subsection DYNAMIC_ITERATION_SPAN "
+						configErrors.add("Section PARALLEL_SHEETS[" + (k+1) + "], subsection DYNAMIC_ITERATION_SPAN "
 								+ "incosistency error: " + dis.errors.get(i));
 			}
 		}
+		
+		
+		//Set default DIS-ids and check for duplicating or empty ids
+		ArrayList<String> ids = new ArrayList<String>();
+		if (dynamicIterationSpan != null)
+		{
+			if (dynamicIterationSpan.FlagId)
+			{
+				if (dynamicIterationSpan.id.isEmpty())
+					configErrors.add("Section DATA_ACCESS, subsection DYNAMIC_ITERATION_SPAN "
+							+ "ID is empty!");
+				else
+					ids.add(dynamicIterationSpan.id);
+			}
+			else
+			{	
+				dynamicIterationSpan.id = "DIS0";
+				ids.add(dynamicIterationSpan.id);
+			}	
+		}
+		
+		for (int k = 0; k < parallelSheets.size(); k++)
+		{	
+			DynamicIterationSpan dis = parallelSheets.get(k).dynamicIterationSpan;
+			if (dis != null)
+			{
+				if (dis.FlagId)
+				{
+					if (dis.id.isEmpty())
+					{	
+						configErrors.add("Section PARALLEL_SHEETS[" + (k+1) + "], subsection DYNAMIC_ITERATION_SPAN "
+								+ "ID is empty!");
+						continue;
+					}	
+				}
+				else
+					dis.id = "DIS" + (k+1); //default id
+								
+				//Check for id duplication
+				for (String id : ids)
+				{
+					if (id.equals(dis.id))
+					{
+						configErrors.add("Section PARALLEL_SHEETS[" + (k+1) + "], subsection DYNAMIC_ITERATION_SPAN "
+								+ "ID " + dis.id + " is duplicated!");
+						break;
+					}
+				}
+				
+				//Register new id
+				ids.add(dis.id);
+			}
+		}
+		
+		
 		
 		//Checking the interrelated consistency of all dynamic sections together
 		//TODO
