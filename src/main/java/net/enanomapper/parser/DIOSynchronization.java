@@ -150,13 +150,12 @@ public class DIOSynchronization
 			handleDIO(entry.getValue(), 0);
 		}
 		
-		/*
-		//Second round (phase = 1)...if needed.
+		//Second round (phase = 1) 
 		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
 		{
 			handleDIO(entry.getValue(), 1);
 		}
-		*/
+		
 	}
 	
 	
@@ -199,23 +198,45 @@ public class DIOSynchronization
 		DynamicElement de = dio.dynamicIterationSpan.elements.get(nElement);
 		Object elObj = ro.elementObjects[nElement];
 		
-		switch (de.synchType)
-		{
-		case PUT_IN_CUMULATIVE_OBJECT:
-			de.putElementInUniversalObject(elObj, dio);
-			break;
+		if (phase == 0)
+		{	
+			if (de.synchTarget != null)
+			{
+				//TODO - eventually check synchTarget info
+				//This element will be processed in phase 1
+				return;
+			}
 			
-		case PUT_IN_GROUP:
-			if (go != null)
-				de.putElementInUniversalObject(elObj, go);
-			break;
-		
-		case PUT_IN_ROW:
-			de.putElementInUniversalObject(elObj, ro);
-			break;
-		
-		default:	
-			//does nothing
+			switch (de.synchType)
+			{
+			case PUT_IN_CUMULATIVE_OBJECT:
+				de.putElementInUniversalObject(elObj, dio);
+				break;
+
+			case PUT_IN_GROUP:
+				if (go != null)
+					de.putElementInUniversalObject(elObj, go);
+				break;
+
+			case PUT_IN_ROW:
+				de.putElementInUniversalObject(elObj, ro);
+				break;
+
+			default:	
+				//does nothing
+			}
+		}
+		else
+		{ 
+			//phase = 1
+			if (de.synchTarget == null)
+			{
+				//This element is already processed in phase 0
+				return;
+			}
+			
+			
+			//TODO
 		}
 		
 	}

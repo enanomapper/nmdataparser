@@ -8,6 +8,7 @@ import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
+import net.enanomapper.parser.DynamicIterationSpan.SynchTarget;
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
@@ -25,6 +26,8 @@ public class DynamicElement
 	
 	public ElementSynchronization synchType = ElementSynchronization.NONE;
 	public boolean FlagSynchType = false;
+	
+	public SynchTarget synchTarget = null;
 
 	public ElementPosition position = ElementPosition.ANY_ROW;
 	public boolean FlagPosition = false;

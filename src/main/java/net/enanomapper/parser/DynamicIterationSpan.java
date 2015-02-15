@@ -35,6 +35,13 @@ import net.enanomapper.parser.json.JsonUtilities;
  */
 public class DynamicIterationSpan 
 {	
+	public static class SynchTarget 
+	{
+		public String targetID = null;
+		public DynamicIterationSpan targetDIS = null;
+	}
+	
+	
 	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
 	
 	//public int sheetNum = 0;
@@ -55,12 +62,17 @@ public class DynamicIterationSpan
 	public ElementSynchronization cumulativeObjectSynch = ElementSynchronization.NONE;
 	public boolean FlagCumulativeObjectSynch = false;
 	
+	public SynchTarget cumulativeObjectSynchTarget = null;
+	
 	public ElementSynchronization groupSynch = ElementSynchronization.NONE;
 	public boolean FlagGroupSynch = false;
+	
+	public SynchTarget groupSynchTarget = null;
 	
 	public ElementSynchronization rowSynch = ElementSynchronization.NONE;
 	public boolean FlagRowSynch = false;
 	
+	public SynchTarget rowSynchTarget = null;
 	
 	
 	//Error handling
