@@ -468,6 +468,20 @@ public class DynamicElement
 		
 		switch (fieldType)
 		{
+		case CITATION_TITLE:
+			protocolApplication.setReference(elObj.toString());  //title is the reference 'itself'
+			break;
+		case CITATION_YEAR:
+			protocolApplication.setReferenceYear(elObj.toString());
+			break;
+		case CITATION_OWNER:
+			protocolApplication.setReferenceOwner(elObj.toString());
+			break;	
+		
+		//TODO handle reliability	
+		//TODO handle parameters:	
+			
+			
 			
 			//TODO
 		default:
