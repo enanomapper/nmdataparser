@@ -230,7 +230,7 @@ public class DIOSynchronization
 				de.putElementInUniversalObject(elObj, ro);
 				break;
 
-			default:	
+			default: //ceses: NONE, UNDEFINED	
 				//does nothing
 			}
 		}

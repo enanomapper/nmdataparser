@@ -501,7 +501,7 @@ public class DynamicIterationSpan
 					grpRows.add(rows.get(i));
 				
 				firstGroupRow = grpRows.get(0);
-				//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+				System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 				GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
 				dio.groupObjects.add(grpObj);
 			}
@@ -515,7 +515,7 @@ public class DynamicIterationSpan
 			grpRows.add(rows.get(i));
 		
 		firstGroupRow = grpRows.get(0);
-		//System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+		System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
 		GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
 		//grpDio.groupIndex = groupIndex;
 		//grpDio.dynamicIterationSpan = this;
@@ -533,7 +533,7 @@ public class DynamicIterationSpan
 		for (int i = 0; i < rows.size(); i ++)
 		{
 			RowObject obj = getRowObject(rows.get(i), resultType);
-			//System.out.println("RowObject: " + rowObjectToString(obj));
+			System.out.println("RowObject: " + rowObjectToString(obj));
 			gObj.rowObjects[i] = obj;
 		}
 		
@@ -575,6 +575,7 @@ public class DynamicIterationSpan
 				elementObjects[i] = obj;
 			}
 			
+			
 			//Second round: handle only the elements that have children
 			for (int i = 0; i < elements.size(); i++)
 				if (elementObjects[i] == null)
@@ -600,6 +601,9 @@ public class DynamicIterationSpan
 		Object variablesObj = null;
 		Object childrenObj = null;
 		
+		boolean FlagLoadElement = true;
+		
+		
 		if (element.FlagIndex)  //Getting value from a position defined by the index
 		{	
 			Cell c = null;
@@ -622,21 +626,29 @@ public class DynamicIterationSpan
 			case FIRST_ROW:  //data is loaded only for the first row
 				if (row == firstRow)
 					c = row.getCell(element.index);
+				else
+					FlagLoadElement = false;
 				break;
 			
 			case FIRST_GROUP_ROW:  //data is loaded only for the first group row
 				if (row == firstGroupRow)
 					c = row.getCell(element.index);
+				else
+					FlagLoadElement = false;
 				break;	
 				
 			case NON_FIRST_ROW:  //data is loaded for any row expect the first row
 				if (row != firstRow)
 					c = row.getCell(element.index);
+				else
+					FlagLoadElement = false;
 				break;
 				
 			case NON_FIRST_GROUP_ROW:  //data is loaded for any row expect the first group row
 				if (row != firstGroupRow)
 					c = row.getCell(element.index);
+				else
+					FlagLoadElement = false;
 				break;	
 			
 			default:
@@ -645,6 +657,10 @@ public class DynamicIterationSpan
 			positionObj  = ExcelUtils.getObjectFromCell(c);
 			nInfoSources++;
 		}
+		
+		if (!FlagLoadElement)  //This position takes precedence
+			return null;
+		
 		
 		if (element.jsonInfo != null)
 			nInfoSources++;
@@ -698,12 +714,12 @@ public class DynamicIterationSpan
 				return childrenObj;
 		}
 		else
-		{
+		{	
 			//More than one source.
 			StringBuffer sb = new StringBuffer();
 			if (positionObj != null)
 				sb.append(positionObj.toString());
-			
+	
 			if (element.jsonInfo != null)
 				sb.append(element.jsonInfo);
 			
