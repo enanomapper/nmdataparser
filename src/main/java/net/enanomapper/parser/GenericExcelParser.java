@@ -1283,7 +1283,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 		}
 		
 		
-		
 		if (efrdl.conditions != null)
 		{	
 			IParams params = new Params();

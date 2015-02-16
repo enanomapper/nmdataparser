@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
 
+import ambit2.base.data.Property;
+import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
@@ -14,12 +16,16 @@ import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
+import ambit2.base.relation.composition.Proportion;
 import net.enanomapper.parser.DynamicIterationSpan.SynchTarget;
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
+import net.enanomapper.parser.recognition.RecognitionUtils;
+import net.enanomapper.parser.recognition.RichValue;
+import net.enanomapper.parser.recognition.RichValueParser;
 
 
 public class DynamicElement 
@@ -43,7 +49,7 @@ public class DynamicElement
 
 	public String jsonInfo = null;
 
-	public String parameterName = null;
+	public String parameterName = null;  //This field is used by fieldTypes: PARAMETER, CONDITION and PROPERTY
 	
 	public boolean infoFromHeader = true;
 	public boolean FlagInfoFromHeader = false;
@@ -102,7 +108,9 @@ public class DynamicElement
 				{	
 					element.FlagFieldType = true;
 					
-					if (element.fieldType == ElementField.PARAMETER)
+					if (( element.fieldType == ElementField.PARAMETER) || 
+						 (element.fieldType == ElementField.CONDITION) ||
+						 (element.fieldType == ElementField.PROPERTY)  )
 					{	
 						if(node.path("PARAMETER_NAME").isMissingNode())
 						{
@@ -575,12 +583,289 @@ public class DynamicElement
 	
 	public void putElementInEffectRecord(Object elObj, EffectRecord effect)
 	{
-		//TODO
+		if (elObj == null)
+			return;
+		
+		switch (fieldType)
+		{
+		case ENDPOINT:
+			effect.setEndpoint(elObj.toString());
+			break;
+			
+		case SAMPLE_ID:
+			effect.setSampleID(elObj.toString());
+			break;
+			
+		case UNIT:
+			effect.setUnit(elObj.toString());
+			break;
+			
+		case LO_QUALIFIER:
+			String lo_q = elObj.toString();	
+			if (ExcelParserConfigurator.isValidQualifier(lo_q))
+				effect.setLoQualifier(lo_q);
+			else
+				{  /* Handle error! */ }
+			break;
+			
+		case LO_VALUE:
+			if (elObj instanceof String)
+			{
+				RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(elObj.toString());
+				if (qv.value != null)
+				{
+					effect.setLoValue(qv.value);
+					if (qv.qualifier != null)
+						effect.setLoQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+				}
+				else
+				{  /* Handle error! */ }
+			}
+			else
+				if (elObj instanceof Double)
+				{
+					effect.setLoValue((Double) elObj);
+				}
+			break;
+			
+		case UP_QUALIFIER:
+			String up_q = elObj.toString();	
+			if (ExcelParserConfigurator.isValidQualifier(up_q))
+				effect.setUpQualifier(up_q);
+			else
+				{  /* Handle error! */ }
+			break;
+			
+		case UP_VALUE:
+			if (elObj instanceof String)
+			{
+				RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(elObj.toString());
+				if (qv.value != null)
+				{
+					effect.setUpValue(qv.value);
+					if (qv.qualifier != null)
+						effect.setUpQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+				}
+				else
+				{  /* Handle error! */ }
+			}
+			else
+				if (elObj instanceof Double)
+				{
+					effect.setUpValue((Double) elObj);
+				}
+			break;	
+			
+		case TEXT_VALUE:
+			effect.setTextValue(elObj.toString());
+			break;	
+			
+		case ERR_QUALIFIER:
+			String err_q = elObj.toString();	
+			if (ExcelParserConfigurator.isValidQualifier(err_q))
+				effect.setErrQualifier(err_q);
+			else
+				{  /* Handle error! */ }
+			break;
+			
+		case ERR_VALUE:
+			if (elObj instanceof String)
+			{
+				RecognitionUtils.QualifierValue qv =  RecognitionUtils.extractQualifierValue(elObj.toString());
+				if (qv.value != null)
+				{
+					effect.setErrorValue(qv.value);
+					if (qv.qualifier != null)
+						effect.setErrQualifier(qv.qualifier);  //this qualifier takes precedence (if already set)
+				}
+				else
+				{  /* Handle error! */ }
+			}
+			else
+				if (elObj instanceof Double)
+				{
+					effect.setErrorValue((Double) elObj);
+				}
+			break;		
+			
+		case VALUE:
+			if (elObj instanceof String)
+			{
+				RichValueParser rvParser = new RichValueParser ();
+				RichValue rv = rvParser.parse(elObj.toString());
+				String rv_error = rvParser.getAllErrorsAsString(); 
+				
+				if (rv_error == null)
+				{
+					if (rv.unit != null)
+						effect.setUnit(rv.unit);
+					if (rv.loValue != null)
+						effect.setLoValue(rv.loValue);
+					if (rv.loQualifier != null)
+						effect.setLoQualifier(rv.loQualifier);
+					if (rv.upValue != null)
+						effect.setUpValue(rv.upValue);
+					if (rv.upQualifier != null)
+						effect.setUpQualifier(rv.upQualifier);
+				}
+				else
+				{  /* Handle error! */ }
+			}
+			else
+				if (elObj instanceof Double)
+				{
+					effect.setLoValue((Double) elObj);  //This is the default behavior if the cell is of type numeric
+				}
+			break;
+		
+		case CONDITION:
+			IParams params;
+			Object p = effect.getConditions();
+			if (p == null)
+			{
+				params = new Params();
+				effect.setConditions(params);
+			}
+			else
+				params = (IParams) p;
+			params.put(parameterName, elObj);
+			break;
+			
+		default:
+			//The other element fields are not used by EffectRecord
+		}	
 	}
 	
 	public void putElementInComposition(Object elObj, CompositionRelation composition)
 	{
-		//TODO
+		if (elObj == null)
+			return;
+		
+		switch (fieldType)
+		{
+		case STRUCTURE_RELATION:
+			STRUCTURE_RELATION strRel = CompositionDataLocation.structureRelationFromString(elObj.toString());
+			if (strRel == null)
+			{
+				//error!
+			}
+			else
+				composition.setRelationType(strRel);
+			break;
+		
+		case CONTENT:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setContent(elObj.toString());
+			break;
+		
+		case FORMAT:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setFormat(elObj.toString());
+			break;	
+		
+		case INCHI_KEY:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setInchiKey(elObj.toString());
+			break;	
+			
+		case INCHI:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setInchi(elObj.toString());
+			break;
+			
+		case FORMULA:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setFormula(elObj.toString());
+			break;	
+			
+		case SMILES:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			composition.getSecondStructure().setSmiles(elObj.toString());
+			break;	
+			
+		case PROPERTY:
+			if (composition.getSecondStructure() == null)
+				composition.setSecondStructure(new StructureRecord());
+			
+			String sameas = Property.guessLabel(parameterName);
+			Property property = new Property(parameterName, "", "");
+			property.setLabel(sameas);
+			composition.getSecondStructure().setProperty(property, elObj);
+			break;		
+			
+		case PROPORTION_FUNCTION:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setFunction(elObj.toString());
+			break;
+			
+		case PROPORTION_TYPICAL_PRECISION:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setTypical(elObj.toString());
+			break;	
+			
+		case PROPORTION_TYPICAL_VALUE:
+			if (elObj instanceof Double)
+			{	
+				if (composition.getRelation() == null)
+					composition.setRelation(new Proportion());
+				composition.getRelation().setTypical_value((Double)elObj);
+			}
+			break;	
+			
+		case PROPORTION_TYPICAL_UNIT:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setTypical_unit(elObj.toString());
+			break;	
+			
+		case PROPORTION_REAL_LOWER_PRECISION:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setReal_lower(elObj.toString());
+			break;	
+			
+		case PROPORTION_REAL_LOWER_VALUE:
+			if (elObj instanceof Double)
+			{	
+				if (composition.getRelation() == null)
+					composition.setRelation(new Proportion());
+				composition.getRelation().setReal_lowervalue((Double)elObj);
+			}
+			break;	
+			
+		case PROPORTION_REAL_UPPER_PRECISION:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setReal_upper(elObj.toString());
+			break;	
+			
+		case PROPORTION_REAL_UPPER_VALUE:
+			if (elObj instanceof Double)
+			{	
+				if (composition.getRelation() == null)
+					composition.setRelation(new Proportion());
+				composition.getRelation().setReal_uppervalue((Double)elObj);
+			}
+			break;		
+		
+		case PROPORTION_REAL_UNIT:
+			if (composition.getRelation() == null)
+				composition.setRelation(new Proportion());
+			composition.getRelation().setReal_unit(elObj.toString());
+			break;	
+			
+		//TODO	
+		default:
+			//The other element fields are not used by CompositionRelation
+		}
 	}
 
 }

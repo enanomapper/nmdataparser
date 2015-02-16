@@ -641,7 +641,7 @@ public class ParserConstants
 		},
 		
 		
-		CONDITIONS {
+		CONDITION {
 			@Override
 		    public boolean isFieldOf(ObjectType type) {
 		    	if (type == ObjectType.EFFECT)
@@ -682,8 +682,6 @@ public class ParserConstants
 			}
 		},  
 		*/
-		
-		
 		
 		
 		//Composition fields
