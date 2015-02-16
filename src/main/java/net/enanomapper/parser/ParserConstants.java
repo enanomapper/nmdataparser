@@ -364,35 +364,7 @@ public class ParserConstants
 			}
 		},
 		
-		COMPOSITION_STR_TYPE {
-			@Override
-		    public boolean isFieldOf(ObjectType type) {
-		    	if (type == ObjectType.SUBSTANCE)
-		    		return true;
-		    	else
-		    		return false;
-			}
-		},
 		
-		COMPOSITION_STR_INFO {
-			@Override
-		    public boolean isFieldOf(ObjectType type) {
-		    	if (type == ObjectType.SUBSTANCE)
-		    		return true;
-		    	else
-		    		return false;
-			}
-		},
-		
-		COMPOSITION_RELATION {
-			@Override
-		    public boolean isFieldOf(ObjectType type) {
-		    	if (type == ObjectType.SUBSTANCE)
-		    		return true;
-		    	else
-		    		return false;
-			}
-		},  
 		
 		//Protocol fields
 		PROTOCOL_TOP_CATEGORY {
@@ -677,6 +649,41 @@ public class ParserConstants
 		    		return false;
 			}
 		},
+		
+		/*
+		COMPOSITION_STR_TYPE {
+			@Override
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPOSITION_STR_INFO {
+			@Override
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
+		COMPOSITION_RELATION {
+			@Override
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},  
+		*/
+		
+		
+		
 		
 		//Composition fields
 		STRUCTURE_RELATION {

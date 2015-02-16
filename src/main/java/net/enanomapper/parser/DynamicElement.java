@@ -434,14 +434,22 @@ public class DynamicElement
 		case OWNER_UUID:
 			substanceRecord.setCompanyUUID(elObj.toString()); 
 			break;	
+		case SUBSTANCE_TYPE:
+			substanceRecord.setSubstancetype(elObj.toString());
+			break;
+		case PUBLIC_NAME:
+			substanceRecord.setPublicName(elObj.toString());
+			break;	
+		case ID_SUBSTANCE:
+			if (elObj instanceof Double)
+				substanceRecord.setIdsubstance(((Double)elObj).intValue());
+			break;		
 			
 		//TODO	
 			
 		default:
+			//The other element fields are not used by SubstanceRecord
 		}
-		
-		
-		//TODO
 	}
 	
 	public void putElementInProtocolApplication(Object elObj, ProtocolApplication protocolApplication)

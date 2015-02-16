@@ -8,6 +8,7 @@ import ambit2.base.relation.composition.CompositionRelation;
 
 public class UniversalObject 
 {
+	//public ArrayList<SubstanceRecord> substanceRecords = null;
 	protected SubstanceRecord substanceRecord = null;
 	protected ProtocolApplication protocolApplication = null;
 	protected Protocol protocol = null;

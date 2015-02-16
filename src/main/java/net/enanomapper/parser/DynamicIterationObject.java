@@ -13,8 +13,6 @@ public class DynamicIterationObject extends UniversalObject
 	public ArrayList<RowObject> rowObjects = new ArrayList<RowObject>(); 
 	public ArrayList<GroupObject> groupObjects = new ArrayList<GroupObject>(); 
 	
-	public ArrayList<SubstanceRecord> substanceRecords = null;
-	//public SubstanceRecord substanceRecord = null;
 	
 	public ArrayList<String> errors = new ArrayList<String>();
 	
