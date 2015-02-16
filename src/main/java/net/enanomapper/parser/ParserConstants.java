@@ -367,7 +367,6 @@ public class ParserConstants
 		},
 		
 		
-		
 		//Protocol fields
 		PROTOCOL_TOP_CATEGORY {
 			@Override

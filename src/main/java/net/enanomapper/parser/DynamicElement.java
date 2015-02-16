@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
@@ -414,6 +416,14 @@ public class DynamicElement
 		}
 	}
 	
+	
+	/*
+	public void putElementInSubstanceRecordArray(Object elObj, ArrayList<SubstanceRecord> substanceRecords)
+	{
+		//TODO
+	}
+	*/
+		
 	public void putElementInSubstanceRecord(Object elObj, SubstanceRecord substanceRecord)
 	{
 		if (elObj == null)
@@ -445,21 +455,60 @@ public class DynamicElement
 				substanceRecord.setIdsubstance(((Double)elObj).intValue());
 			break;		
 			
-		//TODO	
-			
 		default:
 			//The other element fields are not used by SubstanceRecord
 		}
 	}
 	
+	
 	public void putElementInProtocolApplication(Object elObj, ProtocolApplication protocolApplication)
 	{
-		//TODO
+		if (elObj == null)
+			return;
+		
+		switch (fieldType)
+		{
+			
+			//TODO
+		default:
+			//The other element fields are not used by ProtocolApplication
+		}
+		
 	}
 	
 	public void putElementInProtocol(Object elObj, Protocol protocol)
 	{
-		//TODO
+		if (elObj == null)
+			return;
+		
+		switch (fieldType)
+		{
+		case PROTOCOL_TOP_CATEGORY:
+			protocol.setTopCategory(elObj.toString());
+			break;
+			
+		case PROTOCOL_CATEGORY_CODE:
+			protocol.setCategory(elObj.toString());
+			break;	
+			
+		case PROTOCOL_CATEGORY_TITLE:
+			//Currently it is not handled
+			break;	
+		
+		case PROTOCOL_GUIDELINE:
+			List<String> guideline = protocol.getGuideline();
+			if (guideline == null)
+			{	
+				guideline = new ArrayList<String>();
+				protocol.setGuideline(guideline);
+			}	
+			//Add info to guideline:
+			guideline.add(elObj.toString());
+			break;
+			
+		default:
+			//The other element fields are not used by Protocol
+		}
 	}
 	
 	public void putElementInEffectRecord(Object elObj, EffectRecord effect)
