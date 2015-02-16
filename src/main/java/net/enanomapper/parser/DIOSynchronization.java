@@ -89,6 +89,7 @@ public class DIOSynchronization
 			primaryDIO = dios.get(substanceDIS);
 			curRecord = new SubstanceRecord();
 			curRecords = null;
+			primaryDIO.substanceRecord = curRecord;
 			
 			handleDIOs();
 			
@@ -138,12 +139,16 @@ public class DIOSynchronization
 			}
 		}
 		
+		primaryDIO.setSubstanceRecords(records);
+		
 		return records;
 	}
 	
 	
 	protected void handleDIOs()
 	{
+		//(1) Synchronize the elements 
+		
 		//First round (phase = 0)
 		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
 		{
@@ -155,6 +160,9 @@ public class DIOSynchronization
 		{
 			handleDIO(entry.getValue(), 1);
 		}
+		
+		//(2) Synchronize larger components: rowObjects, groupObjects and DIOs
+		//TODO
 		
 	}
 	

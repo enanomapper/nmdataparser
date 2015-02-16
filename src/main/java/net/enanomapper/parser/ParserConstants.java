@@ -221,7 +221,9 @@ public class ParserConstants
 	 * Determines how the Element information is taken from the dynamic span rows/columns 
 	 */
 	public enum ElementPosition {
-		ANY_ROW, FIRST_ROW, NON_FIRST_ROW, ANY_GROUP_ROW, FIRST_GROUP_ROW, NON_FIRST_GROUP_ROW, UNDEFINED;
+		ANY_ROW, FIRST_ROW, NON_FIRST_ROW, EACH_FROM_FIRST_ROW, 
+		ANY_GROUP_ROW, FIRST_GROUP_ROW, NON_FIRST_GROUP_ROW, EACH_FROM_FIRST_GROUP_ROW, 
+		UNDEFINED;
 		
 		public static ElementPosition fromString(String s)
 		{	 

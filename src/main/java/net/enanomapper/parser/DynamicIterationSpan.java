@@ -558,25 +558,8 @@ public class DynamicIterationSpan
 	{	
 		RowObject robj = new RowObject();
 		robj.elementObjects = getElementObjects(row);
-		
-		
-		/*
-		switch (resultType)
-		{
-		case SUBSTANCE: {
-			SubstanceRecord r = new  SubstanceRecord();
-			robj.rowObject = r;
-		}
-		break;
-		
-		default:
-		} 
-		*/
-		
 		return robj;
 	}
-	
-	
 	
 	
 	protected Object[] getElementObjects(Row row)
@@ -628,13 +611,35 @@ public class DynamicIterationSpan
 				c = row.getCell(element.index);
 				break;
 
-			case FIRST_ROW: 
+			case EACH_FROM_FIRST_ROW: 
 				c = firstRow.getCell(element.index);
 				break;
 
-			case FIRST_GROUP_ROW: 
+			case EACH_FROM_FIRST_GROUP_ROW: 
 				c = firstGroupRow.getCell(element.index);
 				break;
+			
+			case FIRST_ROW:  //data is loaded only for the first row
+				if (row == firstRow)
+					c = row.getCell(element.index);
+				break;
+			
+			case FIRST_GROUP_ROW:  //data is loaded only for the first group row
+				if (row == firstGroupRow)
+					c = row.getCell(element.index);
+				break;	
+				
+			case NON_FIRST_ROW:  //data is loaded for any row expect the first row
+				if (row != firstRow)
+					c = row.getCell(element.index);
+				break;
+				
+			case NON_FIRST_GROUP_ROW:  //data is loaded for any row expect the first group row
+				if (row != firstGroupRow)
+					c = row.getCell(element.index);
+				break;	
+			
+			default:
 			}
 			
 			positionObj  = ExcelUtils.getObjectFromCell(c);

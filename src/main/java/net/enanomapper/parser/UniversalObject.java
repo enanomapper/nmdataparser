@@ -1,4 +1,6 @@
 package net.enanomapper.parser;
+import java.util.ArrayList;
+
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.Protocol;
@@ -8,13 +10,27 @@ import ambit2.base.relation.composition.CompositionRelation;
 
 public class UniversalObject 
 {
-	//public ArrayList<SubstanceRecord> substanceRecords = null;
+	protected ArrayList<SubstanceRecord> substanceRecords = null;
 	protected SubstanceRecord substanceRecord = null;
 	protected ProtocolApplication protocolApplication = null;
 	protected Protocol protocol = null;
 	protected EffectRecord effect = null;
 	protected CompositionRelation composition = null;
 	
+	
+	public ArrayList<SubstanceRecord> getSubstanceRecords()
+	{
+		if (substanceRecords != null)
+			return substanceRecords;
+		
+		substanceRecords = new ArrayList<SubstanceRecord>();
+		return substanceRecords;
+	}
+	
+	public void setSubstanceRecords(ArrayList<SubstanceRecord> substanceRecords)
+	{
+		this.substanceRecords = substanceRecords;
+	}
 	
 	public SubstanceRecord getSubstanceRecord()
 	{
