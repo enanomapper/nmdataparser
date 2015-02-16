@@ -439,7 +439,7 @@ public class ParserConstants
 			}
 		},
 		
-		PARAMETERS {
+		PARAMETER {
 			@Override
 		    public boolean isFieldOf(ObjectType type) {
 		    	if (type == ObjectType.PROTOCOL_APPLICATION)

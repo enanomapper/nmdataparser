@@ -8,6 +8,8 @@ import org.codehaus.jackson.JsonNode;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.STRUCTURE_RELATION;
@@ -39,11 +41,10 @@ public class DynamicElement
 	public int index = -1;
 	public boolean FlagIndex = false;
 
-	//public int arrayNum = -1;             //This is used only for array elements
-	//public boolean FlagArrayNum = false;
-
 	public String jsonInfo = null;
 
+	public String parameterName = null;
+	
 	public boolean infoFromHeader = true;
 	public boolean FlagInfoFromHeader = false;
 
@@ -100,6 +101,15 @@ public class DynamicElement
 				else
 				{	
 					element.FlagFieldType = true;
+					
+					if (element.fieldType == ElementField.PARAMETER)
+					{	
+						if(node.path("PARAMETER_NAME").isMissingNode())
+						{
+							conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+									+" subsection ELEMENT [" +(elNum +1) + "], keyword \"PARAMETER_NAME\" is missing!");
+						}
+					}
 					
 					/*
 					// Setting dataType / Checking field compatibility with dataType
@@ -191,6 +201,19 @@ public class DynamicElement
 			else
 			{	
 				element.jsonInfo = keyword;
+			}	
+		}
+		
+		//PARAMETER_NAME
+		if(!node.path("PARAMETER_NAME").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(node, "PARAMETER_NAME", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"PARAMETER_NAME\": " + jsonUtils.getError());
+			else
+			{	
+				element.parameterName = keyword;
 			}	
 		}
 
@@ -331,6 +354,14 @@ public class DynamicElement
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"JSON_INFO\" : \"" + jsonInfo + "\"");
+			nFields++;
+		}
+		
+		if (parameterName != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"PARAMETER\" : \"" + parameterName + "\"");
 			nFields++;
 		}
 
@@ -479,9 +510,19 @@ public class DynamicElement
 			break;	
 		
 		//TODO handle reliability	
-		//TODO handle parameters:	
 			
-			
+		case PARAMETER:
+			IParams params;
+			Object p = protocolApplication.getParameters();
+			if (p == null)
+			{
+				params = new Params();
+			}
+			else
+				params = (IParams) p;
+			params.put(parameterName, elObj);
+			break;
+		
 			
 			//TODO
 		default:
