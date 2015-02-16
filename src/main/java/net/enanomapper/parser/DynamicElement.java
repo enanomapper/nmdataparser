@@ -517,14 +517,21 @@ public class DynamicElement
 			if (p == null)
 			{
 				params = new Params();
+				protocolApplication.setParameters(params);
 			}
 			else
 				params = (IParams) p;
 			params.put(parameterName, elObj);
 			break;
 		
-			
-			//TODO
+		case INTERPRETATION_RESULT:
+			protocolApplication.setInterpretationResult(elObj.toString());
+			break;		
+		
+		case INTERPRETATION_CRITERIA:
+			protocolApplication.setInterpretationCriteria(elObj.toString());
+			break;		
+		
 		default:
 			//The other element fields are not used by ProtocolApplication
 		}
