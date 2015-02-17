@@ -162,7 +162,7 @@ public class DIOSynchronization
 			handleDIO(entry.getValue(), 1);
 		}
 		
-		//(2) Synchronize result objects from: rowObjects, groupObjects and DIOs
+		//(2) Synchronize result objects obtained from: rowObjects, groupObjects and DIOs
 		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
 		{
 			synchResultObjects(entry.getValue());
@@ -172,7 +172,6 @@ public class DIOSynchronization
 	
 	protected void synchResultObjects(DynamicIterationObject dio)
 	{
-		//DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
 		if (primaryDIO.groupObjects.isEmpty())
 		{	
@@ -182,20 +181,37 @@ public class DIOSynchronization
 				dio.rowObjects.get(i).selfDispatch();
 				dispatchRowObject(dio.rowObjects.get(i),  dio, null);	
 			}
-			
 		}
 		else
 		{
 			//Handle the group objects
 			for (int i = 0; i < dio.groupObjects.size(); i++)
 			{	
-				dispatchGroupObject(dio.groupObjects.get(i),  dio);	
+				GroupObject groupObj =  dio.groupObjects.get(i);
+				//Dispatch each row in the group
+				if (groupObj.rowObjects != null)
+					for (int k = 0; k < groupObj.rowObjects.length; k++)
+					{
+						groupObj.rowObjects[k].selfDispatch();
+						dispatchRowObject(groupObj.rowObjects[k],  dio, groupObj);
+					}
+				
+				groupObj.selfDispatch();
+				dispatchGroupObject(groupObj,  dio);	
 			}
 		}
 		
 		//Handle the cumulative object
-		//TODO
-		//dispatchUniversalObject(dio, dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget);
+		dio.selfDispatch();
+		DynamicIterationSpan dis = dio.dynamicIterationSpan;
+		
+		if (dis.cumulativeObjectSynchTarget != null)
+			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget);
+		else
+		{
+			//default
+			//dio.dispatchTo(record);
+		}
 		
 	}
 	
@@ -292,7 +308,6 @@ public class DIOSynchronization
 	{
 		DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
-		
 		if (dis.rowSynchTarget != null)
 			rowObj.dispatchTo(dis.rowSynch, dis.rowSynchTarget);
 		else
@@ -327,7 +342,24 @@ public class DIOSynchronization
 	
 	protected void dispatchGroupObject(GroupObject groupObj, DynamicIterationObject dio)
 	{
-		//TODO
+		DynamicIterationSpan dis = dio.dynamicIterationSpan;
+		
+		if (dis.groupSynchTarget != null)
+			groupObj.dispatchTo(dis.groupSynch, dis.groupSynchTarget);
+		else
+		{
+			switch (dis.groupSynch)
+			{
+			case PUT_IN_CUMULATIVE_OBJECT:
+				groupObj.dispatchTo(dio);
+				break;
+				
+			case PUT_IN_EACH_CUMULATIVE_OBJECT:
+				//TODO ???
+				break;	
+			default:
+			}
+		}
 	}
 	
 	

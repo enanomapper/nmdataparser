@@ -84,6 +84,11 @@ public class UniversalObject
 		//dispatchTo(this);
 	}
 	
+	public void dispatchTo(SubstanceRecord record)
+	{
+		//TODO
+	}
+	
 	public void dispatchTo(UniversalObject target)
 	{
 		//TODO
