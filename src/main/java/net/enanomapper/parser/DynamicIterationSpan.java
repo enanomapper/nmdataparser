@@ -35,13 +35,6 @@ import net.enanomapper.parser.json.JsonUtilities;
  */
 public class DynamicIterationSpan 
 {	
-	public static class SynchTarget 
-	{
-		public String targetID = null;
-		public DynamicIterationSpan targetDIS = null;
-		public String error = null; 
-	}
-	
 	
 	public boolean FlagWaitsFromOtherDIOs = false; //TODO ---
 	
@@ -63,17 +56,17 @@ public class DynamicIterationSpan
 	public ElementSynchronization cumulativeObjectSynch = ElementSynchronization.NONE;
 	public boolean FlagCumulativeObjectSynch = false;
 	
-	public SynchTarget cumulativeObjectSynchTarget = null;
+	public SynchronizationTarget cumulativeObjectSynchTarget = null;
 	
 	public ElementSynchronization groupSynch = ElementSynchronization.NONE;
 	public boolean FlagGroupSynch = false;
 	
-	public SynchTarget groupSynchTarget = null;
+	public SynchronizationTarget groupSynchTarget = null;
 	
 	public ElementSynchronization rowSynch = ElementSynchronization.NONE;
 	public boolean FlagRowSynch = false;
 	
-	public SynchTarget rowSynchTarget = null;
+	public SynchronizationTarget rowSynchTarget = null;
 	
 	public String id = null;  //Typically this is automatically defined
 	public boolean FlagId = false;  
@@ -761,15 +754,8 @@ public class DynamicIterationSpan
 		return sb.toString();
 	}
 	
-	public static SynchTarget extractSynchTarget(String stStr)
-	{
-		SynchTarget st = new SynchTarget();
-		//Parse target in the following syntax   DIS_ID:GROUP:ROW:ELEMENT 
-		
-		
-		//TODO
-		return st;
-	}
+	
+	
 	
 	
 }

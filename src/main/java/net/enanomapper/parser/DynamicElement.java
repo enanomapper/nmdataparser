@@ -17,7 +17,6 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
-import net.enanomapper.parser.DynamicIterationSpan.SynchTarget;
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
@@ -39,7 +38,7 @@ public class DynamicElement
 	public ElementSynchronization synchType = ElementSynchronization.NONE;
 	public boolean FlagSynchType = false;
 	
-	public SynchTarget synchTarget = null;
+	public SynchronizationTarget synchTarget = null;
 
 	public ElementPosition position = ElementPosition.ANY_ROW;
 	public boolean FlagPosition = false;
@@ -862,7 +861,6 @@ public class DynamicElement
 			composition.getRelation().setReal_unit(elObj.toString());
 			break;	
 			
-		//TODO	
 		default:
 			//The other element fields are not used by CompositionRelation
 		}
