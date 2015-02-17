@@ -8,11 +8,11 @@ import ambit2.base.data.SubstanceRecord;
 public class DynamicIterationObject extends UniversalObject
 {	
 	public DynamicIterationSpan dynamicIterationSpan = null;  //pointer to the DynamicIterationSpan corresponding to this object
-	public int groupIndex = -1; //if groupIndex >= 0 then this DIO is a group within dynamicIterationSpan
+	
+	//public int groupIndex = -1; //if groupIndex >= 0 then this DIO is a group within dynamicIterationSpan
 	
 	public ArrayList<RowObject> rowObjects = new ArrayList<RowObject>(); 
 	public ArrayList<GroupObject> groupObjects = new ArrayList<GroupObject>(); 
-	
 	
 	public ArrayList<String> errors = new ArrayList<String>();
 	
@@ -47,6 +47,8 @@ public class DynamicIterationObject extends UniversalObject
 	}
 	*/
 	
+	/*
+	
 	public ObjectType getResultObjectType()
 	{
 		ObjectType resType = dynamicIterationSpan.cumulativeObjectType;
@@ -58,6 +60,7 @@ public class DynamicIterationObject extends UniversalObject
 		}
 		return resType;
 	}
+	*/
 	
 	
 	

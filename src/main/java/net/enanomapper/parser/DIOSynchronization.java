@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.SubstanceRecord;
 
 public class DIOSynchronization 
@@ -161,11 +162,42 @@ public class DIOSynchronization
 			handleDIO(entry.getValue(), 1);
 		}
 		
-		//(2) Synchronize larger components: rowObjects, groupObjects and DIOs
-		//TODO
+		//(2) Synchronize result objects from: rowObjects, groupObjects and DIOs
+		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
+		{
+			synchResultObjects(entry.getValue());
+		}
 		
 	}
 	
+	protected void synchResultObjects(DynamicIterationObject dio)
+	{
+		//DynamicIterationSpan dis = dio.dynamicIterationSpan;
+		
+		if (primaryDIO.groupObjects.isEmpty())
+		{	
+			//Handle the row objects
+			for (int i = 0; i < dio.rowObjects.size(); i++)
+			{
+				dio.rowObjects.get(i).selfDispatch();
+				dispatchRowObject(dio.rowObjects.get(i),  dio, null);	
+			}
+			
+		}
+		else
+		{
+			//Handle the group objects
+			for (int i = 0; i < dio.groupObjects.size(); i++)
+			{	
+				dispatchGroupObject(dio.groupObjects.get(i),  dio);	
+			}
+		}
+		
+		//Handle the cumulative object
+		//TODO
+		//dispatchUniversalObject(dio, dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget);
+		
+	}
 	
 	
 	protected void handleDIO(DynamicIterationObject dio, int phase)
@@ -230,7 +262,7 @@ public class DIOSynchronization
 				de.putElementInUniversalObject(elObj, ro);
 				break;
 
-			default: //ceses: NONE, UNDEFINED	
+			default: //cases: NONE, UNDEFINED	
 				//does nothing
 			}
 		}
@@ -250,15 +282,56 @@ public class DIOSynchronization
 	}
 	
 	
-	
-	
-	
-	
-	boolean isNull (RowObject ro)
+	protected void dispatchElement(Object elObj, ElementSynchronization synchType, SynchronizationTarget synchTarget)
 	{
 		//TODO
-		return true;
 	}
+	
+	
+	protected void dispatchRowObject(RowObject rowObj, DynamicIterationObject dio, GroupObject groupObj)
+	{
+		DynamicIterationSpan dis = dio.dynamicIterationSpan;
+		
+		
+		if (dis.rowSynchTarget != null)
+			rowObj.dispatchTo(dis.rowSynch, dis.rowSynchTarget);
+		else
+		{
+			switch (dis.rowSynch)
+			{
+			case PUT_IN_CUMULATIVE_OBJECT:
+				rowObj.dispatchTo(dio);
+				break;
+				
+			case PUT_IN_EACH_CUMULATIVE_OBJECT:
+				//TODO ???
+				break;	
+				
+			case PUT_IN_GROUP:
+				if (groupObj != null)
+					rowObj.dispatchTo(groupObj);
+				break;
+			
+			case PUT_IN_EACH_GROUP:
+				if (!dio.groupObjects.isEmpty())
+					for (int i = 0; i < dio.groupObjects.size(); i++)
+						rowObj.dispatchTo(dio.groupObjects.get(i));
+				break;	
+				
+			default:
+				//PUT_IN_ELEMENT, PUT_IN_EACH_ELEMENT are not possible for this case
+			}
+		}
+		
+	}
+	
+	protected void dispatchGroupObject(GroupObject groupObj, DynamicIterationObject dio)
+	{
+		//TODO
+	}
+	
+	
+	
 	
 	
 }

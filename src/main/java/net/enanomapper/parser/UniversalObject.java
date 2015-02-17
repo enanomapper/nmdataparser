@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 import java.util.ArrayList;
 
+import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.Protocol;
@@ -75,5 +76,21 @@ public class UniversalObject
 		
 		composition = new CompositionRelation(null, null, null, null);
 		return composition;
+	}
+	
+	
+	public void selfDispatch()
+	{
+		//dispatchTo(this);
+	}
+	
+	public void dispatchTo(UniversalObject target)
+	{
+		//TODO
+	}
+	
+	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget)
+	{
+		//TODO
 	}
 }

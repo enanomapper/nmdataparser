@@ -13,11 +13,15 @@ public class SynchronizationTarget
 	public static SynchronizationTarget parse(String stStr)
 	{
 		SynchronizationTarget st = new SynchronizationTarget();
-		
-		//Parse target in the following syntax   DIS_ID:GROUP:ROW:ELEMENT 
+		//Parse target in the following syntax   DIS_ID:GROUP:ROW:ELEMENT
 		
 		
 		//TODO
 		return st;
+	}
+	
+	public String toString()
+	{
+		return "";
 	}
 }
