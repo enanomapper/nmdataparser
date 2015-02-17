@@ -1,5 +1,6 @@
 package net.enanomapper.parser;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.SubstanceRecord;
@@ -91,7 +92,38 @@ public class UniversalObject
 	
 	public void dispatchTo(UniversalObject target)
 	{
-		//TODO
+		if (composition != null)
+		{
+			if (target.substanceRecord != null)
+				target.substanceRecord.addStructureRelation(composition);
+		}
+		
+		if (effect != null)
+		{
+			if (target.protocolApplication != null)
+				target.protocolApplication.addEffect(effect);
+		}
+		
+		if (protocol != null)
+		{
+			if (target.protocolApplication != null)
+				target.protocolApplication.setProtocol(protocol);
+		}
+		
+		if (protocolApplication != null)
+		{
+			if (target.substanceRecord != null)
+			{	
+				List<ProtocolApplication> listPA = target.substanceRecord.getMeasurements();
+				if (listPA == null)
+				{	
+					listPA = new ArrayList<ProtocolApplication>();
+					target.substanceRecord.setMeasurements(listPA);
+				}
+				listPA.add(protocolApplication);
+			}	
+		}
+		
 	}
 	
 	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget)
