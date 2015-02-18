@@ -17,6 +17,7 @@ import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
+import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import net.enanomapper.parser.excel.ExcelUtils;
@@ -600,6 +601,36 @@ public class DynamicIterationSpan
 		
 		boolean FlagLoadElement = true;
 		
+		//Checking the row position
+		if (row == firstGroupRow)
+		{	
+			if (element.position == ElementPosition.NON_FIRST_GROUP_ROW)
+				FlagLoadElement = false;
+		}
+		else
+		{	//row != firstGroupRow
+			if ( (element.position == ElementPosition.FIRST_GROUP_ROW_FROM_FIRST_ROW) ||
+				(element.position == ElementPosition.FIRST_GROUP_ROW) )
+				FlagLoadElement = false;
+		}
+		
+		if (row == firstRow)
+		{	
+			if (element.position == ElementPosition.NON_FIRST_ROW)
+				FlagLoadElement = false;
+		}
+		else
+		{	//row != firstRow
+			if (element.position == ElementPosition.FIRST_ROW) 
+				FlagLoadElement = false;
+		}
+		
+		
+		if (!FlagLoadElement)  //The position takes precedence over all sources.
+			return null;
+		
+		
+		
 		
 		if (element.FlagIndex)  //Getting value from a position defined by the index
 		{	
@@ -623,36 +654,36 @@ public class DynamicIterationSpan
 			case FIRST_GROUP_ROW_FROM_FIRST_ROW:
 				if (row == firstGroupRow)
 					c = firstRow.getCell(element.index);
-				else
-					FlagLoadElement = false; 
+				//else
+				//	FlagLoadElement = false; 
 				break;	
 			
 			case FIRST_ROW:  //data is loaded only for the first row
 				if (row == firstRow)
 					c = row.getCell(element.index);
-				else
-					FlagLoadElement = false;
+				//else
+				//	FlagLoadElement = false;
 				break;
 			
 			case FIRST_GROUP_ROW:  //data is loaded only for the first group row
 				if (row == firstGroupRow)
 					c = row.getCell(element.index);
-				else
-					FlagLoadElement = false;
+				//else
+				//	FlagLoadElement = false;
 				break;	
 				
 			case NON_FIRST_ROW:  //data is loaded for any row expect the first row
 				if (row != firstRow)
 					c = row.getCell(element.index);
-				else
-					FlagLoadElement = false;
+				//else
+				//	FlagLoadElement = false;
 				break;
 				
 			case NON_FIRST_GROUP_ROW:  //data is loaded for any row expect the first group row
 				if (row != firstGroupRow)
 					c = row.getCell(element.index);
-				else
-					FlagLoadElement = false;
+				//else
+				//	FlagLoadElement = false;
 				break;	
 			
 			default:
@@ -662,8 +693,7 @@ public class DynamicIterationSpan
 			nInfoSources++;
 		}
 		
-		if (!FlagLoadElement)  //This position takes precedence
-			return null;
+		
 		
 		
 		if (element.jsonInfo != null)

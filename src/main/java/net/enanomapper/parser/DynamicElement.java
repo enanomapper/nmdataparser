@@ -742,6 +742,8 @@ public class DynamicElement
 		if (elObj == null)
 			return;
 		
+		System.out.println("----> putElementInComposition: " + elObj.toString());
+		
 		switch (fieldType)
 		{
 		case STRUCTURE_RELATION:
