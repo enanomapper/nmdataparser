@@ -620,11 +620,11 @@ public class DynamicIterationSpan
 				c = firstGroupRow.getCell(element.index);
 				break;
 				
-			case EACH_FIRST_GROUP_ROW_FROM_FIRST_ROW:
+			case FIRST_GROUP_ROW_FROM_FIRST_ROW:
 				if (row == firstGroupRow)
 					c = firstRow.getCell(element.index);
 				else
-					FlagLoadElement = false;
+					FlagLoadElement = false; 
 				break;	
 			
 			case FIRST_ROW:  //data is loaded only for the first row
@@ -678,17 +678,25 @@ public class DynamicIterationSpan
 		
 		if (element.childElements != null)
 		{	
+			int nChildren = 0;
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < element.childElements.length; i++)
 			{	
 				int chIndex = element.childElements[i];
 				if (elementObjects[chIndex] != null)
+				{	
 					sb.append(elementObjects[chIndex].toString());
+					nChildren++;
+				}	
 				if (i < element.childElements.length -1)
 					sb.append(" ");
 			}	
-			childrenObj = sb.toString();
-			nInfoSources++;
+			
+			if (nChildren > 0)
+			{	
+				childrenObj = sb.toString();
+				nInfoSources++;
+			}	
 		}	
 		
 		
@@ -733,7 +741,13 @@ public class DynamicIterationSpan
 			if (childrenObj != null)
 				sb.append(childrenObj.toString());
 			
-			return sb.toString();
+			String res = sb.toString();
+		
+			//if (res.trim().equals(""))
+			//	return null;
+			//else
+			
+				return res;
 		}
 		
 		return null;
