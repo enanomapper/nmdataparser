@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.relation.composition.CompositionRelation;
+import ambit2.base.relation.composition.Proportion;
 
 public class DIOSynchronization 
 {
@@ -79,6 +81,7 @@ public class DIOSynchronization
 			
 			ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 			records.add(curRecord);
+			checkRecords(records);
 			return records;
 		}
 		
@@ -96,6 +99,7 @@ public class DIOSynchronization
 			
 			ArrayList<SubstanceRecord> records = new ArrayList<SubstanceRecord>();
 			records.add(curRecord);
+			checkRecords(records);
 			return records;
 		}
 		else
@@ -103,6 +107,7 @@ public class DIOSynchronization
 			//Handle substance array
 			ArrayList<SubstanceRecord> records = assembleRecordArray();
 			handleDIOs();
+			checkRecords(records);
 			return records;
 		}
 	}
@@ -148,7 +153,7 @@ public class DIOSynchronization
 	
 	protected void handleDIOs()
 	{
-		System.out.println("----numDIOs: " + dios.size());
+		//System.out.println("----numDIOs: " + dios.size());
 		
 		//(1) Synchronize the elements 
 		
@@ -361,6 +366,27 @@ public class DIOSynchronization
 			default:
 			}
 		}
+	}
+	
+	public void checkRecords(ArrayList<SubstanceRecord> records)
+	{
+		for (SubstanceRecord record : records )
+			checkRecord(record);
+	}
+	
+	public static void checkRecord(SubstanceRecord record)
+	{
+		if (record.getRelatedStructures() != null)
+			for (CompositionRelation composition : record.getRelatedStructures())
+			{
+				check(composition);
+			}
+	}
+	
+	public static void check(CompositionRelation composition)
+	{
+		if (composition.getRelation() == null)
+			composition.setRelation(new Proportion());
 	}
 	
 	

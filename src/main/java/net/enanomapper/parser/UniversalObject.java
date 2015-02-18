@@ -82,7 +82,7 @@ public class UniversalObject
 	
 	public void selfDispatch()
 	{
-		//dispatchTo(this);
+		dispatchTo(this);
 	}
 	
 	public void dispatchTo(SubstanceRecord record)
@@ -92,6 +92,8 @@ public class UniversalObject
 	
 	public void dispatchTo(UniversalObject target)
 	{
+		System.out.println("dispatching : " + this.debugInfo(0) + " --> " + target.debugInfo(0));
+		
 		if (composition != null)
 		{
 			if (target.substanceRecord != null)
@@ -129,5 +131,23 @@ public class UniversalObject
 	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget)
 	{
 		//TODO
+	}
+	
+	public String debugInfo(int level)
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		if (substanceRecord != null)
+			sb.append("composition ");
+		if (composition != null)
+			sb.append("composition ");
+		if (protocol != null)
+			sb.append("protocol ");
+		if (protocolApplication != null)
+			sb.append("protocolApplication ");
+		if (effect != null)
+			sb.append("effect ");
+		
+		return sb.toString();
 	}
 }
