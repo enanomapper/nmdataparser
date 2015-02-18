@@ -370,6 +370,16 @@ public class ParserConstants
 		},
 		
 		
+		EXTERNAL_IDENTIFIER {
+			@Override
+		    public boolean isFieldOf(ObjectType type) {
+		    	if (type == ObjectType.SUBSTANCE)
+		    		return true;
+		    	else
+		    		return false;
+			}
+		},
+		
 		//Protocol fields
 		PROTOCOL_TOP_CATEGORY {
 			@Override

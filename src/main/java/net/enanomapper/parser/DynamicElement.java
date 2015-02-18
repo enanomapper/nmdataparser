@@ -14,6 +14,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
@@ -111,12 +112,14 @@ public class DynamicElement
 					
 					if (( element.fieldType == ElementField.PARAMETER) || 
 						 (element.fieldType == ElementField.CONDITION) ||
-						 (element.fieldType == ElementField.PROPERTY)  )
+						 (element.fieldType == ElementField.PROPERTY)  ||
+						 (element.fieldType == ElementField.EXTERNAL_IDENTIFIER)  )
 					{	
 						if(node.path("PARAMETER_NAME").isMissingNode())
 						{
 							conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-									+" subsection ELEMENT [" +(elNum +1) + "], keyword \"PARAMETER_NAME\" is missing!");
+									+" subsection ELEMENT [" +(elNum +1) +
+									"], keyword \"PARAMETER_NAME\" is missing for FIELD_TYPE = " + element.fieldType.toString());
 						}
 					}
 					
@@ -474,26 +477,42 @@ public class DynamicElement
 		case COMPANY_NAME:
 			substanceRecord.setCompanyName(elObj.toString());
 			break;
+			
 		case COMPANY_UUID:
 			String s = elObj.toString();
 			substanceRecord.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
-			break;	
+			break;
+			
 		case OWNER_NAME:
 			substanceRecord.setOwnerName(elObj.toString());
 			break;
+			
 		case OWNER_UUID:
 			substanceRecord.setCompanyUUID(elObj.toString()); 
-			break;	
+			break;
+			
 		case SUBSTANCE_TYPE:
 			substanceRecord.setSubstancetype(elObj.toString());
 			break;
+			
 		case PUBLIC_NAME:
 			substanceRecord.setPublicName(elObj.toString());
 			break;	
+			
 		case ID_SUBSTANCE:
 			if (elObj instanceof Double)
 				substanceRecord.setIdsubstance(((Double)elObj).intValue());
-			break;		
+			break;	
+			
+		case EXTERNAL_IDENTIFIER:
+			List<ExternalIdentifier> ids = substanceRecord.getExternalids();
+			if (ids == null)
+			{
+				ids = new ArrayList<ExternalIdentifier>();
+				substanceRecord.setExternalids(ids);
+			}
+			ids.add(new ExternalIdentifier(parameterName, elObj.toString()));
+			break;
 			
 		default:
 			//The other element fields are not used by SubstanceRecord
@@ -742,7 +761,7 @@ public class DynamicElement
 		if (elObj == null)
 			return;
 		
-		System.out.println("----> putElementInComposition: " + elObj.toString());
+		//System.out.println("----> putElementInComposition: " + elObj.toString());
 		
 		switch (fieldType)
 		{

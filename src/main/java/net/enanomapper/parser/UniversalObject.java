@@ -92,7 +92,7 @@ public class UniversalObject
 	
 	public void dispatchTo(UniversalObject target)
 	{
-		System.out.println("dispatching : " + this.debugInfo(0) + " --> " + target.debugInfo(0));
+		//System.out.println("dispatching : " + this.debugInfo(0) + " --> " + target.debugInfo(0));
 		
 		if (composition != null)
 		{
@@ -138,7 +138,7 @@ public class UniversalObject
 		StringBuffer sb = new StringBuffer();
 		
 		if (substanceRecord != null)
-			sb.append("composition ");
+			sb.append("substanceRecord ");
 		if (composition != null)
 			sb.append("composition ");
 		if (protocol != null)
