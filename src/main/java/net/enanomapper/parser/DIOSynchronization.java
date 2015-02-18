@@ -148,6 +148,8 @@ public class DIOSynchronization
 	
 	protected void handleDIOs()
 	{
+		System.out.println("----numDIOs: " + dios.size());
+		
 		//(1) Synchronize the elements 
 		
 		//First round (phase = 0)
@@ -171,8 +173,7 @@ public class DIOSynchronization
 	}
 	
 	protected void synchResultObjects(DynamicIterationObject dio)
-	{
-		
+	{	
 		if (primaryDIO.groupObjects.isEmpty())
 		{	
 			//Handle the row objects
@@ -209,8 +210,8 @@ public class DIOSynchronization
 			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget);
 		else
 		{
-			//default
-			//dio.dispatchTo(record);
+			//Currently nothing is done
+			//default - ?? dio.dispatchTo(record);
 		}
 		
 	}

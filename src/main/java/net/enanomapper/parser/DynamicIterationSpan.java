@@ -74,7 +74,7 @@ public class DynamicIterationSpan
 	
 	//Error handling
 	public boolean FlagStoreErrors = true;
-	Logger logger = null;
+	public static Logger logger = Logger.getLogger(DynamicIterationSpan.class.getName());
 	public String masterErrorString = ""; //This is used for error messaging 
 	public ArrayList<String> errors = new ArrayList<String>(); 
 	
@@ -475,13 +475,14 @@ public class DynamicIterationSpan
 	protected DynamicIterationObject handleGroupsLavels(ArrayList<Row> rows)
 	{
 		DynamicIterationObject dio = new DynamicIterationObject();
+		DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
 		//Currently only one grouping level is handled (element 0)
 		firstRow = rows.get(0);
 		boolean FlagNextNonEmpty = (dynamicIteration == DynamicIteration.NEXT_NOT_EMPTY);
 		TreeMap<Integer, String> groups = ExcelUtils.getRowGroups(rows, groupLevels.get(0).groupingElementIndex,  FlagNextNonEmpty);
 		
-		System.out.println("#### Iteration object: " + ExcelUtils.rowToString(firstRow) + "\n## nGroups = " + groups.size());
+		logger.info("####GL Iteration object: " + ExcelUtils.rowToString(firstRow) + "\n## nGroups = " + groups.size());
 		
 		Integer prevInt = null;
 		int groupIndex = 0;
@@ -494,7 +495,7 @@ public class DynamicIterationSpan
 					grpRows.add(rows.get(i));
 				
 				firstGroupRow = grpRows.get(0);
-				System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+				logger.info("## group: " + ExcelUtils.rowToString(firstGroupRow));
 				GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
 				dio.groupObjects.add(grpObj);
 			}
@@ -508,7 +509,7 @@ public class DynamicIterationSpan
 			grpRows.add(rows.get(i));
 		
 		firstGroupRow = grpRows.get(0);
-		System.out.println("## group: " + ExcelUtils.rowToString(firstGroupRow));
+		logger.info("## group: " + ExcelUtils.rowToString(firstGroupRow));
 		GroupObject grpObj = rowsToGroupObject(grpRows, groupLevels.get(0).groupCumulativeType);
 		//grpDio.groupIndex = groupIndex;
 		//grpDio.dynamicIterationSpan = this;
@@ -521,12 +522,13 @@ public class DynamicIterationSpan
 	
 	protected GroupObject rowsToGroupObject(ArrayList<Row> rows, ObjectType resultType)
 	{
+		
 		GroupObject gObj = new GroupObject ();
 		gObj.rowObjects = new RowObject[rows.size()];
 		for (int i = 0; i < rows.size(); i ++)
 		{
 			RowObject obj = getRowObject(rows.get(i), resultType);
-			System.out.println("RowObject: " + rowObjectToString(obj));
+			logger.info("RowObject: " + rowObjectToString(obj));
 			gObj.rowObjects[i] = obj;
 		}
 		
@@ -535,11 +537,13 @@ public class DynamicIterationSpan
 	
 	protected DynamicIterationObject rowsToDIO(ArrayList<Row> rows, ObjectType resultType)
 	{
+		logger.info("----RW Iteration object: " + ExcelUtils.rowToString(firstRow));
+		
 		DynamicIterationObject dio = new DynamicIterationObject ();
 		for (int i = 0; i < rows.size(); i ++)
 		{
 			RowObject obj = getRowObject(rows.get(i), resultType);
-			//System.out.println("RowObject: " + rowObjectToString(obj));
+			logger.info("RowObject: " + rowObjectToString(obj));
 			dio.rowObjects.add(obj);
 		}
 		return dio;

@@ -56,6 +56,8 @@ public class DynamicElement
 	public String variableKeys[] = null; //The information is taken (constructed) form the variables defined by their keys
 
 	public int childElements[] = null; //The information is taken from another element
+	
+	//public String sourceDIS = null; //The information is taken from another DIS  
 
 	public static DynamicElement  extractDynamicElement(JsonNode node, ExcelParserConfigurator conf, 
 			String masterSection, int elNum)
