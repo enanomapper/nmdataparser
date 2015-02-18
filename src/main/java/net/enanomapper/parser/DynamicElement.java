@@ -32,9 +32,12 @@ public class DynamicElement
 {
 	//public ObjectType dataType =  null;   //it may be used if needed!
 	//public boolean FlagDataType = false;
-
+	
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
+
+	public int objectIndex = -1;  //This can be used to put field in a new Object
+	public boolean FlagObjectIndex = false;
 	
 	public ElementSynchronization synchType = ElementSynchronization.NONE;
 	public boolean FlagSynchType = false;
@@ -138,6 +141,22 @@ public class DynamicElement
 				}	
 			}	
 		}
+		
+		/*
+		//FIELD_IN_NEW_OBJECT
+		if(!node.path("FIELD_IN_NEW_OBJECT").isMissingNode())
+		{
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "FIELD_IN_NEW_OBJECT", false);
+			if (b == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_IN_NEW_OBJECT\": " + jsonUtils.getError());
+			else
+			{	
+				element.fieldInNewObject = b;
+				element.FlagFieldInNewObject = true
+			}	
+		}
+		*/
 		
 		//SYNCH_TYPE
 		if(!node.path("SYNCH_TYPE").isMissingNode())

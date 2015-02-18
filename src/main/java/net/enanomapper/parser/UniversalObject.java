@@ -19,6 +19,8 @@ public class UniversalObject
 	protected EffectRecord effect = null;
 	protected CompositionRelation composition = null;
 	
+	protected ArrayList<CompositionRelation> compositionArray = new ArrayList<CompositionRelation>();
+	
 	
 	public ArrayList<SubstanceRecord> getSubstanceRecords()
 	{
