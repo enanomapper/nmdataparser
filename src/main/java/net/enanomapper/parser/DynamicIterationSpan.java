@@ -619,6 +619,13 @@ public class DynamicIterationSpan
 			case EACH_FROM_FIRST_GROUP_ROW: 
 				c = firstGroupRow.getCell(element.index);
 				break;
+				
+			case EACH_FIRST_GROUP_ROW_FROM_FIRST_ROW:
+				if (row == firstGroupRow)
+					c = firstRow.getCell(element.index);
+				else
+					FlagLoadElement = false;
+				break;	
 			
 			case FIRST_ROW:  //data is loaded only for the first row
 				if (row == firstRow)
