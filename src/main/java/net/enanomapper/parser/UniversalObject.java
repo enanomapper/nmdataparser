@@ -1,6 +1,9 @@
 package net.enanomapper.parser;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.SubstanceRecord;
@@ -13,11 +16,18 @@ import ambit2.base.relation.composition.CompositionRelation;
 public class UniversalObject 
 {
 	protected ArrayList<SubstanceRecord> substanceRecords = null;
+	
 	protected SubstanceRecord substanceRecord = null;
+	
 	protected ProtocolApplication protocolApplication = null;
+	
 	protected Protocol protocol = null;
+	
 	protected EffectRecord effect = null;
-	protected CompositionRelation composition = null;
+	
+	//protected CompositionRelation composition = null;
+	protected TreeMap<Integer, CompositionRelation> mCompositions = new TreeMap<Integer, CompositionRelation>();
+	
 	
 	protected ArrayList<CompositionRelation> compositionArray = new ArrayList<CompositionRelation>();
 	
@@ -35,6 +45,7 @@ public class UniversalObject
 	{
 		this.substanceRecords = substanceRecords;
 	}
+	
 	
 	public SubstanceRecord getSubstanceRecord()
 	{
@@ -74,12 +85,30 @@ public class UniversalObject
 	
 	public CompositionRelation getComposition()
 	{
+		return getComposition(0);
+		/*
 		if (composition != null)
 			return composition;
 		
 		composition = new CompositionRelation(null, null, null, null);
+		mCompositions.put(0, composition);
 		return composition;
+		*/
 	}
+	
+	
+	public CompositionRelation getComposition(int id)
+	{
+		CompositionRelation comRel = mCompositions.get(id); 
+		if (comRel !=null)
+			return comRel;
+		
+		comRel = new CompositionRelation(null, null, null, null);
+		mCompositions.put(id, comRel);
+		
+		return comRel;
+	}
+	
 	
 	
 	public void selfDispatch()
@@ -96,11 +125,19 @@ public class UniversalObject
 	{
 		//System.out.println("dispatching : " + this.debugInfo(0) + " --> " + target.debugInfo(0));
 		
+		/*
 		if (composition != null)
 		{
 			if (target.substanceRecord != null)
 				target.substanceRecord.addStructureRelation(composition);
 		}
+		*/
+		if (!mCompositions.isEmpty())
+		{
+			for(Entry<Integer, CompositionRelation> entry : mCompositions.entrySet())
+				target.substanceRecord.addStructureRelation(entry.getValue());
+		}
+		
 		
 		if (effect != null)
 		{
@@ -141,8 +178,10 @@ public class UniversalObject
 		
 		if (substanceRecord != null)
 			sb.append("substanceRecord ");
-		if (composition != null)
-			sb.append("composition ");
+		//if (composition != null)
+		//	sb.append("composition ");
+		if (!mCompositions.isEmpty())
+			sb.append("compositions-" + mCompositions.size() + " ");
 		if (protocol != null)
 			sb.append("protocol ");
 		if (protocolApplication != null)

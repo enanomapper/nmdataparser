@@ -478,7 +478,7 @@ public class DynamicElement
 			break;	
 			
 		case COMPOSITION:
-			CompositionRelation comp = uniObj.getComposition();
+			CompositionRelation comp = uniObj.getComposition(resultObjectId);
 			putElementInComposition(elObj, comp);
 			break;
 		

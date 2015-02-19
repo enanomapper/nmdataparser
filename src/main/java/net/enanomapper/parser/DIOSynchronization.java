@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
+import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
@@ -387,6 +388,9 @@ public class DIOSynchronization
 	{
 		if (composition.getRelation() == null)
 			composition.setRelation(new Proportion());
+		
+		if (composition.getSecondStructure() == null)
+			composition.setSecondStructure(new StructureRecord());
 	}
 	
 	
