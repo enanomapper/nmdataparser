@@ -91,14 +91,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 	//All variables read from the primary sheet and all parallel sheets
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
 	
-	private boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
-	private SubstanceRecord basicSubstanceRecord = null;
-	private SubstanceRecord nextRecordBuffer = null;
-	private int nextRecordIndex = -1;
+	protected boolean FlagNextRecordLoaded = false; //This flag is true when next object is iterated and successfully read to the buffer; 
+	protected SubstanceRecord basicSubstanceRecord = null;
+	protected SubstanceRecord nextRecordBuffer = null;
+	protected int nextRecordIndex = -1;
 	
-	private ArrayList<SubstanceRecord> loadedRecordsBuffer = new ArrayList<SubstanceRecord>();
+	protected ArrayList<SubstanceRecord> loadedRecordsBuffer = new ArrayList<SubstanceRecord>();
 	
-	private boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases
+	protected boolean FlagAddParserStringError = true;  //This is used to switch off errors in some cases
 	
 	public GenericExcelParser(InputStream input, String jsonConfig) throws Exception
 	{
