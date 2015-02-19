@@ -54,6 +54,8 @@ public class DynamicIterationSpan
 	public ArrayList<DynamicElement> elements = null;  
 	public ArrayList<DynamicGrouping> groupLevels = null;
 	
+	//element result objects -handle dispatching ????
+	
 	public ElementSynchronization cumulativeObjectSynch = ElementSynchronization.NONE;
 	public boolean FlagCumulativeObjectSynch = false;
 	

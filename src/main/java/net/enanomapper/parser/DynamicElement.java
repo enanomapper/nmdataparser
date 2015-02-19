@@ -473,7 +473,7 @@ public class DynamicElement
 			break;
 			
 		case EFFECT:
-			EffectRecord er = uniObj.getEffect();
+			EffectRecord er = uniObj.getEffect(resultObjectId);
 			putElementInEffectRecord(elObj, er);
 			break;	
 			

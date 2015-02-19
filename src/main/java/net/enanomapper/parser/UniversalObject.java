@@ -23,13 +23,10 @@ public class UniversalObject
 	
 	protected Protocol protocol = null;
 	
-	protected EffectRecord effect = null;
+	protected TreeMap<Integer, EffectRecord> mEffects = new TreeMap<Integer, EffectRecord>();
 	
-	//protected CompositionRelation composition = null;
 	protected TreeMap<Integer, CompositionRelation> mCompositions = new TreeMap<Integer, CompositionRelation>();
 	
-	
-	protected ArrayList<CompositionRelation> compositionArray = new ArrayList<CompositionRelation>();
 	
 	
 	public ArrayList<SubstanceRecord> getSubstanceRecords()
@@ -74,28 +71,30 @@ public class UniversalObject
 		return protocol;
 	}
 	
+	/*
 	public EffectRecord getEffect()
 	{
-		if (effect != null)
-			return effect;
+		return getEffect(0);
+	}
+	*/
+	
+	public EffectRecord getEffect(int id)
+	{
+		EffectRecord ef = mEffects.get(id);
+		if (ef != null)
+			return ef;
 		
-		effect = new EffectRecord();
-		return effect;
+		ef = new EffectRecord();
+		mEffects.put(id, ef);
+		return ef;
 	}
 	
+	/*
 	public CompositionRelation getComposition()
 	{
 		return getComposition(0);
-		/*
-		if (composition != null)
-			return composition;
-		
-		composition = new CompositionRelation(null, null, null, null);
-		mCompositions.put(0, composition);
-		return composition;
-		*/
 	}
-	
+	*/
 	
 	public CompositionRelation getComposition(int id)
 	{
@@ -121,29 +120,43 @@ public class UniversalObject
 		//TODO
 	}
 	
+	
 	public void dispatchTo(UniversalObject target)
 	{
+		dispatchAllTo(target, 0);
+	}
+	
+	
+	public void dispatchAllTo(UniversalObject target, int targetId)
+	{
+		//All multiple objects are dispatched to the master objects with given id
+		
 		//System.out.println("dispatching : " + this.debugInfo(0) + " --> " + target.debugInfo(0));
 		
-		/*
-		if (composition != null)
-		{
-			if (target.substanceRecord != null)
-				target.substanceRecord.addStructureRelation(composition);
-		}
-		*/
+		
 		if (!mCompositions.isEmpty())
 		{
 			for(Entry<Integer, CompositionRelation> entry : mCompositions.entrySet())
 				target.substanceRecord.addStructureRelation(entry.getValue());
 		}
 		
-		
+		/*
 		if (effect != null)
 		{
 			if (target.protocolApplication != null)
 				target.protocolApplication.addEffect(effect);
 		}
+		*/
+		if (!mEffects.isEmpty())
+		{
+			if (target.protocolApplication != null)
+			{
+				for(Entry<Integer, EffectRecord> entry : mEffects.entrySet())
+					target.protocolApplication.addEffect(entry.getValue());
+			}
+				
+		}
+		
 		
 		if (protocol != null)
 		{
@@ -167,6 +180,21 @@ public class UniversalObject
 		
 	}
 	
+	public void dispatchTo(int sourceId, UniversalObject target, int targetId)
+	{
+		//TODO
+	}
+	
+	
+	/*
+	 * TODO - more complex pattern
+	 * 
+	public void dispatchTo(UniversalObject target, DispatchShceme scheme)
+	{
+		
+	}
+	*/
+	
 	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget)
 	{
 		//TODO
@@ -178,17 +206,19 @@ public class UniversalObject
 		
 		if (substanceRecord != null)
 			sb.append("substanceRecord ");
-		//if (composition != null)
-		//	sb.append("composition ");
+		
 		if (!mCompositions.isEmpty())
 			sb.append("compositions-" + mCompositions.size() + " ");
+		
 		if (protocol != null)
 			sb.append("protocol ");
+		
 		if (protocolApplication != null)
 			sb.append("protocolApplication ");
-		if (effect != null)
-			sb.append("effect ");
 		
+		if (!mEffects.isEmpty())
+			sb.append("effects-" + mEffects.size() + " ");
+			
 		return sb.toString();
 	}
 }
