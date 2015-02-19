@@ -171,16 +171,23 @@ public class DIOSynchronization
 		}
 		
 		//(2) Synchronize result objects obtained from: rowObjects, groupObjects and DIOs
+		
+		//primary DIO is synchronized first
+		synchResultObjects(primaryDIO); 
+		
+		//All other DIOs are synchronized
 		for (Entry<DynamicIterationSpan,DynamicIterationObject> entry :  dios.entrySet())
 		{
-			synchResultObjects(entry.getValue());
+			DynamicIterationObject dio = entry.getValue();
+			if (dio != primaryDIO)
+				synchResultObjects(dio);
 		}
 		
 	}
 	
 	protected void synchResultObjects(DynamicIterationObject dio)
 	{	
-		if (primaryDIO.groupObjects.isEmpty())
+		if (dio.groupObjects.isEmpty())     
 		{	
 			//Handle the row objects
 			for (int i = 0; i < dio.rowObjects.size(); i++)
@@ -213,7 +220,7 @@ public class DIOSynchronization
 		DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
 		if (dis.cumulativeObjectSynchTarget != null)
-			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget);
+			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget, this);
 		else
 		{
 			//Currently nothing is done
@@ -316,11 +323,15 @@ public class DIOSynchronization
 		DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
 		if (dis.rowSynchTarget != null)
-			rowObj.dispatchTo(dis.rowSynch, dis.rowSynchTarget);
+			rowObj.dispatchTo(dis.rowSynch, dis.rowSynchTarget, this);
 		else
 		{
 			switch (dis.rowSynch)
 			{
+			case PUT_IN_PRIMARY_CUMULATIVE_OBJECT:
+				rowObj.dispatchTo(primaryDIO);
+				break;
+			
 			case PUT_IN_CUMULATIVE_OBJECT:
 				rowObj.dispatchTo(dio);
 				break;
@@ -352,11 +363,15 @@ public class DIOSynchronization
 		DynamicIterationSpan dis = dio.dynamicIterationSpan;
 		
 		if (dis.groupSynchTarget != null)
-			groupObj.dispatchTo(dis.groupSynch, dis.groupSynchTarget);
+			groupObj.dispatchTo(dis.groupSynch, dis.groupSynchTarget, this);
 		else
 		{
 			switch (dis.groupSynch)
 			{
+			case PUT_IN_PRIMARY_CUMULATIVE_OBJECT:
+				groupObj.dispatchTo(primaryDIO);
+				break;
+			
 			case PUT_IN_CUMULATIVE_OBJECT:
 				groupObj.dispatchTo(dio);
 				break;
@@ -368,6 +383,20 @@ public class DIOSynchronization
 			}
 		}
 	}
+	
+	protected void dispatchDIO(DynamicIterationObject dio)
+	{
+		DynamicIterationSpan dis = dio.dynamicIterationSpan;
+
+		if (dis.cumulativeObjectSynchTarget != null)
+			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget, this);
+		else
+		{
+			//If cumulativeObjectSynchTarget is not present, cumulativeObjectSynch is not take into account
+			dio.dispatchTo(primaryDIO);
+		}
+	}
+	
 	
 	public void checkRecords(ArrayList<SubstanceRecord> records)
 	{

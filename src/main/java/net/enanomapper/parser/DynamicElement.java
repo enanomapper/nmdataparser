@@ -176,6 +176,26 @@ public class DynamicElement
 				}	
 			}	
 		}
+		
+		//SYNCH_TARGET
+		if(!node.path("SYNCH_TARGET").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(node, "SYNCH_TARGET", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"SYNCH_TARGET\": " + jsonUtils.getError());
+			else
+			{	
+				SynchronizationTarget st = SynchronizationTarget.parse(keyword);
+				if (st.error != null)
+				{	
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+" subsection ELEMENT [" +(elNum +1) + "], keyword \"SYNCH_TARGET\" is incorrect -->" + st.error);
+				}	
+				else
+					element.synchTarget = st;
+			}	
+		}
 
 
 		//POSITION
@@ -370,6 +390,14 @@ public class DynamicElement
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"SYNCH_TYPE\" : \"" + synchType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (synchTarget != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SYNCH_TARGET\" : \"" + synchTarget.originalString + "\"");
 			nFields++;
 		}
 

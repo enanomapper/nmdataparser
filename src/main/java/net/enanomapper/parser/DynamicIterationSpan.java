@@ -167,6 +167,27 @@ public class DynamicIterationSpan
 			}	
 		}
 		
+		//CUMULATIVE_OBJECT_SYNCH_TARGET
+		if(!node.path("CUMULATIVE_OBJECT_SYNCH_TARGET").isMissingNode())
+		{	
+			
+			String keyword =  jsonUtils.extractStringKeyword(node, "CUMULATIVE_OBJECT_SYNCH_TARGET", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"CUMULATIVE_OBJECT_SYNCH_TARGET\": " + jsonUtils.getError());
+			else
+			{	
+				SynchronizationTarget st = SynchronizationTarget.parse(keyword);
+				if (st.error != null)
+				{	
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"CUMULATIVE_OBJECT_SYNCH_TARGET\" is incorrect: --> " + st.error);
+				}	
+				else
+					dis.cumulativeObjectSynchTarget = st;
+			}	
+		}
+		
 		//GROUP_SYNCH
 		if(!node.path("GROUP_SYNCH").isMissingNode())
 		{
@@ -182,6 +203,27 @@ public class DynamicIterationSpan
 							+ "\"GROUP_SYNCH\" is incorrect or UNDEFINED! --> " + keyword);
 				else
 					dis.FlagGroupSynch = true;
+			}	
+		}
+		
+		//GROUP_SYNCH_TARGET
+		if(!node.path("GROUP_SYNCH_TARGET").isMissingNode())
+		{	
+
+			String keyword =  jsonUtils.extractStringKeyword(node, "GROUP_SYNCH_TARGET", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"GROUP_SYNCH_TARGET\": " + jsonUtils.getError());
+			else
+			{	
+				SynchronizationTarget st = SynchronizationTarget.parse(keyword);
+				if (st.error != null)
+				{	
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"GROUP_SYNCH_TARGET\" is incorrect: --> " + st.error);
+				}	
+				else
+					dis.groupSynchTarget = st;
 			}	
 		}
 		
@@ -202,6 +244,28 @@ public class DynamicIterationSpan
 					dis.FlagRowSynch = true;
 			}	
 		}
+		
+		//ROW_SYNCH_TARGET
+		if(!node.path("ROW_SYNCH_TARGET").isMissingNode())
+		{	
+
+			String keyword =  jsonUtils.extractStringKeyword(node, "ROW_SYNCH_TARGET", false);
+			if (keyword == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"ROW_SYNCH_TARGET\": " + jsonUtils.getError());
+			else
+			{	
+				SynchronizationTarget st = SynchronizationTarget.parse(keyword);
+				if (st.error != null)
+				{	
+					conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+							+ "\"ROW_SYNCH_TARGET\" is incorrect: --> " + st.error);
+				}	
+				else
+					dis.rowSynchTarget = st;
+			}	
+		}
+		
 		
 		//ID
 		if(!node.path("ID").isMissingNode())
@@ -298,6 +362,14 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
+		if (cumulativeObjectSynchTarget != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"CUMULATIVE_OBJECT_SYNCH_TARGET\" : \"" + cumulativeObjectSynchTarget.originalString + "\"");
+			nFields++;
+		}
+		
 		if (FlagGroupSynch)
 		{
 			if (nFields > 0)
@@ -306,11 +378,27 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
+		if (groupSynchTarget != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"GROUP_SYNCH_TARGET\" : \"" + groupSynchTarget.originalString + "\"");
+			nFields++;
+		}
+		
 		if (FlagRowSynch)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"ROW_SYNCH\" : \"" + rowSynch.toString() + "\"");
+			nFields++;
+		}
+		
+		if (rowSynchTarget != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ROW_SYNCH_TARGET\" : \"" + rowSynchTarget.originalString + "\"");
 			nFields++;
 		}
 		

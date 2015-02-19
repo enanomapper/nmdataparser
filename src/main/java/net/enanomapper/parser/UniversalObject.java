@@ -124,8 +124,9 @@ public class UniversalObject
 		
 		if (!mCompositions.isEmpty())
 		{
-			for(Entry<Integer, CompositionRelation> entry : mCompositions.entrySet())
-				target.substanceRecord.addStructureRelation(entry.getValue());
+			if (target.substanceRecord != null)
+				for(Entry<Integer, CompositionRelation> entry : mCompositions.entrySet())
+					target.substanceRecord.addStructureRelation(entry.getValue());
 		}
 		
 		
@@ -181,10 +182,11 @@ public class UniversalObject
 	}
 	*/
 	
-	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget)
+	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget, DIOSynchronization dio_synch)
 	{
 		//TODO
 	}
+	
 	
 	public String debugInfo(int level)
 	{
