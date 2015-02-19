@@ -36,8 +36,8 @@ public class DynamicElement
 	public ElementField fieldType = ElementField.NONE;
 	public boolean FlagFieldType = false;
 
-	public int resultObjectId = 0;     //If id != 0 it can be used to put field in a newly created Object i
-	public boolean FlagResultObjectId = false;
+	public int resultObjectIndex = 0;     //If id != 0 it can be used to put field in a newly created Object i
+	public boolean FlagResultObjectIndex = false;
 	
 	public ElementSynchronization synchType = ElementSynchronization.NONE;
 	public boolean FlagSynchType = false;
@@ -143,17 +143,17 @@ public class DynamicElement
 		}
 		
 		
-		//RESULT_OBJECT_ID
-		if(!node.path("RESULT_OBJECT_ID").isMissingNode())
+		//RESULT_OBJECT_INDEX
+		if(!node.path("RESULT_OBJECT_INDEX").isMissingNode())
 		{
-			Integer resId =  jsonUtils.extractIntKeyword(node, "RESULT_OBJECT_ID", false);
+			Integer resId =  jsonUtils.extractIntKeyword(node, "RESULT_OBJECT_INDEX", false);
 			if (resId == null)
 				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"FIELD_IN_NEW_OBJECT\": " + jsonUtils.getError());
+						+" subsection ELEMENT [" +(elNum +1) + "], keyword \"RESULT_OBJECT_INDEX\": " + jsonUtils.getError());
 			else
 			{	
-				element.resultObjectId = resId - 1;  //1-based --> 0-based
-				element.FlagResultObjectId = true;
+				element.resultObjectIndex = resId - 1;  //1-based --> 0-based
+				element.FlagResultObjectIndex = true;
 			}	
 		}
 		
@@ -356,11 +356,11 @@ public class DynamicElement
 		}
 		
 		
-		if (FlagResultObjectId)
+		if (FlagResultObjectIndex)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"RESULT_OBJECT_ID\" : " + (resultObjectId + 1));
+			sb.append(offset + "\t\"RESULT_OBJECT_INDEX\" : " + (resultObjectIndex + 1));
 			nFields++;
 		}
 		
@@ -463,22 +463,22 @@ public class DynamicElement
 			break;
 			
 		case PROTOCOL_APPLICATION:
-			ProtocolApplication pa = uniObj.getProtocolApplication();
+			ProtocolApplication pa = uniObj.getProtocolApplication(resultObjectIndex);
 			putElementInProtocolApplication(elObj, pa);
 			break;
 			
 		case PROTOCOL:
-			Protocol protocol = uniObj.getProtocol();
+			Protocol protocol = uniObj.getProtocol(resultObjectIndex);
 			putElementInProtocol(elObj, protocol);
 			break;
 			
 		case EFFECT:
-			EffectRecord er = uniObj.getEffect(resultObjectId);
+			EffectRecord er = uniObj.getEffect(resultObjectIndex);
 			putElementInEffectRecord(elObj, er);
 			break;	
 			
 		case COMPOSITION:
-			CompositionRelation comp = uniObj.getComposition(resultObjectId);
+			CompositionRelation comp = uniObj.getComposition(resultObjectIndex);
 			putElementInComposition(elObj, comp);
 			break;
 		

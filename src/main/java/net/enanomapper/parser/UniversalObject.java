@@ -16,15 +16,11 @@ import ambit2.base.relation.composition.CompositionRelation;
 public class UniversalObject 
 {
 	protected ArrayList<SubstanceRecord> substanceRecords = null;
-	
 	protected SubstanceRecord substanceRecord = null;
 	
-	protected ProtocolApplication protocolApplication = null;
-	
-	protected Protocol protocol = null;
-	
+	protected TreeMap<Integer, ProtocolApplication> mProtocolApplications = new TreeMap<Integer, ProtocolApplication>();
+	protected TreeMap<Integer, Protocol> mProtocols = new TreeMap<Integer, Protocol>();
 	protected TreeMap<Integer, EffectRecord> mEffects = new TreeMap<Integer, EffectRecord>();
-	
 	protected TreeMap<Integer, CompositionRelation> mCompositions = new TreeMap<Integer, CompositionRelation>();
 	
 	
@@ -53,57 +49,49 @@ public class UniversalObject
 		return substanceRecord;
 	}
 	
-	public ProtocolApplication getProtocolApplication()
+	public ProtocolApplication getProtocolApplication(int index)
 	{
-		if (protocolApplication != null)
-			return protocolApplication;
+		ProtocolApplication pa = mProtocolApplications.get(index);
+		if (pa != null)
+			return pa;
 		
-		protocolApplication = new ProtocolApplication(null);
-		return protocolApplication;
+		pa = new ProtocolApplication(null);
+		mProtocolApplications.put(index, pa);
+		return pa;
 	}
 	
-	public Protocol getProtocol()
+	public Protocol getProtocol(int index)
 	{
-		if (protocol != null)
-			return protocol;
+		Protocol p = mProtocols.get(index);
+		if (p!=null)
+			return p;
 		
-		protocol = new Protocol(null);
-		return protocol;
+		p = new Protocol(null);
+		mProtocols.put(index, p);
+		return p;
 	}
 	
-	/*
-	public EffectRecord getEffect()
-	{
-		return getEffect(0);
-	}
-	*/
 	
-	public EffectRecord getEffect(int id)
+	public EffectRecord getEffect(int index)
 	{
-		EffectRecord ef = mEffects.get(id);
+		EffectRecord ef = mEffects.get(index);
 		if (ef != null)
 			return ef;
 		
 		ef = new EffectRecord();
-		mEffects.put(id, ef);
+		mEffects.put(index, ef);
 		return ef;
 	}
 	
-	/*
-	public CompositionRelation getComposition()
-	{
-		return getComposition(0);
-	}
-	*/
 	
-	public CompositionRelation getComposition(int id)
+	public CompositionRelation getComposition(int index)
 	{
-		CompositionRelation comRel = mCompositions.get(id); 
+		CompositionRelation comRel = mCompositions.get(index); 
 		if (comRel !=null)
 			return comRel;
 		
 		comRel = new CompositionRelation(null, null, null, null);
-		mCompositions.put(id, comRel);
+		mCompositions.put(index, comRel);
 		
 		return comRel;
 	}
@@ -127,7 +115,7 @@ public class UniversalObject
 	}
 	
 	
-	public void dispatchAllTo(UniversalObject target, int targetId)
+	public void dispatchAllTo(UniversalObject target, int targetIndex)
 	{
 		//All multiple objects are dispatched to the master objects with given id
 		
@@ -140,31 +128,27 @@ public class UniversalObject
 				target.substanceRecord.addStructureRelation(entry.getValue());
 		}
 		
-		/*
-		if (effect != null)
-		{
-			if (target.protocolApplication != null)
-				target.protocolApplication.addEffect(effect);
-		}
-		*/
+		
 		if (!mEffects.isEmpty())
 		{
-			if (target.protocolApplication != null)
+			ProtocolApplication pa = target.mProtocolApplications.get(targetIndex);
+			if (pa != null)
 			{
 				for(Entry<Integer, EffectRecord> entry : mEffects.entrySet())
-					target.protocolApplication.addEffect(entry.getValue());
-			}
-				
+					pa.addEffect(entry.getValue());
+			}	
 		}
 		
 		
-		if (protocol != null)
+		if (!mProtocols.isEmpty())
 		{
-			if (target.protocolApplication != null)
-				target.protocolApplication.setProtocol(protocol);
+			ProtocolApplication pa = target.mProtocolApplications.get(targetIndex);
+			if (pa != null)
+				for(Entry<Integer, Protocol> entry : mProtocols.entrySet())
+					pa.setProtocol(entry.getValue());
 		}
 		
-		if (protocolApplication != null)
+		if (!mProtocolApplications.isEmpty())
 		{
 			if (target.substanceRecord != null)
 			{	
@@ -174,13 +158,15 @@ public class UniversalObject
 					listPA = new ArrayList<ProtocolApplication>();
 					target.substanceRecord.setMeasurements(listPA);
 				}
-				listPA.add(protocolApplication);
+				
+				for(Entry<Integer, ProtocolApplication> entry : mProtocolApplications.entrySet())
+					listPA.add(entry.getValue());
 			}	
 		}
 		
 	}
 	
-	public void dispatchTo(int sourceId, UniversalObject target, int targetId)
+	public void dispatchTo(int sourceId, UniversalObject target, int targetIndex)
 	{
 		//TODO
 	}
@@ -210,11 +196,11 @@ public class UniversalObject
 		if (!mCompositions.isEmpty())
 			sb.append("compositions-" + mCompositions.size() + " ");
 		
-		if (protocol != null)
-			sb.append("protocol ");
+		if (mProtocols.isEmpty())
+			sb.append("protocols- " + mProtocols.size() + " ");
 		
-		if (protocolApplication != null)
-			sb.append("protocolApplication ");
+		if (mProtocolApplications.isEmpty())
+			sb.append("protocolApplications- " + mProtocolApplications.size() + " ");
 		
 		if (!mEffects.isEmpty())
 			sb.append("effects-" + mEffects.size() + " ");
