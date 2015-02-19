@@ -50,7 +50,7 @@ public class UniversalObject
 	}
 	
 	public ProtocolApplication getProtocolApplication(int index)
-	{
+	{	
 		ProtocolApplication pa = mProtocolApplications.get(index);
 		if (pa != null)
 			return pa;
@@ -184,7 +184,7 @@ public class UniversalObject
 	
 	protected void dispatchTo(ElementSynchronization synchType, SynchronizationTarget synchTarget, DIOSynchronization dio_synch)
 	{
-		//TODO
+		
 	}
 	
 	
@@ -198,10 +198,10 @@ public class UniversalObject
 		if (!mCompositions.isEmpty())
 			sb.append("compositions-" + mCompositions.size() + " ");
 		
-		if (mProtocols.isEmpty())
+		if (!mProtocols.isEmpty())
 			sb.append("protocols- " + mProtocols.size() + " ");
 		
-		if (mProtocolApplications.isEmpty())
+		if (!mProtocolApplications.isEmpty())
 			sb.append("protocolApplications- " + mProtocolApplications.size() + " ");
 		
 		if (!mEffects.isEmpty())

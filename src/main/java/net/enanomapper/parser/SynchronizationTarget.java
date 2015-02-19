@@ -4,9 +4,9 @@ public class SynchronizationTarget
 {
 	public String originalString = null;
 	
-	public boolean FlagPrimaryDIO = false;
-	public boolean FlagParallelGroups = false;
-	public boolean FlagParallelRows = false;
+	//public boolean FlagPrimaryDIO = false;
+	//public boolean FlagParallelGroups = false;
+	//public boolean FlagParallelRows = false;
 	
 	public DynamicIterationSpan targetDIS = null;
 	public String disID = null;
@@ -26,14 +26,18 @@ public class SynchronizationTarget
 		
 		if (tokens.length >= 1)
 		{
+			/*
 			if (tokens[0].equals("PRIMARY"))
 				st.FlagPrimaryDIO = true;
+			*/	
 		}
 		
 		if (tokens.length >= 2)
 		{
+			/*
 			if (tokens[0].equals("PARALLEL"))
 				st.FlagParallelGroups = true;
+			*/	
 		}
 				
 		//TODO

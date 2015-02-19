@@ -44,6 +44,8 @@ public class DynamicIterationSpan
 	public boolean isPrimarySheet = false;
 	public DynamicIteration dynamicIteration = DynamicIteration.NEXT_NOT_EMPTY;
 	
+	public boolean parallelToPrimary = false;
+	public boolean FlagParallelToPrimary = false;
 	
 	public boolean handleByRows = true;    //The flag is related to the iteration mode and it determines whether basic data elements are rows or columns
 	public boolean FlagHandleByRows = false;
@@ -91,6 +93,21 @@ public class DynamicIterationSpan
 		DynamicIterationSpan dis = new DynamicIterationSpan(); 
 		JsonUtilities jsonUtils = new JsonUtilities();
 		
+		//PARALLEL_TO_PRIMARY
+		if(!node.path("PARALLEL_TO_PRIMARY").isMissingNode())
+		{
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "PARALLEL_TO_PRIMARY", true);
+			if (b == null)
+				conf.configErrors.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\" keyword "
+						+ "\"PARALLEL_TO_PRIMARY\": " + jsonUtils.getError());
+			else
+			{	
+				dis.parallelToPrimary = b;
+				dis.FlagParallelToPrimary = true;
+			}	
+		}
+		
+		
 		//HANDLE_BY_ROWS
 		if(!node.path("HANDLE_BY_ROWS").isMissingNode())
 		{
@@ -104,7 +121,6 @@ public class DynamicIterationSpan
 				dis.FlagHandleByRows = true;
 			}	
 		}
-		
 		
 		//CUMULATIVE_OBJECT_TYPE
 		if(node.path("CUMULATIVE_OBJECT_TYPE").isMissingNode())
@@ -337,6 +353,14 @@ public class DynamicIterationSpan
 			nFields++;
 		}
 		
+		
+		if (FlagParallelToPrimary)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"PARALLEL_TO_PRIMARY\" : " + parallelToPrimary + "");
+			nFields++;
+		}
 		
 		if (FlagHandleByRows)
 		{

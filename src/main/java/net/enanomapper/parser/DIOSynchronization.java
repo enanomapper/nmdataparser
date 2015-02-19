@@ -217,15 +217,7 @@ public class DIOSynchronization
 		
 		//Handle the cumulative object
 		dio.selfDispatch();
-		DynamicIterationSpan dis = dio.dynamicIterationSpan;
-		
-		if (dis.cumulativeObjectSynchTarget != null)
-			dio.dispatchTo(dis.cumulativeObjectSynch, dis.cumulativeObjectSynchTarget, this);
-		else
-		{
-			//Currently nothing is done
-			//default - ?? dio.dispatchTo(record);
-		}
+		dispatchDIO(dio);
 		
 	}
 	
@@ -393,7 +385,38 @@ public class DIOSynchronization
 		else
 		{
 			//If cumulativeObjectSynchTarget is not present, cumulativeObjectSynch is not take into account
-			dio.dispatchTo(primaryDIO);
+			
+			if (dis.parallelToPrimary)
+				parallelDispatch(dio);
+			else
+				dio.dispatchTo(primaryDIO);
+		}
+	}
+	
+	
+	protected void parallelDispatch(DynamicIterationObject dio)
+	{
+		//System.out.println(">>>> parallelDispatch");
+		if (dio.groupObjects.isEmpty())     
+		{	
+			//Handle the row objects
+			for (int i = 0; i < dio.rowObjects.size(); i++)
+			{
+				//TODO
+			}
+		}
+		else
+		{
+			//Handle the group objects
+			if (primaryDIO.groupObjects.size() == dio.groupObjects.size()) //just a protection
+				for (int i = 0; i < dio.groupObjects.size(); i++)
+				{	
+					GroupObject groupObj =  dio.groupObjects.get(i);
+					//Dispatch each group to the parallel one from the primary DIO
+					//System.out.println(">> par. group: " + (i+1) + "  " + groupObj.debugInfo(0));
+					groupObj.dispatchTo(primaryDIO.groupObjects.get(i));
+					
+				}
 		}
 	}
 	
