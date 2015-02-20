@@ -22,6 +22,8 @@ public class ExcelUtils
 		public int endIndex;
 	}
 	
+	public static final String NULL_POINTER_CLUSTER = "___NULL_POINTER_CLUSTER___";
+	
 	
 	public static TreeMap<Integer, String> getRowGroups(Sheet sheet, int startRowIndex, int endRowIndex, int keyColumnIndex)
 	{	
@@ -248,7 +250,30 @@ public class ExcelUtils
 	}
 	
 	
-	
+	public static TreeMap<String, ArrayList<Integer>> getRowClusters(ArrayList<Row> rows, int keyColumnIndex)
+	{
+		TreeMap<String, ArrayList<Integer>> clusters = new TreeMap<String, ArrayList<Integer>>();
+		for (int i = 0; i < rows.size(); i++)
+		{
+			Object obj = getObject(keyColumnIndex, rows.get(i));
+			String key;
+			if (obj == null)
+				key = NULL_POINTER_CLUSTER;
+			else
+				key = obj.toString().trim();
+			
+			ArrayList<Integer> cluster = clusters.get(key);
+			if (cluster == null)
+			{
+				cluster = new ArrayList<Integer>();
+				clusters.put(NULL_POINTER_CLUSTER, cluster);
+			}
+			
+			cluster.add(i);
+		}
+		
+		return clusters;
+	}
 	
 	public static boolean isEmpty (Row row)
 	{
@@ -338,6 +363,20 @@ public class ExcelUtils
 		for (int i = row.getFirstCellNum(); i <= row.getLastCellNum(); i++)
 			sb.append(getStringFromCell(row.getCell(i))+ " ");
 		
+		return sb.toString();
+	}
+	
+	public static String rowClustersToString(TreeMap<String, ArrayList<Integer>> clusters)
+	{
+		StringBuffer sb = new StringBuffer();
+		for (String key : clusters.keySet())
+		{	
+			ArrayList<Integer> cluster = clusters.get(key);
+			sb.append(key + ": ");
+			for (int i = 0; i < cluster.size(); i++)
+				sb.append(" " + cluster.get(i));
+			sb.append("\n");
+		}
 		return sb.toString();
 	}
 	
