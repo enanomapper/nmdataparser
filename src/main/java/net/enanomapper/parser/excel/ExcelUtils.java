@@ -250,12 +250,13 @@ public class ExcelUtils
 	}
 	
 	
-	public static TreeMap<String, ArrayList<Integer>> getRowClusters(ArrayList<Row> rows, int keyColumnIndex)
+	public static TreeMap<String, ArrayList<Integer>> getRowClusters(ArrayList<Row> rows, int clusteringColumnIndex)
 	{
 		TreeMap<String, ArrayList<Integer>> clusters = new TreeMap<String, ArrayList<Integer>>();
 		for (int i = 0; i < rows.size(); i++)
 		{
-			Object obj = getObject(keyColumnIndex, rows.get(i));
+			Object obj = getObject(clusteringColumnIndex, rows.get(i));
+			
 			String key;
 			if (obj == null)
 				key = NULL_POINTER_CLUSTER;
@@ -266,7 +267,7 @@ public class ExcelUtils
 			if (cluster == null)
 			{
 				cluster = new ArrayList<Integer>();
-				clusters.put(NULL_POINTER_CLUSTER, cluster);
+				clusters.put(key, cluster);
 			}
 			
 			cluster.add(i);
@@ -369,6 +370,7 @@ public class ExcelUtils
 	public static String rowClustersToString(TreeMap<String, ArrayList<Integer>> clusters)
 	{
 		StringBuffer sb = new StringBuffer();
+		sb.append("Row clusters =  " + clusters.size() + "\n");
 		for (String key : clusters.keySet())
 		{	
 			ArrayList<Integer> cluster = clusters.get(key);
