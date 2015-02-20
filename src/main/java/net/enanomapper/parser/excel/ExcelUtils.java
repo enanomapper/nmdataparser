@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -315,6 +316,20 @@ public class ExcelUtils
 			//TODO
 		}
 		return null;
+	}
+	
+	
+	public static Object getObject(int column, Row row)
+	{	
+		Cell c = row.getCell(column);
+		return ExcelUtils.getObjectFromCell(c);
+	}
+	
+	public static Object getObject(String column, Row row)
+	{
+		int col = CellReference.convertColStringToIndex(column);
+		Cell c = row.getCell(col);
+		return ExcelUtils.getObjectFromCell(c);
 	}
 	
 	public static String rowToString(Row row)
