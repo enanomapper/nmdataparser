@@ -337,6 +337,31 @@ public class ExcelUtils
 				return true;
 			//TODO eventually to check some other 'strange' cases of empty cells
 			
+			/*
+			if ( (cell.getCellType() == Cell.CELL_TYPE_STRING))
+				if("".equals(cell.getStringCellValue().trim()))
+					return true;
+			*/
+			return false;
+		}
+	}
+	
+	public static boolean isEmpty (Cell cell, boolean FlagTrim)
+	{
+		if (cell == null)
+			return true;
+		else
+		{	 
+			if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
+				return true;
+			
+			if (FlagTrim) 
+				if ( (cell.getCellType() == Cell.CELL_TYPE_STRING))
+					if("".equals(cell.getStringCellValue().trim()))
+						return true;
+			
+			//TODO eventually to check some other 'strange' cases of empty cells
+			
 			return false;
 		}
 	}
@@ -423,6 +448,50 @@ public class ExcelUtils
 			return null;
 		
 	}
+	
+	public static void fillCellGaps(ArrayList<Row> rows, int fillColumns[])
+	{
+		fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cell from fillColumns are filled 
+	}
+	
+	public static void fillCellGaps(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
+	{
+		if (fillColumns == null)
+			return;
+		
+		for (int i = 1; i < rows.size(); i++)  //For the first row (index 0) gaps are not filled
+		{	
+			boolean FlagFillGaps = true;
+			if (criterionColumn >= 0)
+				FlagFillGaps = isEmpty(rows.get(i).getCell(criterionColumn), true);
+			
+			for (int k = 0; k < fillColumns.length; k++)
+			{
+				int col = fillColumns[k];
+				if (isEmpty(rows.get(i).getCell(col), true))
+				{
+					int fullRow = findFirstNonEmptyUpInColumn(rows, i, col);
+					if (fullRow >= 0)
+					{	
+						//rows.get(i).createCell.getCell(col).setCellComment(arg0);
+						//TODO
+					}	
+				}
+			}
+		}
+	}
+	
+	public static int findFirstNonEmptyUpInColumn(ArrayList<Row> rows, int startRow, int column)
+	{	
+		for (int i = startRow; i >= 0; i--)
+		{	
+			Cell c = rows.get(i).getCell(column);
+			if (!isEmpty(c, true))
+				return i;
+		}		
+		return -1;
+	}
+	
 	
 	public static String rowToString(Row row)
 	{
