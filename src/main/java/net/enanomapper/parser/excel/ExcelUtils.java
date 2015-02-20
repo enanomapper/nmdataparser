@@ -276,6 +276,39 @@ public class ExcelUtils
 		return clusters;
 	}
 	
+	public static TreeMap<String, ArrayList<Integer>> getRowClusters(ArrayList<Row> rows, int clusteringColumnIndices[])
+	{
+		return  getRowClusters(rows, clusteringColumnIndices, " ", true);  //default separator " "
+	}
+	
+	
+	public static TreeMap<String, ArrayList<Integer>> getRowClusters(ArrayList<Row> rows, int clusteringColumnIndices[], String separator, boolean FlagTrim)
+	{
+		TreeMap<String, ArrayList<Integer>> clusters = new TreeMap<String, ArrayList<Integer>>();
+		for (int i = 0; i < rows.size(); i++)
+		{
+			Object obj = getUnifiedStringObject(clusteringColumnIndices, rows.get(i), separator, FlagTrim);
+			
+			String key;
+			if (obj == null)
+				key = NULL_POINTER_CLUSTER;
+			else
+				key = obj.toString().trim();
+			
+			ArrayList<Integer> cluster = clusters.get(key);
+			if (cluster == null)
+			{
+				cluster = new ArrayList<Integer>();
+				clusters.put(key, cluster);
+			}
+			
+			cluster.add(i);
+		}
+		
+		return clusters;
+	}
+	
+	
 	public static boolean isEmpty (Row row)
 	{
 		if (row == null)
@@ -356,6 +389,39 @@ public class ExcelUtils
 		int col = CellReference.convertColStringToIndex(column);
 		Cell c = row.getCell(col);
 		return ExcelUtils.getObjectFromCell(c);
+	}
+	
+	public static Object getUnifiedStringObject(int columns[], Row row, String separator, boolean FlagTrim)
+	{	
+		if (columns == null)
+			return null;
+		
+		if (columns.length == 0)
+			return null;
+		
+		StringBuffer sb = new StringBuffer();
+		int nNonNull = 0;
+		
+		for (int i = 0; i < columns.length; i++)
+		{
+			Object obj = getObject(columns[i], row);
+			if (obj != null)
+			{
+				if (nNonNull > 0)
+					sb.append(separator);
+				nNonNull++;
+				if (FlagTrim)
+					sb.append(obj.toString().trim());
+				else
+					sb.append(obj.toString());
+			}
+		}
+		
+		if (nNonNull > 0)
+			return sb.toString();
+		else
+			return null;
+		
 	}
 	
 	public static String rowToString(Row row)
