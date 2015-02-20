@@ -10,7 +10,9 @@ public class RecognitionUtils
 	}
 	
 		
-	public static final String[] qualifiers = {"<=", ">=", "<", ">", "Ca.", "ca.", "Mean", "mean", "StdDev", "SD"};  //It is obligatory that "<=" is before "<" ... because of the order of qualifier checking 
+	public static final String[] qualifiers = 
+			{"<=", ">=", "<", ">", "Ca.", "ca.", "Mean", "mean", "StdDev", "SD", "~"};  
+		//It is obligatory that "<=" is before "<" ... because of the order of qualifier checking 
 	
 	public static boolean matchTokens(String s1, String s2)
 	{	
