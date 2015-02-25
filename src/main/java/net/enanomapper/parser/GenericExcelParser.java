@@ -1969,6 +1969,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 	 * 
 	 * - List of all allowed JSON keywords + optional checking
 	 * 
+	 * - Read information from variables into the class ExcelDataLocation 
+	 * 
 	 * - Reading on particular sheet + linked parallel reading on several sheets (e.g. ModNanoTox should need this
 	 * 		(eventually more work variables of the kind: curSheet... would be needed) + synchronization ...		
 	 * 
