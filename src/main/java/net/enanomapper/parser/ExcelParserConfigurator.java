@@ -918,6 +918,22 @@ public class ExcelParserConfigurator
 		ExcelDataLocation loc = new ExcelDataLocation();
 		loc.sectionName = jsonSection;
 		
+		//SOURCE_COMBINATION
+		if (!sectionNode.path("SOURCE_COMBINATION").isMissingNode())
+		{
+			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "SOURCE_COMBINATION", false);
+			if (b ==  null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SOURCE_COMBINATION\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.sourceCombination = b;
+				loc.FlagSourceCombination = true;
+			}	
+		}
+		
 		//ITERATION
 		if (sectionNode.path("ITERATION").isMissingNode())
 		{
@@ -1005,6 +1021,34 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
+		//COLUMN_INDICES
+		JsonNode colIndices = sectionNode.path("COLUMN_INDICES");
+		if(!colIndices.isMissingNode())
+		{	
+			if (colIndices.isArray())
+			{	
+				loc.columnIndices  = new int[colIndices.size()];
+				for (int i = 0; i < colIndices.size(); i++)
+				{	
+					JsonNode colNode = colIndices.get(i);
+					int col_index = ExcelParserUtils.extractColumnIndex(colNode);
+					
+					if (col_index == -1)
+					{
+						conf.configErrors.add("In JSON section \"" + jsonSection + 
+								"\", keyword COLUMN_INDICES[" + (i+1) + "] is incorrect: " + jsonUtils.getError());
+						loc.nErrors++;
+					}
+					else
+						loc.columnIndices[i] = col_index;
+				}
+			}
+			else
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword COLUMN_INDICES  is not an array!");
+			}
+		}
+		
 		
 		//COLUMN_NAME
 		if (sectionNode.path("COLUMN_NAME").isMissingNode())
@@ -1061,6 +1105,43 @@ public class ExcelParserConfigurator
 			{	
 				loc.FlagRowIndex = true;
 				loc.rowIndex = intValue - 1; //1-based --> 0-based
+			}
+		}
+		
+		//ROW_INDICES
+		JsonNode rowIndices = sectionNode.path("ROW_INDICES");
+		if(!rowIndices.isMissingNode())
+		{
+			if (rowIndices.isArray())
+			{	
+				loc.rowIndices  = new int[colIndices.size()];
+				for (int i = 0; i < rowIndices.size(); i++)
+				{	
+					JsonNode rowNode = rowIndices.get(i);
+					if (rowNode.isInt())
+					{	
+						int row_ind = rowNode.asInt();
+						
+						if (row_ind <= 0)
+						{
+							conf.configErrors.add("In JSON section \"" + jsonSection + 
+									"\", keyword ROW_INDICES[" + (i+1) + "] is incorrect: " + jsonUtils.getError());
+							loc.nErrors++;
+						}
+						else
+							loc.rowIndices[i] = row_ind;
+					}
+					else
+					{
+						conf.configErrors.add("In JSON section \"" + jsonSection + 
+								"\", keyword ROW_INDICES[" + (i+1) + "] is not integer!");
+						loc.nErrors++;
+					}
+				}
+			}
+			else
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES  is not an array!");
 			}
 		}
 		
@@ -1174,6 +1255,41 @@ public class ExcelParserConfigurator
 				loc.setVariableKey(stringValue);
 			}
 		}
+		
+		
+		//VARIABLE_KEYS
+		JsonNode vkeys = sectionNode.path("VARIABLE_KEYS");
+		if(!vkeys.isMissingNode())
+		{
+			if (vkeys.isArray())
+			{	
+				loc.variableKeys = new String[vkeys.size()];
+				for (int i = 0; i < vkeys.size(); i++)
+				{	
+					JsonNode keyNode = vkeys.get(i);
+					if (keyNode.isTextual())
+					{	
+						String keyword =  keyNode.asText();
+						if (keyword == null)
+							conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS [" + (i+1)+"]: is incorrect!");
+						else
+							loc.variableKeys[i] = keyword;
+					}
+					else
+					{	
+						conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS [" + (i+1)+"]: is not textual!");
+					}
+				}
+			}
+			else
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS  is not an array!");
+			}
+		}
+		
+		
+		
+		
 		
 		return loc;
 	}

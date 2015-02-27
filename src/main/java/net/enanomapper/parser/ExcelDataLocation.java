@@ -10,14 +10,18 @@ import org.apache.poi.ss.usermodel.Cell;
 
 public class ExcelDataLocation 
 {
-	private boolean FlagExtractValueQualifier = false;
+	private boolean FlagExtractValueQualifier = false; 
 	private boolean FlagExtractAsRichValue = false;
 	private int parallelSheetIndex = -1;  //This is not the sheetIndex. This is the index within array GenericExcelParser.parallelSheets[]
+	
 	
 	private Object absoluteLocationValue = null;
 	private Object jsonValue = null;
 	private String jsonRepositoryKey = null;
 	private String variableKey = null;
+	
+	public boolean sourceCombination = false;
+	public boolean FlagSourceCombination = false;
 	
 	public int nErrors = 0;
 	public String sectionName = "";
@@ -55,7 +59,13 @@ public class ExcelDataLocation
 	public String rowName = null;
 	public boolean FlagRowName = false;
 	
-		
+	public int columnIndices[] = null; //Used only in mode IterationAccess.COMBINATION
+	
+	public int rowIndices[] = null; //Used only in mode IterationAccess.COMBINATION
+	
+	public String variableKeys[] = null; //Used only in mode IterationAccess.COMBINATION
+	
+	
 	public String toJSONKeyWord(String offset)
 	{
 		int nFields = 0;
@@ -63,14 +73,26 @@ public class ExcelDataLocation
 		sb.append(offset + "\"" + sectionName + "\":\n");
 		sb.append(offset + "{\n");
 		
+		if (FlagSourceCombination)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SOURCE_COMBINATION\" : " + sourceCombination);
+			nFields++;
+		}
+		
 		if (FlagDataType)
 		{
+			if (nFields > 0)
+				sb.append(",\n");
 			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
 			nFields++;
 		}
 		
 		if (FlagRecognition)
 		{
+			if (nFields > 0)
+				sb.append(",\n");
 			sb.append(offset + "\t\"RECOGNITION\" : \"" + recognition.toString() + "\"");
 			nFields++;
 		}
@@ -119,6 +141,21 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (columnIndices != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"COLUMN_INDICES\" : [" );
+			for (int i = 0; i < columnIndices.length; i++)
+			{	
+				sb.append(columnIndices[i]+1);
+				if (i < (columnIndices.length -1))
+					sb.append(", ");
+			}	
+			sb.append("]");
+			nFields++;
+		}
+		
 		if (FlagColumnName)
 		{
 			if (nFields > 0)
@@ -137,6 +174,21 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (rowIndices != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ROW_INDICES\" : [" );
+			for (int i = 0; i < rowIndices.length; i++)
+			{	
+				sb.append(rowIndices[i]+1);
+				if (i < (rowIndices.length -1))
+					sb.append(", ");
+			}	
+			sb.append("]");
+			nFields++;
+		}
+		
 		if (FlagRowName)
 		{
 			if (nFields > 0)
@@ -146,10 +198,27 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (variableKeys != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"VARIABLE_KEYS\" : [" );
+			for (int i = 0; i < variableKeys.length; i++)
+			{	
+				sb.append("\"" + variableKeys[i] + "\"");
+				if (i < (variableKeys.length -1))
+					sb.append(", ");
+			}	
+			sb.append("]");
+			nFields++;
+		}
+		
 		if (nFields > 0)
 			sb.append("\n");
 		
 		sb.append(offset + "}");
+		
+		
 		
 		return sb.toString();
 	}
