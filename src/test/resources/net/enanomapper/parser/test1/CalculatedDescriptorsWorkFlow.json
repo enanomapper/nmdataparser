@@ -83,9 +83,8 @@
             "EFFECTS": [
                 {
                     "ENDPOINT": {
-                        "ITERATION": "ABSOLUTE_LOCATION",
-                        "COLUMN_INDEX": "C",
-                        "ROW_INDEX": 8
+            			"ITERATION": "JSON_VALUE",
+            			"JSON_VALUE": "IMAGE"
                     },
                     "TEXT_VALUE": {
                         "COLUMN_INDEX": "C"
