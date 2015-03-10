@@ -1,0 +1,100 @@
+{
+    "TEMPLATE_INFO": {
+        "NAME": "CalculatedDescriptorsWorkFlow",
+        "VERSION": "original",
+        "TYPE": 1
+    },
+    "DATA_ACCESS": {
+        "ITERATION": "ROW_SINGLE",
+        "SHEET_INDEX": 1,
+        "START_ROW": 13,
+        "START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 12,
+        "ALLOW_EMPTY": true,
+        "RECOGNITION": "BY_INDEX"
+    },
+    "SUBSTANCE_RECORD": {
+        "COMPANY_UUID": {
+            "COLUMN_INDEX": "A"
+        },
+        "PUBLIC_NAME": {
+            "COLUMN_INDEX": "A"
+        },
+        "OWNER_NAME": {
+            "ITERATION": "ABSOLUTE_LOCATION",
+            "COLUMN_INDEX": "C",
+            "ROW_INDEX": 3
+        },
+        "SUBSTANCE_TYPE": {
+            "ITERATION": "JSON_VALUE",
+            "JSON_VALUE": "Nanoparticle"
+        },
+         "COMPOSITION": [
+           {
+               "STRUCTURE_RELATION": "HAS_CORE",
+               "CONTENT": {
+                   "COLUMN_INDEX": "B"
+               },
+               "FORMAT": {
+                   "ITERATION" : "JSON_VALUE",
+                   "JSON_VALUE": "INC"
+               },
+               "InChI": {
+                   "COLUMN_INDEX": "B"
+               }
+           },
+       ],
+    },
+    "PROTOCOL_APPLICATIONS": [
+        {
+            "CITATION_TITLE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "C",
+                "ROW_INDEX": 3
+            },
+            "PROTOCOL_CATEGORY_CODE": {
+                "ITERATION": "ABSOLUTE_LOCATION",
+                "COLUMN_INDEX": "C",
+                "ROW_INDEX": 1
+            },
+            "PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "C",
+                    "ROW_INDEX": 2
+                }
+            },
+            "PARAMETERS": {
+                "Medium": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "C",
+                    "ROW_INDEX": 9
+                },
+                "Cell": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "C",
+                    "ROW_INDEX": 8
+                },
+                "type_of_method": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "C",
+                    "ROW_INDEX": 7
+                },
+                "data_gathering_instruments": {
+                    "ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "C",
+                    "ROW_INDEX": 6
+                }
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "ABSOLUTE_LOCATION",
+                        "COLUMN_INDEX": "C",
+                        "ROW_INDEX": 7
+                    },
+                }
+            ]
+        },
+    ]
+}    
