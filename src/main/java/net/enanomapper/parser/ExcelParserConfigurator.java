@@ -400,6 +400,15 @@ public class ExcelParserConfigurator
 				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
 			}
 			
+			//REFERENCE_SUBSTANCE_UUID
+			loc = extractDataLocation(curNode,"REFERENCE_SUBSTANCE_UUID", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					conf.substanceLocations.put("SubstanceRecord.referenceSubstanceUUID", loc);
+			}
+			
+			
 			//COMPANY_UUID
 			loc = extractDataLocation(curNode,"COMPANY_UUID", conf);
 			if (loc != null)
@@ -732,9 +741,20 @@ public class ExcelParserConfigurator
 		sb.append("\t{\n");
 		n = 0;
 		
+		loc = substanceLocations.get("SubstanceRecord.referenceSubstanceUUID");
+		if (loc != null)
+		{
+			if (n > 0)
+				sb.append(",\n\n");
+			sb.append(loc.toJSONKeyWord("\t\t"));
+			n++;
+		}
+		
 		loc = substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{
+			if (n > 0)
+				sb.append(",\n\n");
 			sb.append(loc.toJSONKeyWord("\t\t"));
 			n++;
 		}
