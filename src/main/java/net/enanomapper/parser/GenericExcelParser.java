@@ -805,6 +805,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord>
 				r.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
 		}
 		
+		
+		loc = config.substanceLocations.get("SubstanceRecord.referenceSubstanceUUID");
+		if (loc != null)
+		{	
+			String s = getString(loc);
+			if (s != null)
+				r.setReferenceSubstanceUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
+		}
+
 		loc = config.substanceLocations.get("SubstanceRecord.companyName");
 		if (loc != null)
 		{	
