@@ -29,6 +29,9 @@
             "ITERATION": "JSON_VALUE",
             "JSON_VALUE": "Nanoparticle"
         },
+        "REFERENCE_SUBSTANCE_UUID" : {
+            "COLUMN_INDEX": "B"
+        },
         "COMPOSITION": [
             {
                 "STRUCTURE_RELATION": "HAS_CORE",
@@ -57,6 +60,7 @@
                 "COLUMN_INDEX": "C",
                 "ROW_INDEX": 1
             },
+
             "PROTOCOL_GUIDELINE": {
                 "guideline1": {
                     "ITERATION": "ABSOLUTE_LOCATION",
