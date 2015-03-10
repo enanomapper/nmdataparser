@@ -29,21 +29,21 @@
             "ITERATION": "JSON_VALUE",
             "JSON_VALUE": "Nanoparticle"
         },
-         "COMPOSITION": [
-           {
-               "STRUCTURE_RELATION": "HAS_CORE",
-               "CONTENT": {
-                   "COLUMN_INDEX": "B"
-               },
-               "FORMAT": {
-                   "ITERATION" : "JSON_VALUE",
-                   "JSON_VALUE": "INC"
-               },
-               "InChI": {
-                   "COLUMN_INDEX": "B"
-               }
-           },
-       ],
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+                "CONTENT": {
+                    "COLUMN_INDEX": "B"
+                },
+                "FORMAT": {
+                    "ITERATION": "JSON_VALUE",
+                    "JSON_VALUE": "INC"
+                },
+                "InChI": {
+                    "COLUMN_INDEX": "B"
+                }
+            }
+        ]
     },
     "PROTOCOL_APPLICATIONS": [
         {
@@ -93,8 +93,11 @@
                         "COLUMN_INDEX": "C",
                         "ROW_INDEX": 7
                     },
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "C"
+                    }
                 }
             ]
-        },
+        }
     ]
-}    
+}
