@@ -22,6 +22,7 @@ import org.junit.Test;
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 
@@ -83,17 +84,23 @@ public class NMParserTestUtils {
 				for (ProtocolApplication pa : paList)
 					System.out.println("***Protocol application:\n"
 							+ pa.toString());
-			
+
 			List<CompositionRelation> composition = r.getRelatedStructures();
 			if (composition != null)
-				for (CompositionRelation relation : composition)
-				{	
-					//System.out.println(" ### Composition " + structureRecordToString(relation.getSecondStructure()));
-					System.out.println(" ### Composition \n" + compositionRelationStructureToString(relation));  //both give the same result
-					System.out.println(" ### Properties: " + structureRecordProperties(relation.getSecondStructure()));
-				}	
-			
-			
+				for (CompositionRelation relation : composition) {
+					// System.out.println(" ### Composition " +
+					// structureRecordToString(relation.getSecondStructure()));
+					System.out.println(" ### Composition \n"
+							+ compositionRelationStructureToString(relation)); // both
+																				// give
+																				// the
+																				// same
+																				// result
+					System.out.println(" ### Properties: "
+							+ structureRecordProperties(relation
+									.getSecondStructure()));
+				}
+
 		}
 
 		if (parser.hasErrors())
@@ -103,52 +110,49 @@ public class NMParserTestUtils {
 		fin.close();
 
 	}
-	
-	public static void testRichValue(String rvString)
-	{
+
+	public static void testRichValue(String rvString) {
 		System.out.println("Testing RichValue: " + rvString);
-		
+
 		RichValueParser par = new RichValueParser();
 		RichValue rv = par.parse(rvString);
-		
-		String errors = par.getAllErrorsAsString(); 
-		if (errors != null)
-		{
+
+		String errors = par.getAllErrorsAsString();
+		if (errors != null) {
 			System.out.println("RichValueParser errors:\n" + errors);
-		}
-		else
-		{
+		} else {
 			System.out.println(rv.toString());
 		}
 	}
-	
-	public static void testGetRowGroups(String excelFile, int sheetIndex, int startRowIndex, int endRowIndex, int keyColumnIndex, 
-			boolean recognizeGroupByNextNonEmpty) throws Exception
-	{
+
+	public static void testGetRowGroups(String excelFile, int sheetIndex,
+			int startRowIndex, int endRowIndex, int keyColumnIndex,
+			boolean recognizeGroupByNextNonEmpty) throws Exception {
 		FileInputStream fin = new FileInputStream(excelFile);
 		boolean isXLSX = excelFile.endsWith("xlsx");
 		System.out.println("isXLSX = " + isXLSX + "\n");
-		
+
 		Workbook workbook;
 		if (isXLSX)
 			workbook = new XSSFWorkbook(fin);
 		else
 			workbook = new HSSFWorkbook(fin);
-		
-		//All data is expected as 1-based indexed
-		Sheet sheet = workbook.getSheetAt(sheetIndex-1);
-		TreeMap<Integer, String> groups = 
-				ExcelUtils.getRowGroups(sheet, startRowIndex-1, (endRowIndex == -1)?sheet.getLastRowNum():(endRowIndex-1), keyColumnIndex-1, recognizeGroupByNextNonEmpty);
-		
+
+		// All data is expected as 1-based indexed
+		Sheet sheet = workbook.getSheetAt(sheetIndex - 1);
+		TreeMap<Integer, String> groups = ExcelUtils.getRowGroups(sheet,
+				startRowIndex - 1, (endRowIndex == -1) ? sheet.getLastRowNum()
+						: (endRowIndex - 1), keyColumnIndex - 1,
+				recognizeGroupByNextNonEmpty);
+
 		for (Integer key : groups.keySet())
-			System.out.println("Group starts at row " + (key+1) + "   " + groups.get(key));
-		
-		
+			System.out.println("Group starts at row " + (key + 1) + "   "
+					+ groups.get(key));
+
 		fin.close();
 	}
-	
-	public static String structureRecordToString(IStructureRecord str)
-	{
+
+	public static String structureRecordToString(IStructureRecord str) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Content : " + str.getContent());
 		sb.append("  Format : " + str.getFormat());
@@ -157,19 +161,17 @@ public class NMParserTestUtils {
 		sb.append("  InchiKey : " + str.getInchiKey());
 		return sb.toString();
 	}
-	
-	public static String structureRecordProperties(IStructureRecord str)
-	{
+
+	public static String structureRecordProperties(IStructureRecord str) {
 		StringBuffer sb = new StringBuffer();
-		for (Property p : str.getProperties())
-		{
+		for (Property p : str.getProperties()) {
 			sb.append("    " + p.getName() + ": " + str.getProperty(p));
 		}
 		return sb.toString();
 	}
-	
-	public static String compositionRelationStructureToString(CompositionRelation rel)
-	{
+
+	public static String compositionRelationStructureToString(
+			CompositionRelation rel) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  Content : \"" + rel.getContent() + "\"\n");
 		sb.append("  Format : \"" + rel.getFormat() + "\"\n");
@@ -179,8 +181,8 @@ public class NMParserTestUtils {
 		sb.append("  InchiKey : \"" + rel.getInchiKey() + "\"\n");
 		return sb.toString();
 	}
-	
-	//@Test
+
+	@Test
 	public void testProteinCoronaXLSX() throws Exception {
 		InputStream xlsx = this
 				.getClass()
@@ -200,12 +202,13 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getCompanyUUID());
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
-				Assert.assertTrue(r.getMeasurements().size()>0);
+				Assert.assertTrue(r.getMeasurements().size() > 0);
 				System.out.println(r.toJSON("http://localhost/"));
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
-					Assert.assertEquals(r.getCompanyUUID(),  pa.getSubstanceUUID());
-					Assert.assertEquals(r.getOwnerName(),  pa.getCompanyName());
+					Assert.assertEquals(r.getCompanyUUID(),
+							pa.getSubstanceUUID());
+					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
 					Assert.assertNotNull(pa.getProtocol());
 				}
 			}
@@ -234,16 +237,18 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getCompanyUUID());
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
-				Assert.assertTrue(r.getMeasurements().size()>0);
-				//System.out.println(r.toJSON("http://localhost/"));
+				Assert.assertTrue(r.getMeasurements().size() > 0);
+				// System.out.println(r.toJSON("http://localhost/"));
 				Assert.assertNotNull(r.getExternalids());
-				Assert.assertTrue(r.getExternalids().size()>0);
-				Assert.assertEquals("Classification",r.getExternalids().get(0).getSystemDesignator());
+				Assert.assertTrue(r.getExternalids().size() > 0);
+				Assert.assertEquals("Classification", r.getExternalids().get(0)
+						.getSystemDesignator());
 				Assert.assertNotNull(r.getRelatedStructures());
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
-					Assert.assertEquals(r.getCompanyUUID(),  pa.getSubstanceUUID());
-					Assert.assertEquals(r.getOwnerName(),  pa.getCompanyName());
+					Assert.assertEquals(r.getCompanyUUID(),
+							pa.getSubstanceUUID());
+					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
 					Assert.assertNotNull(pa.getProtocol());
 				}
 			}
@@ -251,4 +256,43 @@ public class NMParserTestUtils {
 			parser.close();
 		}
 	}
+
+	@Test
+	public void testDescriptorsTest1() throws Exception {
+		InputStream xlsx = this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"net/enanomapper/parser/test1/CalculatedDescriptorsWorkFlow.xlsx");
+		URL json = this
+				.getClass()
+				.getClassLoader()
+				.getResource(
+						"net/enanomapper/parser/test1/CalculatedDescriptorsWorkFlow.json");
+		GenericExcelParser parser = new GenericExcelParser(xlsx,
+				json.getFile(), true);
+		StructureRecordValidator validator = new StructureRecordValidator();
+		validator.setFixErrors(true);
+		try {
+			while (parser.hasNext()) {
+				SubstanceRecord r = parser.nextRecord();
+				validator.process(r);
+				Assert.assertNotNull(r.getCompanyUUID());
+				Assert.assertNotNull(r.getPublicName());
+				Assert.assertNotNull(r.getMeasurements());
+				Assert.assertTrue(r.getMeasurements().size() > 0);
+				System.out.println(r.toJSON("http://localhost/"));
+				System.out.println(r.getMeasurements());
+				for (ProtocolApplication pa : r.getMeasurements()) {
+					Assert.assertEquals(r.getCompanyUUID(),
+							pa.getSubstanceUUID());
+					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
+					Assert.assertNotNull(pa.getProtocol());
+				}
+			}
+		} finally {
+			parser.close();
+		}
+	}
+
 }

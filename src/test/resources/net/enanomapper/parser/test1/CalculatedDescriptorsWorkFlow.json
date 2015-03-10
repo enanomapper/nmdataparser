@@ -7,9 +7,9 @@
     "DATA_ACCESS": {
         "ITERATION": "ROW_SINGLE",
         "SHEET_INDEX": 1,
-        "START_ROW": 13,
+        "START_ROW": 10,
         "START_HEADER_ROW": 1,
-        "END_HEADER_ROW": 12,
+        "END_HEADER_ROW": 9,
         "ALLOW_EMPTY": true,
         "RECOGNITION": "BY_INDEX"
     },
@@ -23,7 +23,7 @@
         "OWNER_NAME": {
             "ITERATION": "ABSOLUTE_LOCATION",
             "COLUMN_INDEX": "C",
-            "ROW_INDEX": 3
+            "ROW_INDEX": 7
         },
         "SUBSTANCE_TYPE": {
             "ITERATION": "JSON_VALUE",
@@ -65,20 +65,10 @@
                 }
             },
             "PARAMETERS": {
-                "Medium": {
-                    "ITERATION": "ABSOLUTE_LOCATION",
-                    "COLUMN_INDEX": "C",
-                    "ROW_INDEX": 9
-                },
-                "Cell": {
-                    "ITERATION": "ABSOLUTE_LOCATION",
-                    "COLUMN_INDEX": "C",
-                    "ROW_INDEX": 8
-                },
                 "type_of_method": {
                     "ITERATION": "ABSOLUTE_LOCATION",
                     "COLUMN_INDEX": "C",
-                    "ROW_INDEX": 7
+                    "ROW_INDEX": 5
                 },
                 "data_gathering_instruments": {
                     "ITERATION": "ABSOLUTE_LOCATION",
@@ -91,10 +81,17 @@
                     "ENDPOINT": {
                         "ITERATION": "ABSOLUTE_LOCATION",
                         "COLUMN_INDEX": "C",
-                        "ROW_INDEX": 7
+                        "ROW_INDEX": 8
                     },
                     "TEXT_VALUE": {
                         "COLUMN_INDEX": "C"
+                    },
+                    "CONDITIONS": {
+                        "Cell": {
+                            "ITERATION": "ABSOLUTE_LOCATION",
+                            "COLUMN_INDEX": "C",
+                            "ROW_INDEX": 9
+                        }
                     }
                 }
             ]

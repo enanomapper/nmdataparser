@@ -65,7 +65,13 @@
       <groupId>net.ideaconsult</groupId>
       <artifactId>loom-nm</artifactId>
       <version>1.0.8-SNAPSHOT</version>
-    </dependency>     
+    </dependency>    
+     		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>enmcli</finalName>
