@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
 import net.idea.loom.nm.csv.CSV12Reader;
 import net.idea.loom.nm.csv.CSV12SubstanceReader;
 import ambit2.base.data.ILiteratureEntry._type;
