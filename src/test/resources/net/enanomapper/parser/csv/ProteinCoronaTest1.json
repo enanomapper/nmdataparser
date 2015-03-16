@@ -14,7 +14,7 @@
         "RECOGNITION": "BY_INDEX"
     },
     "SUBSTANCE_RECORD": {
-        "COMPANY_UUID": {
+        "COMPANY_NAME": {
             "COLUMN_INDEX": "A"
         },
         "PUBLIC_NAME": {
