@@ -1,5 +1,6 @@
 package net.enanomapper.parser.test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -40,14 +41,14 @@ public class NMParserTestUtils {
 
 		testExcelTemplate(
 				"/Users/nick/Projects/eNanoMapper/template01-NR.xlsx",
-				"/Users/nick/Projects/eNanoMapper/config01.json");
+				new File("/Users/nick/Projects/eNanoMapper/config01.json"));
 		// testExcelTemplate("D:/Projects/nina/eNanoMapper/template01-NR.xlsx","D:/Projects/nina/eNanoMapper/config01.json");
 
 		// System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 
 	}
 
-	public static void testExcelParserConfiguration(String jsonFile)
+	public static void testExcelParserConfiguration(File jsonFile)
 			throws Exception {
 		ExcelParserConfigurator parserConfig = ExcelParserConfigurator
 				.loadFromJSON(jsonFile);
@@ -62,7 +63,7 @@ public class NMParserTestUtils {
 		System.out.println(parserConfig.toJSONString());
 	}
 
-	public static void testExcelTemplate(String excelFile, String jsonFile)
+	public static void testExcelTemplate(String excelFile, File jsonFile)
 			throws Exception {
 		FileInputStream fin = new FileInputStream(excelFile);
 		boolean isXLSX = excelFile.endsWith("xlsx");
@@ -195,7 +196,7 @@ public class NMParserTestUtils {
 				.getResource(
 						"net/enanomapper/parser/csv/ProteinCoronaTest.json");
 		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				json.getFile(), true);
+				new File(json.getFile()), true);
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
@@ -230,7 +231,7 @@ public class NMParserTestUtils {
 				.getResource(
 						"net/enanomapper/parser/csv/ProteinCoronaTest1.json");
 		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				json.getFile(), true);
+				new File(json.getFile()), true);
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
@@ -270,7 +271,7 @@ public class NMParserTestUtils {
 				.getResource(
 						"net/enanomapper/parser/test1/CalculatedDescriptorsWorkFlow.json");
 		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				json.getFile(), true);
+				new File(json.getFile()), true);
 		StructureRecordValidator validator = new StructureRecordValidator();
 		validator.setFixErrors(true);
 		try {

@@ -1,10 +1,10 @@
 package net.enanomapper.parser;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -15,11 +15,8 @@ import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
-import org.apache.poi.hssf.util.CellReference;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-
-import ambit2.base.data.substance.ExternalIdentifier;
 
 /**
  * 
@@ -113,7 +110,7 @@ public class ExcelParserConfigurator
 	
 	
 	
-	public static ExcelParserConfigurator loadFromJSON(String jsonConfig) throws Exception
+	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws Exception
 	{
 		FileInputStream fin = new FileInputStream(jsonConfig); 
 		ObjectMapper mapper = new ObjectMapper();
