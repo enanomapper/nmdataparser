@@ -165,4 +165,14 @@
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 </properties>    	
+	<scm>
+		<url>https://github.com/enanomapper/nmdataparser.git</url>
+		<connection>scm:git:git://github.com/enanomapper/nmdataparser.git</connection>
+		<developerConnection>scm:git:git@github.com:enanomapper/nmdataparser.git</developerConnection>
+	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/enanomapper/nmdataparser/issues</url>
+	</issueManagement>
+	<inceptionYear>2014</inceptionYear>
 </project>
