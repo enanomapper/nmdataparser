@@ -57,5 +57,25 @@ VARIABLES	Defines an array of excel locations that are read into work variables 
 
 --
 
- The parser will enable import into http://data.enanomapper.net 
+ The parser enables import into http://data.enanomapper.net   [API](http://enanomapper.github.io/API/#!/substance_1/uploadSubstance)
  
+--
+Available at Maven repository http://ambit.uni-plovdiv.bg:8083/nexus/index.html#nexus-search;quick~i5z
+
+Stable release
+````
+<dependency>
+  <groupId>net.enanomapper</groupId>
+  <artifactId>nmparser</artifactId>
+  <version>0.0.1</version>
+</dependency>
+````
+
+Development snapshot
+````
+<dependency>
+  <groupId>net.enanomapper</groupId>
+  <artifactId>nmparser</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+</dependency>
+````
