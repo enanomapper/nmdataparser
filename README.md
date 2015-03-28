@@ -3,6 +3,11 @@ nmdataparser
 
 Configurable parsers for different eNanoMapper input data formats
 
+##### Examples:
+- [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
+- [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
+- [More examples]{https://github.com/enanomapper/nmdataparser/tree/master/src/test/resources/net/enanomapper/parser/csv)
+
 #### Options
 
 1. **DATA_ACCESS**	This section defines the basic parameters for data access and iteration of the primary sheet
@@ -23,12 +28,6 @@ VARIABLES	Defines an array of excel locations that are read into work variables 
 14. **PROTOCOL_APPLICATIONS [ ]**	This is an array of sections , defining the excel data locations for reading of Protocol Application data. Each section includes following fields:  CITATION_TITLE, CITATION_YEAR, CITATION_OWNER,  INTERPRETATION_RESULT, INTERPRETATION_CRITERIA, PROTOCOL_GUIDELINE, PARAMETERS (an array of data locations), EFFECTS (an array of sections)
 15. **EFFECTS [ ]**	This is an array of sections. Each section defines data structures (effect record) for particular measurements and includes following excel data locations: SAMPLE_ID, ENDPOINT, LO_VALUE, UP_VALUE, ERR_VALUE, TEXT_VALUE, VALUE, LO_QUALIFIER, UP_QUALIFIER, ERR_QUALIFIER, UNIT, CONDITIONS (an array of data locations)
 16. REPOSITORY	A JSON structure for defining preconfigured data (e.g. protocol, parameters) to be read directly from the JSON file into the data classes. 
-
-##### Example:
-- [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
-- [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
-- [More examples]{https://github.com/enanomapper/nmdataparser/tree/master/src/test/resources/net/enanomapper/parser/csv)
-
 
 --
 
