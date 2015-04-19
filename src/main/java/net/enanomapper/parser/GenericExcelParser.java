@@ -1569,22 +1569,35 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
 
     protected Double getNumericFromAbsoluteLocation(ExcelDataLocation loc) {
-	Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
-	if (sheet != null) {
-	    Row r = sheet.getRow(loc.rowIndex);
-	    if (r == null)
-		return null;
+    	Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+    	if (sheet != null) {
+    		Row r = sheet.getRow(loc.rowIndex);
+    		if (r == null)
+    			return null;
 
-	    Cell c = r.getCell(loc.columnIndex);
-	    if (c != null) {
-		if (c.getCellType() != Cell.CELL_TYPE_NUMERIC) {
-		    parseErrors.add("[" + locationStringForErrorMessage(loc) + "]: Cell is not of type NUMERIC!");
-		    return null;
-		}
-		return c.getNumericCellValue();
-	    }
-	}
-	return null;
+    		Cell c = r.getCell(loc.columnIndex);
+    		
+    		Double d = ExcelUtils.getNumericValue(c);
+    		if (d != null)
+    			return d;
+    		else
+    		{
+				parseErrors.add("[" + locationStringForErrorMessage(loc) + "]: Cell is not of type NUMERIC!");
+				return null;
+			}
+    			
+    		/*
+    		if (c != null) {
+    			if (c.getCellType() != Cell.CELL_TYPE_NUMERIC) 
+    			{
+    				parseErrors.add("[" + locationStringForErrorMessage(loc) + "]: Cell is not of type NUMERIC!");
+    				return null;
+    			}
+    			return c.getNumericCellValue();
+    		}
+    		*/
+    	}
+    	return null;
     }
 
     /*
@@ -1622,25 +1635,37 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
 
     protected Double getNumericValue(Row row, ExcelDataLocation loc) {
-	Cell c = row.getCell(loc.columnIndex);
+    	Cell c = row.getCell(loc.columnIndex);
 
-	if (c == null) {
-	    if (loc.allowEmpty) {
-		return 0.0;
-	    } else {
-		parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + ", row "
-			+ (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!");
-		return null;
-	    }
-	}
-
-	if (c.getCellType() != Cell.CELL_TYPE_NUMERIC) {
-	    parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + ", row "
-		    + (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type NUMERIC!");
-	    return null;
-	}
-
-	return c.getNumericCellValue();
+    	if (c == null) {
+    		if (loc.allowEmpty) {
+    			return 0.0;
+    		} else {
+    			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + ", row "
+    					+ (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is empty!");
+    			return null;
+    		}
+    	}
+    	
+    	Double d = ExcelUtils.getNumericValue(c);
+		if (d != null)
+			return d;
+		else
+		{
+			parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + ", row "
+    				+ (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type NUMERIC!");
+    		return null;
+		}
+		
+		/*
+    	if (c.getCellType() != Cell.CELL_TYPE_NUMERIC) {
+    		parseErrors.add("JSON Section " + loc.sectionName + ", sheet " + (primarySheetNum + 1) + ", row "
+    				+ (row.getRowNum() + 1) + " cell " + (loc.columnIndex + 1) + " is not of type NUMERIC!");
+    		return null;
+    	}
+    	
+    	return c.getNumericCellValue();
+    	*/	
     }
 
     private String locationStringForErrorMessage(ExcelDataLocation loc) {

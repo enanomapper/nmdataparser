@@ -379,6 +379,10 @@ public class ExcelUtils
 			return "" + c.getNumericCellValue();
 		case Cell.CELL_TYPE_STRING:
 			return c.getStringCellValue();
+		case Cell.CELL_TYPE_FORMULA: {	
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+				return "" + c.getNumericCellValue();
+		}	
 			//TODO
 		}
 		return "";
@@ -397,8 +401,32 @@ public class ExcelUtils
 			return new Double(c.getNumericCellValue());
 		case Cell.CELL_TYPE_STRING:
 			return c.getStringCellValue();
+		case Cell.CELL_TYPE_FORMULA: {	
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+				return new Double(c.getNumericCellValue());
+		}	
 			//TODO
 		}
+		return null;
+	}
+	
+	public static Double getNumericValue(Cell c)
+	{
+		if (c == null)
+			return null;
+		
+		switch (c.getCellType())
+		{
+		case Cell.CELL_TYPE_BLANK:
+			return null;
+		case Cell.CELL_TYPE_NUMERIC:
+			return new Double(c.getNumericCellValue());
+		case Cell.CELL_TYPE_FORMULA: {	
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+				return new Double(c.getNumericCellValue());
+		}	
+		}
+		
 		return null;
 	}
 	
@@ -516,6 +544,8 @@ public class ExcelUtils
 		}
 		return sb.toString();
 	}
+	
+	
 	
 	
 }
