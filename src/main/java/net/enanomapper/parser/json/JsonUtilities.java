@@ -55,7 +55,7 @@ public class JsonUtilities
 		}
 		else
 		{	
-			error = "Keyword " + keyword + " is not of type Int!";
+			error = "Keyword " + keyword + " is not of type Double!";
 			return null;
 		}			
 	}
