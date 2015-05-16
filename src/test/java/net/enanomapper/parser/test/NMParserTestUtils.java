@@ -200,14 +200,14 @@ public class NMParserTestUtils {
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
-				Assert.assertNotNull(r.getCompanyUUID());
+				Assert.assertNotNull(r.getSubstanceUUID());
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size() > 0);
 				System.out.println(r.toJSON("http://localhost/"));
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
-					Assert.assertEquals(r.getCompanyUUID(),
+					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
 					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
 					Assert.assertNotNull(pa.getProtocol());
@@ -235,7 +235,7 @@ public class NMParserTestUtils {
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
-				Assert.assertNotNull(r.getCompanyUUID());
+				Assert.assertNotNull(r.getSubstanceUUID());
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size() > 0);
@@ -247,7 +247,7 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getRelatedStructures());
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
-					Assert.assertEquals(r.getCompanyUUID(),
+					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
 					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
 					Assert.assertNotNull(pa.getProtocol());
@@ -278,14 +278,14 @@ public class NMParserTestUtils {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
 				validator.process(r);
-				Assert.assertNotNull(r.getCompanyUUID());
+				Assert.assertNotNull(r.getSubstanceUUID());
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size() > 0);
 				System.out.println(r.toJSON("http://localhost/"));
 				System.out.println(r.getMeasurements());
 				for (ProtocolApplication pa : r.getMeasurements()) {
-					Assert.assertEquals(r.getCompanyUUID(),
+					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
 					Assert.assertEquals(r.getOwnerName(), pa.getCompanyName());
 					Assert.assertNotNull(pa.getProtocol());

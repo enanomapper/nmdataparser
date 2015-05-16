@@ -722,8 +722,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.companyUUID");
 	if (loc != null) {
 	    String s = getString(loc);
-	    if (s != null)
-		r.setCompanyUUID("XLSX-" + UUID.nameUUIDFromBytes(s.getBytes()).toString());
+	    if (s != null && !"".equals(s.trim()))
+		r.setSubstanceUUID("XLSX-" + UUID.nameUUIDFromBytes(s.getBytes()).toString());
 	}
 
 	loc = config.substanceLocations.get("SubstanceRecord.referenceSubstanceUUID");
@@ -737,7 +737,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	if (loc != null) {
 	    String s = getString(loc);
 	    if (s != null)
-		r.setCompanyName(s);
+		r.setSubstanceName(s);
 	}
 
 	// Typically ownerUUID is not set from the excel file but it is possible
@@ -851,7 +851,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     protected void putSRInfoToProtocolApplications(SubstanceRecord record) {
 	for (ProtocolApplication pa : record.getMeasurements()) {
 	    // pa.setCompanyName(record.getCompanyName());
-	    pa.setSubstanceUUID(record.getCompanyUUID());
+	    pa.setSubstanceUUID(record.getSubstanceUUID());
 	    pa.setCompanyName(record.getOwnerName());
 	    pa.setCompanyUUID(record.getOwnerUUID());
 	    // TODO

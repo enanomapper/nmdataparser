@@ -531,12 +531,12 @@ public class DynamicElement
 		switch (fieldType)
 		{
 		case COMPANY_NAME:
-			substanceRecord.setCompanyName(elObj.toString());
+			substanceRecord.setSubstanceName(elObj.toString());
 			break;
 			
 		case COMPANY_UUID:
 			String s = elObj.toString();
-			substanceRecord.setCompanyUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
+			substanceRecord.setSubstanceUUID("XLSX-"+UUID.nameUUIDFromBytes(s.getBytes()).toString());
 			break;
 			
 		case OWNER_NAME:
@@ -544,7 +544,7 @@ public class DynamicElement
 			break;
 			
 		case OWNER_UUID:
-			substanceRecord.setCompanyUUID(elObj.toString()); 
+			substanceRecord.setOwnerUUID(elObj.toString()); 
 			break;
 			
 		case SUBSTANCE_TYPE:
