@@ -2,6 +2,7 @@ package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -477,18 +478,30 @@ public class ExcelUtils
 		
 	}
 	
-	public static void fillCellGaps(ArrayList<Row> rows, int fillColumns[])
+	public static List<TreeMap<Integer,Object>> fillCellGaps(ArrayList<Row> rows, int fillColumns[])
 	{
-		fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cell from fillColumns are filled 
+		 return fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cell from fillColumns are filled 
 	}
 	
-	public static void fillCellGaps(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
+	
+	/**
+	 * Applies strategy to filling missing cell values.
+	 * @param rows a bloch of excel rows where the gaps (empty cells) are filled
+	 * @param fillColumns
+	 * @param criterionColumn
+	 * @return returns a list with the missing Cell values for each row 
+	 */
+	public static List<TreeMap<Integer,Object>> fillCellGaps(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
 	{
 		if (fillColumns == null)
-			return;
+			return null;
+		
+		List<TreeMap<Integer,Object>> fillInfo = new ArrayList<TreeMap<Integer,Object>>();
+		fillInfo.add(new TreeMap<Integer,Object>()); //and empty map is added in the first row 
 		
 		for (int i = 1; i < rows.size(); i++)  //For the first row (index 0) gaps are not filled
 		{	
+			TreeMap<Integer,Object> rowFill =  new TreeMap<Integer,Object>();
 			boolean FlagFillGaps = true;
 			if (criterionColumn >= 0)
 				FlagFillGaps = isEmpty(rows.get(i).getCell(criterionColumn), true);
@@ -507,6 +520,8 @@ public class ExcelUtils
 				}
 			}
 		}
+		
+		return fillInfo;
 	}
 	
 	public static int findFirstNonEmptyUpInColumn(ArrayList<Row> rows, int startRow, int column)
