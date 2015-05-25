@@ -478,7 +478,7 @@ public class ExcelUtils
 		
 	}
 	
-	public static List<TreeMap<Integer,Object>> fillCellGaps(ArrayList<Row> rows, int fillColumns[])
+	public static List<TreeMap<Integer,Object>> fillCellGaps(List<Row> rows, int fillColumns[])
 	{
 		 return fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cell from fillColumns are filled 
 	}
@@ -491,7 +491,7 @@ public class ExcelUtils
 	 * @param criterionColumn
 	 * @return returns a list with the missing Cell values for each row 
 	 */
-	public static List<TreeMap<Integer,Object>> fillCellGaps(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
+	public static List<TreeMap<Integer,Object>> fillCellGaps(List<Row> rows, int fillColumns[], int criterionColumn)
 	{
 		if (fillColumns == null)
 			return null;
@@ -524,7 +524,20 @@ public class ExcelUtils
 		return fillInfo;
 	}
 	
-	public static int findFirstNonEmptyUpInColumn(ArrayList<Row> rows, int startRow, int column)
+	public static List<TreeMap<Integer,Object>> fillCellGapsByTargetLine(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
+	{
+		if (fillColumns == null)
+			return null;
+		
+		List<TreeMap<Integer,Object>> fillInfo = new ArrayList<TreeMap<Integer,Object>>();
+		fillInfo.add(new TreeMap<Integer,Object>()); //and empty map is added in the first row 
+		
+		//TODO
+		
+		return fillInfo;
+	}
+		
+	public static int findFirstNonEmptyUpInColumn(List<Row> rows, int startRow, int column)
 	{	
 		for (int i = startRow; i >= 0; i--)
 		{	
