@@ -478,9 +478,35 @@ public class ExcelUtils
 		
 	}
 	
+	public static List<TreeMap<Integer,Object>> fillCellGaps(List<Row> rows, String fillColumns[])
+	{
+		if (fillColumns == null)
+			return null;
+		
+		int columns[] = new int[fillColumns.length];
+		for (int i = 0; i < fillColumns.length; i++)
+			columns[i] = CellReference.convertColStringToIndex(fillColumns[i]);
+		
+		return fillCellGaps(rows, columns, -1); //default: no criterion is observed / all cells from fillColumns are filled
+	}
+	
+	public static List<TreeMap<Integer,Object>> fillCellGaps(List<Row> rows, String fillColumns[], String criterionColumn)
+	{
+		if (fillColumns == null)
+			return null;
+		
+		int columns[] = new int[fillColumns.length];
+		for (int i = 0; i < fillColumns.length; i++)
+			columns[i] = CellReference.convertColStringToIndex(fillColumns[i]);
+		
+		int crColumn = CellReference.convertColStringToIndex(criterionColumn);
+		
+		return fillCellGaps(rows, columns, crColumn); //default: no criterion is observed / all cells from fillColumns are filled
+	}
+	
 	public static List<TreeMap<Integer,Object>> fillCellGaps(List<Row> rows, int fillColumns[])
 	{
-		 return fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cell from fillColumns are filled 
+		 return fillCellGaps(rows, fillColumns, -1); //default: no criterion is observed / all cells from fillColumns are filled 
 	}
 	
 	
