@@ -550,15 +550,45 @@ public class ExcelUtils
 		return fillInfo;
 	}
 	
-	public static List<TreeMap<Integer,Object>> fillCellGapsByTargetLine(ArrayList<Row> rows, int fillColumns[], int criterionColumn)
+	public static List<TreeMap<Integer,Object>> fillCellGapsByTargetRow(ArrayList<Row> rows, int fillColumns[], int targetRowNum)
 	{
 		if (fillColumns == null)
 			return null;
 		
-		List<TreeMap<Integer,Object>> fillInfo = new ArrayList<TreeMap<Integer,Object>>();
-		fillInfo.add(new TreeMap<Integer,Object>()); //and empty map is added in the first row 
+		if (targetRowNum < 0)
+			return null;
 		
-		//TODO
+		if (targetRowNum >= rows.size())
+			return null;
+		
+		List<TreeMap<Integer,Object>> fillInfo = new ArrayList<TreeMap<Integer,Object>>();
+		Row targetRow = rows.get(targetRowNum);
+		
+		for (int i = 0; i < rows.size(); i++)
+		{
+			
+			
+			if (i == targetRowNum)
+			{
+				fillInfo.add(new TreeMap<Integer,Object>()); //and empty map is added for the target line 
+				continue;
+			}
+			
+			Row row = rows.get(i);
+			TreeMap<Integer,Object> omap = new TreeMap<Integer,Object>();
+			
+			for (int k = 0; k < fillColumns.length; k++)
+			{
+				int col = fillColumns[k];
+				if (isEmpty(row.getCell(col), true))
+				{
+					Object obj =  getObject(col, targetRow);
+					omap.put(col, obj);
+				}
+			}
+			
+			fillInfo.add(omap);
+		}
 		
 		return fillInfo;
 	}
