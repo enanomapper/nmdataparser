@@ -23,6 +23,9 @@ public class ExcelDataLocation
 	public boolean sourceCombination = false;
 	public boolean FlagSourceCombination = false;
 	
+	public boolean isArray = false;
+	public boolean FlagIsArray = false;
+	
 	public int nErrors = 0;
 	public String sectionName = "";
 	
@@ -78,6 +81,14 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"SOURCE_COMBINATION\" : " + sourceCombination);
+			nFields++;
+		}
+		
+		if (FlagIsArray)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"IS_ARRAY\" : " + isArray);
 			nFields++;
 		}
 		

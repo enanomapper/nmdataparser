@@ -951,6 +951,22 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
+		//IS_ARRAY
+		if (!sectionNode.path("IS_ARRAY").isMissingNode())
+		{
+			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "IS_ARRAY", false);
+			if (b ==  null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"IS_ARRAY\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.isArray = b;
+				loc.FlagIsArray = true;
+			}	
+		}
+		
 		//ITERATION
 		if (sectionNode.path("ITERATION").isMissingNode())
 		{

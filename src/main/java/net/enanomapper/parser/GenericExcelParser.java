@@ -470,36 +470,75 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     protected void readVariables() {
 	curVariables.clear();
 	if (config.variableLocations != null) {
-	    for (String var : config.variableLocations.keySet()) {
-		ExcelDataLocation loc = config.variableLocations.get(var);
-		FlagAddParserStringError = false;
-		String s = getStringValue(loc);
-		FlagAddParserStringError = true;
-		if (s != null)
-		    curVariables.put(var, s);
-		else {
-		    Double d = getNumericValue(loc);
-		    if (d != null)
-			curVariables.put(var, d);
+		for (String var : config.variableLocations.keySet()) 
+		{
+			//Treating source combination or array
+			ExcelDataLocation loc = config.variableLocations.get(var);
+			if (loc.sourceCombination)
+			{
+				//TODO
+			}
+			else			
+				if (loc.isArray)
+				{	
+					logger.info("%%%%%%%%%%% Reading array variable ");
+					Object arrayObj[] = getArray(loc);
+					if (arrayObj != null)
+					{	
+						curVariables.put(var, arrayObj);
+						
+						String s = "";
+						for (int i = 0; i < arrayObj.length; i++)
+							if (arrayObj[i] != null)
+								s += (" " + arrayObj[i].toString());
+						
+						logger.info("%%%%%%%%%%%  " + s);
+					}	
+				}	
+			
+			FlagAddParserStringError = false;
+			String s = getStringValue(loc);
+			FlagAddParserStringError = true;
+			if (s != null)
+				curVariables.put(var, s);
+			else {
+				Double d = getNumericValue(loc);
+				if (d != null)
+					curVariables.put(var, d);
+			}
 		}
-	    }
 	}
 
 	for (ExcelSheetConfiguration eshc : config.parallelSheets) {
 	    if (eshc.variableLocations != null) {
-		for (String var : eshc.variableLocations.keySet()) {
-		    ExcelDataLocation loc = eshc.variableLocations.get(var);
-		    FlagAddParserStringError = false;
-		    String s = getStringValue(loc);
-		    FlagAddParserStringError = true;
-		    if (s != null)
-			curVariables.put(var, s);
-		    else {
-			Double d = getNumericValue(loc);
-			if (d != null)
-			    curVariables.put(var, d);
-		    }
-		}
+	    	for (String var : eshc.variableLocations.keySet()) 
+	    	{	
+	    		ExcelDataLocation loc = eshc.variableLocations.get(var);
+	    		//Treating source combination or array
+				if (loc.sourceCombination)
+				{
+					//TODO
+				}
+				else			
+					if (loc.isArray)
+					{	
+						Object arrayObj[] = getArray(loc);
+						if (arrayObj != null)
+							curVariables.put(var, arrayObj);
+					}	
+	    		
+	    		
+	    		FlagAddParserStringError = false;
+	    		String s = getStringValue(loc);
+	    		FlagAddParserStringError = true;
+	    		if (s != null)
+	    			curVariables.put(var, s);
+	    		else {
+	    			Double d = getNumericValue(loc);
+	    			if (d != null)
+	    				curVariables.put(var, d);
+	    		}
+	    	}
 	    }
 	}
 
@@ -1537,6 +1576,66 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	    return null;
 	}
     }
+    
+    protected Object[] getArray(ExcelDataLocation loc)
+    {
+    	switch (loc.iteration) {
+    	case ROW_SINGLE:
+    		//TODO
+    		return null;
+    		
+    	case ROW_MULTI_FIXED: // Both treated the same way
+    	case ROW_MULTI_DYNAMIC:
+    		// TODO
+    		return null;
+
+    	case ABSOLUTE_LOCATION: {
+    		Object value = loc.getAbsoluteLocationValue();
+    		if (value == null) {
+    			value = getArrayFromAbsoluteLocation(loc);
+    			loc.setAbsoluteLocationValue(value);
+    		}
+    		if (value != null)
+    			return (Object[]) value;
+    		return null;
+    	}
+
+    	case JSON_VALUE: {
+    		/*
+    		Object value = loc.getJsonValue();
+    		if (value != null)
+    			if (value instanceof Object[])
+    				return (Object[]) value;
+    			else
+    				parseErrors.add("[" + locationStringForErrorMessage(loc) + "] JSON_VALUE is not an array!");
+    		*/		
+    		return null;
+    	}
+
+    	case JSON_REPOSITORY: {
+    		//TODO
+    		return null;
+    	}
+
+    	case VARIABLE: {
+    		/*
+    		String key = loc.getVariableKey();
+    		Object value = curVariables.get(key);
+    		if (value != null)
+    			if (value instanceof Object[])
+    				return (Object[]) value;
+    			else
+    				parseErrors.add("[" + locationStringForErrorMessage(loc) + "] variable value for key \""
+    						+ key + "\" is not an array!");
+    		*/
+    		return null;
+    	}
+
+    	default:
+    		return null;
+    	}
+    }
+    
 
     protected String getStringValueFromAbsoluteLocation(ExcelDataLocation loc) {
 	Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
@@ -1601,6 +1700,67 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     		*/
     	}
     	return null;
+    }
+    
+    protected Object[] getArrayFromAbsoluteLocation(ExcelDataLocation loc) 
+    {
+    	logger.info("---------- getArrayFromAbsoluteLocation");
+    	Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+    	
+    	//The array is formed from a matrix defined by rows (and columns)
+    	//The rows are stored sequentially
+    	int rows[];
+    	int columns[];
+    	
+    	if (loc.rowIndices != null)
+    	{
+    		//rowIndices take precedence over rowIndex
+    		rows = loc.rowIndices;
+    	}
+    	else
+    	{
+    		rows = new int[1];
+    		rows[0] = loc.rowIndex;
+    	}
+    	
+    	if (loc.columnIndices != null)
+    	{
+    		//columnIndices takes precedence over columnsIndex
+    		columns = loc.columnIndices;
+    	}
+    	else
+    	{
+    		columns = new int[1];
+    		columns[0] = loc.columnIndex;
+    	}
+    	
+    	//Array size = the number of 'matrix' elements
+    	int n = rows.length * columns.length;
+    	Object objects[] = new Object[n];
+    	
+    	for (int i = 0; i < rows.length; i++)
+    	{	
+    		logger.info("---------- row " + rows[i]);
+    		
+    		Row r = sheet.getRow(rows[i]);
+    		if (r == null)
+    		{	
+    			for (int k = 0; k < columns.length; k++)
+    				objects[i*columns.length + k] = null;
+    			continue;
+    		}
+    		
+    		for (int k = 0; k < columns.length; k++)
+    		{	
+    			Cell c = r.getCell(columns[k]);
+    			Object o = ExcelUtils.getObjectFromCell(c);
+    			objects[i*columns.length + k] = o;
+    			logger.info("---------- column " + columns[k] + o);
+    		}
+    	}
+    	
+    	
+    	return objects;
     }
 
     /*
