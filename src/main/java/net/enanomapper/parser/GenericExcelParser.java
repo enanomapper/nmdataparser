@@ -481,7 +481,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			else			
 				if (loc.isArray)
 				{	
-					logger.info("%%%%%%%%%%% Reading array variable ");
 					Object arrayObj[] = getArray(loc);
 					if (arrayObj != null)
 					{	
@@ -492,7 +491,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 							if (arrayObj[i] != null)
 								s += (" " + arrayObj[i].toString());
 						
-						logger.info("%%%%%%%%%%%  " + s);
+						logger.info("%%%%%%%%%%% Reading array variable " + s);
 					}	
 				}	
 			
@@ -1703,8 +1702,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
     
     protected Object[] getArrayFromAbsoluteLocation(ExcelDataLocation loc) 
-    {
-    	logger.info("---------- getArrayFromAbsoluteLocation");
+    {	
     	Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
     	
     	//The array is formed from a matrix defined by rows (and columns)
@@ -1740,8 +1738,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	
     	for (int i = 0; i < rows.length; i++)
     	{	
-    		logger.info("---------- row " + rows[i]);
-    		
     		Row r = sheet.getRow(rows[i]);
     		if (r == null)
     		{	
@@ -1755,7 +1751,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     			Cell c = r.getCell(columns[k]);
     			Object o = ExcelUtils.getObjectFromCell(c);
     			objects[i*columns.length + k] = o;
-    			logger.info("---------- column " + columns[k] + o);
     		}
     	}
     	

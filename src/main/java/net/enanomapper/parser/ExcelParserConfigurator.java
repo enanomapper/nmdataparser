@@ -1147,7 +1147,7 @@ public class ExcelParserConfigurator
 		{
 			if (rowIndices.isArray())
 			{	
-				loc.rowIndices  = new int[colIndices.size()];
+				loc.rowIndices  = new int[rowIndices.size()];
 				for (int i = 0; i < rowIndices.size(); i++)
 				{	
 					JsonNode rowNode = rowIndices.get(i);
