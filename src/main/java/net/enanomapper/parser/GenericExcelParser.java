@@ -20,6 +20,10 @@ import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
 
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.MapContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -63,6 +67,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
     protected ExcelParserConfigurator config = null;
     protected InputStream input;
+    protected JexlEngine jexlEngine = null;
 
     protected Workbook workbook;
     protected boolean xlsxFormat = false;
@@ -506,6 +511,19 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					curVariables.put(var, d);
 			}
 		}
+		
+		/*
+		String expr = "v1 + 10 * v2 - 23.1 + (v1 < 10)";
+		try
+		{
+			Object obj = evaluateExpression(expr);
+			logger.info(expr + " = " + obj);
+		}
+		catch(Exception e)
+		{
+			logger.info("Expression " + expr + "  Exception:\n" + e.getMessage());
+		}
+		*/
 	}
 
 	for (ExcelSheetConfiguration eshc : config.parallelSheets) {
@@ -1825,15 +1843,52 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	return c.getNumericCellValue();
     	*/	
     }
+    
+    
+    
+    protected Object evaluateExpression(String expression) throws Exception
+    {
+    	JexlEngine jexl = getJexlEngine();
+    	Expression e = jexl.createExpression( expression );
+    	
+    	//Create context from the variables
+    	JexlContext variableContext = getContextFromVariables();
+    	
+    	Object result = e.evaluate(variableContext);
+    	return result;
+    }
+    
+    protected JexlContext getContextFromVariables()
+    {
+    	JexlContext context = new MapContext();
+    	Set<String> keys = curVariables.keySet();
+    	
+    	for (String key : keys)
+    		context.set(key, curVariables.get(key));
+    	
+    	return context;
+    }
+    
+    protected JexlEngine getJexlEngine()
+    {
+    	if (jexlEngine == null)
+    	{
+    		jexlEngine = new JexlEngine();
+    		jexlEngine.setCache(512);
+            jexlEngine.setLenient(false);
+            jexlEngine.setSilent(false);
+    	}
+    	return jexlEngine;
+    }
 
     private String locationStringForErrorMessage(ExcelDataLocation loc) {
-	// TODO
-	return "";
+    	// TODO
+    	return "";
     }
 
     private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet) {
-	// TODO
-	return "";
+    	// TODO
+    	return "";
     }
 
     public boolean hasErrors() {
