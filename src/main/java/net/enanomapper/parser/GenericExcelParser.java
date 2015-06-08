@@ -224,24 +224,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
 
     protected void setParallelSheet(ExcelDataLocation loc) {
-	if (loc.sheetIndex != primarySheetNum) {
-	    for (int i = 0; i < parallelSheetStates.length; i++)
-		if (loc.sheetIndex == parallelSheetStates[i].sheetNum) {
-		    loc.setParallelSheetIndex(i);
-		    return;
-		}
+    	if (loc.sheetIndex != primarySheetNum) {
+    		for (int i = 0; i < parallelSheetStates.length; i++)
+    			if (loc.sheetIndex == parallelSheetStates[i].sheetNum) {
+    				loc.setParallelSheetIndex(i);
+    				return;
+    			}
 
-	    if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) // This
-										    // iteration
-										    // mode
-										    // is
-										    // not
-										    // treated
-										    // as
-										    // error
-		parallelSheetsErrors.add("[" + locationStringForErrorMessage(loc)
-			+ "] Sheet number number not valid parallel sheet!");
-	}
+    		if (loc.iteration != ParserConstants.IterationAccess.ABSOLUTE_LOCATION) // This iteration mode is not treated as error
+    			parallelSheetsErrors.add("[" + locationStringForErrorMessage(loc)
+    					+ "] Sheet number number not valid parallel sheet!");
+    	}
     }
 
     protected void setParallelSheets(ProtocolApplicationDataLocation padl) {
@@ -495,6 +488,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						for (int i = 0; i < arrayObj.length; i++)
 							if (arrayObj[i] != null)
 								s += (" " + arrayObj[i].toString());
+							else
+								s += " null";
 						
 						logger.info("%%%%%%%%%%% Reading array variable " + s);
 					}	
@@ -1770,11 +1765,47 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     			Object o = ExcelUtils.getObjectFromCell(c);
     			objects[i*columns.length + k] = o;
     		}
-    	}
+    	}    	
     	
+    	if (loc.trimArray)
+    		return trimObjects(objects, rows.length, columns.length);
     	
     	return objects;
     }
+    
+    protected Object[] trimObjects(Object objects[], int nRows, int nColumns)
+    {
+    	//The array is treated as a virtual matrix
+    	//Each dimension is trimmed to the maximal index that represents a non-null object
+    	//correct values for nRows and nColumns are expected
+    	
+    	int maxRow = -1;
+    	int maxColumn = -1;
+    	for (int i = 0; i < nRows; i++)
+    	{
+    		for (int k = 0; k < nColumns; k++)
+    		{	
+    			if (objects[i*nColumns + k] != null)
+    			{	
+    				maxRow = i;
+    				if (maxColumn < k)
+    					maxColumn = k;
+    			}
+    		}	
+    	}
+    	
+    	//constructing new 'virtual' matrix 
+    	int nRows1 = maxRow + 1;
+    	int nColumns1 = maxColumn + 1;
+    	
+    	Object objects1[] = new Object[nRows1*nColumns1];
+    	for (int i = 0; i < nRows1; i++)
+    		for (int k = 0; k < nColumns1; k++)
+    			objects1[i*nColumns1+k] = objects[i*nColumns+k];
+    	
+    	return objects1;
+    }
+     
 
     /*
      * Returns null if cell is not of string type (i.e. numerics are treated as
@@ -1892,14 +1923,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
 
     public boolean hasErrors() {
-	return (!parseErrors.isEmpty());
+    	return (!parseErrors.isEmpty());
     }
 
     public String errorsToString() {
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < parseErrors.size(); i++)
-	    sb.append("Error #" + (i + 1) + "\n" + parseErrors.get(i) + "\n");
-	return sb.toString();
+    	StringBuffer sb = new StringBuffer();
+    	for (int i = 0; i < parseErrors.size(); i++)
+    		sb.append("Error #" + (i + 1) + "\n" + parseErrors.get(i) + "\n");
+    	return sb.toString();
     }
 
     @Override

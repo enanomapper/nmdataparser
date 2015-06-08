@@ -49,7 +49,6 @@ public class ExcelDataBlockLocation
 		sb.append(offset + "}");
 		
 		
-		
 		return sb.toString();
 	}
 }

@@ -28,6 +28,9 @@ public class ExcelDataLocation
 	public boolean isArray = false;
 	public boolean FlagIsArray = false;
 	
+	public boolean trimArray = false; //The array size/dimensions are trimmed according to the non null element with maximal dimension indices 
+	public boolean FlagTrimArray = false;
+	
 	public int nErrors = 0;
 	public String sectionName = "";
 	
@@ -125,6 +128,22 @@ public class ExcelDataLocation
 			{	
 				loc.isArray = b;
 				loc.FlagIsArray = true;
+			}	
+		}
+		
+		//TRIM_ARRAY
+		if (!sectionNode.path("TRIM_ARRAY").isMissingNode())
+		{
+			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "TRIM_ARRAY", false);
+			if (b ==  null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"TRIM_ARRAY\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.trimArray = b;
+				loc.FlagTrimArray = true;
 			}	
 		}
 		
@@ -504,6 +523,14 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"IS_ARRAY\" : " + isArray);
+			nFields++;
+		}
+		
+		if (FlagTrimArray)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"TRIM_ARRAY\" : " + trimArray);
 			nFields++;
 		}
 		
