@@ -1875,7 +1875,39 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	*/	
     }
     
-    
+    protected Integer getIntegerFromExpression(Object obj)
+    {
+    	if (obj == null)
+    		return null;
+    	
+    	if (obj instanceof Integer)
+    		return (Integer) obj;
+    	
+    	if (obj instanceof String)
+    	{	
+    		String s = (String) obj;
+    		if (s.startsWith("="))
+    		{	
+    			s = s.substring(1);
+    			try
+    			{
+    				Object res = evaluateExpression(s);
+    				if (res !=  null)
+    				{	
+    					if (res instanceof Integer)
+    						return (Integer) obj;
+    				}		
+    						
+    			}
+    			catch (Exception e)
+    			{	
+    				//Expression error
+    			}
+    		}
+    	}
+    	
+    	return null;
+    }
     
     protected Object evaluateExpression(String expression) throws Exception
     {

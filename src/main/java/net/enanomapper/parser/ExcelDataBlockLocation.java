@@ -6,6 +6,19 @@ public class ExcelDataBlockLocation
 {
 	public ExcelDataLocation location = null;
 	
+	public int numberOfRows = 1;
+	public boolean FlagNumberOfRows = false;
+	
+	public int numberOfColumns = 1;
+	public boolean Flag = false;
+	
+	public int rowSubblocks = 0;
+	public boolean FlagRowSubblocks = false;
+	
+	public int columnSubblocks = 0;
+	public boolean FlagColumnSubblocks = false;
+	
+	//TODO add sub-blocks definition, parameters and values
 	
 	
 	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, ExcelParserConfigurator conf)
