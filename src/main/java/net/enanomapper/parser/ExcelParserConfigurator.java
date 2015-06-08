@@ -384,7 +384,7 @@ public class ExcelParserConfigurator
 		else
 		{
 			//COMPANY_NAME
-			ExcelDataLocation loc = extractDataLocation(curNode,"COMPANY_NAME", conf);
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_NAME", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -398,7 +398,7 @@ public class ExcelParserConfigurator
 			}
 			
 			//REFERENCE_SUBSTANCE_UUID
-			loc = extractDataLocation(curNode,"REFERENCE_SUBSTANCE_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"REFERENCE_SUBSTANCE_UUID", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -407,7 +407,7 @@ public class ExcelParserConfigurator
 			
 			
 			//COMPANY_UUID
-			loc = extractDataLocation(curNode,"COMPANY_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_UUID", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -415,7 +415,7 @@ public class ExcelParserConfigurator
 			}
 			
 			//OWNER_NAME
-			loc = extractDataLocation(curNode,"OWNER_NAME", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"OWNER_NAME", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -423,7 +423,7 @@ public class ExcelParserConfigurator
 			}
 			
 			//OWNER_UUID
-			loc = extractDataLocation(curNode,"OWNER_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"OWNER_UUID", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -431,7 +431,7 @@ public class ExcelParserConfigurator
 			}
 			
 			//SUBSTANCE_TYPE
-			loc = extractDataLocation(curNode,"SUBSTANCE_TYPE", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"SUBSTANCE_TYPE", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -440,7 +440,7 @@ public class ExcelParserConfigurator
 			
 			
 			//PUBLIC_NAME
-			loc = extractDataLocation(curNode,"PUBLIC_NAME", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"PUBLIC_NAME", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -448,7 +448,7 @@ public class ExcelParserConfigurator
 			}
 			
 			//ID_SUBSTANCE
-			loc = extractDataLocation(curNode,"ID_SUBSTANCE", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode,"ID_SUBSTANCE", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
@@ -909,431 +909,13 @@ public class ExcelParserConfigurator
 		return sb.toString();
 	}
 	
-	public static ExcelDataLocation extractDataLocation(JsonNode node, ExcelParserConfigurator conf)
-	{
-		return extractDataLocation(node, null, conf);
-	}
-	
-	
-	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
-	{
-		//Error messages are stored globally in 'conf' variable and are
-		//counted locally in return variable 'loc'
-		
-		JsonNode sectionNode;
-		
-		if (jsonSection == null)
-			sectionNode = node; //The node itself is used
-		else
-		{	
-			sectionNode = node.path(jsonSection);
-			if (sectionNode.isMissingNode())
-				return null;
-		}
-		JsonUtilities jsonUtils = new JsonUtilities();
-		
-		ExcelDataLocation loc = new ExcelDataLocation();
-		loc.sectionName = jsonSection;
-		
-		//SOURCE_COMBINATION
-		if (!sectionNode.path("SOURCE_COMBINATION").isMissingNode())
-		{
-			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "SOURCE_COMBINATION", false);
-			if (b ==  null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SOURCE_COMBINATION\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.sourceCombination = b;
-				loc.FlagSourceCombination = true;
-			}	
-		}
-		
-		//IS_ARRAY
-		if (!sectionNode.path("IS_ARRAY").isMissingNode())
-		{
-			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "IS_ARRAY", false);
-			if (b ==  null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"IS_ARRAY\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.isArray = b;
-				loc.FlagIsArray = true;
-			}	
-		}
-		
-		//ITERATION
-		if (sectionNode.path("ITERATION").isMissingNode())
-		{
-			loc.iteration = conf.substanceIteration; //default value is taken form global config
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "ITERATION", false);
-			if (keyword == null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.FlagIteration = true;
-				loc.iteration = IterationAccess.fromString(keyword);
-				if (loc.iteration == IterationAccess.UNDEFINED)
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
-					loc.nErrors++;
-				}	
-			}
-		}
-		
-		
-		//RECOGNITION
-		if (sectionNode.path("RECOGNITION").isMissingNode())
-		{
-			loc.recognition = conf.recognition; //default value is taken form global config
-		}
-		else
-		{
-			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "RECOGNITION", false);
-			if (keyword == null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.FlagRecognition = true;
-				loc.recognition = Recognition.fromString(keyword);
-				if (loc.recognition == Recognition.UNDEFINED)
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
-					loc.nErrors++;
-				}	
-			}
-		}
-		
-		
-		//COLUMN_INDEX
-		if (sectionNode.path("COLUMN_INDEX").isMissingNode())
-		{	
-			if (loc.iteration.isColumnInfoRequired())
-			{	
-				if (loc.recognition == Recognition.BY_INDEX) 
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
-					loc.nErrors++;
-				}
-				
-				if (loc.recognition == Recognition.BY_INDEX_AND_NAME && (sectionNode.path("COLUMN_NAME").isMissingNode()) )
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + 
-								"\", both keywords \"COLUMN_INDEX\" and \"COLUMN_NAME\" are missing. "
-								+ "At least one is required for RECOGNITION mode BY_INDEX_AND_NAME!");
-					loc.nErrors++;
-				}
-			}	
-		}
-		else
-		{
-			int col_index = ExcelParserUtils.extractColumnIndex(sectionNode.path("COLUMN_INDEX"));
-			if (col_index == -1)
-			{
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}
-			else
-			{	
-				loc.FlagColumnIndex = true;
-				loc.columnIndex = col_index;
-			}	
-		}
-		
-		//COLUMN_INDICES
-		JsonNode colIndices = sectionNode.path("COLUMN_INDICES");
-		if(!colIndices.isMissingNode())
-		{	
-			if (colIndices.isArray())
-			{	
-				loc.columnIndices  = new int[colIndices.size()];
-				for (int i = 0; i < colIndices.size(); i++)
-				{	
-					JsonNode colNode = colIndices.get(i);
-					int col_index = ExcelParserUtils.extractColumnIndex(colNode);
-					
-					if (col_index == -1)
-					{
-						conf.configErrors.add("In JSON section \"" + jsonSection + 
-								"\", keyword COLUMN_INDICES[" + (i+1) + "] is incorrect: " + jsonUtils.getError());
-						loc.nErrors++;
-					}
-					else
-						loc.columnIndices[i] = col_index;
-				}
-			}
-			else
-			{
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword COLUMN_INDICES  is not an array!");
-			}
-		}
-		
-		
-		//COLUMN_NAME
-		if (sectionNode.path("COLUMN_NAME").isMissingNode())
-		{
-			if (loc.iteration.isColumnInfoRequired())
-				if (loc.recognition == Recognition.BY_NAME)
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
-					loc.nErrors++;
-				}	
-			//Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated in COLUMN_INDEX
-		}
-		else
-		{
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "COLUMN_NAME", false);
-			if (stringValue == null)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" : " + jsonUtils.getError());
-			else
-			{	
-				loc.FlagColumnName = true;
-				loc.columnName = stringValue;
-			}
-		}
-		
-		//ROW_INDEX
-		if (sectionNode.path("ROW_INDEX").isMissingNode())
-		{
-			if (loc.iteration.isRowInfoRequired())
-			{	
-				if (loc.recognition == Recognition.BY_INDEX)
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" is missing!");
-					loc.nErrors++;
-				}
-				
-				if (loc.recognition == Recognition.BY_INDEX_AND_NAME && (sectionNode.path("ROW_NAME").isMissingNode()) )
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + 
-								"\", both keywords \"ROW_INDEX\" and \"ROW_NAME\" are missing. "
-								+ "At least one is required for RECOGNITION mode BY_INDEX_AND_NAME!");
-					loc.nErrors++;
-				}
-			}	
-		}
-		else
-		{
-			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "ROW_INDEX", true);
-			if (intValue == null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.FlagRowIndex = true;
-				loc.rowIndex = intValue - 1; //1-based --> 0-based
-			}
-		}
-		
-		//ROW_INDICES
-		JsonNode rowIndices = sectionNode.path("ROW_INDICES");
-		if(!rowIndices.isMissingNode())
-		{
-			if (rowIndices.isArray())
-			{	
-				loc.rowIndices  = new int[rowIndices.size()];
-				for (int i = 0; i < rowIndices.size(); i++)
-				{	
-					JsonNode rowNode = rowIndices.get(i);
-					if (rowNode.isInt())
-					{	
-						int row_ind = rowNode.asInt();
-						
-						if (row_ind <= 0)
-						{
-							conf.configErrors.add("In JSON section \"" + jsonSection + 
-									"\", keyword ROW_INDICES[" + (i+1) + "] is incorrect: " + jsonUtils.getError());
-							loc.nErrors++;
-						}
-						else
-							loc.rowIndices[i] = row_ind;
-					}
-					else
-					{
-						conf.configErrors.add("In JSON section \"" + jsonSection + 
-								"\", keyword ROW_INDICES[" + (i+1) + "] is not integer!");
-						loc.nErrors++;
-					}
-				}
-			}
-			else
-			{
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES  is not an array!");
-			}
-		}
-		
-		//ROW_NAME
-		if (sectionNode.path("ROW_NAME").isMissingNode())
-		{
-			if (loc.iteration.isRowInfoRequired())
-				if (loc.recognition == Recognition.BY_NAME)
-				{	
-					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" is missing!");
-					loc.nErrors++;
-				}
-			//Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated in ROW_INDEX
-		}
-		else
-		{
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "ROW_NAME", false);
-			if (stringValue == null)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" : " + jsonUtils.getError());
-			else
-			{	
-				loc.FlagRowName = true;
-				loc.rowName = stringValue;
-			}
-		}
-		
-		
-		//SHEET_INDEX
-		if (!sectionNode.path("SHEET_INDEX").isMissingNode())
-		{	
-			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "SHEET_INDEX", false);
-			if (intValue == null)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SHEET_INDEX\" : " + jsonUtils.getError());
-				loc.nErrors++;
-			}	
-			else
-			{	
-				loc.FlagSheetIndex = true;
-				loc.sheetIndex = intValue - 1; //1-based --> 0-based
-			}
-		}
-		
-		
-		//SHEET_NAME
-		if (!sectionNode.path("SHEET_NAME").isMissingNode())
-		{
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "SHEET_NAME", false);
-			if (stringValue == null)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SHEET_NAME\" : " + jsonUtils.getError());
-			else
-			{	
-				loc.FlagSheetName = true;
-				loc.sheetName = stringValue;
-			}
-		}
-		
-		
-		//JSON_VALUE
-		if (sectionNode.path("JSON_VALUE").isMissingNode())
-		{	
-			if (loc.iteration == IterationAccess.JSON_VALUE)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_VALUE\" is missing!");
-				loc.nErrors++;
-			}
-		}
-		else
-		{
-			Object jsonValue = extractObject (sectionNode.path("JSON_VALUE"));
-			loc.setJsonValue(jsonValue); 
-		}
-		
-		//JSON_REPOSITORY_KEY
-		if (sectionNode.path("JSON_REPOSITORY_KEY").isMissingNode())
-		{	
-			if (loc.iteration == IterationAccess.JSON_REPOSITORY)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" is missing!");
-				loc.nErrors++;
-			}
-		}
-		else
-		{
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "JSON_REPOSITORY_KEY", true);
-			if (stringValue == null)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" : " + jsonUtils.getError());
-			else
-			{	
-				loc.setJsonRepositoryKey(stringValue);
-			}
-		}
-		
-		
-		//VARIABLE_KEY
-		if (sectionNode.path("VARIABLE_KEY").isMissingNode())
-		{	
-			if (loc.iteration == IterationAccess.VARIABLE)
-			{	
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" is missing!");
-				loc.nErrors++;
-			}
-		}
-		else
-		{
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "VARIABLE_KEY", false);
-			if (stringValue == null)
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" : " + jsonUtils.getError());
-			else
-			{	
-				loc.setVariableKey(stringValue);
-			}
-		}
-		
-		
-		//VARIABLE_KEYS
-		JsonNode vkeys = sectionNode.path("VARIABLE_KEYS");
-		if(!vkeys.isMissingNode())
-		{
-			if (vkeys.isArray())
-			{	
-				loc.variableKeys = new String[vkeys.size()];
-				for (int i = 0; i < vkeys.size(); i++)
-				{	
-					JsonNode keyNode = vkeys.get(i);
-					if (keyNode.isTextual())
-					{	
-						String keyword =  keyNode.asText();
-						if (keyword == null)
-							conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS [" + (i+1)+"]: is incorrect!");
-						else
-							loc.variableKeys[i] = keyword;
-					}
-					else
-					{	
-						conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS [" + (i+1)+"]: is not textual!");
-					}
-				}
-			}
-			else
-			{
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword VARIABLE_KEYS  is not an array!");
-			}
-		}
-		
-		
-		
-		
-		
-		return loc;
-	}
-	
 	
 	public static ProtocolApplicationDataLocation extractProtocolApplicationDataLocations(JsonNode node, int protocolNum, ExcelParserConfigurator conf)
 	{
 		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
 		
 		//CITATION_TITLE
-		ExcelDataLocation loc = extractDataLocation(node,"CITATION_TITLE", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node,"CITATION_TITLE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1341,7 +923,7 @@ public class ExcelParserConfigurator
 		}	
 		
 		//CITATION_YEAR
-		loc = extractDataLocation(node,"CITATION_YEAR", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"CITATION_YEAR", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1349,7 +931,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//CITATION_OWNER
-		loc = extractDataLocation(node,"CITATION_OWNER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"CITATION_OWNER", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1357,7 +939,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//PROTOCOL_TOP_CATEGORY
-		loc = extractDataLocation(node,"PROTOCOL_TOP_CATEGORY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"PROTOCOL_TOP_CATEGORY", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1365,7 +947,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//PROTOCOL_CATEGORY_CODE
-		loc = extractDataLocation(node,"PROTOCOL_CATEGORY_CODE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"PROTOCOL_CATEGORY_CODE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1373,7 +955,7 @@ public class ExcelParserConfigurator
 		}
 
 		//PROTOCOL_CATEGORY_TITLE
-		loc = extractDataLocation(node,"PROTOCOL_CATEGORY_TITLE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"PROTOCOL_CATEGORY_TITLE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1381,7 +963,7 @@ public class ExcelParserConfigurator
 		}
 
 		//PROTOCOL_ENDPOINT
-		loc = extractDataLocation(node,"PROTOCOL_ENDPOINT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"PROTOCOL_ENDPOINT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1414,7 +996,7 @@ public class ExcelParserConfigurator
 		
 		
 		//RELIABILITY_IS_ROBUST_STUDY
-		loc = extractDataLocation(node,"RELIABILITY_IS_ROBUST_STUDY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_IS_ROBUST_STUDY", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1423,7 +1005,7 @@ public class ExcelParserConfigurator
 		
 		
 		//RELIABILITY_IS_USED_FOR_CLASSIFICATION
-		loc = extractDataLocation(node,"RELIABILITY_IS_USED_FOR_CLASSIFICATION", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_IS_USED_FOR_CLASSIFICATION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1431,7 +1013,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//RELIABILITY_IS_USED_FOR_MSDS
-		loc = extractDataLocation(node,"RELIABILITY_IS_USED_FOR_MSDS", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_IS_USED_FOR_MSDS", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1439,7 +1021,7 @@ public class ExcelParserConfigurator
 		}
 
 		//RELIABILITY_PURPOSE_FLAG
-		loc = extractDataLocation(node,"RELIABILITY_PURPOSE_FLAG", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_PURPOSE_FLAG", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1447,7 +1029,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//RELIABILITY_STUDY_RESULT_TYPE
-		loc = extractDataLocation(node,"RELIABILITY_STUDY_RESULT_TYPE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_STUDY_RESULT_TYPE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1455,7 +1037,7 @@ public class ExcelParserConfigurator
 		}
 
 		//RELIABILITY_VALUE
-		loc = extractDataLocation(node,"RELIABILITY_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"RELIABILITY_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1463,7 +1045,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//INTERPRETATION_RESULT
-		loc = extractDataLocation(node,"INTERPRETATION_RESULT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"INTERPRETATION_RESULT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1471,7 +1053,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//INTERPRETATION_CRITERIA
-		loc = extractDataLocation(node,"INTERPRETATION_CRITERIA", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"INTERPRETATION_CRITERIA", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1507,7 +1089,7 @@ public class ExcelParserConfigurator
 		EffectRecordDataLocation efrdl = new EffectRecordDataLocation();
 		
 		//ENDPOINT
-		ExcelDataLocation loc = extractDataLocation(node,"ENDPOINT", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node,"ENDPOINT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1515,7 +1097,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//SAMPLE_ID
-		loc = extractDataLocation(node,"SAMPLE_ID", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"SAMPLE_ID", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1523,7 +1105,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//UNIT
-		loc = extractDataLocation(node,"UNIT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"UNIT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1531,7 +1113,7 @@ public class ExcelParserConfigurator
 		}
 
 		//LO_VALUE
-		loc = extractDataLocation(node,"LO_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"LO_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)
@@ -1543,7 +1125,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//LO_QUALIFIER
-		loc = extractDataLocation(node,"LO_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"LO_QUALIFIER", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1551,7 +1133,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//UP_VALUE
-		loc = extractDataLocation(node,"UP_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"UP_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)
@@ -1563,7 +1145,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//UP_QUALIFIER
-		loc = extractDataLocation(node,"UP_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"UP_QUALIFIER", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1571,7 +1153,7 @@ public class ExcelParserConfigurator
 		}
 
 		//TEXT_VALUE
-		loc = extractDataLocation(node,"TEXT_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"TEXT_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1579,7 +1161,7 @@ public class ExcelParserConfigurator
 		}
 
 		//ERR_VALUE
-		loc = extractDataLocation(node,"ERR_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"ERR_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)
@@ -1591,7 +1173,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//ERR_QUALIFIER
-		loc = extractDataLocation(node,"ERR_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"ERR_QUALIFIER", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1599,7 +1181,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//VALUE
-		loc = extractDataLocation(node,"VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1869,7 +1451,7 @@ public class ExcelParserConfigurator
 		while (it.hasNext())
 		{
 			Entry<String,JsonNode> entry = it.next();
-			ExcelDataLocation loc = extractDataLocation(entry.getValue(), conf);
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(entry.getValue(), conf);
 			loc.sectionName = entry.getKey();
 			hmap.put(entry.getKey(), loc);
 		}
@@ -1902,7 +1484,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//CONTENT
-		ExcelDataLocation loc = extractDataLocation(node,"CONTENT", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node,"CONTENT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1917,7 +1499,7 @@ public class ExcelParserConfigurator
 		}		
 		
 		//FORMAT
-		loc = extractDataLocation(node,"FORMAT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"FORMAT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1925,7 +1507,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//INCHI_KEY
-		loc = extractDataLocation(node,"INCHI_KEY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"INCHI_KEY", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1933,7 +1515,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//INCHI
-		loc = extractDataLocation(node,"INCHI", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"INCHI", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1941,7 +1523,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//FORMULA
-		loc = extractDataLocation(node,"FORMULA", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"FORMULA", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1949,7 +1531,7 @@ public class ExcelParserConfigurator
 		}
 		
 		//SMILES
-		loc = extractDataLocation(node,"SMILES", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"SMILES", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -1996,38 +1578,11 @@ public class ExcelParserConfigurator
 		{
 			Entry<String,JsonNode> entry = it.next();
 			JsonNode nd = entry.getValue();
-			Object o = extractObject (nd);
+			Object o = JsonUtilities.extractObject (nd);
 			if (o != null)
 				conf.jsonRepository.put(entry.getKey(), o);
 		}
 	}
-	
-	public static Object extractObject (JsonNode node)
-	{
-		if (node.isTextual())
-		{
-			String s = node.asText();
-			if (s != null)
-				return s;
-		}
-		
-		if (node.isInt())
-		{
-			int i = node.asInt();
-			return  new Integer(i);
-		}
-		
-		if (node.isDouble())
-		{
-			double d  = node.asDouble();
-			return new Double(d);
-		}
-		
-		//TODO - eventually add array object extraction
-		
-		return null;
-	}
-	
 	
 	
 	public static boolean isValidQualifier(String qualifier)

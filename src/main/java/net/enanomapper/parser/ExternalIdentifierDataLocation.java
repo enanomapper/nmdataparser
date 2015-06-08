@@ -14,7 +14,7 @@ public class ExternalIdentifierDataLocation
 		ExternalIdentifierDataLocation eidl = new ExternalIdentifierDataLocation();
 		
 		//TYPE
-		ExcelDataLocation loc = ExcelParserConfigurator.extractDataLocation(node,"TYPE", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node,"TYPE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -22,7 +22,7 @@ public class ExternalIdentifierDataLocation
 		}
 		
 		//ID
-		loc = ExcelParserConfigurator.extractDataLocation(node,"ID", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"ID", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							

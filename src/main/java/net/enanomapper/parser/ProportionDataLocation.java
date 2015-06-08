@@ -28,7 +28,7 @@ public class ProportionDataLocation
 		//JsonUtilities jsonUtils = new JsonUtilities();
 		
 		//FUNCTION
-		ExcelDataLocation loc = ExcelParserConfigurator.extractDataLocation(node,"FUNCTION", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node,"FUNCTION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -36,7 +36,7 @@ public class ProportionDataLocation
 		}
 		
 		//TYPICAL_PRECISION
-		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_PRECISION", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"TYPICAL_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -44,7 +44,7 @@ public class ProportionDataLocation
 		}
 		
 		//TYPICAL_VALUE
-		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"TYPICAL_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -52,7 +52,7 @@ public class ProportionDataLocation
 		}
 		
 		//TYPICAL_UNIT
-		loc = ExcelParserConfigurator.extractDataLocation(node,"TYPICAL_UNIT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"TYPICAL_UNIT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -60,7 +60,7 @@ public class ProportionDataLocation
 		}
 		
 		//REAL_VALUE
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -68,7 +68,7 @@ public class ProportionDataLocation
 		}
 		
 		//REAL_LOWER_PRECISION
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER_PRECISION", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_LOWER_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -76,7 +76,7 @@ public class ProportionDataLocation
 		}
 		
 		//REAL_LOWER_VALUE
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_LOWER_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_LOWER_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -84,7 +84,7 @@ public class ProportionDataLocation
 		}
 		
 		//REAL_UPPER_PRECISION
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER_PRECISION", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_UPPER_PRECISION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -92,7 +92,7 @@ public class ProportionDataLocation
 		}
 
 		//REAL_UPPER_VALUE
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UPPER_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_UPPER_VALUE", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
@@ -100,7 +100,7 @@ public class ProportionDataLocation
 		}
 		
 		//REAL_UNIT
-		loc = ExcelParserConfigurator.extractDataLocation(node,"REAL_UNIT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node,"REAL_UNIT", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							

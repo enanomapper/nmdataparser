@@ -144,4 +144,30 @@ public class JsonUtilities
 		return "0";
 	}
 	
+	public static Object extractObject (JsonNode node)
+	{
+		if (node.isTextual())
+		{
+			String s = node.asText();
+			if (s != null)
+				return s;
+		}
+		
+		if (node.isInt())
+		{
+			int i = node.asInt();
+			return  new Integer(i);
+		}
+		
+		if (node.isDouble())
+		{
+			double d  = node.asDouble();
+			return new Double(d);
+		}
+		
+		//TODO - eventually add array object extraction
+		
+		return null;
+	}
+	
 }
