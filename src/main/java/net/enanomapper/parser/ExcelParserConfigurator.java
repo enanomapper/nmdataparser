@@ -1081,6 +1081,15 @@ public class ExcelParserConfigurator
 			}	
 		}
 		
+		//EFFECTS_BLOCK
+		JsonNode effectsBlockNode = node.path("EFFECTS_BLOCK");
+		if (!effectsBlockNode.isMissingNode())
+		{
+			ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(effectsBlockNode, conf);
+			//TODO ?? handle errors if any
+			padl.effectsBlock = block;
+		}
+		
 		return padl;
 	}
 	
