@@ -1,21 +1,27 @@
 package net.enanomapper.parser;
 
+import net.enanomapper.parser.ParserConstants.Recognition;
+import net.enanomapper.parser.json.JsonUtilities;
+import net.enanomapper.parser.recognition.ExpressionUtils;
+
 import org.codehaus.jackson.JsonNode;
 
 public class ExcelDataBlockLocation 
 {
+	public String blockSectionName = null; 
+	
 	public ExcelDataLocation location = null;
 	
-	public int numberOfRows = 1;
+	public Object numberOfRows = new Integer(1);
 	public boolean FlagNumberOfRows = false;
 	
 	public int numberOfColumns = 1;
 	public boolean Flag = false;
 	
-	public int rowSubblocks = 0;
+	public int rowSubblocks = 1;  //default: only one sub-block = entire block
 	public boolean FlagRowSubblocks = false;
 	
-	public int columnSubblocks = 0;
+	public int columnSubblocks = 1;  //default: only one sub-block = entire block
 	public boolean FlagColumnSubblocks = false;
 	
 	//TODO add sub-blocks definition, parameters and values
@@ -23,17 +29,59 @@ public class ExcelDataBlockLocation
 	
 	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, ExcelParserConfigurator conf)
 	{
+		return extractDataBlock(node, null, conf);
+	}
+	
+	
+	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
+	{
 		ExcelDataBlockLocation edbl = new ExcelDataBlockLocation();
+		edbl.blockSectionName = jsonSection;
+		
+		JsonNode sectionNode;
+		
+		if (jsonSection == null)
+			sectionNode = node; //The node itself is used
+		else
+		{	
+			sectionNode = node.path(jsonSection);
+			if (sectionNode.isMissingNode())
+				return null;
+		}
 		
 		
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "LOCATION", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(sectionNode, "LOCATION", conf);
 		if (loc != null)
 		{	
 			if (loc.nErrors == 0)							
 				edbl.location = loc;
 		}
 		
-		
+		//NUMBER_OF_ROWS
+		JsonNode nd = sectionNode.path("NUMBER_OF_ROWS");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"NUMBER_OF_ROWS\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"" + jsonSection +
+							"\", keyword \"NUMBER_OF_ROWS\" is incorrect expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					edbl.numberOfRows = obj;
+					edbl.FlagNumberOfRows = true;
+				}	
+			}	
+		}		
 		
 		return edbl;
 	}
@@ -43,7 +91,14 @@ public class ExcelDataBlockLocation
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append(offset + "\"" + blockName + "\":\n");
+		
+		String secName = blockName;
+		if (secName == null)
+			secName = blockSectionName;
+		if (secName == null)
+			secName = "NON_NAME_BLOCK";
+		
+		sb.append(offset + "\"" + secName + "\":\n");
 		sb.append(offset + "{\n");
 		
 		if (location != null)
@@ -52,6 +107,15 @@ public class ExcelDataBlockLocation
 				sb.append(",\n");
 			
 			sb.append(location.toJSONKeyWord(offset+"\t"));
+			nFields++;
+		}
+		
+		if (FlagNumberOfRows)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"NUMBER_OF_ROWS\" : " + JsonUtilities.objectsToJsonField(numberOfRows));
 			nFields++;
 		}
 		

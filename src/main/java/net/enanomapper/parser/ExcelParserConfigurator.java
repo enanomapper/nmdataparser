@@ -1085,7 +1085,7 @@ public class ExcelParserConfigurator
 		JsonNode effectsBlockNode = node.path("EFFECTS_BLOCK");
 		if (!effectsBlockNode.isMissingNode())
 		{
-			ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(effectsBlockNode, conf);
+			ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(node, "EFFECTS_BLOCK", conf);
 			//TODO ?? handle errors if any
 			padl.effectsBlock = block;
 		}

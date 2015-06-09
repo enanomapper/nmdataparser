@@ -170,4 +170,23 @@ public class JsonUtilities
 		return null;
 	}
 	
+	public static String objectsToJsonField(Object obj)
+	{
+		if (obj == null)
+			return null;
+		
+		if (obj instanceof String)
+			return ("\"" + obj.toString() + "\"");
+		
+		if (obj instanceof Integer)
+			return obj.toString();
+		
+		if (obj instanceof Double)
+			return obj.toString();
+		
+		//TODO handle some other cases as arrays etc.
+		
+		return null;
+	}
+	
 }

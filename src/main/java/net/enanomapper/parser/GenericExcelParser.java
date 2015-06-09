@@ -1904,6 +1904,19 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     				//Expression error
     			}
     		}
+    		else
+    		{
+    			try {
+    				Integer res = Integer.parseInt(s);
+    				return res;
+    			}
+    			catch(Exception e)
+    			{	
+    				//Expression error
+    			}
+    		}
+    		
+    		
     	}
     	
     	return null;
