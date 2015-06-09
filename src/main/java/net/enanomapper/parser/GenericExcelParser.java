@@ -475,6 +475,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			if (loc.sourceCombination)
 			{
 				//TODO
+				continue;
 			}
 			else			
 				if (loc.isArray)
@@ -492,6 +493,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								s += " null";
 						
 						logger.info("%%%%%%%%%%% Reading array variable " + s);
+						
+						continue;
 					}	
 				}	
 			
@@ -530,6 +533,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				if (loc.sourceCombination)
 				{
 					//TODO
+					continue;
 				}
 				else			
 					if (loc.isArray)
@@ -537,6 +541,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						Object arrayObj[] = getArray(loc);
 						if (arrayObj != null)
 							curVariables.put(var, arrayObj);
+						
+						continue;
 					}	
 	    		
 	    		
@@ -979,6 +985,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		EffectRecord effect = readEffect(padl.effects.get(i));
 		pa.addEffect(effect);
 	    }
+	}
+	
+	//Read effects from EFFECTS_BLOCK
+	if (padl.effectsBlock != null)
+	{
+		List<DataBlockElement> effDataBlock = getDataBlock(padl.effectsBlock);
+		//TODO - make effects from it
 	}
 
 	return pa;
@@ -1875,6 +1888,50 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	*/	
     }
     
+    protected List<DataBlockElement> getDataBlock(ExcelDataBlockLocation exdb_loc)
+    {
+    	switch (exdb_loc.location.iteration)
+    	{
+    	case ROW_SINGLE:
+    		//TODO
+    		return null;
+
+    	case ROW_MULTI_FIXED: // Both treated the same way
+    	case ROW_MULTI_DYNAMIC:
+    		// TODO
+    		return null;
+
+    	case ABSOLUTE_LOCATION: {
+    		Object value = exdb_loc.getAbsoluteLocationValue();
+    		if (value == null) {
+    			value = getDataBlockFromAbsolutePosition(exdb_loc);
+    			exdb_loc.setAbsoluteLocationValue(value);
+    		}
+    		if (value != null)
+    			return (List<DataBlockElement>) value;
+    		return null;
+    	}
+
+    	default:
+    		return null;
+    	
+    	}
+    }
+    
+    protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc)
+    {
+    	logger.info("------------ getDataBlockFromAbsolutePosition");
+    	Integer nRows = getIntegerFromExpression(exdb_loc.numberOfRows);
+    	if (nRows == null)
+    		return null;
+    	logger.info("--- numberOfRows = " + nRows);
+    	
+    	//TODO
+    	return null;
+    }
+    
+    
+    
     protected Integer getIntegerFromExpression(Object obj)
     {
     	if (obj == null)
@@ -1894,14 +1951,23 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     				Object res = evaluateExpression(s);
     				if (res !=  null)
     				{	
+    					//logger.info("Expression result: " + res + "   class name " + res.getClass().getName());
+    					
     					if (res instanceof Integer)
-    						return (Integer) obj;
+    						return (Integer) res;
+    					
+    					if (res instanceof Double)
+    						return ((Double) res).intValue();
+    					
+    					if (res instanceof Long)
+    						return ((Long) res).intValue();
+    					
     				}		
     						
     			}
     			catch (Exception e)
     			{	
-    				//Expression error
+    				logger.info("Expression error: " + e.getMessage());
     			}
     		}
     		else
@@ -1912,11 +1978,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     			}
     			catch(Exception e)
     			{	
-    				//Expression error
+    				logger.info("Expression error: " + e.getMessage());
     			}
     		}
-    		
-    		
     	}
     	
     	return null;
@@ -1939,8 +2003,26 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	JexlContext context = new MapContext();
     	Set<String> keys = curVariables.keySet();
     	
+    	logger.info("variables:");
     	for (String key : keys)
+    	{	
     		context.set(key, curVariables.get(key));
+    		
+    		/*
+    		//Logging the variables values
+    		Object v = curVariables.get(key);
+    		String s = "";
+    		if (v instanceof Object[])
+    		{	
+    			Object v1[] = (Object[]) v;
+    			for (int i = 0; i < v1.length; i++)
+    				s += (" " + v1[i]);
+    		}
+    		else
+    			s = v.toString();
+    		logger.info(key + " : " + s);
+    		*/
+    	}	
     	
     	return context;
     }

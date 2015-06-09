@@ -8,6 +8,8 @@ import org.codehaus.jackson.JsonNode;
 
 public class ExcelDataBlockLocation 
 {
+	private Object absoluteLocationValue = null;
+	
 	public String blockSectionName = null; 
 	
 	public ExcelDataLocation location = null;
@@ -127,5 +129,13 @@ public class ExcelDataBlockLocation
 		
 		
 		return sb.toString();
+	}
+	
+	public Object getAbsoluteLocationValue() {
+		return absoluteLocationValue;
+	}
+
+	public void setAbsoluteLocationValue(Object absoluteLocationValue) {
+		this.absoluteLocationValue = absoluteLocationValue;
 	}
 }
