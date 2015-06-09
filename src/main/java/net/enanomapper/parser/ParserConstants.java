@@ -923,6 +923,22 @@ public class ParserConstants
 		}
 	};
 	
-	
+	public enum BlockParameterAssign 
+	{
+		ASSIGN_TO_BLOCK, ASSIGN_TO_SUBBLOCK, ASSIGN_TO_VALUE, UNDEFINED;
+		
+		public static BlockParameterAssign fromString(String s)
+		{
+			try
+			{
+				BlockParameterAssign type  = BlockParameterAssign.valueOf(s) ;
+				return (type);
+			}
+			catch (Exception e)
+			{
+				return BlockParameterAssign.UNDEFINED;
+			}
+		}
+	}
 	
 }

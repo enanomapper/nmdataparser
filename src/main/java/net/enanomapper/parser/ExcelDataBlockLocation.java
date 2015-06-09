@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 
-import net.enanomapper.parser.ParserConstants.Recognition;
+import java.util.List;
+
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
 
@@ -8,8 +9,8 @@ import org.codehaus.jackson.JsonNode;
 
 public class ExcelDataBlockLocation 
 {
-	private Object absoluteLocationValue = null;
 	
+	private Object absoluteLocationValue = null;
 	public String blockSectionName = null; 
 	
 	public ExcelDataLocation location = null;
@@ -26,7 +27,20 @@ public class ExcelDataBlockLocation
 	public int columnSubblocks = 1;  //default: only one sub-block = entire block
 	public boolean FlagColumnSubblocks = false;
 	
-	//TODO add sub-blocks definition, parameters and values
+	public List<BlockParameter> parameters = null;
+	
+	//Values definitions are relative to the sub-block beginning position (left upper corner)
+	public Object valuesStartColumn = new Integer(0);  
+	public boolean FlagValuesStartColumn = false;
+	
+	public Object valuesEndColumn = new Integer(0);
+	public boolean FlagValuesEndColumn = false;
+	
+	public Object valuesStartRow = new Integer(0);  
+	public boolean FlagValuesStartRow = false;
+	
+	public Object valuesEndRow = new Integer(0);
+	public boolean FlagValuesEndRow = false;
 	
 	
 	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, ExcelParserConfigurator conf)
