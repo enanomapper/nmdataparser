@@ -1,5 +1,6 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.enanomapper.parser.json.JsonUtilities;
@@ -15,8 +16,6 @@ public class ExcelDataBlockLocation
 	
 	public ExcelDataLocation location = null;
 	
-	
-	
 	public Object rowSubblocks = new Integer(1);  //default: only one sub-block = entire block
 	public boolean FlagRowSubblocks = false;
 	
@@ -29,45 +28,7 @@ public class ExcelDataBlockLocation
 	public Object subblockSizeColumns = new Integer(1);
 	public boolean FlagSubblockSizeColumns = false;
 	
-	public List<BlockParameter> parameters = null;
-	
-	//Values definitions are relative to the sub-block beginning position (left upper corner)
-	public Object valuesStartColumn = new Integer(1);  
-	public boolean FlagValuesStartColumn = false;
-	
-	public Object valuesEndColumn = new Integer(1);
-	public boolean FlagValuesEndColumn = false;
-	
-	public Object valuesStartRow = new Integer(1);  
-	public boolean FlagValuesStartRow = false;
-	
-	public Object valuesEndRow = new Integer(1);
-	public boolean FlagValuesEndRow = false;
-	
-	//The shifts are relative to the corresponding value position (value by default is treated as lo-value)
-	public Object qualifierColumnPosShift = new Integer(0); 
-	public boolean FlagQualifierColumnPosShift = false;
-	
-	public Object qualifierRowPosShift = new Integer(0); 
-	public boolean FlagQualifierRowPosShift = false;
-	
-	public Object upValueColumnPosShift = new Integer(0); 
-	public boolean FlagUpValueColumnPosShift = false;
-	
-	public Object upValueRowPosShift = new Integer(0); 
-	public boolean FlagUpValueRowPosShift = false;
-	
-	public Object upQualifierColumnPosShift = new Integer(0); 
-	public boolean FlagUpQualifierColumnPosShift = false;
-	
-	public Object upQualifierRowPosShift = new Integer(0); 
-	public boolean FlagUpQualifierRowPosShift = false;
-	
-	public Object errorColumnPosShift = new Integer(0); 
-	public boolean FlagErrorColumnPosShift = false;
-	
-	public Object errorRowPosShift = new Integer(0); 
-	public boolean FlagErrorRowPosShift = false;
+	public List<BlockValueGroup> valueGroups = null;
 	
 	
 	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, ExcelParserConfigurator conf)
@@ -98,8 +59,7 @@ public class ExcelDataBlockLocation
 		{	
 			if (loc.nErrors == 0)							
 				edbl.location = loc;
-		}
-		
+		}		
 		
 	
 		//ROW_SUBBLOCKS
@@ -206,6 +166,24 @@ public class ExcelDataBlockLocation
 			}	
 		}
 		
+		//VALUE_GROUPS
+		JsonNode vgNode = sectionNode.path("VALUE_GROUPS");
+		if (!vgNode.isMissingNode())
+		{
+			if (!vgNode.isArray())
+			{	
+				conf.configErrors.add("VALUE_GROUPS section is not of type array!");
+			}
+
+			edbl.valueGroups = new ArrayList<BlockValueGroup>();
+
+			for (int i = 0; i < vgNode.size(); i++)
+			{	
+				BlockValueGroup bvg = BlockValueGroup.extractValueGroup(vgNode.get(i) ,conf);
+				edbl.valueGroups.add(bvg);
+			}	
+		}
+		
 		return edbl;
 	}
 	
@@ -232,8 +210,6 @@ public class ExcelDataBlockLocation
 			sb.append(location.toJSONKeyWord(offset+"\t"));
 			nFields++;
 		}
-		
-		
 		
 		if (FlagRowSubblocks)
 		{
@@ -269,6 +245,23 @@ public class ExcelDataBlockLocation
 			
 			sb.append(offset + "\t\"SUBBLOCK_SIZE_COLUMNS\" : " + JsonUtilities.objectsToJsonField(subblockSizeColumns));
 			nFields++;
+		}
+		
+		if (valueGroups != null)
+		{	
+			if (nFields > 0)
+				sb.append(",\n\n");
+
+			sb.append(offset + "\t\"VALUE_GROUPS\":\n");
+			sb.append(offset + "\t[\n");
+			for (int i = 0; i < valueGroups.size(); i++)
+			{	
+				sb.append(valueGroups.get(i).toJSONKeyWord(offset + "\t\t"));			
+				if (i < valueGroups.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append(offset + "\t]"); 
 		}
 		
 		

@@ -1922,16 +1922,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     {
     	logger.info("------------ getDataBlockFromAbsolutePosition");
     	
+    	Integer rowSublocks = getIntegerFromExpression(exdb_loc.rowSubblocks);
+    	Integer columnSubblocks = getIntegerFromExpression(exdb_loc.columnSubblocks);
     	Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
     	Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
     	
-    	
-    	
-    	
+    	logger.info("--- rowSublocks = " + rowSublocks);
+    	logger.info("--- columnSublocks = " + columnSubblocks);
     	logger.info("--- subblockSizeRows = " + sbSizeRows);
     	logger.info("--- subblockSizeColumns = " + sbSizeColumns);
-    	
-    	
     	
     	//TODO
     	return null;
