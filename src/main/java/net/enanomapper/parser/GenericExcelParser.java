@@ -1921,10 +1921,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc)
     {
     	logger.info("------------ getDataBlockFromAbsolutePosition");
-    	Integer nRows = getIntegerFromExpression(exdb_loc.numberOfRows);
-    	if (nRows == null)
-    		return null;
-    	logger.info("--- numberOfRows = " + nRows);
+    	
+    	Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
+    	Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
+    	
+    	
+    	
+    	
+    	logger.info("--- subblockSizeRows = " + sbSizeRows);
+    	logger.info("--- subblockSizeColumns = " + sbSizeColumns);
+    	
+    	
     	
     	//TODO
     	return null;
@@ -2003,7 +2010,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	JexlContext context = new MapContext();
     	Set<String> keys = curVariables.keySet();
     	
-    	logger.info("variables:");
+    	//logger.info("variables:");
+    	
     	for (String key : keys)
     	{	
     		context.set(key, curVariables.get(key));

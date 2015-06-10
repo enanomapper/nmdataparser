@@ -13,9 +13,9 @@ public class BlockParameter
 	public int rowPos = 0;
 	public boolean FlagRowPos = false;	
 	
-	public int valueRelativeColumnPos = -1;
-	public boolean FlagValueRelativeColumnPos = false;
+	public int relativeToValueColumnPos = -1;
+	public boolean FlagRelativeToValueColumnPos = false;
 	
-	public int valueRelativeRowPos = 0;
-	public boolean FlagValueRelativeRowPos = false;
+	public int relativeToValueRowPos = 0;
+	public boolean FlagRelativeToValueRowPos = false;
 }

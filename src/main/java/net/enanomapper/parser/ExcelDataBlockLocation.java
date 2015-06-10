@@ -15,32 +15,59 @@ public class ExcelDataBlockLocation
 	
 	public ExcelDataLocation location = null;
 	
-	public Object numberOfRows = new Integer(1);
-	public boolean FlagNumberOfRows = false;
 	
-	public int numberOfColumns = 1;
-	public boolean Flag = false;
 	
-	public int rowSubblocks = 1;  //default: only one sub-block = entire block
+	public Object rowSubblocks = new Integer(1);  //default: only one sub-block = entire block
 	public boolean FlagRowSubblocks = false;
 	
-	public int columnSubblocks = 1;  //default: only one sub-block = entire block
+	public Object columnSubblocks = new Integer(1);  //default: only one sub-block = entire block
 	public boolean FlagColumnSubblocks = false;
+	
+	public Object subblockSizeRows = new Integer(1);
+	public boolean FlagSubblockSizeRows = false;
+	
+	public Object subblockSizeColumns = new Integer(1);
+	public boolean FlagSubblockSizeColumns = false;
 	
 	public List<BlockParameter> parameters = null;
 	
 	//Values definitions are relative to the sub-block beginning position (left upper corner)
-	public Object valuesStartColumn = new Integer(0);  
+	public Object valuesStartColumn = new Integer(1);  
 	public boolean FlagValuesStartColumn = false;
 	
-	public Object valuesEndColumn = new Integer(0);
+	public Object valuesEndColumn = new Integer(1);
 	public boolean FlagValuesEndColumn = false;
 	
-	public Object valuesStartRow = new Integer(0);  
+	public Object valuesStartRow = new Integer(1);  
 	public boolean FlagValuesStartRow = false;
 	
-	public Object valuesEndRow = new Integer(0);
+	public Object valuesEndRow = new Integer(1);
 	public boolean FlagValuesEndRow = false;
+	
+	//The shifts are relative to the corresponding value position (value by default is treated as lo-value)
+	public Object qualifierColumnPosShift = new Integer(0); 
+	public boolean FlagQualifierColumnPosShift = false;
+	
+	public Object qualifierRowPosShift = new Integer(0); 
+	public boolean FlagQualifierRowPosShift = false;
+	
+	public Object upValueColumnPosShift = new Integer(0); 
+	public boolean FlagUpValueColumnPosShift = false;
+	
+	public Object upValueRowPosShift = new Integer(0); 
+	public boolean FlagUpValueRowPosShift = false;
+	
+	public Object upQualifierColumnPosShift = new Integer(0); 
+	public boolean FlagUpQualifierColumnPosShift = false;
+	
+	public Object upQualifierRowPosShift = new Integer(0); 
+	public boolean FlagUpQualifierRowPosShift = false;
+	
+	public Object errorColumnPosShift = new Integer(0); 
+	public boolean FlagErrorColumnPosShift = false;
+	
+	public Object errorRowPosShift = new Integer(0); 
+	public boolean FlagErrorRowPosShift = false;
 	
 	
 	public static ExcelDataBlockLocation extractDataBlock(JsonNode node, ExcelParserConfigurator conf)
@@ -73,14 +100,16 @@ public class ExcelDataBlockLocation
 				edbl.location = loc;
 		}
 		
-		//NUMBER_OF_ROWS
-		JsonNode nd = sectionNode.path("NUMBER_OF_ROWS");
+		
+	
+		//ROW_SUBBLOCKS
+		JsonNode nd = sectionNode.path("ROW_SUBBLOCKS");
 		if (!nd.isMissingNode())
 		{	
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null)
 			{
-				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"NUMBER_OF_ROWS\" is incorrect!");
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_SUBBLOCKS\" is incorrect!");
 			}
 			else
 			{	
@@ -88,16 +117,94 @@ public class ExcelDataBlockLocation
 				if (expr_error != null)
 				{
 					conf.configErrors.add("In JSON section \"" + jsonSection +
-							"\", keyword \"NUMBER_OF_ROWS\" is incorrect expression: " 
+							"\", keyword \"ROW_SUBBLOCKS\" is incorrect expression: " 
 							+ expr_error + " --> \"" + obj.toString() + "\"");
 				}
 				else
 				{	
-					edbl.numberOfRows = obj;
-					edbl.FlagNumberOfRows = true;
+					edbl.rowSubblocks = obj;
+					edbl.FlagRowSubblocks = true;
 				}	
 			}	
-		}		
+		}
+	
+		//COLUMN_SUBBLOCKS
+		nd = sectionNode.path("COLUMN_SUBBLOCKS");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_SUBBLOCKS\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"" + jsonSection +
+							"\", keyword \"COLUMN_SUBBLOCKS\" is incorrect expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					edbl.columnSubblocks = obj;
+					edbl.FlagColumnSubblocks = true;
+				}	
+			}	
+		}
+		
+		//SUBBLOCK_SIZE_ROWS
+		nd = sectionNode.path("SUBBLOCK_SIZE_ROWS");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_ROWS\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"" + jsonSection +
+							"\", keyword \"SUBBLOCK_SIZE_ROWS\" is incorrect expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					edbl.subblockSizeRows = obj;
+					edbl.FlagSubblockSizeRows = true;
+				}	
+			}	
+		}
+
+		//SUBBLOCK_SIZE_COLUMNS
+		nd = sectionNode.path("SUBBLOCK_SIZE_COLUMNS");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_COLUMNS\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"" + jsonSection +
+							"\", keyword \"SUBBLOCK_SIZE_COLUMNS\" is incorrect expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					edbl.subblockSizeColumns = obj;
+					edbl.FlagSubblockSizeColumns = true;
+				}	
+			}	
+		}
 		
 		return edbl;
 	}
@@ -126,12 +233,41 @@ public class ExcelDataBlockLocation
 			nFields++;
 		}
 		
-		if (FlagNumberOfRows)
+		
+		
+		if (FlagRowSubblocks)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"NUMBER_OF_ROWS\" : " + JsonUtilities.objectsToJsonField(numberOfRows));
+			sb.append(offset + "\t\"ROW_SUBBLOCKS\" : " + JsonUtilities.objectsToJsonField(rowSubblocks));
+			nFields++;
+		}
+		
+		if (FlagColumnSubblocks)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"COLUMN_SUBBLOCKS\" : " + JsonUtilities.objectsToJsonField(columnSubblocks));
+			nFields++;
+		}
+		
+		if (FlagSubblockSizeRows)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"SUBBLOCK_SIZE_ROWS\" : " + JsonUtilities.objectsToJsonField(subblockSizeRows));
+			nFields++;
+		}
+		
+		if (FlagSubblockSizeColumns)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"SUBBLOCK_SIZE_COLUMNS\" : " + JsonUtilities.objectsToJsonField(subblockSizeColumns));
 			nFields++;
 		}
 		
