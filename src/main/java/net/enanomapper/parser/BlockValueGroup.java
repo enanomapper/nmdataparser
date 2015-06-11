@@ -1,5 +1,6 @@
 package net.enanomapper.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.enanomapper.parser.json.JsonUtilities;
@@ -63,6 +64,18 @@ public class BlockValueGroup
 	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum)
 	{
 		BlockValueGroup bvg = new BlockValueGroup();
+		
+		JsonUtilities jsonUtils = new JsonUtilities();
+		
+		//NAME
+		String keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
+		if (keyword == null)
+			conf.configErrors.add(jsonUtils.getError());
+		else
+		{	
+			bvg.name = keyword;
+			bvg.FlagName = true;
+		}	
 		
 		//START_COLUMN
 		JsonNode nd = node.path("START_COLUMN");
@@ -171,11 +184,28 @@ public class BlockValueGroup
 					bvg.FlagEndRow = true;
 				}	
 			}	
-		}		
-		
-		
+		}	
 		
 		//TODO
+		
+		
+		//PARAMETERS
+		JsonNode parNode = node.path("PARAMETERS");
+		if (!parNode.isMissingNode())
+		{
+			if (!parNode.isArray())
+			{	
+				conf.configErrors.add("PARAMETERS section is not of type array!");
+			}
+
+			bvg.parameters = new ArrayList<BlockParameter>();
+
+			for (int i = 0; i < parNode.size(); i++)
+			{	
+				BlockParameter bp = BlockParameter.extractBlockParameter(parNode.get(i), conf, jsonUtils, i);
+				bvg.parameters.add(bp);
+			}	
+		}
 		
 		return bvg;
 	}
@@ -187,12 +217,21 @@ public class BlockValueGroup
 		
 		sb.append(offset + "{\n");
 		
+		if (FlagName)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"NAME\" : " + JsonUtilities.objectToJsonField(name));
+			nFields++;
+		}
+		
 		if (FlagStartColumn)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"START_COLUMN\" : " + JsonUtilities.objectsToJsonField(startColumn));
+			sb.append(offset + "\t\"START_COLUMN\" : " + JsonUtilities.objectToJsonField(startColumn));
 			nFields++;
 		}
 		
@@ -201,7 +240,7 @@ public class BlockValueGroup
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"END_COLUMN\" : " + JsonUtilities.objectsToJsonField(endColumn));
+			sb.append(offset + "\t\"END_COLUMN\" : " + JsonUtilities.objectToJsonField(endColumn));
 			nFields++;
 		}
 		
@@ -210,7 +249,7 @@ public class BlockValueGroup
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"START_ROW\" : " + JsonUtilities.objectsToJsonField(startRow));
+			sb.append(offset + "\t\"START_ROW\" : " + JsonUtilities.objectToJsonField(startRow));
 			nFields++;
 		}
 		
@@ -219,8 +258,25 @@ public class BlockValueGroup
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"END_ROW\" : " + JsonUtilities.objectsToJsonField(endRow));
+			sb.append(offset + "\t\"END_ROW\" : " + JsonUtilities.objectToJsonField(endRow));
 			nFields++;
+		}
+		
+		if (parameters != null)
+		{	
+			if (nFields > 0)
+				sb.append(",\n\n");
+
+			sb.append(offset + "\t\"PARAMETERS\":\n");
+			sb.append(offset + "\t[\n");
+			for (int i = 0; i < parameters.size(); i++)
+			{	
+				sb.append(parameters.get(i).toJSONKeyWord(offset + "\t\t"));			
+				if (i < parameters.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			sb.append(offset + "\t]"); 
 		}
 		
 		

@@ -170,7 +170,7 @@ public class JsonUtilities
 		return null;
 	}
 	
-	public static String objectsToJsonField(Object obj)
+	public static String objectToJsonField(Object obj)
 	{
 		if (obj == null)
 			return null;
@@ -184,9 +184,31 @@ public class JsonUtilities
 		if (obj instanceof Double)
 			return obj.toString();
 		
+		if (obj instanceof double[])
+		{
+			return toJsonField((double[]) obj);
+		}
+			
 		//TODO handle some other cases as arrays etc.
 		
 		return null;
+	}
+	
+	public static String toJsonField(double d[])
+	{
+		if (d == null)
+			return null;
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		for (int i = 0; i < d.length; i++)
+		{
+			sb.append(d[i]);
+			if (i < (d.length-1))
+				sb.append(",");
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 	
 }

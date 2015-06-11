@@ -216,7 +216,7 @@ public class ExcelDataBlockLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"ROW_SUBBLOCKS\" : " + JsonUtilities.objectsToJsonField(rowSubblocks));
+			sb.append(offset + "\t\"ROW_SUBBLOCKS\" : " + JsonUtilities.objectToJsonField(rowSubblocks));
 			nFields++;
 		}
 		
@@ -225,7 +225,7 @@ public class ExcelDataBlockLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"COLUMN_SUBBLOCKS\" : " + JsonUtilities.objectsToJsonField(columnSubblocks));
+			sb.append(offset + "\t\"COLUMN_SUBBLOCKS\" : " + JsonUtilities.objectToJsonField(columnSubblocks));
 			nFields++;
 		}
 		
@@ -234,7 +234,7 @@ public class ExcelDataBlockLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"SUBBLOCK_SIZE_ROWS\" : " + JsonUtilities.objectsToJsonField(subblockSizeRows));
+			sb.append(offset + "\t\"SUBBLOCK_SIZE_ROWS\" : " + JsonUtilities.objectToJsonField(subblockSizeRows));
 			nFields++;
 		}
 		
@@ -243,7 +243,7 @@ public class ExcelDataBlockLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"SUBBLOCK_SIZE_COLUMNS\" : " + JsonUtilities.objectsToJsonField(subblockSizeColumns));
+			sb.append(offset + "\t\"SUBBLOCK_SIZE_COLUMNS\" : " + JsonUtilities.objectToJsonField(subblockSizeColumns));
 			nFields++;
 		}
 		
