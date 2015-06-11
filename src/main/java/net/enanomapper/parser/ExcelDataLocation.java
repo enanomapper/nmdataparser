@@ -651,6 +651,16 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (jsonValue != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"JSON_VALUE\" : " + JsonUtilities.objectToJsonField(jsonValue));
+			nFields++;
+		}
+		
+		//TODO output some other missing info
+		
 		if (variableKeys != null)
 		{
 			if (nFields > 0)
