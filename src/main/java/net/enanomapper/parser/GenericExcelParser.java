@@ -1932,6 +1932,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     	logger.info("--- subblockSizeRows = " + sbSizeRows);
     	logger.info("--- subblockSizeColumns = " + sbSizeColumns);
     	
+    	if (exdb_loc.valueGroups != null)
+    	{	
+    		for (BlockValueGroup bvg : exdb_loc.valueGroups)
+    		{	
+    			//Handle a value group 
+    			Integer startColumn = getIntegerFromExpression(bvg.startColumn);
+    			Integer endColumn = getIntegerFromExpression(bvg.endColumn);
+    			Integer startRow = getIntegerFromExpression(bvg.startRow);
+    			Integer endRow = getIntegerFromExpression(bvg.endRow);
+    			
+    			logger.info("--- Handling value group: " + bvg.name);
+    			logger.info("--- startColumn " + startColumn);
+    			logger.info("--- endColumn " + endColumn);
+    			logger.info("--- startRow " + startRow);
+    			logger.info("--- endRow " + endRow);
+    			
+    		}
+    	}
+    	
     	//TODO
     	return null;
     }

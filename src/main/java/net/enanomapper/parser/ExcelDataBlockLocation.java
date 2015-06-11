@@ -179,7 +179,7 @@ public class ExcelDataBlockLocation
 
 			for (int i = 0; i < vgNode.size(); i++)
 			{	
-				BlockValueGroup bvg = BlockValueGroup.extractValueGroup(vgNode.get(i) ,conf);
+				BlockValueGroup bvg = BlockValueGroup.extractValueGroup(vgNode.get(i), conf, i);
 				edbl.valueGroups.add(bvg);
 			}	
 		}

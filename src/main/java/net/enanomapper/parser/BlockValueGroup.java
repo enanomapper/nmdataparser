@@ -2,6 +2,9 @@ package net.enanomapper.parser;
 
 import java.util.List;
 
+import net.enanomapper.parser.json.JsonUtilities;
+import net.enanomapper.parser.recognition.ExpressionUtils;
+
 import org.codehaus.jackson.JsonNode;
 
 
@@ -17,51 +20,162 @@ public class BlockValueGroup
 	public boolean FlagName = false;
 	
 	//Values definitions are in the context of sub-block
-	public Object valuesStartColumn = new Integer(1);  
-	public boolean FlagValuesStartColumn = false;
+	public Object startColumn = new Integer(1);  
+	public boolean FlagStartColumn = false;
 
-	public Object valuesEndColumn = new Integer(1);
-	public boolean FlagValuesEndColumn = false;
+	public Object endColumn = new Integer(1);
+	public boolean FlagEndColumn = false;
 
-	public Object valuesStartRow = new Integer(1);  
-	public boolean FlagValuesStartRow = false;
+	public Object startRow = new Integer(1);  
+	public boolean FlagStartRow = false;
 
-	public Object valuesEndRow = new Integer(1);
-	public boolean FlagValuesEndRow = false;
+	public Object endRow = new Integer(1);
+	public boolean FlagEndRow = false;
 
-	//The shifts are relative to the corresponding value position (value by default is treated as lo-value)
-	public Object qualifierColumnPosShift = new Integer(0); 
-	public boolean FlagQualifierColumnPosShift = false;
+	//The shifts are relative to the corresponding value position ('value' by default is considered to be lo-value or text-value)
+	public Object qualifierColumnShift = new Integer(0); 
+	public boolean FlagQualifierColumnShift = false;
 
-	public Object qualifierRowPosShift = new Integer(0); 
-	public boolean FlagQualifierRowPosShift = false;
+	public Object qualifierRowShift = new Integer(0); 
+	public boolean FlagQualifierRowShift = false;
 
-	public Object upValueColumnPosShift = new Integer(0); 
-	public boolean FlagUpValueColumnPosShift = false;
+	public Object upValueColumnShift = new Integer(0); 
+	public boolean FlagUpValueColumnShift = false;
 
-	public Object upValueRowPosShift = new Integer(0); 
-	public boolean FlagUpValueRowPosShift = false;
+	public Object upValueRowShift = new Integer(0); 
+	public boolean FlagUpValueRowShift = false;
 
-	public Object upQualifierColumnPosShift = new Integer(0); 
-	public boolean FlagUpQualifierColumnPosShift = false;
+	public Object upQualifierColumnShift = new Integer(0); 
+	public boolean FlagUpQualifierColumnShift = false;
 
-	public Object upQualifierRowPosShift = new Integer(0); 
-	public boolean FlagUpQualifierRowPosShift = false;
+	public Object upQualifierRowShift = new Integer(0); 
+	public boolean FlagUpQualifierRowShift = false;
 
-	public Object errorColumnPosShift = new Integer(0); 
-	public boolean FlagErrorColumnPosShift = false;
+	public Object errorColumnShift = new Integer(0); 
+	public boolean FlagErrorColumnShift = false;
 
-	public Object errorRowPosShift = new Integer(0); 
-	public boolean FlagErrorRowPosShift = false;
+	public Object errorRowShift = new Integer(0); 
+	public boolean FlagErrorRowShift = false;
 	
 	public List<BlockParameter> parameters = null;
 	
 	
-	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf)
+	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum)
 	{
 		BlockValueGroup bvg = new BlockValueGroup();
-		//TODO
 		
+		//START_COLUMN
+		JsonNode nd = node.path("START_COLUMN");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"START_COLUMN\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"START_COLUMN\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.startColumn = obj;
+					bvg.FlagStartColumn = true;
+				}	
+			}	
+		}
+		
+		//END_COLUMN
+		nd = node.path("END_COLUMN");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"END_COLUMN\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"END_COLUMN\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.endColumn = obj;
+					bvg.FlagEndColumn = true;
+				}	
+			}	
+		}
+		
+
+		//START_ROW
+		nd = node.path("START_ROW");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"START_ROW\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"START_ROW\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.startRow = obj;
+					bvg.FlagStartRow = true;
+				}	
+			}	
+		}
+
+		//END_ROW
+		nd = node.path("END_ROW");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"END_ROW\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"END_ROW\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.endRow = obj;
+					bvg.FlagEndRow = true;
+				}	
+			}	
+		}		
+		
+		
+		
+		//TODO
 		
 		return bvg;
 	}
@@ -73,7 +187,41 @@ public class BlockValueGroup
 		
 		sb.append(offset + "{\n");
 		
-		//TODO
+		if (FlagStartColumn)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"START_COLUMN\" : " + JsonUtilities.objectsToJsonField(startColumn));
+			nFields++;
+		}
+		
+		if (FlagEndColumn)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"END_COLUMN\" : " + JsonUtilities.objectsToJsonField(endColumn));
+			nFields++;
+		}
+		
+		if (FlagStartRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"START_ROW\" : " + JsonUtilities.objectsToJsonField(startRow));
+			nFields++;
+		}
+		
+		if (FlagEndRow)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"END_ROW\" : " + JsonUtilities.objectsToJsonField(endRow));
+			nFields++;
+		}
 		
 		
 		if (nFields > 0)
@@ -83,6 +231,6 @@ public class BlockValueGroup
 		
 		return sb.toString();
 		
-	}	
+	}
 	
 }
