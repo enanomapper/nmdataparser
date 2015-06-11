@@ -54,17 +54,27 @@ public class ExcelDataBlockLocation
 		}
 		
 		
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(sectionNode, "LOCATION", conf);
-		if (loc != null)
+		if (sectionNode.path("LOCATION").isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"LOCATION\" is missing!");
+		}
+		else
 		{	
-			if (loc.nErrors == 0)							
-				edbl.location = loc;
-		}		
-		
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(sectionNode, "LOCATION", conf);
+			if (loc != null)
+			{	
+				if (loc.nErrors == 0)							
+					edbl.location = loc;
+			}		
+		}
 	
 		//ROW_SUBBLOCKS
 		JsonNode nd = sectionNode.path("ROW_SUBBLOCKS");
-		if (!nd.isMissingNode())
+		if (nd.isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"ROW_SUBBLOCKS\" is missing!");
+		}
+		else
 		{	
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null)
@@ -90,7 +100,11 @@ public class ExcelDataBlockLocation
 	
 		//COLUMN_SUBBLOCKS
 		nd = sectionNode.path("COLUMN_SUBBLOCKS");
-		if (!nd.isMissingNode())
+		if (nd.isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_SUBBLOCKS\" is missing!");
+		}
+		else
 		{	
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null)
@@ -116,7 +130,11 @@ public class ExcelDataBlockLocation
 		
 		//SUBBLOCK_SIZE_ROWS
 		nd = sectionNode.path("SUBBLOCK_SIZE_ROWS");
-		if (!nd.isMissingNode())
+		if (nd.isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_ROWS\" is missing!");
+		}
+		else
 		{	
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null)
@@ -142,7 +160,11 @@ public class ExcelDataBlockLocation
 
 		//SUBBLOCK_SIZE_COLUMNS
 		nd = sectionNode.path("SUBBLOCK_SIZE_COLUMNS");
-		if (!nd.isMissingNode())
+		if (nd.isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_COLUMNS\" is missing!");
+		}
+		else
 		{	
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null)
@@ -168,7 +190,11 @@ public class ExcelDataBlockLocation
 		
 		//VALUE_GROUPS
 		JsonNode vgNode = sectionNode.path("VALUE_GROUPS");
-		if (!vgNode.isMissingNode())
+		if (vgNode.isMissingNode())
+		{
+			conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"VALUE_GROUPS\" is missing!");
+		}
+		else
 		{
 			if (!vgNode.isArray())
 			{	

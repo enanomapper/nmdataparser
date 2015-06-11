@@ -398,15 +398,27 @@ public class ExcelUtils
 		{
 		case Cell.CELL_TYPE_BLANK:
 			return null;
+			
 		case Cell.CELL_TYPE_NUMERIC:
 			return new Double(c.getNumericCellValue());
+			
+		case Cell.CELL_TYPE_BOOLEAN:
+			return new Boolean(c.getBooleanCellValue());	
+			
 		case Cell.CELL_TYPE_STRING:
 			return c.getStringCellValue();
+			
 		case Cell.CELL_TYPE_FORMULA: {	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
 				return new Double(c.getNumericCellValue());
-		}	
-			//TODO
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_BOOLEAN)
+				return new Boolean(c.getBooleanCellValue());
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+				return c.getStringCellValue();
+			
+		}
+			
+			//TODO some other types ???
 		}
 		return null;
 	}

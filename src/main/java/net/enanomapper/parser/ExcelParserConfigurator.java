@@ -351,6 +351,9 @@ public class ExcelParserConfigurator
 				conf.variableLocations = extractDynamicSection(varNode, conf);
 			}
 			
+			//VARIABLE_MAPS
+			//TODO
+			
 			
 			//DYNAMIC_ITERATION_SPAN
 			if (!curNode.path("DYNAMIC_ITERATION_SPAN").isMissingNode())

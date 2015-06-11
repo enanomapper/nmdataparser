@@ -1919,18 +1919,56 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
     
     protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc)
-    {
-    	logger.info("------------ getDataBlockFromAbsolutePosition");
-    	
-    	Integer rowSublocks = getIntegerFromExpression(exdb_loc.rowSubblocks);
+    {	
+    	Integer rowSubblocks = getIntegerFromExpression(exdb_loc.rowSubblocks);
     	Integer columnSubblocks = getIntegerFromExpression(exdb_loc.columnSubblocks);
     	Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
     	Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
     	
-    	logger.info("--- rowSublocks = " + rowSublocks);
-    	logger.info("--- columnSublocks = " + columnSubblocks);
+    	logger.info("------------ getDataBlockFromAbsolutePosition");
+    	logger.info("--- rowSubblocks = " + rowSubblocks);
+    	logger.info("--- columnSubblocks = " + columnSubblocks);
     	logger.info("--- subblockSizeRows = " + sbSizeRows);
     	logger.info("--- subblockSizeColumns = " + sbSizeColumns);
+    	
+    	if (rowSubblocks == null || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null)
+    	{
+    		return null;
+    	}
+    	
+    	if (exdb_loc.location == null)
+    		return null;
+    	
+    	//Constructing the cell matrix
+    	int n = rowSubblocks * sbSizeRows;
+    	int m = columnSubblocks * sbSizeColumns;
+    	int startRow = exdb_loc.location.rowIndex;
+    	int startColumn = exdb_loc.location.columnIndex;
+    	
+    	Cell cells[][] = new Cell[n][m];
+    	
+    	Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
+    	
+    	for (int i = 0; i < n; i++)
+    	{
+    		Row row = sheet.getRow(startRow + i);
+    		String s = "";
+    		for (int k = 0; k < m; k++)
+    		{
+    			Cell c = row.getCell(startColumn + k);
+    			cells[i][k] = c;
+    			s += ("  " + ExcelUtils.getObjectFromCell(c));
+    		}
+    		logger.info(">>>> " + s);
+    	}
+    	
+    	return getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, exdb_loc);
+    }
+    
+    
+    protected List<DataBlockElement> getDataBlockFromCellMatrix(Cell cell[][], int rowSublocs, int columnSubblocks, ExcelDataBlockLocation exdb_loc)
+    {	
+    	List<DataBlockElement> dbeList = new ArrayList<DataBlockElement>();
     	
     	if (exdb_loc.valueGroups != null)
     	{	
@@ -1948,13 +1986,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     			logger.info("--- startRow " + startRow);
     			logger.info("--- endRow " + endRow);
     			
+    			//Handle block and sub-block parameters
+    			//TODO
+    			
+    			
+    			if (startColumn != null && endColumn != null && startRow != null && endRow != null)
+    			{	
+    				//TODO
+    			}	
+    			
     		}
     	}
     	
-    	//TODO
-    	return null;
+    	return dbeList;
     }
-    
     
     
     protected Integer getIntegerFromExpression(Object obj)

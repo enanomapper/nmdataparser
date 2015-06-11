@@ -21,16 +21,16 @@ public class BlockValueGroup
 	public boolean FlagName = false;
 	
 	//Values definitions are in the context of sub-block
-	public Object startColumn = new Integer(1);  
+	public Object startColumn = null;  
 	public boolean FlagStartColumn = false;
 
-	public Object endColumn = new Integer(1);
+	public Object endColumn = null;
 	public boolean FlagEndColumn = false;
 
-	public Object startRow = new Integer(1);  
+	public Object startRow = null;  
 	public boolean FlagStartRow = false;
 
-	public Object endRow = new Integer(1);
+	public Object endRow = null;
 	public boolean FlagEndRow = false;
 
 	//The shifts are relative to the corresponding value position ('value' by default is considered to be lo-value or text-value)
