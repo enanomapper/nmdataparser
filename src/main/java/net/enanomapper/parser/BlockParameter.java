@@ -16,7 +16,9 @@ public class BlockParameter
 	public boolean FlagAssign = false;
 	
 	//The positions are relative to the beginning of 
-	//block (0,0), sub-block (0,0) or value - here negative values make sense as well 
+	//block (1,1) position, sub-block (x,y) position 
+	//or 'value' position - in this case negative values make sense as well 
+	
 	public Object columnPos = new Integer(0); 
 	public boolean FlagColumnPos = false;
 	

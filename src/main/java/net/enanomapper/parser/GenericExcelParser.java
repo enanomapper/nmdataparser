@@ -981,17 +981,24 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	// Read effects array
 	if (padl.effects != null) {
-	    for (int i = 0; i < padl.effects.size(); i++) {
-		EffectRecord effect = readEffect(padl.effects.get(i));
-		pa.addEffect(effect);
-	    }
+		for (int i = 0; i < padl.effects.size(); i++) {
+			EffectRecord effect = readEffect(padl.effects.get(i));
+			pa.addEffect(effect);
+		}
 	}
 	
 	//Read effects from EFFECTS_BLOCK
 	if (padl.effectsBlock != null)
 	{
 		List<DataBlockElement> effDataBlock = getDataBlock(padl.effectsBlock);
-		//TODO - make effects from it
+		for (DataBlockElement dbe : effDataBlock)
+		{
+			EffectRecord effect = dbe.generateEffectRecord();
+			effect.setEndpoint("test-endpoint"); 
+			//TODO (1) read endpoint from JSON config and (2) set unit
+			
+			pa.addEffect(effect);
+		}
 	}
 
 	return pa;
@@ -1074,12 +1081,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		    else {
 			d = qv.value;
 			if (qv.qualifier != null)
-			    effect.setLoQualifier(qv.qualifier); // this
-								 // qualifier
-								 // takes
-								 // precedence
-								 // (if already
-								 // set)
+			    effect.setLoQualifier(qv.qualifier); // this qualifier takes precedence (if already set)
 		    }
 		} else
 		    d = getNumericValue(efrdl.loValue);
@@ -1116,12 +1118,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		    else {
 			d = qv.value;
 			if (qv.qualifier != null)
-			    effect.setUpQualifier(qv.qualifier); // this
-								 // qualifier
-								 // takes
-								 // precedence
-								 // (if already
-								 // set)
+			    effect.setUpQualifier(qv.qualifier); // this qualifier takes precedence (if already set)
 		    }
 		} else
 		    d = getNumericValue(efrdl.upValue);
@@ -1164,12 +1161,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		    else {
 			d = qv.value;
 			if (qv.qualifier != null)
-			    effect.setErrQualifier(qv.qualifier); // this
-								  // qualifier
-								  // takes
-								  // precedence
-								  // (if already
-								  // set)
+			    effect.setErrQualifier(qv.qualifier); // this qualifier takes precedence (if already set)
 		    }
 		} else
 		    d = getNumericValue(efrdl.errValue);
@@ -1957,48 +1949,153 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     		{
     			Cell c = row.getCell(startColumn + k);
     			cells[i][k] = c;
-    			s += ("  " + ExcelUtils.getObjectFromCell(c));
+    			//s += ("  " + ExcelUtils.getObjectFromCell(c));
     		}
-    		logger.info(">>>> " + s);
+    		//logger.info(">>>> " + s);
     	}
     	
-    	return getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, exdb_loc);
+    	return getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, sbSizeRows, sbSizeColumns, exdb_loc);
     }
     
     
-    protected List<DataBlockElement> getDataBlockFromCellMatrix(Cell cell[][], int rowSublocs, int columnSubblocks, ExcelDataBlockLocation exdb_loc)
+    protected List<DataBlockElement> getDataBlockFromCellMatrix(Cell cells[][], 
+    									int rowSubblocks, int columnSubblocks, 
+    									int subblockSizeRows, int subblockSizeColumns,
+    									ExcelDataBlockLocation exdb_loc)
     {	
     	List<DataBlockElement> dbeList = new ArrayList<DataBlockElement>();
     	
-    	if (exdb_loc.valueGroups != null)
-    	{	
-    		for (BlockValueGroup bvg : exdb_loc.valueGroups)
+    	if (exdb_loc.valueGroups == null)
+    		return dbeList;
+    	
+    	//Analyze value groups
+    	List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
+    	for (BlockValueGroup bvg : exdb_loc.valueGroups)
+		{
+    		BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
+    		if (bvgei.getErrors().isEmpty())
+    			bvgExtrInfo.add(bvgei);
+    		else
     		{	
-    			//Handle a value group 
-    			Integer startColumn = getIntegerFromExpression(bvg.startColumn);
-    			Integer endColumn = getIntegerFromExpression(bvg.endColumn);
-    			Integer startRow = getIntegerFromExpression(bvg.startRow);
-    			Integer endRow = getIntegerFromExpression(bvg.endRow);
-    			
-    			logger.info("--- Handling value group: " + bvg.name);
-    			logger.info("--- startColumn " + startColumn);
-    			logger.info("--- endColumn " + endColumn);
-    			logger.info("--- startRow " + startRow);
-    			logger.info("--- endRow " + endRow);
-    			
-    			//Handle block and sub-block parameters
-    			//TODO
-    			
-    			
-    			if (startColumn != null && endColumn != null && startRow != null && endRow != null)
+    			logger.info("--- Value Group " + bvg.name + "errors:");
+    			for (String err : bvgei.getErrors() )
+    				logger.info("--- " + err);
+    		}	
+		}
+
+    	//Iterating all sub-blocks
+    	for (int sbRow = 0; sbRow < rowSubblocks; sbRow++)
+    		for (int sbColumn = 0; sbColumn < columnSubblocks; sbColumn++)
+    		{	
+    			//Upper left corner of the current sub-block
+    			int row0 = sbRow * subblockSizeRows;
+    			int column0 = sbColumn * subblockSizeColumns;		
+    					
+    			for (BlockValueGroupExtractedInfo bvgei : bvgExtrInfo)
     			{	
-    				//TODO
-    			}	
-    			
-    		}
-    	}
+    				if (bvgei.FlagValues)
+    				{	
+    					//Shifted  by -1 to make it 0-based indexing
+    					for (int i = bvgei.startRow-1; i <= bvgei.endRow-1; i++)
+    						for (int k = bvgei.startColumn-1; k <= bvgei.endColumn-1; k++)
+    						{
+    							Object o = ExcelUtils.getObjectFromCell(cells[row0+i][column0+k]);
+    							DataBlockElement dbEl = new DataBlockElement();
+    							dbEl.setValue(o, rvParser);
+    							
+    							//Handle parameters
+    							//TODO
+    							
+    							dbeList.add(dbEl);
+    						}
+    				}	
+
+    			}
+
+    		} //iterating all sub-blocks
     	
     	return dbeList;
+    }
+    
+    protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg)
+    {	
+    	BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
+    	
+    	//Handle values
+    	bvgei.startColumn = getIntegerFromExpression(bvg.startColumn);
+    	bvgei.endColumn = getIntegerFromExpression(bvg.endColumn);
+    	bvgei.startRow = getIntegerFromExpression(bvg.startRow);
+    	bvgei.endRow = getIntegerFromExpression(bvg.endRow);
+
+		logger.info("--- Extracting inffo for value group: " + bvg.name);
+		logger.info("--- startColumn " + bvgei.startColumn);
+		logger.info("--- endColumn " + bvgei.endColumn);
+		logger.info("--- startRow " + bvgei.startRow);
+		logger.info("--- endRow " + bvgei.endRow);
+
+		bvgei.FlagValues = true;
+		
+		if (bvgei.startColumn == null)
+		{
+			bvgei.errors.add("START_COLUMN:  incorrect result for expression: " + bvg.startColumn);
+			bvgei.FlagValues = false;
+		}
+		
+		if (bvgei.endColumn == null)
+		{
+			bvgei.errors.add("END_COLUMN:  incorrect result for expression: " + bvg.endColumn);
+			bvgei.FlagValues = false;
+		}
+		
+		if (bvgei.startRow == null)
+		{
+			bvgei.errors.add("START_ROW:  incorrect result for expression: " + bvg.startRow);
+			bvgei.FlagValues = false;
+		}
+		
+		if (bvgei.endRow == null)
+		{
+			bvgei.errors.add("END_ROW:  incorrect result for expression: " + bvg.endRow);
+			bvgei.FlagValues = false;
+		}
+    	
+		if (bvgei.FlagValues)
+		{
+			if (bvgei.startColumn > bvgei.endColumn)
+			{	
+				bvgei.errors.add("START_COLUMN > END_COLUMN");
+				bvgei.FlagValues = false;
+			}
+			
+			if (bvgei.startRow > bvgei.endRow)
+			{	
+				bvgei.errors.add("START_ROW > END_ROW");
+				bvgei.FlagValues = false;
+			}
+		}
+		
+		if (bvg.parameters != null)
+			if (!bvg.parameters.isEmpty())
+			{	
+				bvgei.paramInfo = new ArrayList<BlockValueGroupExtractedInfo.ParamInfo>();
+						
+				for (BlockParameter bp : bvg.parameters)
+				{
+					BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
+					if (bvg.name == null)
+						bvgei.errors.add("Parameter name is missing!");
+					else
+						pi.name = bvg.name;
+					
+					//TODO
+					
+					bvgei.paramInfo.add(pi);
+				}
+			}	
+		
+		
+		
+		return bvgei;
     }
     
     
