@@ -383,6 +383,8 @@ public class ExcelUtils
 		case Cell.CELL_TYPE_FORMULA: {	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
 				return "" + c.getNumericCellValue();
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+				return c.getStringCellValue();
 		}	
 			//TODO
 		}
