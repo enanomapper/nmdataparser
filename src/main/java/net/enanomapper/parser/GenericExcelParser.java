@@ -45,6 +45,7 @@ import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
@@ -957,6 +958,80 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	    if (s != null)
 		pa.setInterpretationResult(s);
 	}
+	
+	//Handle reliability info
+	ReliabilityParams reliability = null;
+	
+	if (padl.reliability_value != null) {
+	    String s = getString(padl.reliability_value);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setValue(s);
+	    }
+	}
+	
+	if (padl.reliability_isRobustStudy != null) {
+	    String s = getString(padl.reliability_isRobustStudy);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setIsRobustStudy(s);
+	    }
+	}
+	
+	if (padl.reliability_isUsedforClassification != null) {
+	    String s = getString(padl.reliability_isUsedforClassification);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setIsUsedforClassification(s);
+	    }
+	}
+	
+	if (padl.reliability_isUsedforMSDS != null) {
+	    String s = getString(padl.reliability_isUsedforMSDS);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setIsUsedforMSDS(s);
+	    }
+	}
+	
+	if (padl.reliability_purposeFlag != null) {
+	    String s = getString(padl.reliability_purposeFlag);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setPurposeFlag(s);
+	    }
+	}
+	
+	if (padl.reliability_studyResultType != null) {
+	    String s = getString(padl.reliability_studyResultType);
+	    if (s != null)
+	    {
+	    	if (reliability == null)
+	    		reliability = new ReliabilityParams();
+	    	
+	    	reliability.setStudyResultType(s);
+	    }
+	}
+	
+	
+	if (reliability != null)
+		pa.setReliability(reliability);
+	
 
 	// Read parameters
 	if (padl.parameters != null)
@@ -1842,8 +1917,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
     }
 
     protected String getString(Row row, ExcelDataLocation loc) {
-	Cell c = row.getCell(loc.columnIndex);
-	return ExcelUtils.getStringFromCell(c);
+    	Cell c = row.getCell(loc.columnIndex);
+    	return ExcelUtils.getStringFromCell(c);
     }
 
     protected Double getNumericValue(Row row, ExcelDataLocation loc) {
