@@ -64,7 +64,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	public final static Logger logger = Logger
 			.getLogger(GenericExcelParser.class.getName());
-
+	//TODO refactor!!!!!!!!!
 	public static String key00 = "";
 	protected RichValueParser rvParser = new RichValueParser();
 	// protected ArrayList<String> parseErrors = new ArrayList<String>();
