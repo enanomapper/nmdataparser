@@ -1018,6 +1018,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 */
 	protected ProtocolApplication readProtocolApplication(
 			ProtocolApplicationDataLocation padl) throws Exception {
+		logger.log(Level.FINE,"Reading protocol application ...");
 		Protocol protocol = readProtocol(padl);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
 
@@ -1213,6 +1214,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 */
 	protected EffectRecord readEffect(EffectRecordDataLocation efrdl)
 			throws Exception {
+		logger.log(Level.FINE,"Reading effect record");
 		EffectRecord effect = new EffectRecord();
 
 		if (efrdl.sampleID != null) {
@@ -1351,10 +1353,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				effect.setUpValue(d);
 		}
 
-		if (efrdl.textValue != null) {
+		if (efrdl.textValue != null) try {
+			
 			String s = getString(efrdl.textValue);
 			if (s != null)
 				effect.setTextValue(s);
+		} catch (Exception x) {
+			logger.log(Level.WARNING,x.getMessage());
 		}
 
 		if (efrdl.errQualifier != null) {
