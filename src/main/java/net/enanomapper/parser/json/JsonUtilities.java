@@ -5,11 +5,20 @@ import org.codehaus.jackson.JsonNode;
 public class JsonUtilities 
 {
 	private String error = "";
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getError() {
 		return error;
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @param keyword
+	 * @param isRequired
+	 * @return
+	 */
 	public String extractStringKeyword(JsonNode node, String keyword, boolean isRequired)
 	{
 		error = "";
@@ -34,7 +43,13 @@ public class JsonUtilities
 			return null;
 		}			
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @param keyword
+	 * @param isRequired
+	 * @return
+	 */
 	public Double extractDoubleKeyword(JsonNode node, String keyword, boolean isRequired)
 	{
 		error = "";
@@ -59,7 +74,13 @@ public class JsonUtilities
 			return null;
 		}			
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @param keyword
+	 * @param isRequired
+	 * @return
+	 */
 	public Integer extractIntKeyword(JsonNode node, String keyword, boolean isRequired)
 	{
 		error = "";
@@ -84,7 +105,13 @@ public class JsonUtilities
 			return null;
 		}			
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @param keyword
+	 * @param isRequired
+	 * @return
+	 */
 	public Boolean extractBooleanKeyword(JsonNode node, String keyword, boolean isRequired)
 	{
 		error = "";
@@ -109,7 +136,11 @@ public class JsonUtilities
 			return null;
 		}			
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	public static String getNodeTypeAsString(JsonNode node)
 	{
 		if (node.isArray())
@@ -143,7 +174,11 @@ public class JsonUtilities
 		*/
 		return "0";
 	}
-	
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	public static Object extractObject (JsonNode node)
 	{
 		if (node.isTextual())
@@ -169,7 +204,11 @@ public class JsonUtilities
 		
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
 	public static String objectToJsonField(Object obj)
 	{
 		if (obj == null)
@@ -193,7 +232,11 @@ public class JsonUtilities
 		
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param d
+	 * @return
+	 */
 	public static String toJsonField(double d[])
 	{
 		if (d == null)

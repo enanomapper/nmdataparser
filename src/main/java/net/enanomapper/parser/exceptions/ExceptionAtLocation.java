@@ -2,6 +2,7 @@ package net.enanomapper.parser.exceptions;
 
 import net.enanomapper.parser.ExcelDataLocation;
 
+
 public class ExceptionAtLocation extends Exception {
 	/**
 	 * 

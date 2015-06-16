@@ -112,12 +112,23 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	// off errors in some
 	// cases
-
+	/**
+	 * 
+	 * @param input
+	 * @param jsonConfig
+	 * @throws Exception
+	 */
 	public GenericExcelParser(InputStream input, File jsonConfig)
 			throws Exception {
 		this(input, jsonConfig, true);
 	}
-
+	/**
+	 * 
+	 * @param input
+	 * @param jsonConfig
+	 * @param xlsxFormat
+	 * @throws Exception
+	 */
 	public GenericExcelParser(InputStream input, File jsonConfig,
 			boolean xlsxFormat) throws Exception {
 		super();
@@ -241,7 +252,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			eidl.setParallelSheets(parallelSheetStates, primarySheetNum,
 					parallelSheetsErrors);
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 */
 	protected void setParallelSheet(ExcelDataLocation loc) {
 		if (loc.sheetIndex != primarySheetNum) {
 			for (int i = 0; i < parallelSheetStates.length; i++)
@@ -263,7 +277,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						+ "] Sheet number number not valid parallel sheet!");
 		}
 	}
-
+	/**
+	 * 
+	 * @param padl
+	 */
 	protected void setParallelSheets(ProtocolApplicationDataLocation padl) {
 		if (padl.citationOwner != null)
 			setParallelSheet(padl.citationOwner);
@@ -331,7 +348,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			sb.append(s + "\n");
 		return sb.toString();
 	}
-
+	/**
+	 * 
+	 * @param efrdl
+	 */
 	protected void setParallelSheets(EffectRecordDataLocation efrdl) {
 		if (efrdl.sampleID != null)
 			setParallelSheet(efrdl.sampleID);
@@ -373,9 +393,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			setParallelSheet(efrdl.value);
 
 	}
-
+	/**
+	 * 
+	 */
 	@Override
-	public void setReader(Reader arg0) throws CDKException {
+	public void setReader(Reader reader) throws CDKException {
 		throw new CDKException("setReader(Reader arg0) - Not implemented");
 	}
 
@@ -405,7 +427,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public boolean hasNext() {
 
@@ -482,12 +506,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return false;
 		}
 	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public Object next() {
 		return nextRecord();
 	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public SubstanceRecord nextRecord() {
 		if (hasNext()) {
@@ -648,7 +676,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			break;
 		}
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	protected int iterateExcel() {
 		switch (config.substanceIteration) {
 		case ROW_SINGLE:
@@ -694,7 +725,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return 0;
 	}
-
+	
 	protected int iterateToNextNonEmptyRow() {
 		curRowNum++;
 		while (curRowNum <= primarySheet.getLastRowNum()) {
@@ -707,12 +738,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return -1;
 	}
-
+	/**
+	 * 
+	 */
 	protected void iterateRowMultiDynamic() {
 		curRowNum = curReadRowNum;
 		readRowsMultiDynamic();
 	}
-
+	/**
+	 * 
+	 */
 	protected void readRowsMultiDynamic() {
 		logger.info("----- Primary Sheet - Reading at row: " + (curRowNum + 1));
 
@@ -797,10 +832,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * false; } }
 	 */
 
-	// This function uses a generic approach (the generic variants of the helper
-	// functions)
-	// The iteration access mode is handled in the specific overloads of the
-	// functions.
+
+	/**
+	* This function uses a generic approach (the generic variants of the helper functions)
+	* The iteration access mode is handled in the specific overloads of the functions. 
+	 * @return
+	 * @throws Exception
+	 */
 	protected SubstanceRecord getBasicSubstanceRecord() throws Exception {
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE)
 			logger.info("Reading row: " + (curRowNum + 1));
@@ -899,7 +937,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return r;
 	}
-
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	protected void loadSubstanceRecords() throws Exception {
 		loadedRecordsBuffer.clear();
 
@@ -955,7 +996,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			// TODO
 		}
 	}
-
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	protected List<ProtocolApplication> readProtocolApplications()
 			throws Exception {
 		List<ProtocolApplication> protApps = new ArrayList<ProtocolApplication>();
@@ -965,7 +1010,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		return protApps;
 	}
-
+	/**
+	 * 
+	 * @param padl
+	 * @return
+	 * @throws Exception
+	 */
 	protected ProtocolApplication readProtocolApplication(
 			ProtocolApplicationDataLocation padl) throws Exception {
 		Protocol protocol = readProtocol(padl);
@@ -1113,7 +1163,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return pa;
 	}
-
+	/**
+	 * 
+	 * @param padl
+	 * @return
+	 * @throws Exception
+	 */
 	protected Protocol readProtocol(ProtocolApplicationDataLocation padl)
 			throws Exception {
 		String endpoint = null;
@@ -1150,7 +1205,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return protocol;
 	}
-
+	/**
+	 * 
+	 * @param efrdl
+	 * @return
+	 * @throws Exception
+	 */
 	protected EffectRecord readEffect(EffectRecordDataLocation efrdl)
 			throws Exception {
 		EffectRecord effect = new EffectRecord();
@@ -1436,7 +1496,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return effect;
 	}
-
+	/**
+	 * 
+	 * @param cdl
+	 * @param record
+	 * @return
+	 * @throws Exception
+	 */
 	protected CompositionRelation readCompositionRelation(
 			CompositionDataLocation cdl, SubstanceRecord record)
 			throws Exception {
@@ -1561,10 +1627,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return relation;
 	}
 
-	/*
+
+	/**
 	 * Generic function (regardless of the iteration access) Reads a string
 	 * value from a cell which is of type String If cell is not of type 'String'
-	 * error is generated
+	 * error is generated 
+	 * @param loc
+	 * @return
+	 * @throws Exception
 	 */
 	protected String getStringValue(ExcelDataLocation loc) throws Exception {
 		switch (loc.iteration) {
@@ -1651,8 +1721,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 	}
 
-	/*
+
+	/**
 	 * Generic function (regardless of the iteration access)
+	 * @param loc
+	 * @return
+	 * @throws Exception
 	 */
 	protected String getString(ExcelDataLocation loc) throws Exception {
 		switch (loc.iteration) {
@@ -1732,8 +1806,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 	}
 
-	/*
+	/**
 	 * Generic function (regardless of the iteration access)
+	 * @param loc
+	 * @return
+	 * @throws Exception
 	 */
 	protected Double getNumericValue(ExcelDataLocation loc) throws Exception {
 		switch (loc.iteration) {
@@ -1824,7 +1901,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 		}
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 */
 	protected Object[] getArray(ExcelDataLocation loc) {
 		switch (loc.iteration) {
 		case ROW_SINGLE:
@@ -1877,7 +1958,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 		}
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 * @throws Exception
+	 */
 	protected String getStringValueFromAbsoluteLocation(ExcelDataLocation loc)
 			throws Exception {
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
@@ -1899,7 +1985,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 */
 	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc) {
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
 		if (sheet != null) {
@@ -1912,7 +2002,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 * @throws Exception
+	 */
 	protected Double getNumericFromAbsoluteLocation(ExcelDataLocation loc)
 			throws Exception {
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
@@ -1944,7 +2039,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 */
 	protected Object[] getArrayFromAbsoluteLocation(ExcelDataLocation loc) {
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
 
@@ -1994,6 +2093,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return objects;
 	}
 
+	/**
+	 * 
+	 * @param objects
+	 * @param nRows
+	 * @param nColumns
+	 * @return
+	 */
 	protected Object[] trimObjects(Object objects[], int nRows, int nColumns) {
 		// The array is treated as a virtual matrix
 		// Each dimension is trimmed to the maximal index that represents a
@@ -2024,9 +2130,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return objects1;
 	}
 
-	/*
-	 * Returns null if cell is not of string type (i.e. numerics are treated as
-	 * errors)
+
+	/**
+	 * 
+	 * @param row
+	 * @param loc
+	 * @return Returns null if cell is not of string type (i.e. numerics are treated as errors) 
+	 * @throws Exception
 	 */
 	protected String getStringValue(Row row, ExcelDataLocation loc)
 			throws Exception {
@@ -2059,12 +2169,23 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return c.getStringCellValue();
 	}
-
+	/**
+	 * 
+	 * @param row
+	 * @param loc
+	 * @return
+	 */
 	protected String getString(Row row, ExcelDataLocation loc) {
 		Cell c = row.getCell(loc.columnIndex);
 		return ExcelUtils.getStringFromCell(c);
 	}
-
+	/**
+	 * 
+	 * @param row
+	 * @param loc
+	 * @return
+	 * @throws CellException
+	 */
 	protected Double getNumericValue(Row row, ExcelDataLocation loc)
 			throws CellException {
 		Cell c = row.getCell(loc.columnIndex);
@@ -2090,8 +2211,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (loc.allowEmpty && (Cell.CELL_TYPE_BLANK == c.getCellType()))
 			return null;
 		else {
-			// logger.log(Level.WARNING, msg);
-
 			throw new CellException(
 					loc.sectionName,
 					(primarySheetNum + 1),
@@ -2111,7 +2230,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		 * return c.getNumericCellValue();
 		 */
 	}
-
+	/**
+	 * 
+	 * @param exdb_loc
+	 * @return
+	 */
 	protected List<DataBlockElement> getDataBlock(
 			ExcelDataBlockLocation exdb_loc) {
 		switch (exdb_loc.location.iteration) {
