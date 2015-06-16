@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.ss.formula.functions.Column;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -425,7 +424,7 @@ public class ExcelUtils
 		return null;
 	}
 	
-	public static Double getNumericValue(Cell c)
+	public static Number getNumericValue(Cell c)
 	{
 		if (c == null)
 			return null;

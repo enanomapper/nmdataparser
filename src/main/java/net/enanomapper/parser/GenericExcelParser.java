@@ -563,7 +563,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				if (s != null)
 					curVariables.put(var, s);
 				else {
-					Double d = getNumericValue(loc);
+					Number d = getNumericValue(loc);
 					if (d != null)
 						curVariables.put(var, d);
 				}
@@ -602,7 +602,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (s != null)
 						curVariables.put(var, s);
 					else {
-						Double d = getNumericValue(loc);
+						Number d = getNumericValue(loc);
 						if (d != null)
 							curVariables.put(var, d);
 					}
@@ -904,7 +904,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		loc = config.substanceLocations.get("SubstanceRecord.idSubstance");
 		if (loc != null) {
-			Double v = getNumericValue(loc);
+			Number v = getNumericValue(loc);
 			if (v != null)
 				r.setIdsubstance(v.intValue());
 		}
@@ -1134,7 +1134,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				if (paramStringValue != null)
 					params.put(param, paramStringValue);
 				else {
-					Double paramDoubleValue = getNumericValue(loc);
+					Number paramDoubleValue = getNumericValue(loc);
 					if (paramDoubleValue != null)
 						params.put(param, paramDoubleValue);
 				}
@@ -1249,7 +1249,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		if (efrdl.loValue != null) {
-			Double d = null;
+			Number d = null;
 			if (config.Fl_AllowQualifierInValueCell) {
 				try {
 					String qstring = getStringValue(efrdl.loValue);
@@ -1290,7 +1290,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				d = getNumericValue(efrdl.loValue);
 
 			if (d != null)
-				effect.setLoValue(d);
+				effect.setLoValue(d.doubleValue());
 		}
 
 		if (efrdl.upQualifier != null) {
@@ -1311,7 +1311,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		if (efrdl.upValue != null) {
-			Double d = null;
+			Number d = null;
 			if (config.Fl_AllowQualifierInValueCell) {
 				String qstring = null;
 				try {
@@ -1350,7 +1350,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				d = getNumericValue(efrdl.upValue);
 
 			if (d != null)
-				effect.setUpValue(d);
+				effect.setUpValue(d.doubleValue());
 		}
 
 		if (efrdl.textValue != null) try {
@@ -1380,7 +1380,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		if (efrdl.errValue != null) {
-			Double d = null;
+			Number d = null;
 			if (config.Fl_AllowQualifierInValueCell) {
 				// errors
 				String qstring = null;
@@ -1419,7 +1419,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				d = getNumericValue(efrdl.errValue);
 
 			if (d != null)
-				effect.setErrorValue(d);
+				effect.setErrorValue(d.doubleValue());
 		}
 
 		if (efrdl.unit != null) {
@@ -1433,7 +1433,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			// qualifiers and unit
 			// These are intelligently recognized
 
-			Double d = null;
+			Number d = null;
 			// errors
 			String richValueString = null;
 			try {
@@ -1472,7 +1472,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				d = getNumericValue(efrdl.value);
 
 			if (d != null)
-				effect.setLoValue(d); // This is the default behavior if the
+				effect.setLoValue(d.doubleValue()); // This is the default behavior if the
 			// cell is of type numeric
 		}
 
@@ -1585,8 +1585,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 
 			if (cdl.proportion.typical_value != null) {
-				Double d = getNumericValue(cdl.proportion.typical_value);
-				proportion.setTypical_value(d);
+				Number d = getNumericValue(cdl.proportion.typical_value);
+				proportion.setTypical_value(d.doubleValue());
 			}
 
 			if (cdl.proportion.typical_unit != null) {
@@ -1606,8 +1606,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 
 			if (cdl.proportion.real_lower_value != null) {
-				Double d = getNumericValue(cdl.proportion.real_lower_value);
-				proportion.setReal_lowervalue(d);
+				Number d = getNumericValue(cdl.proportion.real_lower_value);
+				proportion.setReal_lowervalue(d.doubleValue());
 			}
 
 			if (cdl.proportion.real_upper_precision != null) {
@@ -1616,8 +1616,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 
 			if (cdl.proportion.real_upper_value != null) {
-				Double d = getNumericValue(cdl.proportion.real_upper_value);
-				proportion.setReal_uppervalue(d);
+				Number d = getNumericValue(cdl.proportion.real_upper_value);
+				proportion.setReal_uppervalue(d.doubleValue());
 			}
 
 			if (cdl.proportion.real_unit != null) {
@@ -1817,7 +1817,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Double getNumericValue(ExcelDataLocation loc) throws Exception {
+	protected Number getNumericValue(ExcelDataLocation loc) throws Exception {
 		switch (loc.iteration) {
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet()) {
@@ -1848,16 +1848,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				value = getNumericFromAbsoluteLocation(loc);
 				loc.setAbsoluteLocationValue(value);
 			}
-			if (value != null)
-				return (Double) value;
+			if (value != null && (value instanceof Number))
+				return (Number) value;
 			return null;
 		}
 
 		case JSON_VALUE: {
 			Object value = loc.getJsonValue();
-			if (value != null)
+			if (value != null) {
 				if (value instanceof Number)
-					return ((Number) value).doubleValue();
+					return (Number) value;
 				else {
 					String msg = String.format(
 							"[%s] JSON_VALUE is not of type NUMERIC!",
@@ -1865,7 +1865,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					logger.log(Level.WARNING, msg);
 					throw new Exception(msg);
 				}
-
+			}	
 			return null;
 		}
 
@@ -1874,7 +1874,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			Object value = config.jsonRepository.get(key);
 			if (value != null)
 				if (value instanceof Number)
-					return ((Number) value).doubleValue();
+					return (Number) value;
 				else {
 					String msg = String
 							.format("[%s] JSON_REPOSITORY value for key '%s' is not of type NUMERIC!",
@@ -1890,7 +1890,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			Object value = curVariables.get(key);
 			if (value != null)
 				if (value instanceof Number)
-					return ((Number) value).doubleValue();
+					return (Number) value;
 				else {
 					String msg = String
 							.format("[%s] JSON_REPOSITORY value for key '%s' is not of type NUMERIC!",
@@ -2013,7 +2013,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Double getNumericFromAbsoluteLocation(ExcelDataLocation loc)
+	protected Number getNumericFromAbsoluteLocation(ExcelDataLocation loc)
 			throws Exception {
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
 		if (sheet != null) {
@@ -2023,7 +2023,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			Cell c = r.getCell(loc.columnIndex);
 
-			Double d = ExcelUtils.getNumericValue(c);
+			Number d = ExcelUtils.getNumericValue(c);
 			if (d != null)
 				return d;
 			else {
@@ -2191,7 +2191,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @return
 	 * @throws CellException
 	 */
-	protected Double getNumericValue(Row row, ExcelDataLocation loc)
+	protected Number getNumericValue(Row row, ExcelDataLocation loc)
 			throws CellException {
 		Cell c = row.getCell(loc.columnIndex);
 
@@ -2209,7 +2209,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 		}
 
-		Double d = ExcelUtils.getNumericValue(c);
+		Number d = ExcelUtils.getNumericValue(c);
 
 		if (d != null)
 			return d;
