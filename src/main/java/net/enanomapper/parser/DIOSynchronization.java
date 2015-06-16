@@ -130,7 +130,7 @@ public class DIOSynchronization
 			{
 				SubstanceRecord r = new SubstanceRecord(); 
 				primaryDIO.rowObjects.get(i).substanceRecord = r;  
-				r.setSubstanceName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
+				//r.setSubstanceName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
 				records.add(r);
 			}
 		}
@@ -141,7 +141,7 @@ public class DIOSynchronization
 			{	
 				SubstanceRecord r = new SubstanceRecord(); 
 				primaryDIO.groupObjects.get(i).substanceRecord = r;
-				r.setSubstanceName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
+				//r.setSubstanceName(GenericExcelParser.key00 + " #" + (i+1)); //temporary code
 				records.add(r);
 			}
 		}
