@@ -66,49 +66,56 @@ public class NMParserTestUtils {
 	public static void testExcelTemplate(String excelFile, File jsonFile)
 			throws Exception {
 		FileInputStream fin = new FileInputStream(excelFile);
-		boolean isXLSX = excelFile.endsWith("xlsx");
-		System.out.println("isXLSX = " + isXLSX + "\n");
-		GenericExcelParser parser = new GenericExcelParser(fin, jsonFile,
-				isXLSX);
-		System.out.println(parser.getExcelParserConfigurator().toJSONString()
-				+ "\n");
+		try {
+			boolean isXLSX = excelFile.endsWith("xlsx");
+			System.out.println("isXLSX = " + isXLSX + "\n");
+			GenericExcelParser parser = new GenericExcelParser(fin, jsonFile,
+					isXLSX);
+			System.out.println(parser.getExcelParserConfigurator()
+					.toJSONString() + "\n");
 
-		int n = 0;
-		while (parser.hasNext()) {
-			SubstanceRecord r = parser.nextRecord();
-			n++;
-			System.out.println("Record #" + n);
-			System.out.println(r.toJSON(null));
-			List<ProtocolApplication> paList = r.getMeasurements();
+			int n = 0;
+			while (parser.hasNext()) {
+				SubstanceRecord r = parser.nextRecord();
+				n++;
+				System.out.println("Record #" + n);
+				System.out.println(r.toJSON(null));
+				List<ProtocolApplication> paList = r.getMeasurements();
 
-			if (paList != null)
-				for (ProtocolApplication pa : paList)
-					System.out.println("***Protocol application:\n"
-							+ pa.toString());
+				if (paList != null)
+					for (ProtocolApplication pa : paList)
+						System.out.println("***Protocol application:\n"
+								+ pa.toString());
 
-			List<CompositionRelation> composition = r.getRelatedStructures();
-			if (composition != null)
-				for (CompositionRelation relation : composition) {
-					// System.out.println(" ### Composition " +
-					// structureRecordToString(relation.getSecondStructure()));
-					System.out.println(" ### Composition \n"
-							+ compositionRelationStructureToString(relation)); // both
-																				// give
-																				// the
-																				// same
-																				// result
-					System.out.println(" ### Properties: "
-							+ structureRecordProperties(relation
-									.getSecondStructure()));
-				}
+				List<CompositionRelation> composition = r
+						.getRelatedStructures();
+				if (composition != null)
+					for (CompositionRelation relation : composition) {
+						// System.out.println(" ### Composition " +
+						// structureRecordToString(relation.getSecondStructure()));
+						System.out
+								.println(" ### Composition \n"
+										+ compositionRelationStructureToString(relation)); // both
+																							// give
+																							// the
+																							// same
+																							// result
+						System.out.println(" ### Properties: "
+								+ structureRecordProperties(relation
+										.getSecondStructure()));
+					}
 
+			}
+
+			/*
+			 * we'll get the parser errors logged or exceptions thrown if
+			 * (parser.hasErrors()) System.out.println("\n\nParser errors:\n" +
+			 * parser.errorsToString());
+			 */
+		} finally {
+
+			fin.close();
 		}
-
-		if (parser.hasErrors())
-			System.out
-					.println("\n\nParser errors:\n" + parser.errorsToString());
-
-		fin.close();
 
 	}
 
@@ -195,8 +202,8 @@ public class NMParserTestUtils {
 				.getClassLoader()
 				.getResource(
 						"net/enanomapper/parser/csv/ProteinCoronaTest.json");
-		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				new File(json.getFile()), true);
+		GenericExcelParser parser = new GenericExcelParser(xlsx, new File(
+				json.getFile()), true);
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
@@ -230,8 +237,8 @@ public class NMParserTestUtils {
 				.getClassLoader()
 				.getResource(
 						"net/enanomapper/parser/csv/ProteinCoronaTest1.json");
-		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				new File(json.getFile()), true);
+		GenericExcelParser parser = new GenericExcelParser(xlsx, new File(
+				json.getFile()), true);
 		try {
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
@@ -270,8 +277,8 @@ public class NMParserTestUtils {
 				.getClassLoader()
 				.getResource(
 						"net/enanomapper/parser/test1/CalculatedDescriptorsWorkFlow.json");
-		GenericExcelParser parser = new GenericExcelParser(xlsx,
-				new File(json.getFile()), true);
+		GenericExcelParser parser = new GenericExcelParser(xlsx, new File(
+				json.getFile()), true);
 		StructureRecordValidator validator = new StructureRecordValidator();
 		validator.setFixErrors(true);
 		try {
