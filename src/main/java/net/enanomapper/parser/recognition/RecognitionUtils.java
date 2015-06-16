@@ -8,7 +8,7 @@ public class RecognitionUtils {
 		public String errorMsg = null;
 	}
 
-	public static final String[] qualifiers = { "", "=", "<=", ">=", "<", ">",
+	public static final String[] qualifiers = { " ", "=", "<=", ">=", "<", ">",
 			"Ca.", "ca.", "Mean", "mean", "StdDev", "SD", "~", "±", "+-",
 			"+/-", "Geo mean" };
 
