@@ -11,7 +11,7 @@ public class RecognitionUtils
 	
 		
 	public static final String[] qualifiers = 
-			{"<=", ">=", "<", ">", "Ca.", "ca.", "Mean", "mean", "StdDev", "SD", "~", "±", "+-", "+/-" ,"Geo mean"};  
+			{"","=","<=", ">=", "<", ">", "Ca.", "ca.", "Mean", "mean", "StdDev", "SD", "~", "±", "+-", "+/-" ,"Geo mean"};  
 		//It is obligatory that "<=" is before "<" ... because of the order of qualifier checking 
 	
 	public static boolean matchTokens(String s1, String s2)
