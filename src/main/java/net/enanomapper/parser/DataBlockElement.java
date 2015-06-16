@@ -3,6 +3,8 @@ package net.enanomapper.parser;
 import java.util.Map;
 
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Params;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
 
@@ -23,7 +25,7 @@ public class DataBlockElement
 	public String errQualifier = null;
 	public String unit = null;
 	
-	public Map<String, Object> parameters = null;
+	IParams params = null;
 	
 	public void setValue(Object obj, RichValueParser rvParser)
 	{
@@ -89,7 +91,8 @@ public class DataBlockElement
 			effect.setTextValue(textValue);
 		
 		//Setting the effect conditions from parameters
-		//TODO 
+		if (params != null)
+			effect.setConditions(params);
 		
 		return effect;
 	}

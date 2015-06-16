@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
@@ -2353,7 +2354,38 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								dbEl.setValue(o, rvParser);
 
 								// Handle parameters
-								// TODO
+								if (bvgei.paramInfo != null)
+									if (!bvgei.paramInfo.isEmpty())
+									{
+										dbEl.params = new Params();
+										for (BlockValueGroupExtractedInfo.ParamInfo pi : bvgei.paramInfo)
+										{
+											Cell c = null;
+											switch (pi.assign)
+											{
+											case ASSIGN_TO_BLOCK:
+												c = cells[pi.rowPos-1][pi.columnPos-1]; //-1 for 0-based indexing
+												break;
+											case ASSIGN_TO_SUBBLOCK:
+												c = cells[row0+pi.rowPos-1][column0+pi.columnPos-1]; //(rowPos,columnPos) are the sub-block position
+																									//-1 for 0-based indexing
+												break;
+											case ASSIGN_TO_VALUE:
+												c = cells[row0+i+pi.rowPos][column0+k+pi.columnPos]; //(rowPos,columnPos) are used as shifts
+												break;	
+											case UNDEFINED:
+												//nothing is done
+												break;
+											}
+											
+											if (c != null)
+											{	
+												Object value =  ExcelUtils.getObjectFromCell(c);
+												if (value != null)
+													dbEl.params.put(pi.name, value);
+											}	
+										}
+									}
 
 								dbeList.add(dbEl);
 							}
@@ -2419,21 +2451,58 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				bvgei.FlagValues = false;
 			}
 		}
-
+	
+		
 		if (bvg.parameters != null)
 			if (!bvg.parameters.isEmpty()) {
 				bvgei.paramInfo = new ArrayList<BlockValueGroupExtractedInfo.ParamInfo>();
 
-				for (BlockParameter bp : bvg.parameters) {
+				for (int i = 0; i < bvg.parameters.size(); i++) 
+				{
+					boolean FlagParamOK = true;
+					BlockParameter bp = bvg.parameters.get(i);
 					BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
-					if (bvg.name == null)
-						bvgei.errors.add("Parameter name is missing!");
+					if (bp.name == null)
+					{	
+						bvgei.errors.add("Parameter " + (i+1) + ": NAME is missing!");
+						FlagParamOK = false;
+					}	
 					else
-						pi.name = bvg.name;
+						pi.name = bp.name;
 
-					// TODO
-
-					bvgei.paramInfo.add(pi);
+					if (bp.assign == BlockParameterAssign.UNDEFINED)
+					{	
+						bvgei.errors.add("Parameter " + (i+1) + ": ASSIGN is UNDEFINED!");
+						FlagParamOK = false;
+					}	
+					else
+						pi.assign = bp.assign;
+					
+					Integer intVal = getIntegerFromExpression(bp.columnPos);
+					if (intVal == null)
+					{	
+						bvgei.errors.add("Parameter " + (i+1) + ": COLUMN_POS is incorrect!");
+						FlagParamOK = false;
+					}
+					else
+						pi.columnPos = intVal;
+					
+					intVal = getIntegerFromExpression(bp.rowPos);
+					if (intVal == null)
+					{	
+						bvgei.errors.add("Parameter " + (i+1) + ": ROW_POS is incorrect!");
+						FlagParamOK = false;
+					}
+					else
+						pi.rowPos = intVal;
+					
+					if (FlagParamOK)
+					{
+						//TODO some additional checks for the positions if needed
+					}
+					
+					if (FlagParamOK)
+						bvgei.paramInfo.add(pi);
 				}
 			}
 
@@ -2653,10 +2722,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * ExcelParserConfiguration to the corresponding *DataLocation class -
 	 * analogously: Move handling of parallel sheets to the corresponding
 	 * classes + move some functionality as static to ExcelParserUtils
-	 * 
-	 * - add function getString(ExcelDataLocation) and replace most of the
-	 * function calls of getStringValue() so that numeric cell would not give
-	 * error
 	 * 
 	 * - Error messages to be logged out /option to switch off memory storage of
 	 * the error messages
