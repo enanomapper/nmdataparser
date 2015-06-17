@@ -99,6 +99,7 @@ public class ExcelParserConfigurator
 	
 	//Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
+	public ArrayList<VariableMapping> variableMappings = null;
 	
 	//Handling locations dynamically
 	public boolean FlagDynamicSpan = false;
@@ -351,8 +352,22 @@ public class ExcelParserConfigurator
 				conf.variableLocations = extractDynamicSection(varNode, conf);
 			}
 			
-			//VARIABLE_MAPS
-			//TODO
+			//VARIABLE_MAPPINGS
+			JsonNode mapsNode = curNode.path("VARIABLE_MAPPINGS");
+			if (!mapsNode.isMissingNode())
+			{
+				if (!mapsNode.isArray())
+					conf.configErrors.add("In JSON section \"DATA_ACESS\", keyword \"VARIABLE_MAPPINGS\" is not of type array! ");
+				else
+				{
+					conf.variableMappings = new ArrayList<VariableMapping>();
+					for (int i = 0; i < mapsNode.size(); i++)
+					{
+						VariableMapping vm = VariableMapping.extractVariableMapping(mapsNode.get(i), conf, jsonUtils, i);
+						conf.variableMappings.add(vm);
+					}
+				}
+			}
 			
 			
 			//DYNAMIC_ITERATION_SPAN
@@ -688,6 +703,26 @@ public class ExcelParserConfigurator
 				nParams++;
 			}
 			sb.append("\t\t}" );
+			nDAFields++;
+		}
+		
+		//Variable mappings
+		if (variableMappings != null)
+		{
+			if (nDAFields > 0)
+				sb.append(",\n\n");
+			
+			sb.append("\t\t\"VARIABLE_MAPPINGS\":\n");
+			sb.append("\t\t[\n");
+			for (int i = 0; i < variableMappings.size(); i++)
+			{	
+				sb.append(variableMappings.get(i).toJSONKeyWord("\t\t\t"));			
+				if (i < variableMappings.size()-1) 
+					sb.append(",\n");
+				sb.append("\n");
+			}
+			
+			sb.append("\t\t]\n");
 			nDAFields++;
 		}
 		

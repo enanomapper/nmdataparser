@@ -197,17 +197,16 @@ public class ExcelDataBlockLocation
 		else
 		{
 			if (!vgNode.isArray())
-			{	
 				conf.configErrors.add("VALUE_GROUPS section is not of type array!");
-			}
-
-			edbl.valueGroups = new ArrayList<BlockValueGroup>();
-
-			for (int i = 0; i < vgNode.size(); i++)
+			else
 			{	
-				BlockValueGroup bvg = BlockValueGroup.extractValueGroup(vgNode.get(i), conf, i);
-				edbl.valueGroups.add(bvg);
-			}	
+				edbl.valueGroups = new ArrayList<BlockValueGroup>();
+				for (int i = 0; i < vgNode.size(); i++)
+				{	
+					BlockValueGroup bvg = BlockValueGroup.extractValueGroup(vgNode.get(i), conf, i);
+					edbl.valueGroups.add(bvg);
+				}	
+			}
 		}
 		
 		return edbl;
@@ -288,6 +287,7 @@ public class ExcelDataBlockLocation
 				sb.append("\n");
 			}
 			sb.append(offset + "\t]"); 
+			nFields++;
 		}
 		
 		
