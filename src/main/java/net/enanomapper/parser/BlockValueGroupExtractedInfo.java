@@ -13,6 +13,7 @@ public class BlockValueGroupExtractedInfo
 		public BlockParameterAssign assign = BlockParameterAssign.UNDEFINED;
 		public Integer columnPos = null;
 		public Integer rowPos = null;
+		public String mapping = null;
 		
 	}
 	

@@ -2454,8 +2454,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											if (c != null)
 											{	
 												Object value =  ExcelUtils.getObjectFromCell(c);
+												
 												if (value != null)
+												{	
+													if (pi.mapping != null)
+														value = getMappingValue(value, pi.mapping);
+													
 													dbEl.params.put(pi.name, value);
+												}	
 											}	
 										}
 									}
@@ -2569,6 +2575,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					else
 						pi.rowPos = intVal;
 					
+					if (bp.mapping != null)
+						pi.mapping = bp.mapping;
+					
 					if (FlagParamOK)
 					{
 						//TODO some additional checks for the positions if needed
@@ -2665,6 +2674,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			jexlEngine.setSilent(false);
 		}
 		return jexlEngine;
+	}
+	
+	protected Object getMappingValue(Object originalValue, String mapping)
+	{
+		HashMap<Object,Object> map = curVariableMappings.get(mapping);
+		if (map == null)
+			return null;
+		//Original read value is used as a key to obtain the result value; 
+		return map.get(originalValue);
 	}
 
 	private String locationStringForErrorMessage(ExcelDataLocation loc) {
