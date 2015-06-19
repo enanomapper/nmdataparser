@@ -7,8 +7,16 @@ import org.codehaus.jackson.JsonNode;
 public class VariableMapping 
 {
 	public String name = null;
+	
+	//Mapping definition through variable
 	public String keysVariable = null;
 	public String valuesVariable = null;
+	
+	//TODO
+	//Direct definition of the mapping by the JSON config
+	//public Object keys[] = null;
+	//public Object values[] = null;
+	
 	
 	
 	public static VariableMapping extractVariableMapping(JsonNode node, ExcelParserConfigurator conf, 

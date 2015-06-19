@@ -25,6 +25,9 @@ public class BlockParameter
 	public Object rowPos = new Integer(0);
 	public boolean FlagRowPos = false;	
 	
+	public String mapping = null;
+	public boolean FlagMapping = false;
+	
 	
 	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf, 
 											JsonUtilities jsonUtils, int paramNum )
@@ -132,7 +135,19 @@ public class BlockParameter
 				}	
 			}	
 		}
-
+		
+		//MAPPING
+		if (!node.path("MAPPING").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(node, "MAPPING", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bp.mapping = keyword;
+				bp.FlagMapping = true;
+			}
+		}
 		
 		return bp;
 	}
@@ -178,6 +193,15 @@ public class BlockParameter
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"ROW_POS\" : " + JsonUtilities.objectToJsonField(rowPos));
+			nFields++;
+		}
+		
+		if (FlagMapping)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"MAPPING\" : " + JsonUtilities.objectToJsonField(mapping));
 			nFields++;
 		}
 		

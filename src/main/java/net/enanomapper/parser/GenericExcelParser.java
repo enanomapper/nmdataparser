@@ -96,6 +96,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	// All variables read from the primary sheet and all parallel sheets
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
+	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = new HashMap<String, HashMap<Object, Object>>();
+	
 
 	protected boolean FlagNextRecordLoaded = false; // This flag is true when
 	// next object is iterated
@@ -567,14 +569,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (d != null)
 						curVariables.put(var, d);
 				}
-			}
-
-			/*
-			 * String expr = "v1 + 10 * v2 - 23.1 + (v1 < 10)"; try { Object obj
-			 * = evaluateExpression(expr); logger.info(expr + " = " + obj); }
-			 * catch(Exception e) { logger.info("Expression " + expr +
-			 * "  Exception:\n" + e.getMessage()); }
-			 */
+			}			
 		}
 
 		for (ExcelSheetConfiguration eshc : config.parallelSheets) {
@@ -609,7 +604,85 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				}
 			}
 		}
+		
+		
+		//Make variable mapping
+		if (config.variableMappings != null)
+		{	
+			curVariableMappings.clear();
+			for (VariableMapping vm : config.variableMappings)
+			{
+				HashMap<Object, Object> map = makeMapping(vm);
+				if (map != null)
+					curVariableMappings.put(vm.name, map);
+			}
+		}		
 
+	}
+	
+	protected HashMap<Object, Object> makeMapping(VariableMapping varMapping)
+	{
+		//Set mapping keys
+		Object varObj = curVariables.get(varMapping.keysVariable);
+		if (varObj == null)
+		{	
+			logger.info("---- Variable mapping error in mapping: \"" + varMapping.name +
+					"\",  KEYS_VARIABLE \"" +  varMapping.keysVariable +  "\" is missing");
+			return null;
+		}	
+		
+		Object keys[] = null;
+		if ((varObj instanceof Double) || (varObj instanceof Double))
+		{
+			keys = new Object[1];
+			keys[0] = varObj;
+		}
+		
+		if (varObj instanceof Object[])
+		{
+			keys = (Object[]) varObj;
+		}
+		
+		if (keys == null)
+			return null;
+			
+		
+		//Set mapping keys
+		varObj = curVariables.get(varMapping.valuesVariable);
+		if (varObj == null)
+		{	
+			logger.info("---- Variable mapping error in mapping: \"" + varMapping.name +
+					"\",  VALUES_VARIABLE \"" +  varMapping.valuesVariable +  "\" is missing");
+			return null;
+		}	
+
+		Object values[] = null;
+		if ((varObj instanceof Double) || (varObj instanceof Double))
+		{
+			values = new Object[1];
+			values[0] = varObj;
+		}
+
+		if (varObj instanceof Object[])
+		{
+			values = (Object[]) varObj;
+		}
+
+		if (values == null)
+			return null;
+		
+		logger.info("---- Variable mapping: " + varMapping.name);
+		//Make mapping
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		for (int i = 0; i < keys.length; i++)
+		{
+			if (i >= values.length) //Reached the end of values array
+				break;
+			map.put(keys[i], values[i]);
+			logger.info("---- " + keys[i] + " --> " + values[i]);
+		}
+		
+		return map;
 	}
 
 	protected void initialIteration() {
