@@ -1224,11 +1224,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		// Read effects from EFFECTS_BLOCK
 		if (padl.effectsBlock != null) {
+			
 			List<DataBlockElement> effDataBlock = getDataBlock(padl.effectsBlock);
 			for (DataBlockElement dbe : effDataBlock) {
 				EffectRecord effect = dbe.generateEffectRecord();
-				effect.setEndpoint("test-endpoint");
-				// TODO (1) read endpoint from JSON config and (2) set unit
+				
+				// TODO (2) set unit
 
 				pa.addEffect(effect);
 			}
@@ -2424,6 +2425,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 										.getObjectFromCell(cells[row0 + i][column0
 												+ k]);
 								DataBlockElement dbEl = new DataBlockElement();
+								dbEl.blockValueGroup = bvgei.name;
 								dbEl.setValue(o, rvParser);
 
 								// Handle parameters
@@ -2480,7 +2482,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(
 			BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
-
+		
+		if (bvg.name != null)
+		{	
+			bvgei.name = getStringFromExpression(bvg.name);
+			if (bvgei.name == null)
+				bvgei.errors.add("VALUE_GROUPS: \"NAME\" is an incorrect expression: " + bvg.name);
+		}
+		
 		// Handle values
 		bvgei.startColumn = getIntegerFromExpression(bvg.startColumn);
 		bvgei.endColumn = getIntegerFromExpression(bvg.endColumn);
@@ -2630,6 +2639,41 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					logger.info("Expression error: " + e.getMessage());
 				}
 			}
+		}
+
+		return null;
+	}
+	
+	protected String getStringFromExpression(Object obj) {
+		if (obj == null)
+			return null;
+		
+		if (obj instanceof Number)
+			return obj.toString();
+
+		if (obj instanceof String) 
+		{
+			String s = (String) obj;
+			if (s.startsWith("=")) 
+			{
+				s = s.substring(1);
+				try {
+					Object res = evaluateExpression(s);
+					if (res != null) 
+					{
+						if (res instanceof Number)
+							return res.toString();	
+						
+						if (res instanceof String)
+							return res.toString();
+					}
+
+				} catch (Exception e) {
+					logger.info("Expression error: " + e.getMessage());
+				}
+			} 
+			else 
+				return s;
 		}
 
 		return null;

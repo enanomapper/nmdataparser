@@ -25,7 +25,8 @@ public class DataBlockElement
 	public String errQualifier = null;
 	public String unit = null;
 	
-	IParams params = null;
+	public IParams params = null;
+	public String blockValueGroup = null;
 	
 	public void setValue(Object obj, RichValueParser rvParser)
 	{
@@ -65,6 +66,8 @@ public class DataBlockElement
 	public EffectRecord generateEffectRecord()
 	{
 		EffectRecord effect = new EffectRecord();
+		
+		effect.setEndpoint(blockValueGroup);   //blockValueGroup is used as an endpoint
 		
 		if (unit != null)
 			effect.setUnit(unit);
