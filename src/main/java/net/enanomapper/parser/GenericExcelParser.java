@@ -2426,6 +2426,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 												+ k]);
 								DataBlockElement dbEl = new DataBlockElement();
 								dbEl.blockValueGroup = bvgei.name;
+								dbEl.unit = bvgei.unit; //The unit may be overriden by the setValue() function
 								dbEl.setValue(o, rvParser);
 
 								// Handle parameters
@@ -2488,6 +2489,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			bvgei.name = getStringFromExpression(bvg.name);
 			if (bvgei.name == null)
 				bvgei.errors.add("VALUE_GROUPS: \"NAME\" is an incorrect expression: " + bvg.name);
+		}
+		
+		if (bvg.unit != null)
+		{	
+			bvgei.unit = getStringFromExpression(bvg.unit);
+			if (bvgei.name == null)
+				bvgei.errors.add("VALUE_GROUPS: \"UNIT\" is an incorrect expression: " + bvg.unit);
 		}
 		
 		// Handle values

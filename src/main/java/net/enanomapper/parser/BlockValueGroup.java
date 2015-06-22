@@ -20,6 +20,9 @@ public class BlockValueGroup
 	public String name = null;
 	public boolean FlagName = false;
 	
+	public String unit = null;
+	public boolean FlagUnit = false;
+	
 	//Values definitions are in the context of sub-block
 	public Object startColumn = null;  
 	public boolean FlagStartColumn = false;
@@ -75,7 +78,17 @@ public class BlockValueGroup
 		{	
 			bvg.name = keyword;
 			bvg.FlagName = true;
-		}	
+		}
+		
+		//UNIT
+		keyword = jsonUtils.extractStringKeyword(node, "UNIT", false);
+		if (keyword == null)
+			conf.configErrors.add(jsonUtils.getError());
+		else
+		{	
+			bvg.unit = keyword;
+			bvg.FlagUnit = true;
+		}
 		
 		//START_COLUMN
 		JsonNode nd = node.path("START_COLUMN");
@@ -223,6 +236,15 @@ public class BlockValueGroup
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"NAME\" : " + JsonUtilities.objectToJsonField(name));
+			nFields++;
+		}
+		
+		if (FlagUnit)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"UNIT\" : " + JsonUtilities.objectToJsonField(unit));
 			nFields++;
 		}
 		
