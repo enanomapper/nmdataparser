@@ -11,9 +11,15 @@ nmdataparser
 #### JSON Configuration - Main sections
 The JSON config file consists of several major sections (objects on the first level of the JSON schema):
 
-**TEMPLATE_INFO** section defines basic info for the data format being imported. Intended mainly for internal usage. Section **TEMPLATE_INFO** is defined by the options: **NAME**, **VERSION** and **TYPE**.
+**TEMPLATE_INFO** section defines basic info for the data format being imported. Intended mainly for internal usage. This section contains the options: **NAME**, **VERSION** and **TYPE**.
 
+**DATA_ACCESS** section defines the basic access to the excel file
 
+**PARALLEL_SHEETS** section is used to set up simultaneous access to several sheets of a given excel file.
+ 
+**SUBSTANCE_RECORD** section defines the reading of basic info for a substance record. 
+
+**PROTOCOL_APPLICATIONS** section defines the reading of an array of ProtocolApplication objects which are included in the SubtsanceRecord object defined in the previous section.
 
 
 
