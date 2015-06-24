@@ -21,6 +21,20 @@ The JSON config file consists of several major sections (objects on the first le
 
 **PROTOCOL_APPLICATIONS** section defines how to read an array of ProtocolApplication objects which are included in the SubtsanceRecord object defined in the previous section.
 
+#### Excel Data Location
+**Excel Data Location** is a key concept for the JSON configuration of excel parser reader. Excel data location is required for each data component of the Substance representation e.g. PUBLIC_NAME, CITATION_TITLE, ENDPOINT etc. must be defined by an excel data location.
+
+Particular excel data location is defined by means of several options:
+"ITERATION" field defines the iteration mode - how the data from this location is accessed. 
+Following iteration modes are supported: 
+**ROW_SINGLE** - data is accessed treating each excel table row as a separate data unit (e.g. Substance record),
+**ROW_MULTI_FIXED** - a fixed number of rows are treated as a separate Substance record,
+**ROW_MULTI_DYNAMIC** - a dynamic number of rows are used to load a Substance record (the number of rows may vary for each record),
+**ABSOLUTE_LOCATION** - the data component is read from absolute location fro the excel file e.g. sheet, row and column must be defined
+**JSON_VALUE** - the data component is taken directly from the JSON config file
+**JSON_REPOSITORY** - the data component is taken directly from the JSON config file but special section REPOSOTORY is used.
+
+Fields: "COLUMN_INDEX" "COLUMN_INDEX" and "COLUMN_INDEX" define the index of the column 
 
 #### DATA_ACCESS JSON options
 
