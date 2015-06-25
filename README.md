@@ -44,6 +44,9 @@ Following iteration modes are supported:
 Fields: **SHEET_INDEX** **COLUMN_INDEX** and **ROW_INDEX** define respectively excel sheet, column and row for reading data from a single excel cell. Depending on the ITERATION mode, some of these fields are not required (if supplied they are ignored). For example in *ROW_SINGLE* mode only column index will be used while in ABSOLUTE_LOCATION mode all of the above inddices will be used. When particular index is needed for the current iteration mode but not supplied, a parsing error is obtained.
 Typically the default values of the fields **ITERATION** and **SHEET_INDEX** (when not supplied explicitly) are taken globally from the **DATA_ACCESS** section for the primary iteration sheet or from the corresponding **PARALLEL_SHEET**.
 
+Excel data location may define an array of cells. For this purpose boolean JSON field **IS_ARRAY** is set to *true* (default value if missing is *false*).
+Accordingly fields: **ROW_INDICES** and **COLUMN_INDICES** are used to define arrays of row and column indices. Since all row/column indices are given explicitly it is not needed to be consequent numbers hence more complex sets of cells can set this way. 
+
 
 #### DATA_ACCESS section - JSON configuration
 
