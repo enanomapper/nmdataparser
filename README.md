@@ -25,25 +25,27 @@ The JSON config file consists of several major sections (objects on the first le
 **Excel Data Location** is a key concept for the JSON configuration of excel parser reader. Excel data location is required for each data component of the Substance representation e.g. PUBLIC_NAME, CITATION_TITLE, ENDPOINT etc.
 
 Excel data location is defined by means of several options:
-"ITERATION" field defines the iteration mode - how the data from this location is accessed. 
+
+**ITERATION** field defines the iteration mode - how the data from this location is accessed. 
 Following iteration modes are supported: 
-   **ROW_SINGLE** - data is accessed treating each excel table row as a separate data unit (e.g. Substance record),
 
-   **ROW_MULTI_FIXED** - a fixed number of rows are treated as a separate Substance record,
+   *ROW_SINGLE* - data is accessed treating each excel table row as a separate data unit (e.g. Substance record),
 
-   **ROW_MULTI_DYNAMIC** - a dynamic number of rows are used to load a Substance record (the number of rows may vary for each record),
+   *ROW_MULTI_FIXED* - a fixed number of rows are treated as a separate Substance record,
 
-   **ABSOLUTE_LOCATION** - the data component is read from absolute location fro the excel file e.g. sheet, row and column must be defined
+   *ROW_MULTI_DYNAMIC* - a dynamic number of rows are used to load a Substance record (the number of rows may vary for each record),
 
-   **JSON_VALUE** - the data component is taken directly from the JSON config file
+   *ABSOLUTE_LOCATION* - the data component is read from absolute location fro the excel file e.g. sheet, row and column must be defined
 
-   **JSON_REPOSITORY** - the data component is taken directly from the JSON config file but special section REPOSOTORY is used.
+   *JSON_VALUE* - the data component is taken directly from the JSON config file
 
-Fields: "SHEET_INDEX" "COLUMN_INDEX" and "ROW_INDEX" define respectively excel sheet, column and row for reading data from a single excel cell. Depending on the ITERATION mode some of these fields are not required (if supplied they are ignored). For example ROW_SINGLE mode will use only column index; ABSOLUTE_LOCATION mode would use all. When particular index is needed for the current iteration mode but not supplied in the JSON excel data location parsing error is obtained.
-Typically the default values of the fields "ITERATION" and "SHEET_INDEX" (when not supplied)  are taken from globally from the "DATA_ACCESS" section for the primary iteration sheet or from the corresponding PARALLEL_SHEET.
+   *JSON_REPOSITORY* - the data component is taken directly from the JSON config file but special section REPOSOTORY is used.
+
+Fields: **SHEET_INDEX** **COLUMN_INDEX** and **ROW_INDEX** define respectively excel sheet, column and row for reading data from a single excel cell. Depending on the ITERATION mode, some of these fields are not required (if supplied they are ignored). For example in *ROW_SINGLE* mode only column index will be used while in ABSOLUTE_LOCATION mode all of the above inddices will be used. When particular index is needed for the current iteration mode but not supplied, a parsing error is obtained.
+Typically the default values of the fields **ITERATION** and **SHEET_INDEX** (when not supplied explicitly) are taken globally from the **DATA_ACCESS** section for the primary iteration sheet or from the corresponding **PARALLEL_SHEET**.
 
 
-#### DATA_ACCESS JSON options
+#### DATA_ACCESS section - JSON configuration
 
 Section **DATA_ACCESS**	defines the basic parameters for data access and iteration of the primary sheet.
 
