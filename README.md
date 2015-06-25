@@ -22,9 +22,9 @@ The JSON config file consists of several major sections (objects on the first le
 **PROTOCOL_APPLICATIONS** section defines how to read an array of ProtocolApplication objects which are included in the SubtsanceRecord object defined in the previous section.
 
 #### Excel Data Location
-**Excel Data Location** is a key concept for the JSON configuration of excel parser reader. Excel data location is required for each data component of the Substance representation e.g. PUBLIC_NAME, CITATION_TITLE, ENDPOINT etc. must be defined by an excel data location.
+**Excel Data Location** is a key concept for the JSON configuration of excel parser reader. Excel data location is required for each data component of the Substance representation e.g. PUBLIC_NAME, CITATION_TITLE, ENDPOINT etc.
 
-Particular excel data location is defined by means of several options:
+Excel data location is defined by means of several options:
 "ITERATION" field defines the iteration mode - how the data from this location is accessed. 
 Following iteration modes are supported: 
 **ROW_SINGLE** - data is accessed treating each excel table row as a separate data unit (e.g. Substance record),
@@ -34,7 +34,8 @@ Following iteration modes are supported:
 **JSON_VALUE** - the data component is taken directly from the JSON config file
 **JSON_REPOSITORY** - the data component is taken directly from the JSON config file but special section REPOSOTORY is used.
 
-Fields: "COLUMN_INDEX" "COLUMN_INDEX" and "COLUMN_INDEX" define the index of the column 
+Fields: "SHEET_INDEX" "COLUMN_INDEX" and "ROW_INDEX" define respectively excel sheet, column and row for reading data from a single excel cell. Depending on the ITERATION mode some of these fields are not required (if supplied they are ignored). For example ROW_SINGLE mode will use only column index; ABSOLUTE_LOCATION mode would use all. When particular index is needed for the current iteration mode but not supplied in the JSON excel data location parsing error is obtained.
+Typically the default values of the fields "ITERATION" and "SHEET_INDEX" (when not supplied)  are taken from globally from the "DATA_ACCESS" section for the primary iteration sheet or from the corresponding PARALLEL_SHEET.
 
 #### DATA_ACCESS JSON options
 
