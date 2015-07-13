@@ -1631,8 +1631,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					logger.log(Level.FINE, x.getMessage());
 				}
 
-				if (propObj == null) {
+				if (propObj == null) try {
 					propObj = getNumericValue(loc);
+				} catch (Exception x) {
+					//we might just have empty cell 
+					logger.log(Level.WARNING,String.format("%s %s", x.getMessage(),loc.toString()));
 				}
 
 				if (propObj != null) {
@@ -2376,10 +2379,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		for (int i = 0; i < n; i++) {
 			Row row = sheet.getRow(startRow + i);
 			String s = "";
-			for (int k = 0; k < m; k++) {
+			for (int k = 0; k < m; k++) try {
 				Cell c = row.getCell(startColumn + k);
 				cells[i][k] = c;
 				// s += ("  " + ExcelUtils.getObjectFromCell(c));
+			} catch (Exception x) {
+				cells[i][k] = null;
+				logger.warning(x.getMessage());
 			}
 			// logger.info(">>>> " + s);
 		}
@@ -2738,14 +2744,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	}
 
 	private String locationStringForErrorMessage(ExcelDataLocation loc) {
-		// TODO
-		return "";
+		return String.format("Col %d Row %d",loc.columnIndex,loc.rowIndex);
 	}
 
 	private String locationStringForErrorMessage(ExcelDataLocation loc,
 			int sheet) {
-		// TODO
-		return "";
+		return String.format("[Sheet %d Col %d Row %d",sheet,loc.columnIndex,loc.rowIndex);
 	}
 
 	/*
