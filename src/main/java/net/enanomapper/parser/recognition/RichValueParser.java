@@ -9,6 +9,7 @@ public class RichValueParser {
 	private char intervalMiddleSplitter = '-';
 	private String defaultIntervalLoQualifier = ">=";
 	private String defaultIntervalUpQualifier = "<=";
+	private char plusMinus = '±';
 
 	public boolean FlagAllowIntervalBrackets = false;
 	public boolean FlagAllowUnit = true;
@@ -205,6 +206,7 @@ public class RichValueParser {
 		int intervalPhase = 0; // 0 nothing is read, 1 loValue is read, 2
 								// upValue is read
 		boolean FlagMidSplit = false;
+		boolean FlagPlusMinus = false;
 
 		while (curChar < token.length()) {
 			char ch = token.charAt(curChar);
@@ -227,7 +229,7 @@ public class RichValueParser {
 					break;
 
 				case 1: {
-					if (!FlagMidSplit) {
+					if (!FlagMidSplit && !FlagPlusMinus) {
 						errors.add("In Token #" + (curTokenNum + 1) + " "
 								+ token + " Missing middle splitter!");
 						return null;
@@ -328,6 +330,27 @@ public class RichValueParser {
 					continue;
 				}
 			}
+			
+			//Handle plus minus
+			if (ch == plusMinus) {
+				
+				switch (intervalPhase)
+				{
+				case 0:{
+					//It is interpreted as loQualifier
+					rv.loQualifier = ""+ plusMinus;
+					curChar++;
+					continue;
+				}
+				
+				case 1:{
+					FlagPlusMinus = true;
+					curChar++;
+					continue;
+				}
+				
+				}
+			}
 
 			if (FlagAllowIntervalBrackets) {
 				// TODO - handle (, [, ), ]
@@ -411,6 +434,15 @@ public class RichValueParser {
 			break;
 
 		default: // case 2
+			
+			if (FlagPlusMinus)
+			{
+				//In this case upValue is used for +- definition
+				double sd = rv.upValue;
+				rv.loValue = rv.loValue - sd;
+				rv.upValue = rv.loValue + 2*sd;  
+			}
+			
 			if (rv.loQualifier != null) {
 				errors.add("In Token #" + (curTokenNum + 1) + " " + token
 						+ " Defined interval and qualifier together!");
