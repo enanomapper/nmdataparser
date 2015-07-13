@@ -746,5 +746,9 @@ public class ExcelDataLocation
 	
 	public boolean isFromParallelSheet(){
 		return (parallelSheetIndex >= 0);
-	}	
+	}
+	@Override
+	public String toString() {
+		return String.format("Col %d Row %d",columnIndex,rowIndex);
+	}
 }
