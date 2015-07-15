@@ -2469,6 +2469,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 													if (pi.mapping != null)
 														value = getMappingValue(value, pi.mapping);
 													
+													value = RichValue.recognizeRichValueFromObject(value, pi.unit, rvParser);
 													dbEl.params.put(pi.name, value);
 												}	
 											}	
@@ -2600,6 +2601,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;
+					
+					String strUnit = getStringFromExpression(bp.unit);
+					if (strUnit != null)
+						pi.unit = strUnit;
 					
 					if (FlagParamOK)
 					{

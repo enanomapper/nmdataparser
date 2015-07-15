@@ -14,7 +14,7 @@ public class BlockValueGroupExtractedInfo
 		public Integer columnPos = null;
 		public Integer rowPos = null;
 		public String mapping = null;
-		
+		public String unit = null;
 	}
 	
 	protected List<String> errors = new ArrayList<String>();

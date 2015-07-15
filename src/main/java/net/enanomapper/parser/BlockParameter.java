@@ -28,6 +28,9 @@ public class BlockParameter
 	public String mapping = null;
 	public boolean FlagMapping = false;
 	
+	public String unit = null;
+	public boolean FlagUnit = false;
+	
 	
 	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf, 
 											JsonUtilities jsonUtils, int paramNum )
@@ -149,6 +152,19 @@ public class BlockParameter
 			}
 		}
 		
+		//UNIT
+		if (!node.path("UNIT").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(node, "UNIT", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bp.unit = keyword;
+				bp.FlagUnit = true;
+			}
+		}
+		
 		return bp;
 	}
 	
@@ -202,6 +218,15 @@ public class BlockParameter
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"MAPPING\" : " + JsonUtilities.objectToJsonField(mapping));
+			nFields++;
+		}
+		
+		if (FlagUnit)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"UNIT\" : " + JsonUtilities.objectToJsonField(unit));
 			nFields++;
 		}
 		
