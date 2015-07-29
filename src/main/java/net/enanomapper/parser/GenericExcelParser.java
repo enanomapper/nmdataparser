@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -2870,6 +2871,48 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	@Override
 	public void removeChemObjectIOListener(IChemObjectIOListener arg0) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public <S extends IOSetting> S addSetting(IOSetting arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addSettings(Collection<IOSetting> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Collection<IChemObjectIOListener> getListeners() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <S extends IOSetting> S getSetting(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <S extends IOSetting> S getSetting(String arg0, Class<S> arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IOSetting> getSettings() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasSetting(String arg0) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/**
