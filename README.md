@@ -74,8 +74,9 @@ ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, J
 
 **DYNAMIC_ITERATION**	Defines how dynamic iteration is performed in mode ROW_MULTI_DYNAMIC. Several rows are read at once where the criterion for row group recognition is: NEXT_NOT_EMPTY or NEXT_DIFFERENT_VALUE.
 
-**DYNAMIC_ITERATION_COLUMN_INDEX**	The column used for the dynamic iteration.
-VARIABLES	Defines an array of excel locations that are read into work variables stored for later used if the reading process
+**DYNAMIC_ITERATION_COLUMN_INDEX**	The index of the column used for dynamic iteration.
+
+**VARIABLES**	is a subsection that defines an array of excel locations that are read and stored into a work list of variables later used in the reading process. The variables can be used for more complex routing of data e.g. one value can be used/loaded in several components of the substance record.
 
 
 #### PARALLEL_SHEETS JSON options
