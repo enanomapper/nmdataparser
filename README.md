@@ -50,25 +50,33 @@ Accordingly fields: **ROW_INDICES** and **COLUMN_INDICES** are used to define ar
 Column indices may be defined in two ways by integers (designating the column numbers) or as column labels (as used in the Excel standart addressing). For example: "COLUMN_INDICES" :[2,3,4] or "COLUMN_INDICES" :["B","C","D"] are both valid specifications.  
 
 
-#### DATA_ACCESS section - JSON configuration
+#### DATA_ACCESS section (JSON configuration)
 
 Section **DATA_ACCESS**	defines the basic parameters for data access and iteration of the primary sheet. This section describes the basic approach for reading data i.e. these are the default reading parameters. When particular parameter in a given Excel Data Location is ommited the default value is taken from this section. 
 Data access for other sheets (addional secondary sheets) is set in JSON array section *PARALLEL_SHEETS* analogously to this section.
 
-**ITERATION**	Defines the iteration mode. Possible iteration modes are were described above:
+**ITERATION**	Defines the iteration mode. Possible iteration modes were already described above:
 ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, VARIABLE. 
 
-
 **SHEET_INDEX**	The primary sheet for iteration
+
 **SHEET_NAME**	The primary sheet name
+
 **START_ROW**	The starting row for iteration
+
 **START_HEADER_ROW**	The first (starting) header row
+
 **END_HEADER_ROW**	The last (ending) header row
+
 **ALLOW_EMPTY**	Flag that defines whether empty cells are allowed. Default value is true 
+
 **RECOGNITION**	The mode for sheet/column/row recognition. These elements can be recognized by index or by name.
+
 **DYNAMIC_ITERATION**	Defines how dynamic iteration is performed in mode ROW_MULTI_DYNAMIC. Several rows are read at once where the criterion for row group recognition is: NEXT_NOT_EMPTY or NEXT_DIFFERENT_VALUE.
+
 **DYNAMIC_ITERATION_COLUMN_INDEX**	The column used for the dynamic iteration.
 VARIABLES	Defines an array of excel locations that are read into work variables stored for later used if the reading process
+
 
 #### PARALLEL_SHEETS JSON options
 
