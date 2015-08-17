@@ -52,10 +52,13 @@ Column indices may be defined in two ways by integers (designating the column nu
 
 #### DATA_ACCESS section - JSON configuration
 
-Section **DATA_ACCESS**	defines the basic parameters for data access and iteration of the primary sheet.
+Section **DATA_ACCESS**	defines the basic parameters for data access and iteration of the primary sheet. This section describes the basic approach for reading data i.e. these are the default reading parameters. When particular parameter in a given Excel Data Location is ommited the default value is taken from this section. 
+Data access for other sheets (addional secondary sheets) is set in JSON array section *PARALLEL_SHEETS* analogously to this section.
 
-**ITERATION**	Defines the iteration mode. Possible iteration modes are:
-ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, VARIABLE
+**ITERATION**	Defines the iteration mode. Possible iteration modes are were described above:
+ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, ABSOLUTE_LOCATION, JSON_VALUE, JSON_REPOSITORY, VARIABLE. 
+
+
 **SHEET_INDEX**	The primary sheet for iteration
 **SHEET_NAME**	The primary sheet name
 **START_ROW**	The starting row for iteration
