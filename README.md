@@ -47,6 +47,8 @@ Typically the default values of the fields **ITERATION** and **SHEET_INDEX** (wh
 Excel data location may define an array of cells. For this purpose boolean JSON field **IS_ARRAY** is set to *true* (default value if missing is *false*).
 Accordingly fields: **ROW_INDICES** and **COLUMN_INDICES** are used to define arrays of row and column indices. Since all row/column indices are given explicitly it is not needed to be consequent numbers hence more complex sets of cells can set this way. 
 
+Column indices may be defined in two ways by integers (designating the column numbers) or as column label (as used in the Excel standart addressing). For example: "COLUMN_INDICES" :[2,3,4] or "COLUMN_INDICES" :["B","C","D"] are both valid specifications.  
+
 
 #### DATA_ACCESS section - JSON configuration
 
