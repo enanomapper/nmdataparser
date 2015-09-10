@@ -874,7 +874,7 @@ public class DynamicElement
 			String sameas = Property.guessLabel(parameterName);
 			Property property = new Property(parameterName, "", "");
 			property.setLabel(sameas);
-			composition.getSecondStructure().setProperty(property, elObj);
+			composition.getSecondStructure().setRecordProperty(property, elObj);
 			break;		
 			
 		case PROPORTION_FUNCTION:

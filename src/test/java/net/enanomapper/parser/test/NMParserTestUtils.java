@@ -172,8 +172,8 @@ public class NMParserTestUtils {
 
 	public static String structureRecordProperties(IStructureRecord str) {
 		StringBuffer sb = new StringBuffer();
-		for (Property p : str.getProperties()) {
-			sb.append("    " + p.getName() + ": " + str.getProperty(p));
+		for (Property p : str.getRecordProperties()) {
+			sb.append("    " + p.getName() + ": " + str.getRecordProperty(p));
 		}
 		return sb.toString();
 	}

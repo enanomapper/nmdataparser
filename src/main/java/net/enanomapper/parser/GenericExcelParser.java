@@ -1664,7 +1664,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					String sameas = Property.guessLabel(propName);
 					Property property = new Property(propName, "", "");
 					property.setLabel(sameas);
-					structure.setProperty(property, propObj);
+					structure.setRecordProperty(property, propObj);
 				}
 			}
 		}
