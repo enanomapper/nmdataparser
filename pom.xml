@@ -12,71 +12,88 @@
 			<comments>LGPL 2</comments>
 		</license>
 	</licenses>
-<repositories>
-    <repository>
-      <id>mvnrepository</id>
-      <name>mvnrepository</name>
-      <url>http://mvnrepository.com/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>ambit-plovdiv</id>
-      <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/thirdparty</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>ambit-plovdiv-releases</id>
-      <name>ambit-plovdiv-releases</name>
-      <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>ambit-plovdiv-snapshots</id>
-      <name>ambit-plovdiv-snapshots</name>
-      <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/snapshots</url>
-    </repository>
-  </repositories>	
+	<repositories>
+		<repository>
+			<id>mvnrepository</id>
+			<name>mvnrepository</name>
+			<url>http://mvnrepository.com/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ambit-plovdiv</id>
+			<url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/thirdparty</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>ambit-plovdiv-releases</id>
+			<name>ambit-plovdiv-releases</name>
+			<url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<id>ambit-plovdiv-snapshots</id>
+			<name>ambit-plovdiv-snapshots</name>
+			<url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
 	<dependencies>
-    <dependency>
-      <groupId>commons-cli</groupId>
-      <artifactId>commons-cli</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-	  <artifactId>commons-jexl</artifactId>
-	  <version>2.1.1</version>
-    </dependency>	
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-lgpl</artifactId>
-      <version>1.9.13</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.13</version>
-    </dependency>    
-    <dependency>
-      <groupId>net.ideaconsult</groupId>
-      <artifactId>loom-nm</artifactId>
-      <version>1.1.0-SNAPSHOT</version>
-    </dependency>    
-     		<dependency>
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-jexl</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-lgpl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+			<groupId>net.ideaconsult</groupId>
+			<artifactId>loom-nm</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.10-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>3.10-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.10-FINAL</version>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<finalName>enmcli</finalName>
@@ -86,21 +103,21 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
- <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.2</version>
-          <configuration>
-            <source>${sourceVersion}</source>
-            <target>${sourceVersion}</target>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>${sourceVersion}</source>
+						<target>${sourceVersion}</target>
 
-          </configuration>
-        </plugin>
-     </plugins>
-     </pluginManagement>
-        
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -127,49 +144,49 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ambit-plovdiv-snapshots</id>
-      <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ambit-plovdiv-releases</id>
-      <url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/releases</url>
-    </repository>
-  </distributionManagement>	
-<profiles>
-<profile>
-      <id>JRE6</id>
-      <activation>
-        <jdk>1.6</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.6</sourceVersion>
-      </properties>
-    </profile>
-    <profile>
-      <id>JRE7</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.7</sourceVersion>
-      </properties>
-    </profile>
-    <profile>
-      <id>JRE8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <properties>
-        <sourceVersion>1.8</sourceVersion>
-      </properties>
-    </profile>
-</profiles>	
-<properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>    	
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ambit-plovdiv-snapshots</id>
+			<url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ambit-plovdiv-releases</id>
+			<url>http://ambit.uni-plovdiv.bg:8083/nexus/content/repositories/releases</url>
+		</repository>
+	</distributionManagement>
+	<profiles>
+		<profile>
+			<id>JRE6</id>
+			<activation>
+				<jdk>1.6</jdk>
+			</activation>
+			<properties>
+				<sourceVersion>1.6</sourceVersion>
+			</properties>
+		</profile>
+		<profile>
+			<id>JRE7</id>
+			<activation>
+				<jdk>1.7</jdk>
+			</activation>
+			<properties>
+				<sourceVersion>1.7</sourceVersion>
+			</properties>
+		</profile>
+		<profile>
+			<id>JRE8</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<properties>
+				<sourceVersion>1.8</sourceVersion>
+			</properties>
+		</profile>
+	</profiles>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<scm>
 		<url>https://github.com/enanomapper/nmdataparser.git</url>
 		<connection>scm:git:git://github.com/enanomapper/nmdataparser.git</connection>
