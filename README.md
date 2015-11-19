@@ -1,7 +1,9 @@
 nmdataparser
 ============
 
-Java library **nmdataparser** implements a configurable parser for importing spreadsheet data  into the eNanoMapper internal data base representation (deployed on top of Ambit database functionality). The main class GenericExcelParser  iterates *.xls and *.xlsx files returning a set of SubstanceRecords objects. The class is configured by means of JSON file. 
+The **nmdataparser** Java library is a configurable parser allowing to importing spreadsheet substance composition, characterisation and assay data into the [eNanoMapper database](https://apps.ideaconsult.net/enanomapper). The parser converts the spreadsheet into the internal [AMBIT](http://ambit.sf.net) data model, using a JSON file for mapping the objects.  The main class `GenericExcelParser`  iterates over entries of `*.xls` and `*.xlsx` files returning a set of `SubstanceRecords` objects. 
+
+#####N. Jeliazkova, C. Chomenidis, P. Doganis, B. Fadeel, R. Grafström, B. Hardy, J. Hastings, M. Hegi, V. Jeliazkov, N. Kochev, P. Kohonen, C. R. Munteanu, H. Sarimveis, B. Smeets, P. Sopasakis, G. Tsiliki, D. Vorgrimmler, and E. Willighagen, The eNanoMapper database for nanomaterial safety information,Beilstein J. Nanotechnol., vol. 6, pp. 1609-1634, Jul. 2015. [doi:10.3762/bjnano.6.165](http://dx.doi.org/10.3762/bjnano.6.165)
 
 ##### Examples:
 - [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
