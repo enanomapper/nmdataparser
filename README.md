@@ -132,7 +132,7 @@ Stable release
 <dependency>
   <groupId>net.enanomapper</groupId>
   <artifactId>nmparser</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
 </dependency>
 ````
 
@@ -141,6 +141,6 @@ Development snapshot
 <dependency>
   <groupId>net.enanomapper</groupId>
   <artifactId>nmparser</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
 </dependency>
 ````
