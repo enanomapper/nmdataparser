@@ -2798,8 +2798,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	private String locationStringForErrorMessage(ExcelDataLocation loc,
 			int sheet) {
-		return String.format("[Sheet %d Col %d Row %d", sheet, loc.columnIndex,
-				loc.rowIndex);
+		return String.format("[Sheet %d Col %d Row %d", sheet, loc==null?null:loc.columnIndex,
+				loc==null?null:loc.rowIndex);
 	}
 
 	/*
