@@ -7,10 +7,10 @@ public class RecognitionUtils {
 		public String qualifier = null;
 		public String errorMsg = null;
 	}
-
+	//convert to lower case before comparison
 	public static final String[] qualifiers = { " ", "=", "<=", ">=", "<", ">",
-			"Ca.", "ca.", "Mean", "mean", "StdDev", "SD", "~", "±", "+-",
-			"+/-", "Geo mean" };
+			 "ca.", "mean", "stddev", "sd","s.d.", "~", "±", "+-",
+			"+/-", "geo mean", "average"};
 
 	
 	/**
@@ -66,7 +66,7 @@ public class RecognitionUtils {
 	 */
 	public static QualifierValue extractQualifierValue(String valueString) {
 		QualifierValue qvalue = new QualifierValue();
-		String s = valueString.trim();
+		String s = valueString.trim().toLowerCase();
 
 		// Handle qualifier
 		for (int i = 0; i < qualifiers.length; i++)
