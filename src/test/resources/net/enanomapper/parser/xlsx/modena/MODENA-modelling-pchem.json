@@ -137,7 +137,11 @@
 			"ITERATION": "JSON_VALUE",
 			"JSON_VALUE": "MODENA"
 		},
-		"PARAMETERS": {},
+		"PARAMETERS": {
+				"Dispersion protocol": {
+					"COLUMN_INDEX": "I"
+				}		
+		},
 		"EFFECTS": [{
 			"ENDPOINT": {
 				"ITERATION": "JSON_VALUE",
