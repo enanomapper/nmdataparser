@@ -51,6 +51,13 @@
 				"SMILES": {
 					"COLUMN_INDEX": "AN"
 				}
+			},
+			"CONTENT": {
+				"COLUMN_INDEX": "AN"
+			},
+			"FORMAT" : {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "INC"
 			}
 		}, {
 			"STRUCTURE_RELATION": "HAS_COATING",
