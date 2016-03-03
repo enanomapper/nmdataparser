@@ -110,7 +110,7 @@ public class ProtocolApplicationDataLocation
 				ExcelDataLocation loc = protocolGuideline.get(i);
 				sb.append(loc.toJSONKeyWord(offset+"\t\t"));
 				
-				if (i < parameters.size()-1)
+				if (i < protocolGuideline.size()-1)
 					sb.append(",\n\n");
 				else
 					sb.append("\n");
