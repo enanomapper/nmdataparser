@@ -17,6 +17,8 @@ import ambit2.base.io.DownloadTool;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.RDFReader;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -36,8 +38,7 @@ public class RDFsmasher {
 		Assert.assertTrue(file.exists());
 		Model jmodel = ModelFactory.createDefaultModel();
 		FileInputStream in = null;
-		BufferedWriter out = new BufferedWriter(new FileWriter(new File(
-				baseDir, "ENM_tree.json")));
+
 		try {
 			RDFReader reader = jmodel.getReader();
 			in = new FileInputStream(file);
@@ -45,8 +46,31 @@ public class RDFsmasher {
 			Resource root = jmodel
 					.createResource("http://www.w3.org/2002/07/owl#Thing");
 			// final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+			int c = 1;
+			ResIterator thingi = jmodel.listSubjectsWithProperty(
+					RDFS.subClassOf, root);
+			while (thingi.hasNext()) {
+				Resource thing = thingi.next();
+				ResIterator entityi = jmodel.listSubjectsWithProperty(
+						RDFS.subClassOf, thing);
+				BufferedWriter out = null;
+				while (entityi.hasNext())
+					try {
+						Resource entity = entityi.next();
+						out = new BufferedWriter(new FileWriter(
+								new File(baseDir, String.format(
+										"ENM_tree_%s.json",
+										entity.getLocalName()))));
+						traverse(entity, jmodel, 0, out);
+					} finally {
+						try {
+							out.close();
+						} catch (Exception x) {
+						}
+					}
+				c++;
+			}
 
-			traverse(root, jmodel, 0, out);
 		} finally {
 			jmodel.close();
 			try {
@@ -54,10 +78,7 @@ public class RDFsmasher {
 					in.close();
 			} catch (Exception x) {
 			}
-			try {
-				out.close();
-			} catch (Exception x) {
-			}
+
 		}
 	}
 
@@ -73,8 +94,17 @@ public class RDFsmasher {
 			throws IOException {
 		if (level > maxlevel)
 			return;
+		NodeIterator n = jmodel.listObjectsOfProperty(root,RDFS.label);
+		StringBuilder label = new StringBuilder();
+		while (n.hasNext()) {
+			RDFNode node = n.next();
+			label.append(node.asLiteral().getString());
+		}
 		ResIterator i = jmodel.listSubjectsWithProperty(RDFS.subClassOf, root);
-		out.write("{\n\"name\":");
+		out.write("{");
+		out.write("\n\"name\":");
+		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(label.toString())));
+		out.write(",\n\"id\":");
 		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(root.getLocalName())));
 		out.write(",\n\"size\":1");
 
