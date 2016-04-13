@@ -7,6 +7,13 @@ The **nmdataparser** Java library is a configurable parser allowing to importing
 
 --
 
+````
+<dependency>
+  <groupId>net.enanomapper</groupId>
+  <artifactId>nmparser</artifactId>
+  <version>1.0.2</version>
+</dependency>
+````
 Stable release [![DOI](https://zenodo.org/badge/2503/enanomapper/nmdataparser.svg)](https://zenodo.org/badge/latestdoi/2503/enanomapper/nmdataparser)
 ````
 <dependency>
@@ -20,7 +27,7 @@ Development snapshot at Maven repository http://ambit.uni-plovdiv.bg:8083/nexus/
 <dependency>
   <groupId>net.enanomapper</groupId>
   <artifactId>nmparser</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
 </dependency>
 ````
 ##### Examples:
