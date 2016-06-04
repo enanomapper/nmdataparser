@@ -28,11 +28,26 @@ public class RDFsmasher {
 	int maxlevel = Integer.MAX_VALUE;
 
 	@Test
-	public void test() throws Exception {
-		URL url = new URL(
-				"http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf");
+	public void testGO() throws Exception {
+		smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","GO");
+	}
+	@Test
+	public void testBAO() throws Exception {
+		smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","BAO");
+	}
+	@Test
+	public void testENM() throws Exception {
+		smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+				"ENM");
+	}
+	@Test
+	public void testCLO() throws Exception {
+		smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","CLO");
+	}
+	public void smash(String rdfurl, String title) throws Exception {
+		URL url = new URL(rdfurl);
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
-		File file = new File(baseDir, "ENM.rdf");
+		File file = new File(baseDir, title + ".rdf");
 		if (!file.exists())
 			DownloadTool.download(url, file);
 		Assert.assertTrue(file.exists());
@@ -43,6 +58,7 @@ public class RDFsmasher {
 			RDFReader reader = jmodel.getReader();
 			in = new FileInputStream(file);
 			reader.read(jmodel, in, "RDF/XML");
+			System.out.println("Reading completed "+file.getAbsolutePath());
 			Resource root = jmodel
 					.createResource("http://www.w3.org/2002/07/owl#Thing");
 			// final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
@@ -57,10 +73,11 @@ public class RDFsmasher {
 				while (entityi.hasNext())
 					try {
 						Resource entity = entityi.next();
-						out = new BufferedWriter(new FileWriter(
-								new File(baseDir, String.format(
-										"ENM_tree_%s.json",
-										entity.getLocalName()))));
+						String outname=String.format("%s_tree_%s.json",
+								title, entity.getLocalName());
+						out = new BufferedWriter(new FileWriter(new File(
+								baseDir, outname)));
+						System.out.println("Writing tree into "+outname);
 						traverse(entity, jmodel, 0, out);
 					} finally {
 						try {
@@ -94,7 +111,7 @@ public class RDFsmasher {
 			throws IOException {
 		if (level > maxlevel)
 			return;
-		NodeIterator n = jmodel.listObjectsOfProperty(root,RDFS.label);
+		NodeIterator n = jmodel.listObjectsOfProperty(root, RDFS.label);
 		StringBuilder label = new StringBuilder();
 		while (n.hasNext()) {
 			RDFNode node = n.next();
