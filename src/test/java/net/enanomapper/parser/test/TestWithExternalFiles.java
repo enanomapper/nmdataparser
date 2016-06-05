@@ -7,10 +7,10 @@ import ambit2.base.io.DownloadTool;
 
 public class TestWithExternalFiles {
 
-	protected File getTestFile(String remoteurl, String localname, File baseDir)
+	protected File getTestFile(String remoteurl, String localname, String extension, File baseDir)
 			throws Exception {
 		URL url = new URL(remoteurl);
-		File file = new File(baseDir, localname + ".rdf");
+		File file = new File(baseDir, localname + extension);
 		if (!file.exists())
 			DownloadTool.download(url, file);
 		return file;

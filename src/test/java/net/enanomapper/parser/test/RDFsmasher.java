@@ -55,7 +55,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 	public void smash(String rdfurl, String title, boolean splitfirstlevel)
 			throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
-		File file = getTestFile(rdfurl, title + ".rdf", baseDir);
+		File file = getTestFile(rdfurl, title ,".rdf", baseDir);
 		Assert.assertTrue(file.exists());
 		Model jmodel = ModelFactory.createDefaultModel();
 		FileInputStream in = null;
