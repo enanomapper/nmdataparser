@@ -1,13 +1,22 @@
 package net.enanomapper.parser.test;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,9 +26,9 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 	@BeforeClass
 	public static void initTemplateNames() throws IOException {
 		templates = new Properties();
-		InputStream in = NRTemplatesTest.class.getClassLoader()
-				.getResourceAsStream(
-						"data/xlsx/nanoreg/nrtemplates.properties");
+		InputStream in = NRTemplatesTest.class
+				.getClassLoader()
+				.getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
 		try {
 			Assert.assertNotNull(in);
 			templates.load(in);
@@ -34,12 +43,68 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		Assert.assertNotNull(templates);
 		Assert.assertEquals(15, templates.size());
 		Enumeration<Object> e = templates.keys();
-		while (e.hasMoreElements()) {
-			Object key = e.nextElement();
-			String fileUrl = templates.getProperty(key.toString());
-			File file = getTestFile(fileUrl, key.toString(), ".xlsx",baseDir);
-			Assert.assertTrue(file.exists());
-			System.out.println(file.getAbsolutePath());
-		}
+		Map<String, Integer> histogram = new HashMap<String, Integer>();
+		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
+				baseDir + "/nrtemplate.txt")));
+		while (e.hasMoreElements())
+			try {
+				Object key = e.nextElement();
+				String fileUrl = templates.getProperty(key.toString());
+				File file = getTestFile(fileUrl, key.toString(), ".xlsx",
+						baseDir);
+				Assert.assertTrue(file.exists());
+				// verify we can read it and extract some stats
+				XSSFWorkbook workbook = new XSSFWorkbook(file);
+				int nsh = workbook.getNumberOfSheets();
+				for (int i = 0; i < nsh; i++) {
+					XSSFSheet sheet = workbook.getSheetAt(i);
+					if ("instruction for data logging".equals(sheet
+							.getSheetName().toLowerCase()))
+						continue;
+					int rows = 0;
+					int maxcols = 0;
+					Iterator<Row> rowIterator = sheet.rowIterator();
+					while (rowIterator.hasNext()) {
+						Row row = rowIterator.next();
+						Iterator<Cell> cellIterator = row.cellIterator();
+						int columns = 0;
+						while (cellIterator.hasNext()) {
+							Cell cell = cellIterator.next();
+							try {
+								String value = cell.getStringCellValue()
+										.toLowerCase();
+								Integer count = histogram.get(value);
+								if (count == null) {
+									histogram.put(value, 1);
+								} else {
+									count++;
+									histogram.put(value, count);
+								}
+								if (!"".equals(value.trim()))
+									stats.write(String.format(
+											"%s\t'%s'\t%s\t%d\t%d\t%s\n",
+											key.toString(), templates.get(key),
+											sheet.getSheetName(), rows, columns,
+											value.replace("\n", " ").replace("\r","")));
+							} catch (Exception x) {
+								x.printStackTrace();
+							}
+							columns++;
+						}
+						rows++;
+						if (columns > maxcols)
+							maxcols = columns;
+					}
+					System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d",
+							key.toString(), templates.get(key),
+							sheet.getSheetName(), rows, maxcols));
+
+				}
+				// stats.write(histogram.toString());
+				workbook.close();
+			} catch (Exception x) {
+
+			}
+		stats.close();
 	}
 }
