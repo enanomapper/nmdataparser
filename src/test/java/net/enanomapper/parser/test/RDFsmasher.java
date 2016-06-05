@@ -6,14 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URL;
 
 import net.idea.modbcum.i.json.JSONUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import ambit2.base.io.DownloadTool;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -24,32 +21,41 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-public class RDFsmasher {
+public class RDFsmasher extends TestWithExternalFiles {
 	int maxlevel = Integer.MAX_VALUE;
 
 	@Test
 	public void testGO() throws Exception {
-		smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","GO");
+		smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+				"GO");
 	}
+
 	@Test
 	public void testBAO() throws Exception {
-		smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","BAO");
+		smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+				"BAO");
 	}
+
 	@Test
 	public void testENM() throws Exception {
 		smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM");
 	}
+
 	@Test
 	public void testCLO() throws Exception {
-		smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf","CLO");
+		smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+				"CLO");
 	}
+
 	public void smash(String rdfurl, String title) throws Exception {
-		URL url = new URL(rdfurl);
+		smash(rdfurl, title, true);
+	}
+
+	public void smash(String rdfurl, String title, boolean splitfirstlevel)
+			throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
-		File file = new File(baseDir, title + ".rdf");
-		if (!file.exists())
-			DownloadTool.download(url, file);
+		File file = getTestFile(rdfurl, title + ".rdf", baseDir);
 		Assert.assertTrue(file.exists());
 		Model jmodel = ModelFactory.createDefaultModel();
 		FileInputStream in = null;
@@ -58,10 +64,11 @@ public class RDFsmasher {
 			RDFReader reader = jmodel.getReader();
 			in = new FileInputStream(file);
 			reader.read(jmodel, in, "RDF/XML");
-			System.out.println("Reading completed "+file.getAbsolutePath());
+			System.out.println("Reading completed " + file.getAbsolutePath());
 			Resource root = jmodel
 					.createResource("http://www.w3.org/2002/07/owl#Thing");
 			// final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+
 			int c = 1;
 			ResIterator thingi = jmodel.listSubjectsWithProperty(
 					RDFS.subClassOf, root);
@@ -73,11 +80,11 @@ public class RDFsmasher {
 				while (entityi.hasNext())
 					try {
 						Resource entity = entityi.next();
-						String outname=String.format("%s_tree_%s.json",
+						String outname = String.format("%s_tree_%s.json",
 								title, entity.getLocalName());
 						out = new BufferedWriter(new FileWriter(new File(
 								baseDir, outname)));
-						System.out.println("Writing tree into "+outname);
+						System.out.println("Writing tree into " + outname);
 						traverse(entity, jmodel, 0, out);
 					} finally {
 						try {
