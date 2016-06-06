@@ -92,6 +92,13 @@
 			<artifactId>ambit2-export</artifactId>
 			<version>${ambit.version}</version>
 		</dependency>
+		<!-- http://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-spellchecker</artifactId>
+			<version>3.6.2</version>
+			<scope>test</scope>
+		</dependency>
 
 
 	</dependencies>

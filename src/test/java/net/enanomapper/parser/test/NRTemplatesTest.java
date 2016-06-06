@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.apache.lucene.search.spell.LevensteinDistance;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -72,7 +73,10 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 							Cell cell = cellIterator.next();
 							try {
 								String value = cell.getStringCellValue()
-										.toLowerCase();
+										.toLowerCase().replace("\n", " ")
+										.replace("\r", "").trim();
+								if ("".equals(value))
+									continue;
 								Integer count = histogram.get(value);
 								if (count == null) {
 									histogram.put(value, 1);
@@ -82,10 +86,10 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 								}
 								if (!"".equals(value.trim()))
 									stats.write(String.format(
-											"%s\t'%s'\t%s\t%d\t%d\t%s\n",
+											"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
 											key.toString(), templates.get(key),
-											sheet.getSheetName(), rows, columns,
-											value.replace("\n", " ").replace("\r","")));
+											sheet.getSheetName(), rows,
+											columns, value));
 							} catch (Exception x) {
 								x.printStackTrace();
 							}
@@ -100,11 +104,42 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 							sheet.getSheetName(), rows, maxcols));
 
 				}
-				// stats.write(histogram.toString());
 				workbook.close();
 			} catch (Exception x) {
 
 			}
 		stats.close();
+		// histogram
+		BufferedWriter terms = new BufferedWriter(new FileWriter(new File(
+				baseDir + "/terms.txt")));
+		BufferedWriter similar = new BufferedWriter(new FileWriter(new File(
+				baseDir + "/similar.txt")));
+		Iterator<String> terms1 = histogram.keySet().iterator();
+
+		LevensteinDistance d = new LevensteinDistance();
+		while (terms1.hasNext()) {
+			String key1 = terms1.next();
+			Iterator<String> terms2 = histogram.keySet().iterator();
+			double max = 0;
+			String mostSimilar = null;
+			while (terms2.hasNext()) {
+				String key2 = terms2.next();
+				if (key1.equals(key2))
+					continue;
+				// avoid running twice on the same pair
+				// if (key1.compareTo(key2) > 0)
+				double sim = d.getDistance(key1, key2);
+				if (sim > max) {
+					mostSimilar = key2;
+					max = sim;
+				}
+				terms.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1, key2,
+						sim));
+			}
+			similar.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1,
+					mostSimilar, max));
+		}
+		terms.close();
+		similar.close();
 	}
 }
