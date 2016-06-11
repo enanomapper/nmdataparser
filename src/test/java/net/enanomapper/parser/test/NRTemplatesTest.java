@@ -44,7 +44,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		Assert.assertNotNull(templates);
 		Assert.assertEquals(15, templates.size());
 		Enumeration<Object> e = templates.keys();
-		Map<String, Integer> histogram = new HashMap<String, Integer>();
+		Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
 				baseDir + "/nrtemplate.txt")));
 		while (e.hasMoreElements())
@@ -77,13 +77,29 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 										.replace("\r", "").trim();
 								if ("".equals(value))
 									continue;
-								Integer count = histogram.get(value);
+								Term count = histogram.get(value);
 								if (count == null) {
-									histogram.put(value, 1);
+									Term term = new Term();
+									term.setSecondbest(new Term());
+									histogram.put(value, term);
 								} else {
-									count++;
+									count.setFrequency(count.getFrequency() + 1);
 									histogram.put(value, count);
 								}
+								//try to split the term 
+								String[] splitted = value.split(" ");
+								for (int ii=0;ii<splitted.length;ii++) {
+									String val = splitted[ii].trim();
+									if ("".equals(val)) continue;
+									Term scount = histogram.get(val);
+									if (scount == null) {
+										histogram.put(val, new Term());
+									} else {
+										scount.setFrequency(scount.getFrequency() + 1);
+										histogram.put(val, scount);
+									}
+								}
+
 								if (!"".equals(value.trim()))
 									stats.write(String.format(
 											"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
@@ -109,6 +125,48 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 
 			}
 		stats.close();
+
+		similarity(histogram, baseDir);
+		System.out.println("Estimating annotations");
+		smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+				"ENM", true, new ExtractSynonymsList() {
+					LevensteinDistance d = new LevensteinDistance();
+
+					@Override
+					public void processEntry(String entity, String label) {
+						Iterator<String> terms1 = histogram.keySet().iterator();
+						while (terms1.hasNext()) {
+							String key1 = terms1.next();
+							double sim = d.getDistance(key1, label);
+							Term term = histogram.get(key1);
+							if (sim > term.getDistance()) {
+								if (term.getSecondbest()==null) term.setSecondbest(new Term());
+								term.getSecondbest().setDistance(term.getDistance());
+								term.getSecondbest().setAnnotation(term.getAnnotation());
+								term.getSecondbest().setLabel(term.getLabel());
+								term.getSecondbest().setFrequency(term.getFrequency());
+								term.setDistance(sim);
+								term.setAnnotation(entity);
+								term.setLabel(label);
+							}
+						}
+					}
+				});
+		System.out.println("Writing annotated terms");
+		BufferedWriter annotated = new BufferedWriter(new FileWriter(new File(
+				baseDir + "/annotated.txt")));
+		Iterator<String> terms1 = histogram.keySet().iterator();
+		while (terms1.hasNext()) {
+			String key1 = terms1.next();
+			Term term = histogram.get(key1);
+			annotated.write(String.format("\"%s\"\t%s\n", key1, term.toString()));
+		}
+		annotated.close();
+
+	}
+
+	protected void similarity(Map<String, Term> histogram, File baseDir)
+			throws IOException {
 		// histogram
 		BufferedWriter terms = new BufferedWriter(new FileWriter(new File(
 				baseDir + "/terms.txt")));
@@ -136,10 +194,71 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 				terms.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1, key2,
 						sim));
 			}
-			similar.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1,
-					mostSimilar, max));
+			if (max >= 0.5)
+				similar.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1,
+						mostSimilar, max));
 		}
 		terms.close();
 		similar.close();
+	}
+}
+
+class Term {
+	protected Term secondbest;
+	public Term getSecondbest() {
+		return secondbest;
+	}
+
+	public void setSecondbest(Term secondbest) {
+		this.secondbest = secondbest;
+	}
+
+	public Term() {
+		setFrequency(1);
+		setDistance(0);
+	}
+
+	public String getAnnotation() {
+		return annotation;
+	}
+
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
+	}
+
+	int frequency;
+
+	public int getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	String annotation;
+	String label;
+	double distance;
+
+	@Override
+	public String toString() {
+		return String.format("%d\t\"%s\"\t\"%s\"\t%s\t%s", frequency, annotation,
+				label, distance,secondbest);
 	}
 }
