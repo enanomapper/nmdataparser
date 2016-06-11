@@ -69,14 +69,14 @@ public class RDFsmasher extends TestWithExternalFiles  {
 	@Test
 	public void testCHEBI() throws Exception {
 		smash("http://data.bioontology.org/ontologies/CHEBI/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
-				"ENM",false,this);
+				"CHEBI",false,this);
 		
 	}
 	
 	@Test
 	public void testCLO() throws Exception {
 		smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
-				"CLO");
+				"CLO",false,this);
 	}
 
 	@Override
