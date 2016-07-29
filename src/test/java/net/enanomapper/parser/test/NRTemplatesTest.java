@@ -44,7 +44,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		Assert.assertNotNull(templates);
 		Assert.assertEquals(15, templates.size());
 		Enumeration<Object> e = templates.keys();
-		Map<String, Term> histogram = new HashMap<String, Term>();
+		final Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
 				baseDir + "/nrtemplate.txt")));
 		while (e.hasMoreElements())
