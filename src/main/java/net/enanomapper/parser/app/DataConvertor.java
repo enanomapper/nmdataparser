@@ -246,7 +246,7 @@ public class DataConvertor {
 
 		ISAJsonExporter1_0 exporter;
 		try {
-			exporter = new ISAJsonExporter1_0(null, null);
+			exporter = new ISAJsonExporter1_0();
 			exporter.init(endpointBundle);
 		} catch (Exception x) {
 			logger_cli.log(Level.SEVERE, x.getMessage());
