@@ -14,6 +14,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.apache.lucene.search.spell.LevensteinDistance;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -38,6 +39,75 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		}
 	}
 
+	protected void readExcelTemplate(File file, Object key, Map<String, Term> histogram, BufferedWriter stats) throws InvalidFormatException, IOException {
+		XSSFWorkbook workbook = new XSSFWorkbook(file);
+		int nsh = workbook.getNumberOfSheets();
+		for (int i = 0; i < nsh; i++) {
+			XSSFSheet sheet = workbook.getSheetAt(i);
+			if ("instruction for data logging".equals(sheet
+					.getSheetName().toLowerCase()))
+				continue;
+			int rows = 0;
+			int maxcols = 0;
+			Iterator<Row> rowIterator = sheet.rowIterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				int columns = 0;
+				while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					try {
+						String value = cell.getStringCellValue()
+								.toLowerCase().replace("\n", " ")
+								.replace("\r", "").trim();
+						if ("".equals(value))
+							continue;
+						Term count = histogram.get(value);
+						if (count == null) {
+							Term term = new Term();
+							term.setSecondbest(new Term());
+							histogram.put(value, term);
+						} else {
+							count.setFrequency(count.getFrequency() + 1);
+							histogram.put(value, count);
+						}
+						//try to split the term 
+						/*
+						String[] splitted = value.split(" ");
+						for (int ii=0;ii<splitted.length;ii++) {
+							String val = splitted[ii].trim();
+							if ("".equals(val)) continue;
+							Term scount = histogram.get(val);
+							if (scount == null) {
+								histogram.put(val, new Term());
+							} else {
+								scount.setFrequency(scount.getFrequency() + 1);
+								histogram.put(val, scount);
+							}
+						}
+						*/	
+						if (!"".equals(value.trim()))
+							stats.write(String.format(
+									"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
+									key.toString(), templates.get(key),
+									sheet.getSheetName(), rows,
+									columns, value));
+					} catch (Exception x) {
+						x.printStackTrace();
+					}
+					columns++;
+				}
+				rows++;
+				if (columns > maxcols)
+					maxcols = columns;
+			}
+			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d",
+					key.toString(), templates.get(key),
+					sheet.getSheetName(), rows, maxcols));
+
+		}
+		workbook.close();
+	}
 	@Test
 	public void testTemplatesAvailable() throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
@@ -55,72 +125,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 						baseDir);
 				Assert.assertTrue(file.exists());
 				// verify we can read it and extract some stats
-				XSSFWorkbook workbook = new XSSFWorkbook(file);
-				int nsh = workbook.getNumberOfSheets();
-				for (int i = 0; i < nsh; i++) {
-					XSSFSheet sheet = workbook.getSheetAt(i);
-					if ("instruction for data logging".equals(sheet
-							.getSheetName().toLowerCase()))
-						continue;
-					int rows = 0;
-					int maxcols = 0;
-					Iterator<Row> rowIterator = sheet.rowIterator();
-					while (rowIterator.hasNext()) {
-						Row row = rowIterator.next();
-						Iterator<Cell> cellIterator = row.cellIterator();
-						int columns = 0;
-						while (cellIterator.hasNext()) {
-							Cell cell = cellIterator.next();
-							try {
-								String value = cell.getStringCellValue()
-										.toLowerCase().replace("\n", " ")
-										.replace("\r", "").trim();
-								if ("".equals(value))
-									continue;
-								Term count = histogram.get(value);
-								if (count == null) {
-									Term term = new Term();
-									term.setSecondbest(new Term());
-									histogram.put(value, term);
-								} else {
-									count.setFrequency(count.getFrequency() + 1);
-									histogram.put(value, count);
-								}
-								//try to split the term 
-								String[] splitted = value.split(" ");
-								for (int ii=0;ii<splitted.length;ii++) {
-									String val = splitted[ii].trim();
-									if ("".equals(val)) continue;
-									Term scount = histogram.get(val);
-									if (scount == null) {
-										histogram.put(val, new Term());
-									} else {
-										scount.setFrequency(scount.getFrequency() + 1);
-										histogram.put(val, scount);
-									}
-								}
-
-								if (!"".equals(value.trim()))
-									stats.write(String.format(
-											"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
-											key.toString(), templates.get(key),
-											sheet.getSheetName(), rows,
-											columns, value));
-							} catch (Exception x) {
-								x.printStackTrace();
-							}
-							columns++;
-						}
-						rows++;
-						if (columns > maxcols)
-							maxcols = columns;
-					}
-					System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d",
-							key.toString(), templates.get(key),
-							sheet.getSheetName(), rows, maxcols));
-
-				}
-				workbook.close();
+				readExcelTemplate(file , key, histogram, stats);
 			} catch (Exception x) {
 
 			}
