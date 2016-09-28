@@ -1,4 +1,4 @@
-#### JSON Configuration - Main sections
+# JSON Configuration - Main sections
 The JSON config file consists of several major sections (objects on the first level of the JSON schema):
 
 **TEMPLATE_INFO** section defines basic info for the data format being imported. Intended mainly for internal usage. This section contains the options: **NAME**, **VERSION** and **TYPE**.
