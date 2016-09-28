@@ -43,7 +43,7 @@ java -jar dataconvertor.jar -i spreadsheet.xlsx -j spreadsheet.json -o test.isa
 
 #### JSON Configuration
 
-JSON syntax documentation: [json_config.md](json_config.md)
+[JSON syntax documentation](doc/README.md)
 
 ####Data model JAVADOC 
 
