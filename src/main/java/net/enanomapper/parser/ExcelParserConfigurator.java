@@ -434,12 +434,22 @@ public class ExcelParserConfigurator
 			}
 			
 			
-			//COMPANY_UUID
-			loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_UUID", conf);
+			//SUBSTANCE_UUID
+			loc = ExcelDataLocation.extractDataLocation(curNode,"SUBSTANCE_UUID", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
-					conf.substanceLocations.put("SubstanceRecord.companyUUID", loc);
+					conf.substanceLocations.put("SubstanceRecord.substanceUUID", loc);
+			}
+			else
+			{	
+				//depricated syntax COMPANY_UUID used for the same purpose
+				loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_UUID", conf);
+				if (loc != null)
+				{	
+					if (loc.nErrors == 0)							
+						conf.substanceLocations.put("SubstanceRecord.substanceUUID", loc);
+				}
 			}
 			
 			//OWNER_NAME

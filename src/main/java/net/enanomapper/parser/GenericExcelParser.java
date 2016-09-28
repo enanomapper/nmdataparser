@@ -919,10 +919,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		SubstanceRecord r = new SubstanceRecord();
 
-		// Typically companyUUID is not set from the excel file but it is
+		// Typically substanceUUID is not set from the excel file but it is
 		// possible if needed.
 		ExcelDataLocation loc = config.substanceLocations
-				.get("SubstanceRecord.companyUUID");
+				.get("SubstanceRecord.substanceUUID");
 		if (loc != null) {
 			String s = getString(loc);
 			if (s != null && !"".equals(s.trim()))
