@@ -15,7 +15,7 @@
     },
     "SUBSTANCE_RECORD": {
     
-        "COMPANY_UUID": {
+        "SUBSTANCE_UUID": {
             "COLUMN_INDEX": 1
         },
         "PUBLIC_NAME": {
