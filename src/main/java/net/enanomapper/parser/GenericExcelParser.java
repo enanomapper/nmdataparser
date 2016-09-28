@@ -939,7 +939,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						+ UUID.nameUUIDFromBytes(s.getBytes()).toString());
 		}
 
-		loc = config.substanceLocations.get("SubstanceRecord.companyName");
+		loc = config.substanceLocations.get("SubstanceRecord.substanceName");
 		if (loc != null) {
 			String s = getString(loc);
 			if (s != null)
