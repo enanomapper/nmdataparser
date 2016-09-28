@@ -401,18 +401,28 @@ public class ExcelParserConfigurator
 			conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\" is missing!");
 		else
 		{
-			//COMPANY_NAME
-			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_NAME", conf);
+			//SUBSTANCE_NAME 
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode,"SUBSTANCE_NAME", conf);
 			if (loc != null)
 			{	
 				if (loc.nErrors == 0)							
-					conf.substanceLocations.put("SubstanceRecord.companyName", loc);
+					conf.substanceLocations.put("SubstanceRecord.substanceName", loc);
 				//error messages are already added to conf (this is valid for all other location extractions)
 			}
 			else
 			{	
-				//Missing section is not counted as an error. Same treatment for the other sections
-				//conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\", keyword  \"COMPANY_NAME\" is missing!");
+				//depricated syntax COMPANY_NAME used for the same purposes
+				loc = ExcelDataLocation.extractDataLocation(curNode,"COMPANY_NAME", conf);
+				if (loc != null)
+				{	
+					if (loc.nErrors == 0)							
+						conf.substanceLocations.put("SubstanceRecord.substanceName", loc);
+					//error messages are already added to conf (this is valid for all other location extractions)
+				}
+				else 
+				{
+					//Missing section is not counted as an error. Same treatment for the other sections
+				}	
 			}
 			
 			//REFERENCE_SUBSTANCE_UUID
