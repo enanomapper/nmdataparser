@@ -25,9 +25,14 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 import org.apache.log4j.PropertyConfigurator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.restlet.Request;
+import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
@@ -37,6 +42,10 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.core.io.IRawReader;
 import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
+import ambit2.rest.substance.SubstanceRDFReporter;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class DataConvertor {
 
@@ -85,6 +94,12 @@ public class DataConvertor {
 	protected File jsonConfig;
 	protected File inputFile;
 	protected File outputFile;
+	protected _OUTPUT_FORMAT outformat = _OUTPUT_FORMAT.json;
+
+	protected enum _OUTPUT_FORMAT {
+		json, rdf, isa
+		// xlsx
+	}
 
 	public File getInputFile() {
 		return inputFile;
@@ -121,17 +136,17 @@ public class DataConvertor {
 			throw new Exception("Unsupported format");
 	}
 
-	/*
-	 * protected IRawReader<IStructureRecord> createParser(InputStream stream,
-	 * boolean xlsx) throws Exception { _parsertype mode = getParserType();
-	 * InputStream in = null; if (gzipped) in = new GZIPInputStream(stream);
-	 * else in = stream; if (mode == null) throw new
-	 * Exception("Unsupported parser type " + mode);
-	 * 
-	 * switch (mode) { case nanowiki: return new NanoWikiRDFReader(new
-	 * InputStreamReader(in)); case modnanotox: return new MNTParser(in,
-	 * jsonConfig, true); default: return super.createParser(in, xlsx); } }
-	 */
+	protected static _OUTPUT_FORMAT getOutputFormat(CommandLine line)
+			throws FileNotFoundException {
+		_OUTPUT_FORMAT f = _OUTPUT_FORMAT.json;
+		if (line.hasOption('f'))
+			try {
+				_OUTPUT_FORMAT.valueOf(line.getOptionValue('j'));
+			} catch (Exception x) {
+			}
+		return f;
+
+	}
 
 	protected static File getJSONConfig(CommandLine line)
 			throws FileNotFoundException {
@@ -187,6 +202,8 @@ public class DataConvertor {
 							"Missing JSON config file, mandatory for importing XLSX!");
 
 			outputFile = getOutput(line);
+			
+			outformat = getOutputFormat(line);
 
 			return true;
 		} catch (Exception x) {
@@ -238,6 +255,90 @@ public class DataConvertor {
 	}
 
 	public int write(IRawReader<IStructureRecord> reader,
+			StructureRecordValidator validator, _OUTPUT_FORMAT outformat)
+			throws Exception {
+		switch (outformat) {
+		case json: {
+			return writeAsJSON(reader, validator);
+		}
+		case isa: {
+			return writeAsISA(reader, validator);
+		}
+		case rdf: {
+			return writeAsRDF(reader, validator);
+		}
+		default: {
+
+		}
+		}
+		return 0;
+	}
+
+	public int writeAsJSON(IRawReader<IStructureRecord> reader,
+			StructureRecordValidator validator) throws Exception {
+		int records =0;
+		try {
+			while (reader.hasNext()) {
+				Object record = reader.next();
+				if (record == null)
+					continue;
+				try {
+					validator.process((IStructureRecord) record);
+					System.out.println(((SubstanceRecord) record).toJSON(null));
+				} catch (Exception x) {
+					logger_cli.log(Level.FINE, x.getMessage());
+				}
+				records++;
+			}
+
+		} catch (Exception x) {
+			logger_cli.log(Level.WARNING, x.getMessage(), x);
+		} finally {
+
+			logger_cli
+					.log(Level.INFO, "MSG_IMPORTED", new Object[] { records });
+		}
+		return records;
+	}
+
+	public int writeAsRDF(IRawReader<IStructureRecord> reader,
+			StructureRecordValidator validator) throws Exception {
+
+		Request hack = new Request();
+		hack.setRootRef(new Reference("http://localhost/ambit2"));
+		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack,
+				MediaType.TEXT_RDF_N3);
+		Model model = ModelFactory.createDefaultModel();
+		exporter.header(model, null);
+		exporter.setOutput(model);
+
+		int records = 0;
+		try {
+			while (reader.hasNext()) {
+				Object record = reader.next();
+				if (record == null)
+					continue;
+				try {
+					validator.process((IStructureRecord) record);
+					exporter.process((SubstanceRecord) record);
+				} catch (Exception x) {
+					logger_cli.log(Level.FINE, x.getMessage());
+				}
+				records++;
+			}
+			RDFDataMgr.write(System.out, model, RDFFormat.TURTLE);
+		} catch (Exception x) {
+			logger_cli.log(Level.WARNING, x.getMessage(), x);
+		} finally {
+			if (exporter != null)
+				exporter.close();
+			logger_cli
+					.log(Level.INFO, "MSG_IMPORTED", new Object[] { records });
+		}
+		return records;
+	}
+
+	public int writeAsISA(IRawReader<IStructureRecord> reader,
 			StructureRecordValidator validator) throws Exception {
 		SubstanceEndpointsBundle endpointBundle = null;
 		endpointBundle = new SubstanceEndpointsBundle();
@@ -332,7 +433,7 @@ public class DataConvertor {
 				}
 			};
 
-			return write(parser, validator);
+			return write(parser, validator, outformat);
 		} catch (Exception x) {
 			throw x;
 		} finally {
@@ -358,6 +459,10 @@ public class DataConvertor {
 		Option output = OptionBuilder.hasArg().withLongOpt("output")
 				.withArgName("file").withDescription("Output file").create("o");
 
+		Option outformat = OptionBuilder.hasArg().withLongOpt("outputformat")
+				.withArgName("format").withDescription("json|isa|rdf")
+				.create("f");
+
 		/*
 		 * Option gzip = OptionBuilder.hasArg().withLongOpt("gzipped")
 		 * .withDescription("Gzipped file").create("z");
@@ -368,6 +473,7 @@ public class DataConvertor {
 		options.addOption(input);
 		options.addOption(jsonConfig);
 		options.addOption(output);
+		options.addOption(outformat);
 
 		options.addOption(help);
 
