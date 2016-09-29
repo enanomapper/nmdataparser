@@ -20,6 +20,11 @@
 			<artifactId>loom-nm</artifactId>
 			<version>${loom.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>ambit</groupId>
+			<artifactId>ambit2-rest</artifactId>
+			<version>${ambit.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>enmconvertor</finalName>

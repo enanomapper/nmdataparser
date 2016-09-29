@@ -13,10 +13,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import ambit2.base.io.DownloadTool;
@@ -32,9 +34,8 @@ public class Tools {
 
 	public static Properties initJRCTemplateNames() throws IOException {
 		Properties templates = new Properties();
-		InputStream in = Tools.class
-				.getClassLoader()
-				.getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
+		InputStream in = Tools.class.getClassLoader().getResourceAsStream(
+				"data/xlsx/nanoreg/nrtemplates.properties");
 		try {
 			templates.load(in);
 		} finally {
@@ -46,10 +47,17 @@ public class Tools {
 	public static void readJRCExcelTemplate(File file, Object key,
 			String templateName, Map<String, Term> histogram,
 			BufferedWriter stats) throws InvalidFormatException, IOException {
-		XSSFWorkbook workbook = new XSSFWorkbook(file);
+		Workbook workbook;
+		if (templateName.endsWith(".xlsx")) {
+			workbook = new XSSFWorkbook(file);
+		} else if (templateName.endsWith(".xls")) {
+			workbook = new HSSFWorkbook(new FileInputStream(file));
+		} else throw new InvalidFormatException(file.getName()); 
+
+		
 		int nsh = workbook.getNumberOfSheets();
 		for (int i = 0; i < nsh; i++) {
-			XSSFSheet sheet = workbook.getSheetAt(i);
+			Sheet sheet = workbook.getSheetAt(i);
 			if ("instruction for data logging".equals(sheet.getSheetName()
 					.toLowerCase()))
 				continue;
@@ -62,10 +70,21 @@ public class Tools {
 				int columns = 0;
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
+					String value = null;
 					try {
-						String value = cell.getStringCellValue().toLowerCase()
-								.replace("\n", " ").replace("\r", "").trim();
-						if ("".equals(value))
+						switch (cell.getCellType()) {
+						case Cell.CELL_TYPE_STRING: {
+							value = cell.getStringCellValue().toLowerCase()
+									.replace("\n", " ").replace("\r", "")
+									.trim();
+							break;
+						}
+						case Cell.CELL_TYPE_FORMULA: {
+							// skip for now, we are only looking at terms!
+							break;
+						}
+						}
+						if (value == null || "".equals(value))
 							continue;
 						Term count = histogram.get(value);
 						if (count == null) {

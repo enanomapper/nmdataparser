@@ -1,5 +1,5 @@
-Package: net.enanomapper.parser
-Main-Class: net.enanomapper.templates.App
+Package: net.enanomapper.templates.app
+Main-Class: net.enanomapper.templates.app.MainApp
 Manifest-version: ${project.version}
 Package-Version: ${project.version}
 Package-Vendor: eNanoMapper
