@@ -141,8 +141,9 @@ public class DataConvertor {
 		_OUTPUT_FORMAT f = _OUTPUT_FORMAT.json;
 		if (line.hasOption('f'))
 			try {
-				_OUTPUT_FORMAT.valueOf(line.getOptionValue('j'));
+				return _OUTPUT_FORMAT.valueOf(line.getOptionValue('f'));
 			} catch (Exception x) {
+				
 			}
 		return f;
 
