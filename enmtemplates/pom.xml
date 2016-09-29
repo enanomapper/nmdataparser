@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.enanomapper</groupId>
+		<artifactId>enmdatamapper</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+	</parent>
+	<artifactId>enmtemplates</artifactId>
+	<dependencies>
+
+		<!-- http://mvnrepository.com/artifact/org.apache.lucene/lucene-spellchecker -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-spellchecker</artifactId>
+			<version>3.6.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<!-- transitive Jena dep -->
+			
+			<groupId>net.ideaconsult</groupId>
+			<artifactId>loom-nm</artifactId>
+			<version>${loom.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>enmtemplates</finalName>
+	</build>
+
+</project>

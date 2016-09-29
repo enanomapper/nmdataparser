@@ -18,8 +18,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-
 public class CSV2TreeTest {
 	int maxlevel = Integer.MAX_VALUE;
 

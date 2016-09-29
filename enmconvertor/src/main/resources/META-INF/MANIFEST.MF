@@ -1,4 +1,5 @@
 Package: net.enanomapper.parser
+Main-Class: net.enanomapper.parser.app.DataConvertor
 Manifest-version: ${project.version}
 Package-Version: ${project.version}
 Package-Vendor: eNanoMapper
