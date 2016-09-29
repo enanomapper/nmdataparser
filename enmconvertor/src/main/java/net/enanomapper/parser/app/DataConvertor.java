@@ -320,7 +320,7 @@ public class DataConvertor {
 					continue;
 				try {
 					validator.process((IStructureRecord) record);
-					exporter.process((SubstanceRecord) record);
+					exporter.processItem((SubstanceRecord) record);
 				} catch (Exception x) {
 					logger_cli.log(Level.FINE, x.getMessage());
 				}
