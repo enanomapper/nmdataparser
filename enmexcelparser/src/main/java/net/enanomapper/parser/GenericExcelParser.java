@@ -1205,16 +1205,18 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				try {
 					paramStringValue = getStringValue(loc);
 				} catch (Exception x) {
-					logger.log(Level.FINE, x.getMessage());
+					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
 				}
-
 				if (paramStringValue != null)
 					params.put(param, paramStringValue);
-				else {
+				else try {
 					Number paramDoubleValue = getNumericValue(loc);
 					if (paramDoubleValue != null)
 						params.put(param, paramDoubleValue);
+				} catch (Exception x) {
+					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
 				}
+				
 			}
 			pa.setParameters(params);
 		}
