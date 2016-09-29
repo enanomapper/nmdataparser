@@ -22,7 +22,7 @@ Stable release [![DOI](https://zenodo.org/badge/2503/enanomapper/nmdataparser.sv
   <version>1.0.0</version>
 </dependency>
 ````
-Development snapshot at Maven repository http://nexus.ideaconsult.net/nexus/index.html#nexus-search;quick~enmexcelparser
+Development snapshot at Maven repository https://nexus.ideaconsult.net/#nexus-search;gav~~enmexcelparser~~jar~
 ````
 <dependency>
   <groupId>net.enanomapper</groupId>
