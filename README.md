@@ -22,11 +22,11 @@ Stable release [![DOI](https://zenodo.org/badge/2503/enanomapper/nmdataparser.sv
   <version>1.0.0</version>
 </dependency>
 ````
-Development snapshot at Maven repository http://ambit.uni-plovdiv.bg:8083/nexus/index.html#nexus-search;quick~nmparser
+Development snapshot at Maven repository http://nexus.ideaconsult.net/nexus/index.html#nexus-search;quick~enmexcelparser
 ````
 <dependency>
   <groupId>net.enanomapper</groupId>
-  <artifactId>nmparser</artifactId>
+  <artifactId>enmexcelparser</artifactId>
   <version>1.0.3-SNAPSHOT</version>
 </dependency>
 ````
@@ -37,8 +37,17 @@ Development snapshot at Maven repository http://ambit.uni-plovdiv.bg:8083/nexus/
 
 #### Command line
 
+Download https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~
+Reads Excel file and JSON configuration and writes eNanoMapper RDF or ISA-JSON or JSON format.
+
 ````
-java -jar dataconvertor.jar -i spreadsheet.xlsx -j spreadsheet.json -o test.isa 
+java -jar enmconvertor.jar -i spreadsheet.xlsx -j spreadsheet.json -o test.rdf -f rdf
+usage: enmconvertor-{version}
+ -f,--outputformat <format>   json|isa|rdf
+ -h,--help                    This help
+ -i,--input <file>            Input file or folder
+ -j,--json <file>             JSON config file
+ -o,--output <file>           Output file
 ````
 
 #### JSON Configuration
