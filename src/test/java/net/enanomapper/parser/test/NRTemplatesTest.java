@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,13 +11,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.Assert;
+import net.enanomapper.templates.ExtractSynonymsList;
+import net.enanomapper.templates.Term;
+import net.enanomapper.templates.Tools;
 
 import org.apache.lucene.search.spell.LevensteinDistance;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,87 +24,10 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 
 	@BeforeClass
 	public static void initTemplateNames() throws IOException {
-		templates = new Properties();
-		InputStream in = NRTemplatesTest.class
-				.getClassLoader()
-				.getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
-		try {
-			Assert.assertNotNull(in);
-			templates.load(in);
-		} finally {
-			in.close();
-		}
+		templates = Tools.initJRCTemplateNames();
 	}
 
-	protected void readExcelTemplate(File file, Object key, Map<String, Term> histogram, BufferedWriter stats) throws InvalidFormatException, IOException {
-		XSSFWorkbook workbook = new XSSFWorkbook(file);
-		int nsh = workbook.getNumberOfSheets();
-		for (int i = 0; i < nsh; i++) {
-			XSSFSheet sheet = workbook.getSheetAt(i);
-			if ("instruction for data logging".equals(sheet
-					.getSheetName().toLowerCase()))
-				continue;
-			int rows = 0;
-			int maxcols = 0;
-			Iterator<Row> rowIterator = sheet.rowIterator();
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Iterator<Cell> cellIterator = row.cellIterator();
-				int columns = 0;
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					try {
-						String value = cell.getStringCellValue()
-								.toLowerCase().replace("\n", " ")
-								.replace("\r", "").trim();
-						if ("".equals(value))
-							continue;
-						Term count = histogram.get(value);
-						if (count == null) {
-							Term term = new Term();
-							term.setSecondbest(new Term());
-							histogram.put(value, term);
-						} else {
-							count.setFrequency(count.getFrequency() + 1);
-							histogram.put(value, count);
-						}
-						//try to split the term 
-						/*
-						String[] splitted = value.split(" ");
-						for (int ii=0;ii<splitted.length;ii++) {
-							String val = splitted[ii].trim();
-							if ("".equals(val)) continue;
-							Term scount = histogram.get(val);
-							if (scount == null) {
-								histogram.put(val, new Term());
-							} else {
-								scount.setFrequency(scount.getFrequency() + 1);
-								histogram.put(val, scount);
-							}
-						}
-						*/	
-						if (!"".equals(value.trim()))
-							stats.write(String.format(
-									"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
-									key.toString(), templates.get(key),
-									sheet.getSheetName(), rows,
-									columns, value));
-					} catch (Exception x) {
-						x.printStackTrace();
-					}
-					columns++;
-				}
-				rows++;
-				if (columns > maxcols)
-					maxcols = columns;
-			}
-			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d",
-					key.toString(), templates.get(key),
-					sheet.getSheetName(), rows, maxcols));
 
-		}
-		workbook.close();
-	}
 	@Test
 	public void testTemplatesAvailable() throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
@@ -121,11 +41,11 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 			try {
 				Object key = e.nextElement();
 				String fileUrl = templates.getProperty(key.toString());
-				File file = getTestFile(fileUrl, key.toString(), ".xlsx",
+				File file = Tools.getTestFile(fileUrl, key.toString(), ".xlsx",
 						baseDir);
 				Assert.assertTrue(file.exists());
 				// verify we can read it and extract some stats
-				readExcelTemplate(file , key, histogram, stats);
+				Tools.readJRCExcelTemplate(file , key, templates.get(key).toString(), histogram, stats);
 			} catch (Exception x) {
 
 			}
@@ -133,7 +53,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 
 		similarity(histogram, baseDir);
 		System.out.println("Estimating annotations");
-		smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		Tools.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, new ExtractSynonymsList() {
 					LevensteinDistance d = new LevensteinDistance();
 
@@ -205,65 +125,5 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		}
 		terms.close();
 		similar.close();
-	}
-}
-
-class Term {
-	protected Term secondbest;
-	public Term getSecondbest() {
-		return secondbest;
-	}
-
-	public void setSecondbest(Term secondbest) {
-		this.secondbest = secondbest;
-	}
-
-	public Term() {
-		setFrequency(1);
-		setDistance(0);
-	}
-
-	public String getAnnotation() {
-		return annotation;
-	}
-
-	public void setAnnotation(String annotation) {
-		this.annotation = annotation;
-	}
-
-	int frequency;
-
-	public int getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(int frequency) {
-		this.frequency = frequency;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(double distance) {
-		this.distance = distance;
-	}
-
-	String annotation;
-	String label;
-	double distance;
-
-	@Override
-	public String toString() {
-		return String.format("%d\t\"%s\"\t\"%s\"\t%s\t%s", frequency, annotation,
-				label, distance,secondbest);
 	}
 }

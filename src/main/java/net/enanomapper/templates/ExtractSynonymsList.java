@@ -1,17 +1,29 @@
-package net.enanomapper.parser.test;
+package net.enanomapper.templates;
 
 import java.io.IOException;
 import java.io.Writer;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+
 public class ExtractSynonymsList implements IProcessRDF {
 	int maxlevel = Integer.MAX_VALUE;
+	protected Property hproperty = RDFS.subClassOf;
+
+	public Property getHproperty() {
+		return hproperty;
+	}
+
+	public void setHproperty(Property hproperty) {
+		this.hproperty = hproperty;
+	}
+
 	
 	public ExtractSynonymsList() {
 	}
