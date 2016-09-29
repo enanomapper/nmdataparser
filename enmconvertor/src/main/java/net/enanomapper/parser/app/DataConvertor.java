@@ -3,8 +3,11 @@ package net.enanomapper.parser.app;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Writer;
 import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -143,7 +146,7 @@ public class DataConvertor {
 			try {
 				return _OUTPUT_FORMAT.valueOf(line.getOptionValue('f'));
 			} catch (Exception x) {
-				
+
 			}
 		return f;
 
@@ -203,7 +206,7 @@ public class DataConvertor {
 							"Missing JSON config file, mandatory for importing XLSX!");
 
 			outputFile = getOutput(line);
-			
+
 			outformat = getOutputFormat(line);
 
 			return true;
@@ -256,17 +259,17 @@ public class DataConvertor {
 	}
 
 	public int write(IRawReader<IStructureRecord> reader,
-			StructureRecordValidator validator, _OUTPUT_FORMAT outformat)
-			throws Exception {
+			StructureRecordValidator validator, _OUTPUT_FORMAT outformat,
+			File outputFile) throws Exception {
 		switch (outformat) {
 		case json: {
-			return writeAsJSON(reader, validator);
+			return writeAsJSON(reader, validator, outputFile);
 		}
 		case isa: {
-			return writeAsISA(reader, validator);
+			return writeAsISA(reader, validator, outputFile);
 		}
 		case rdf: {
-			return writeAsRDF(reader, validator);
+			return writeAsRDF(reader, validator, outputFile);
 		}
 		default: {
 
@@ -276,8 +279,9 @@ public class DataConvertor {
 	}
 
 	public int writeAsJSON(IRawReader<IStructureRecord> reader,
-			StructureRecordValidator validator) throws Exception {
-		int records =0;
+			StructureRecordValidator validator, File outputFile)
+			throws Exception {
+		int records = 0;
 		try {
 			while (reader.hasNext()) {
 				Object record = reader.next();
@@ -285,7 +289,9 @@ public class DataConvertor {
 					continue;
 				try {
 					validator.process((IStructureRecord) record);
-					System.out.println(((SubstanceRecord) record).toJSON(null));
+					Writer writer = new FileWriter(outputFile);
+					writer.write(((SubstanceRecord) record).toJSON(null));
+					writer.close();
 				} catch (Exception x) {
 					logger_cli.log(Level.FINE, x.getMessage());
 				}
@@ -303,7 +309,8 @@ public class DataConvertor {
 	}
 
 	public int writeAsRDF(IRawReader<IStructureRecord> reader,
-			StructureRecordValidator validator) throws Exception {
+			StructureRecordValidator validator, File outputFile)
+			throws Exception {
 
 		Request hack = new Request();
 		hack.setRootRef(new Reference("http://localhost/ambit2"));
@@ -327,7 +334,9 @@ public class DataConvertor {
 				}
 				records++;
 			}
-			RDFDataMgr.write(System.out, model, RDFFormat.TURTLE);
+			FileOutputStream out = new FileOutputStream(outputFile);
+			RDFDataMgr.write(out, model, RDFFormat.TURTLE);
+			out.close();
 		} catch (Exception x) {
 			logger_cli.log(Level.WARNING, x.getMessage(), x);
 		} finally {
@@ -340,7 +349,8 @@ public class DataConvertor {
 	}
 
 	public int writeAsISA(IRawReader<IStructureRecord> reader,
-			StructureRecordValidator validator) throws Exception {
+			StructureRecordValidator validator, File outputFile)
+			throws Exception {
 		SubstanceEndpointsBundle endpointBundle = null;
 		endpointBundle = new SubstanceEndpointsBundle();
 		endpointBundle.setDescription(inputFile.getName());
@@ -350,6 +360,7 @@ public class DataConvertor {
 		try {
 			exporter = new ISAJsonExporter1_0();
 			exporter.init(endpointBundle);
+			exporter.setOutputDir(outputFile);
 		} catch (Exception x) {
 			logger_cli.log(Level.SEVERE, x.getMessage());
 			throw x;
@@ -434,7 +445,7 @@ public class DataConvertor {
 				}
 			};
 
-			return write(parser, validator, outformat);
+			return write(parser, validator, outformat, outputFile);
 		} catch (Exception x) {
 			throw x;
 		} finally {
