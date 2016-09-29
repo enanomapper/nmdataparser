@@ -414,7 +414,7 @@ public class DataConvertor {
 			logger_cli.log(Level.WARNING, message);
 
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("dataconvertor-{version}", options);
+		formatter.printHelp("enmconvertor-{version}", options);
 		Runtime.getRuntime().runFinalization();
 		Runtime.getRuntime().exit(0);
 	}
