@@ -1,4 +1,4 @@
-package net.enanomapper.parser.test;
+package net.enanomapper.templates.test;
 
 import java.io.IOException;
 import java.io.Writer;
