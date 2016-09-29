@@ -13,9 +13,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
 
-import junit.framework.Assert;
-import net.enanomapper.parser.test.NRTemplatesTest;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -35,11 +32,10 @@ public class Tools {
 
 	public static Properties initJRCTemplateNames() throws IOException {
 		Properties templates = new Properties();
-		InputStream in = NRTemplatesTest.class
+		InputStream in = Tools.class
 				.getClassLoader()
 				.getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
 		try {
-			Assert.assertNotNull(in);
 			templates.load(in);
 		} finally {
 			in.close();
@@ -136,7 +132,6 @@ public class Tools {
 		if (format.toUpperCase().equals("TURTLE"))
 			ext = ".ttl";
 		File file = getTestFile(rdfurl, title, ext, baseDir);
-		Assert.assertTrue(file.exists());
 		System.out.println("Download completed " + file.getAbsolutePath());
 		Model jmodel = ModelFactory.createDefaultModel();
 
