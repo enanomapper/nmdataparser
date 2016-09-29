@@ -37,12 +37,12 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 
 #### Command line
 
-Download [enmconvertor](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
+Download [enmconvertor-version-jar-with-dependencies](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
 
 Reads Excel file and JSON configuration and writes eNanoMapper RDF or ISA-JSON or JSON format.
 
 ````
-java -jar enmconvertor.jar -i spreadsheet.xlsx -j spreadsheet.json -o test.rdf -f rdf
+java -jar enmconvertor-version-jar-with-dependencies.jar -i spreadsheet.xlsx -j spreadsheet.json -o test.rdf -f rdf
 usage: enmconvertor-{version}
  -f,--outputformat <format>   json|isa|rdf
  -h,--help                    This help
