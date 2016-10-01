@@ -10,6 +10,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.idea.modbcum.i.json.JSONUtils;
 
@@ -19,6 +21,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 
 public class CSV2TreeTest {
+	static Logger logger = Logger.getLogger(CSV2TreeTest.class.getName());
 	int maxlevel = Integer.MAX_VALUE;
 
 	@Test
@@ -44,7 +47,7 @@ public class CSV2TreeTest {
 			if (root != null) {
 				String outname = "protein_classification.json";
 				File baseDir = new File(System.getProperty("java.io.tmpdir"));
-				System.out.println(baseDir);
+				logger.log(Level.FINE, baseDir.getAbsolutePath());
 				out = new BufferedWriter(new FileWriter(new File(baseDir,
 						outname)));
 				traverse(root, lookup, 0, out);
@@ -63,15 +66,17 @@ public class CSV2TreeTest {
 
 		String id = node.get("protein_class_id");
 		String name = node.get("pref_name");
-		String shortname=node.get("short_name").replace("_", "");
-		
+		String shortname = node.get("short_name").replace("_", "");
+
 		out.write("{");
 		out.write("\n\"name\":");
-		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(level>2?shortname:name)));
+		out.write(JSONUtils.jsonQuote(JSONUtils
+				.jsonEscape(level > 2 ? shortname : name)));
 		out.write(",\n\"id\":");
 		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(shortname)));
 		out.write(",\n\"description\":");
-		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(node.get("protein_class_desc"))));
+		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(node
+				.get("protein_class_desc"))));
 
 		int count = 0;
 		int size = 0;

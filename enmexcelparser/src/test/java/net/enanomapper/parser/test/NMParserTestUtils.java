@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import junit.framework.Assert;
 import net.enanomapper.parser.ExcelParserConfigurator;
@@ -28,6 +30,7 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 
 public class NMParserTestUtils {
+	static Logger logger = Logger.getLogger(NMParserTestUtils.class.getName());
 
 	/**
 	 * @param args
@@ -54,13 +57,13 @@ public class NMParserTestUtils {
 				.loadFromJSON(jsonFile);
 
 		if (parserConfig.configErrors.size() > 0) {
-			System.out.println("GenericExcelParser configuration errors:\n"
+			logger.log(Level.INFO, "GenericExcelParser configuration errors:\n"
 					+ parserConfig.getAllErrorsAsString());
 			return;
 		}
 
-		System.out.println("ExcelParserConfigurator " + jsonFile);
-		System.out.println(parserConfig.toJSONString());
+		logger.log(Level.INFO, "ExcelParserConfigurator " + jsonFile);
+		logger.log(Level.INFO, parserConfig.toJSONString());
 	}
 
 	public static void testExcelTemplate(String excelFile, File jsonFile)
@@ -68,23 +71,23 @@ public class NMParserTestUtils {
 		FileInputStream fin = new FileInputStream(excelFile);
 		try {
 			boolean isXLSX = excelFile.endsWith("xlsx");
-			System.out.println("isXLSX = " + isXLSX + "\n");
+			logger.log(Level.FINE, "isXLSX = " + isXLSX + "\n");
 			GenericExcelParser parser = new GenericExcelParser(fin, jsonFile,
 					isXLSX);
-			System.out.println(parser.getExcelParserConfigurator()
+			logger.log(Level.FINE, parser.getExcelParserConfigurator()
 					.toJSONString() + "\n");
 
 			int n = 0;
 			while (parser.hasNext()) {
 				SubstanceRecord r = parser.nextRecord();
 				n++;
-				System.out.println("Record #" + n);
-				System.out.println(r.toJSON(null));
+				logger.log(Level.FINE, "Record #" + n);
+				logger.log(Level.FINE, r.toJSON(null));
 				List<ProtocolApplication> paList = r.getMeasurements();
 
 				if (paList != null)
 					for (ProtocolApplication pa : paList)
-						System.out.println("***Protocol application:\n"
+						logger.log(Level.FINE, "***Protocol application:\n"
 								+ pa.toString());
 
 				List<CompositionRelation> composition = r
@@ -93,16 +96,19 @@ public class NMParserTestUtils {
 					for (CompositionRelation relation : composition) {
 						// System.out.println(" ### Composition " +
 						// structureRecordToString(relation.getSecondStructure()));
-						System.out
-								.println(" ### Composition \n"
+						logger.log(
+								Level.FINE,
+								" ### Composition \n"
 										+ compositionRelationStructureToString(relation)); // both
 																							// give
 																							// the
 																							// same
 																							// result
-						System.out.println(" ### Properties: "
-								+ structureRecordProperties(relation
-										.getSecondStructure()));
+						logger.log(
+								Level.FINE,
+								" ### Properties: "
+										+ structureRecordProperties(relation
+												.getSecondStructure()));
 					}
 
 			}
@@ -120,16 +126,16 @@ public class NMParserTestUtils {
 	}
 
 	public static void testRichValue(String rvString) {
-		System.out.println("Testing RichValue: " + rvString);
+		logger.log(Level.FINE,"Testing RichValue: " + rvString);
 
 		RichValueParser par = new RichValueParser();
 		RichValue rv = par.parse(rvString);
 
 		String errors = par.getAllErrorsAsString();
 		if (errors != null) {
-			System.out.println("RichValueParser errors:\n" + errors);
+			logger.log(Level.FINE,"RichValueParser errors:\n" + errors);
 		} else {
-			System.out.println(rv.toString());
+			logger.log(Level.FINE,rv.toString());
 		}
 	}
 
@@ -138,7 +144,7 @@ public class NMParserTestUtils {
 			boolean recognizeGroupByNextNonEmpty) throws Exception {
 		FileInputStream fin = new FileInputStream(excelFile);
 		boolean isXLSX = excelFile.endsWith("xlsx");
-		System.out.println("isXLSX = " + isXLSX + "\n");
+		logger.log(Level.FINE,"isXLSX = " + isXLSX + "\n");
 
 		Workbook workbook;
 		if (isXLSX)
@@ -154,7 +160,7 @@ public class NMParserTestUtils {
 				recognizeGroupByNextNonEmpty);
 
 		for (Integer key : groups.keySet())
-			System.out.println("Group starts at row " + (key + 1) + "   "
+			logger.log(Level.FINE,"Group starts at row " + (key + 1) + "   "
 					+ groups.get(key));
 
 		fin.close();
@@ -211,8 +217,8 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size() > 0);
-				System.out.println(r.toJSON("http://localhost/"));
-				System.out.println(r.getMeasurements());
+				logger.log(Level.FINE,r.toJSON("http://localhost/"));
+				logger.log(Level.FINE,r.getMeasurements().toString());
 				for (ProtocolApplication pa : r.getMeasurements()) {
 					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
@@ -252,7 +258,7 @@ public class NMParserTestUtils {
 				Assert.assertEquals("Classification", r.getExternalids().get(0)
 						.getSystemDesignator());
 				Assert.assertNotNull(r.getRelatedStructures());
-				System.out.println(r.getMeasurements());
+				logger.log(Level.FINE,r.getMeasurements().toString());
 				for (ProtocolApplication pa : r.getMeasurements()) {
 					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
@@ -289,8 +295,8 @@ public class NMParserTestUtils {
 				Assert.assertNotNull(r.getPublicName());
 				Assert.assertNotNull(r.getMeasurements());
 				Assert.assertTrue(r.getMeasurements().size() > 0);
-				System.out.println(r.toJSON("http://localhost/"));
-				System.out.println(r.getMeasurements());
+				logger.log(Level.FINE, r.toJSON("http://localhost/"));
+				logger.log(Level.FINE, r.getMeasurements().toString());
 				for (ProtocolApplication pa : r.getMeasurements()) {
 					Assert.assertEquals(r.getSubstanceUUID(),
 							pa.getSubstanceUUID());
