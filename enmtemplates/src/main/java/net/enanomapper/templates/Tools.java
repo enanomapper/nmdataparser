@@ -130,21 +130,23 @@ public class Tools {
 					Cell cell = cellIterator.next();
 					String value = getValue(cell);
 					try {
-
-						gatherStats(value, histogram);
-						// try to split the term
-						/*
-						 * String[] splitted = value.split(" "); for (int
-						 * ii=0;ii<splitted.length;ii++) { String val =
-						 * splitted[ii].trim(); if ("".equals(val)) continue;
-						 * Term scount = histogram.get(val); if (scount == null)
-						 * { histogram.put(val, new Term()); } else {
-						 * scount.setFrequency(scount.getFrequency() + 1);
-						 * histogram.put(val, scount); } }
-						 */
-						if (!"".equals(value.trim()))
-							stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%s\n", key.toString(), templateName,
-									sheet.getSheetName(), rows, columns, value));
+						if (value != null) {
+							gatherStats(value, histogram);
+							// try to split the term
+							/*
+							 * String[] splitted = value.split(" "); for (int
+							 * ii=0;ii<splitted.length;ii++) { String val =
+							 * splitted[ii].trim(); if ("".equals(val))
+							 * continue; Term scount = histogram.get(val); if
+							 * (scount == null) { histogram.put(val, new
+							 * Term()); } else {
+							 * scount.setFrequency(scount.getFrequency() + 1);
+							 * histogram.put(val, scount); } }
+							 */
+							if (!"".equals(value.trim()))
+								stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%s\n", key.toString(), templateName,
+										sheet.getSheetName(), rows, columns, value));
+						}
 					} catch (Exception x) {
 						x.printStackTrace();
 					}
