@@ -21,8 +21,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ambit2.base.io.DownloadTool;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFReader;
@@ -30,12 +28,13 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+import ambit2.base.io.DownloadTool;
+
 public class Tools {
 
 	public static Properties initJRCTemplateNames() throws IOException {
 		Properties templates = new Properties();
-		InputStream in = Tools.class.getClassLoader().getResourceAsStream(
-				"data/xlsx/nanoreg/nrtemplates.properties");
+		InputStream in = Tools.class.getClassLoader().getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
 		try {
 			templates.load(in);
 		} finally {
@@ -44,22 +43,81 @@ public class Tools {
 		return templates;
 	}
 
-	public static void readJRCExcelTemplate(File file, Object key,
-			String templateName, Map<String, Term> histogram,
+	public static void readIOMtemplates(File file, Object key, String templateName, Map<String, Term> histogram,
 			BufferedWriter stats) throws InvalidFormatException, IOException {
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
 			workbook = new XSSFWorkbook(file);
 		} else if (templateName.endsWith(".xls")) {
 			workbook = new HSSFWorkbook(new FileInputStream(file));
-		} else throw new InvalidFormatException(file.getName()); 
+		} else
+			throw new InvalidFormatException(file.getName());
 
-		
+		Sheet sheet = workbook.getSheetAt(0);
+
+		Iterator<Row> rowIterator = sheet.rowIterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+			Cell cell1 = row.getCell(0);
+			String value1 = cell1 == null ? null : getValue(cell1);
+			Cell cell2 = row.getCell(1);
+			String value2 = cell2 == null ? null : getValue(cell2);
+
+			if (value1 == null || value2 == null)
+				continue;
+			gatherStats(value1, histogram);
+			gatherStats(value2, histogram);
+			stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%d\t%s\t%s\n", key.toString(), templateName,
+					sheet.getSheetName(), row.getRowNum(), cell1 == null ? -1 : cell1.getColumnIndex(),
+					cell2 == null ? -1 : cell2.getColumnIndex(), value1, value2));
+		}
+		workbook.close();
+	}
+
+	protected static String getValue(Cell cell) {
+		String value = null;
+		switch (cell.getCellType()) {
+		case Cell.CELL_TYPE_STRING: {
+			value = cell.getStringCellValue().toLowerCase().replace("\n", " ").replace("\r", "").trim();
+			break;
+		}
+		case Cell.CELL_TYPE_FORMULA: {
+			// skip for now, we are only looking at terms!
+			break;
+		}
+		}
+		return value;
+	}
+
+	protected static void gatherStats(String value, Map<String, Term> histogram) {
+		if (value == null || "".equals(value))
+			return;
+		Term count = histogram.get(value);
+		if (count == null) {
+			Term term = new Term();
+			term.setSecondbest(new Term());
+			histogram.put(value, term);
+		} else {
+			count.setFrequency(count.getFrequency() + 1);
+			histogram.put(value, count);
+		}
+		return;
+	}
+
+	public static void readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
+			BufferedWriter stats) throws InvalidFormatException, IOException {
+		Workbook workbook;
+		if (templateName.endsWith(".xlsx")) {
+			workbook = new XSSFWorkbook(file);
+		} else if (templateName.endsWith(".xls")) {
+			workbook = new HSSFWorkbook(new FileInputStream(file));
+		} else
+			throw new InvalidFormatException(file.getName());
+
 		int nsh = workbook.getNumberOfSheets();
 		for (int i = 0; i < nsh; i++) {
 			Sheet sheet = workbook.getSheetAt(i);
-			if ("instruction for data logging".equals(sheet.getSheetName()
-					.toLowerCase()))
+			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
 				continue;
 			int rows = 0;
 			int maxcols = 0;
@@ -70,31 +128,10 @@ public class Tools {
 				int columns = 0;
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
-					String value = null;
+					String value = getValue(cell);
 					try {
-						switch (cell.getCellType()) {
-						case Cell.CELL_TYPE_STRING: {
-							value = cell.getStringCellValue().toLowerCase()
-									.replace("\n", " ").replace("\r", "")
-									.trim();
-							break;
-						}
-						case Cell.CELL_TYPE_FORMULA: {
-							// skip for now, we are only looking at terms!
-							break;
-						}
-						}
-						if (value == null || "".equals(value))
-							continue;
-						Term count = histogram.get(value);
-						if (count == null) {
-							Term term = new Term();
-							term.setSecondbest(new Term());
-							histogram.put(value, term);
-						} else {
-							count.setFrequency(count.getFrequency() + 1);
-							histogram.put(value, count);
-						}
+
+						gatherStats(value, histogram);
 						// try to split the term
 						/*
 						 * String[] splitted = value.split(" "); for (int
@@ -106,9 +143,7 @@ public class Tools {
 						 * histogram.put(val, scount); } }
 						 */
 						if (!"".equals(value.trim()))
-							stats.write(String.format(
-									"%s\t\"%s\"\t%s\t%d\t%d\t%s\n",
-									key.toString(), templateName,
+							stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%s\n", key.toString(), templateName,
 									sheet.getSheetName(), rows, columns, value));
 					} catch (Exception x) {
 						x.printStackTrace();
@@ -119,31 +154,25 @@ public class Tools {
 				if (columns > maxcols)
 					maxcols = columns;
 			}
-			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d",
-					key.toString(), templateName, sheet.getSheetName(), rows,
-					maxcols));
+			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d", key.toString(), templateName, sheet.getSheetName(),
+					rows, maxcols));
 
 		}
 		workbook.close();
 	}
 
-	public static void smash(String rdfurl, String title,
-			boolean splitfirstlevel, IProcessRDF processor) throws Exception {
-		smash(rdfurl, title, splitfirstlevel, processor,
-				"http://www.w3.org/2002/07/owl#Thing", "RDF/XML");
-	}
-
-	public static void smash(String rdfurl, String title,
-			boolean splitfirstlevel, IProcessRDF processor,
-			String rootResource, String format) throws Exception {
-		Tools.smash(rdfurl, title, splitfirstlevel, processor, rootResource,
-				format, null);
-	}
-
-	public static void smash(String rdfurl, String title,
-			boolean splitfirstlevel, IProcessRDF processor,
-			String rootResource, String format, String propertyURI)
+	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor)
 			throws Exception {
+		smash(rdfurl, title, splitfirstlevel, processor, "http://www.w3.org/2002/07/owl#Thing", "RDF/XML");
+	}
+
+	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor,
+			String rootResource, String format) throws Exception {
+		Tools.smash(rdfurl, title, splitfirstlevel, processor, rootResource, format, null);
+	}
+
+	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor,
+			String rootResource, String format, String propertyURI) throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
 		System.out.println("Downloading " + rdfurl);
 
@@ -162,8 +191,7 @@ public class Tools {
 			RDFReader reader = jmodel.getReader(format);
 
 			if (rdfurl.endsWith(".gz"))
-				in = new InputStreamReader(new GZIPInputStream(
-						new FileInputStream(file)));
+				in = new InputStreamReader(new GZIPInputStream(new FileInputStream(file)));
 			else
 				in = new InputStreamReader(new FileInputStream(file));
 			reader.read(jmodel, in, format);
@@ -171,10 +199,9 @@ public class Tools {
 			Resource root = jmodel.createResource(rootResource);
 
 			if (!splitfirstlevel) {
-				String outname = String.format("%s_tree_%s.%s", title,
-						root.getLocalName(), processor.getFileExtension());
-				BufferedWriter out = new BufferedWriter(new FileWriter(
-						new File(baseDir, outname)));
+				String outname = String.format("%s_tree_%s.%s", title, root.getLocalName(),
+						processor.getFileExtension());
+				BufferedWriter out = new BufferedWriter(new FileWriter(new File(baseDir, outname)));
 				System.out.println("Writing tree into " + outname);
 				try {
 					processor.traverse(root, jmodel, 0, out);
@@ -187,23 +214,19 @@ public class Tools {
 
 			} else {
 				int c = 1;
-				ResIterator thingi = jmodel.listSubjectsWithProperty(
-						RDFS.subClassOf, root);
+				ResIterator thingi = jmodel.listSubjectsWithProperty(RDFS.subClassOf, root);
 				while (thingi.hasNext()) {
 					Resource thing = thingi.next();
 					BufferedWriter out = null;
 
-					ResIterator entityi = jmodel.listSubjectsWithProperty(
-							RDFS.subClassOf, thing);
+					ResIterator entityi = jmodel.listSubjectsWithProperty(RDFS.subClassOf, thing);
 
 					while (entityi.hasNext())
 						try {
 							Resource entity = entityi.next();
-							String outname = String.format("%s_tree_%s.%s",
-									title, entity.getLocalName(),
+							String outname = String.format("%s_tree_%s.%s", title, entity.getLocalName(),
 									processor.getFileExtension());
-							out = new BufferedWriter(new FileWriter(new File(
-									baseDir, outname)));
+							out = new BufferedWriter(new FileWriter(new File(baseDir, outname)));
 							System.out.println("Writing tree into " + outname);
 							processor.traverse(entity, jmodel, 0, out);
 						} finally {
@@ -228,8 +251,8 @@ public class Tools {
 		}
 	}
 
-	public static File getTestFile(String remoteurl, String localname,
-			String extension, File baseDir) throws Exception {
+	public static File getTestFile(String remoteurl, String localname, String extension, File baseDir)
+			throws Exception {
 		URL url = new URL(remoteurl);
 		boolean gz = remoteurl.endsWith(".gz");
 		File file = new File(baseDir, localname + extension + (gz ? ".gz" : ""));

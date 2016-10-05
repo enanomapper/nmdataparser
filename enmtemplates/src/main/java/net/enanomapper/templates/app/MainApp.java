@@ -11,9 +11,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.enanomapper.templates.Term;
-import net.enanomapper.templates.Tools;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -22,6 +19,10 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
+import net.enanomapper.templates.Term;
+import net.enanomapper.templates.Tools;
+import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_TYPE;
+
 /**
  * Tools for processing templates
  * 
@@ -29,8 +30,7 @@ import org.apache.commons.cli.PosixParser;
  * 
  */
 public class MainApp {
-	protected static Logger logger_cli = Logger.getLogger(MainApp.class
-			.getName());
+	protected static Logger logger_cli = Logger.getLogger(MainApp.class.getName());
 
 	public static void main(String[] args) {
 		// logger_cli.log(Level.INFO, "MSG_INFO_VERSION");
@@ -42,22 +42,19 @@ public class MainApp {
 			object.process(s);
 
 		} catch (ConnectException x) {
-			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED",
-					new Object[] { x.getMessage() });
+			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
 			Runtime.getRuntime().runFinalization();
 			code = -1;
 
 		} catch (SQLException x) {
-			logger_cli.log(Level.SEVERE, "MSG_ERR_SQL",
-					new Object[] { x.getMessage() });
+			logger_cli.log(Level.SEVERE, "MSG_ERR_SQL", new Object[] { x.getMessage() });
 			code = -1;
 		} catch (Exception x) {
 			logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });
 			code = -1;
 		} finally {
 			if (code >= 0)
-				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED",
-						(System.currentTimeMillis() - now));
+				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
 		}
 	}
 
@@ -70,6 +67,10 @@ public class MainApp {
 			MainAppSettings s = new MainAppSettings();
 			s.setInputfolder(new File(getOption(line, 'i')));
 			s.setOutputfolder(new File(getOption(line, 'o')));
+			try {
+				s.setTemplatesType(_TEMPLATES_TYPE.valueOf(getOption(line, 't')));
+			} catch (Exception x) {
+			}
 
 			return s;
 		} catch (Exception x) {
@@ -80,26 +81,26 @@ public class MainApp {
 		}
 	}
 
-	protected String getOption(CommandLine line, char option)
-			throws FileNotFoundException {
+	protected String getOption(CommandLine line, char option) throws FileNotFoundException {
 		return line.hasOption(option) ? line.getOptionValue(option) : null;
 	}
 
 	protected Options createOptions() {
 		Options options = new Options();
-		Option input = OptionBuilder.hasArg().withLongOpt("input")
-				.withArgName("folder").withDescription("Input folder")
+		Option input = OptionBuilder.hasArg().withLongOpt("input").withArgName("folder").withDescription("Input folder")
 				.create("i");
 
-		Option output = OptionBuilder.hasArg().withLongOpt("output")
-				.withArgName("folder").withDescription("Output folder")
-				.create("o");
+		Option output = OptionBuilder.hasArg().withLongOpt("output").withArgName("folder")
+				.withDescription("Output folder").create("o");
 
-		Option help = OptionBuilder.withLongOpt("help")
-				.withDescription("This help").create("h");
+		Option template = OptionBuilder.hasArg().withLongOpt("template").withArgName("type")
+				.withDescription("Template type jrc|iom|undefined").create("t");
+
+		Option help = OptionBuilder.withLongOpt("help").withDescription("This help").create("h");
 
 		options.addOption(input);
 		options.addOption(output);
+		options.addOption(template);
 
 		options.addOption(help);
 
@@ -120,15 +121,33 @@ public class MainApp {
 		System.out.println(settings);
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
-		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
-				settings.getOutputfolder(), settings.getInputfolder().getName()
-						+ ".txt")));
-		stats.write("Folder\tFile\tSheet\tRow\tColumn\tValue\n");
+		BufferedWriter stats = new BufferedWriter(
+				new FileWriter(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".txt")));
+		switch (settings.getTemplatesType()) {
+		case iom: {
+			stats.write("Folder\tFile\tSheet\tRow\tColumn1\tColumn2\tValue1\tValue2\n");
+			break;
+		} 
+		default: {
+			stats.write("Folder\tFile\tSheet\tRow\tColumn\tValue\n");	
+		}
+		}
+		
 		try {
 			for (File file : files)
 				try {
-					Tools.readJRCExcelTemplate(file, settings.getInputfolder()
-							.getName(), file.getName(), histogram, stats);
+					switch (settings.getTemplatesType()) {
+					case iom: {
+						Tools.readIOMtemplates(file, settings.getInputfolder().getName(), file.getName(), histogram,
+								stats);
+						break;
+					}
+					default: {
+						Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(), histogram,
+								stats);
+					}
+					}
+
 					stats.flush();
 				} catch (Exception x) {
 					x.printStackTrace();

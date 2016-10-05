@@ -4,6 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MainAppSettings {
+	enum _TEMPLATES_TYPE {jrc,iom,undefuned}
+	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
+	public _TEMPLATES_TYPE getTemplatesType() {
+		return templatesType;
+	}
+
+	public void setTemplatesType(_TEMPLATES_TYPE templatesType) {
+		this.templatesType = templatesType;
+	}
+
 	File inputfolder;
 
 	public File getInputfolder() {
