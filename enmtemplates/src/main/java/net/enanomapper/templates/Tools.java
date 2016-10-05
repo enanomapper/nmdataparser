@@ -145,7 +145,7 @@ public class Tools {
 							 */
 							if (!"".equals(value.trim()))
 								stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%s\n", key.toString(), templateName,
-										sheet.getSheetName(), rows, columns, value));
+										sheet.getSheetName(), row.getRowNum(), cell.getColumnIndex(), value));
 						}
 					} catch (Exception x) {
 						x.printStackTrace();
