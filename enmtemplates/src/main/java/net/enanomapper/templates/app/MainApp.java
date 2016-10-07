@@ -21,6 +21,7 @@ import org.apache.commons.cli.PosixParser;
 
 import net.enanomapper.templates.Term;
 import net.enanomapper.templates.Tools;
+import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_CMD;
 import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_TYPE;
 
 /**
@@ -34,12 +35,17 @@ public class MainApp {
 
 	public static void main(String[] args) {
 		// logger_cli.log(Level.INFO, "MSG_INFO_VERSION");
+		MainApp object = new MainApp();
+		object.run(args);
+	}
+
+	public int run(String[] args) {
+		// logger_cli.log(Level.INFO, "MSG_INFO_VERSION");
 		long now = System.currentTimeMillis();
 		int code = 0;
 		try {
-			MainApp object = new MainApp();
-			MainAppSettings s = object.parse(args);
-			object.process(s);
+			MainAppSettings s = parse(args);
+			process(s);
 
 		} catch (ConnectException x) {
 			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
@@ -56,6 +62,7 @@ public class MainApp {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
 		}
+		return code;
 	}
 
 	public MainAppSettings parse(String[] args) throws Exception {
@@ -71,7 +78,10 @@ public class MainApp {
 				s.setTemplatesType(_TEMPLATES_TYPE.valueOf(getOption(line, 't')));
 			} catch (Exception x) {
 			}
-
+			try {
+				s.setTemplatesCommand(_TEMPLATES_CMD.valueOf(getOption(line, 'a')));
+			} catch (Exception x) {
+			}
 			return s;
 		} catch (Exception x) {
 			printHelp(options, x.getMessage());
@@ -96,11 +106,15 @@ public class MainApp {
 		Option template = OptionBuilder.hasArg().withLongOpt("template").withArgName("type")
 				.withDescription("Template type jrc|iom|undefined").create("t");
 
+		Option cmd = OptionBuilder.hasArg().withLongOpt("command").withArgName("cmd")
+				.withDescription("What to do: extract|generate").create("a");
+
 		Option help = OptionBuilder.withLongOpt("help").withDescription("This help").create("h");
 
 		options.addOption(input);
 		options.addOption(output);
 		options.addOption(template);
+		options.addOption(cmd);
 
 		options.addOption(help);
 
@@ -118,6 +132,26 @@ public class MainApp {
 	}
 
 	protected void process(MainAppSettings settings) throws Exception {
+		switch (settings.getTemplatesCommand()) {
+		case extract: {
+			extract(settings);
+			break;
+		}
+		case generate: {
+			generate(settings);
+			break;
+		}
+		default: {
+			System.out.println("Unsupported command " + settings.getTemplatesCommand());
+		}
+		}
+	}
+
+	protected void generate(MainAppSettings settings) throws Exception {
+		System.out.println("Unsupported command " + settings.getTemplatesCommand());
+	}
+
+	protected void extract(MainAppSettings settings) throws Exception {
 		System.out.println(settings);
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
@@ -127,12 +161,12 @@ public class MainApp {
 		case iom: {
 			stats.write("Folder\tFile\tSheet\tRow\tColumn1\tColumn2\tValue1\tValue2\n");
 			break;
-		} 
+		}
 		default: {
-			stats.write("Folder\tFile\tSheet\tRow\tColumn\tValue\n");	
+			stats.write("Folder\tFile\tSheet\tRow\tColumn\tValue\n");
 		}
 		}
-		
+
 		try {
 			for (File file : files)
 				try {

@@ -4,8 +4,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MainAppSettings {
-	enum _TEMPLATES_TYPE {jrc,iom,undefuned}
+	enum _TEMPLATES_TYPE {
+		jrc, iom, undefuned
+	}
+
+	enum _TEMPLATES_CMD {
+		extract, generate
+	}
+
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
+	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.extract;
+
+	public _TEMPLATES_CMD getTemplatesCommand() {
+		return templatesCommand;
+	}
+
+	public void setTemplatesCommand(_TEMPLATES_CMD templatesCommand) {
+		this.templatesCommand = templatesCommand;
+	}
+
 	public _TEMPLATES_TYPE getTemplatesType() {
 		return templatesType;
 	}
@@ -24,8 +41,7 @@ public class MainAppSettings {
 		if (inputfolder.exists())
 			this.inputfolder = inputfolder;
 		else
-			throw new FileNotFoundException(inputfolder == null ? "null"
-					: inputfolder.getAbsolutePath());
+			throw new FileNotFoundException(inputfolder == null ? "null" : inputfolder.getAbsolutePath());
 	}
 
 	public File getOutputfolder() {
@@ -37,11 +53,11 @@ public class MainAppSettings {
 		if (outputfolder.exists())
 			this.outputfolder = outputfolder;
 		else
-			throw new FileNotFoundException(outputfolder == null ? "null"
-					: outputfolder.getAbsolutePath());
+			throw new FileNotFoundException(outputfolder == null ? "null" : outputfolder.getAbsolutePath());
 	}
 
 	File outputfolder;
+
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
