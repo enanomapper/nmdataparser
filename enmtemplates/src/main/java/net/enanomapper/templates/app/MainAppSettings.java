@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class MainAppSettings {
-	enum _TEMPLATES_TYPE {
+	public enum _TEMPLATES_TYPE {
 		jrc, iom, undefuned
 	}
 
@@ -14,6 +14,15 @@ public class MainAppSettings {
 
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
 	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.extract;
+	private String assayname;
+	
+	public String getAssayname() {
+		return assayname;
+	}
+
+	public void setAssayname(String assayname) {
+		this.assayname = assayname;
+	}
 
 	public _TEMPLATES_CMD getTemplatesCommand() {
 		return templatesCommand;

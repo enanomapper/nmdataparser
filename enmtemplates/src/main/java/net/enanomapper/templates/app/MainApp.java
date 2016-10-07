@@ -56,6 +56,7 @@ public class MainApp {
 			logger_cli.log(Level.SEVERE, "MSG_ERR_SQL", new Object[] { x.getMessage() });
 			code = -1;
 		} catch (Exception x) {
+			x.printStackTrace();
 			logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });
 			code = -1;
 		} finally {
@@ -82,6 +83,12 @@ public class MainApp {
 				s.setTemplatesCommand(_TEMPLATES_CMD.valueOf(getOption(line, 'a')));
 			} catch (Exception x) {
 			}
+			
+			try {
+				s.setAssayname(getOption(line, 's'));
+			} catch (Exception x) {
+			}
+			if (s.getAssayname()==null) s.setAssayname("COMET");
 			return s;
 		} catch (Exception x) {
 			printHelp(options, x.getMessage());
@@ -109,11 +116,15 @@ public class MainApp {
 		Option cmd = OptionBuilder.hasArg().withLongOpt("command").withArgName("cmd")
 				.withDescription("What to do: extract|generate").create("a");
 
+		Option assay = OptionBuilder.hasArg().withLongOpt("assay").withArgName("assayname")
+				.withDescription("Sheet name as defined in JRC templates").create("s");
+
 		Option help = OptionBuilder.withLongOpt("help").withDescription("This help").create("h");
 
 		options.addOption(input);
 		options.addOption(output);
 		options.addOption(template);
+		options.addOption(assay);
 		options.addOption(cmd);
 
 		options.addOption(help);
