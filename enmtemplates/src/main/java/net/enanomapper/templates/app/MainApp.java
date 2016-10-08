@@ -32,6 +32,10 @@ import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_TYPE;
  */
 public class MainApp {
 	protected static Logger logger_cli = Logger.getLogger(MainApp.class.getName());
+	protected MainAppSettings settings;
+	public MainAppSettings getSettings() {
+		return settings;
+	}
 
 	public static void main(String[] args) {
 		// logger_cli.log(Level.INFO, "MSG_INFO_VERSION");
@@ -44,8 +48,8 @@ public class MainApp {
 		long now = System.currentTimeMillis();
 		int code = 0;
 		try {
-			MainAppSettings s = parse(args);
-			process(s);
+			settings = parse(args);
+			process(settings);
 
 		} catch (ConnectException x) {
 			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
