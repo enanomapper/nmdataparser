@@ -115,7 +115,7 @@ public class MainApp {
 				.withDescription("Output folder").create("o");
 
 		Option template = OptionBuilder.hasArg().withLongOpt("template").withArgName("type")
-				.withDescription("Template type jrc|iom|undefined").create("t");
+				.withDescription("Template type jrc|iom|all|undefined").create("t");
 
 		Option cmd = OptionBuilder.hasArg().withLongOpt("command").withArgName("cmd")
 				.withDescription("What to do: extract|generate").create("a");

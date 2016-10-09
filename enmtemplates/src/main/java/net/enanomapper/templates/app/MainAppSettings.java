@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 
 public class MainAppSettings {
 	public enum _TEMPLATES_TYPE {
-		jrc, iom, undefuned
+		jrc, iom, all, undefuned
 	}
 
 	enum _TEMPLATES_CMD {
