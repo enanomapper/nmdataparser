@@ -32,7 +32,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 	public void testTemplatesAvailable() throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
 		Assert.assertNotNull(templates);
-		Assert.assertEquals(15, templates.size());
+		Assert.assertEquals(33, templates.size());
 		Enumeration<Object> e = templates.keys();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
