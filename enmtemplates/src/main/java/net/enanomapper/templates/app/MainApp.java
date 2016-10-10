@@ -172,14 +172,14 @@ public class MainApp {
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(
-				new FileWriter(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".txt")));
+				new FileWriter(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")));
 		switch (settings.getTemplatesType()) {
 		case iom: {
-			stats.write("Folder\tFile\tSheet\tRow\tColumn1\tColumn2\tValue1\tValue2\n");
+			stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
 			break;
 		}
 		default: {
-			stats.write("Folder\tFile\tSheet\tRow\tColumn\tValue\n");
+			stats.write("ID,Folder,File,Sheet,Row,Column,Value,Annotation,header1,cleanedvalue,unit,hint,JSON_LEVEL1,JSON_LEVEL2,JSON_LEVEL3\n");
 		}
 		}
 

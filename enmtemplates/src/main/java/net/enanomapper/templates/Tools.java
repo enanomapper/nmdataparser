@@ -21,6 +21,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFReader;
@@ -67,7 +71,7 @@ public class Tools {
 				continue;
 			gatherStats(value1, histogram);
 			gatherStats(value2, histogram);
-			stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%d\t%s\t%s\n", key.toString(), templateName,
+			stats.write(String.format("%s,\"%s\",%s,%d,%d,%d,%s,%s\n", key.toString(), templateName,
 					sheet.getSheetName(), row.getRowNum(), cell1 == null ? -1 : cell1.getColumnIndex(),
 					cell2 == null ? -1 : cell2.getColumnIndex(), value1, value2));
 		}
@@ -121,6 +125,8 @@ public class Tools {
 				continue;
 			int rows = 0;
 			int maxcols = 0;
+			HashFunction hf = Hashing.murmur3_32();
+
 			Iterator<Row> rowIterator = sheet.rowIterator();
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
@@ -143,9 +149,15 @@ public class Tools {
 							 * scount.setFrequency(scount.getFrequency() + 1);
 							 * histogram.put(val, scount); } }
 							 */
+							HashCode hc = hf.newHasher()
+								       .putString(value,  Charsets.UTF_8)
+								       .hash();
 							if (!"".equals(value.trim()))
-								stats.write(String.format("%s\t\"%s\"\t%s\t%d\t%d\t%s\n", key.toString(), templateName,
+								stats.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",,,,,,,,\n", 
+										hc,key.toString(), templateName,
 										sheet.getSheetName(), row.getRowNum(), cell.getColumnIndex(), value));
+							
+							
 						}
 					} catch (Exception x) {
 						x.printStackTrace();
