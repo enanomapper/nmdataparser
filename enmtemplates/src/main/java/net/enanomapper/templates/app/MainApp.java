@@ -82,6 +82,7 @@ public class MainApp {
 			try {
 				s.setTemplatesType(_TEMPLATES_TYPE.valueOf(getOption(line, 't')));
 			} catch (Exception x) {
+				s.setTemplatesType(_TEMPLATES_TYPE.all);
 			}
 			try {
 				s.setTemplatesCommand(_TEMPLATES_CMD.valueOf(getOption(line, 'a')));
