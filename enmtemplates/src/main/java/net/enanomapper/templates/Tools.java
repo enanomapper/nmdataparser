@@ -80,13 +80,18 @@ public class Tools {
 	}
 
 	protected static String getValue(Cell cell) {
+		return getValue(cell, true);
+	}
+
+	protected static String getValue(Cell cell, boolean clean) {
 		String value = null;
 		switch (cell.getCellType()) {
 		case Cell.CELL_TYPE_STRING: {
 			value = new String(cell.getStringCellValue().getBytes(Charset.forName("UTF-8")));
-		//	System.out.println(value);
-			value = value.toLowerCase().replace("\n", " ").replace("\r", "").trim();
-			
+			// System.out.println(value);
+			value = value.toLowerCase();
+			if (clean)
+				value = value.replace("\n", " ").replace("\r", "").trim();
 			break;
 		}
 		case Cell.CELL_TYPE_FORMULA: {
@@ -140,7 +145,9 @@ public class Tools {
 				int columns = 0;
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
-					String value = getValue(cell);
+					String value = getValue(cell, false);
+					String values[] = value==null?null:value.split("\n");
+					value = value==null?null:value.replace("\n", " ").replace("\r", "").trim();
 					try {
 						if (value != null) {
 							gatherStats(value, histogram);
@@ -153,6 +160,15 @@ public class Tools {
 											cell.getColumnIndex(), value));
 								else {
 									record.clear();
+									try {
+										TR.hix.cleanedvalue.set(record, values[0]);
+									} catch (Exception x) {
+									}
+									try {
+										TR.hix.hint.set(record, values[1]);
+									} catch (Exception x) {
+									}
+
 									TR.hix.ID.set(record, hc);
 									TR.hix.Folder.set(record, key.toString());
 									TR.hix.File.set(record, templateName);
