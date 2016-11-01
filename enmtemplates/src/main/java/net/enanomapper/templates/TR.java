@@ -8,7 +8,7 @@ public class TR extends HashMap<String, Object> {
 	 * 
 	 */
 	private static final long serialVersionUID = -4974769546259809851L;
-	public static final String header_string = "ID,Folder,File,Sheet,Row,Column,Value,Annotation,header1,cleanedvalue,unit,hint,JSON_LEVEL1,JSON_LEVEL2,JSON_LEVEL3,Warning";
+	public static final String header_string = "ID,Folder,File,Sheet,Row,Column,Value,Annotation,header1,cleanedvalue,unit,hint,JSON_LEVEL1,JSON_LEVEL2,JSON_LEVEL3,Warning,term_uri,term_label,term_score";
 	public static final String[] header = header_string.split(",");
 
 	public enum hix {
@@ -77,11 +77,11 @@ public class TR extends HashMap<String, Object> {
 			}
 		},
 		Annotation, header1, cleanedvalue, unit, hint, JSON_LEVEL1, JSON_LEVEL2, JSON_LEVEL3, Warning {
-
 			public boolean isAnnotation() {
 				return false;
 			}
-		};
+		},
+		term_uri, term_label, term_score;
 		public Object get(TR record) {
 			return record.get(name());
 		}
@@ -102,7 +102,7 @@ public class TR extends HashMap<String, Object> {
 	public void write(Writer writer) throws Exception {
 		for (hix h : hix.values()) {
 			Object v = get(h.name());
-			writer.write(v == null ?"":( v instanceof String)? ('"' + v.toString() + '"'):v.toString());
+			writer.write(v == null ? "" : (v instanceof String) ? ('"' + v.toString() + '"') : v.toString());
 			writer.write(",");
 		}
 		writer.write("\n");
