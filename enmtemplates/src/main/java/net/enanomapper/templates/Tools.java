@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -82,7 +83,8 @@ public class Tools {
 		String value = null;
 		switch (cell.getCellType()) {
 		case Cell.CELL_TYPE_STRING: {
-			value = cell.getStringCellValue().toLowerCase().replace("\n", " ").replace("\r", "").trim();
+			value = new String(cell.getStringCellValue().getBytes(Charset.forName("UTF-8")));
+			value = value.toLowerCase().replace("\n", " ").replace("\r", "").trim();
 			break;
 		}
 		case Cell.CELL_TYPE_FORMULA: {

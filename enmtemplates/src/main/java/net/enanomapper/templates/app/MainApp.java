@@ -3,7 +3,8 @@ package net.enanomapper.templates.app;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -173,7 +174,7 @@ public class MainApp {
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(
-				new FileWriter(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")));
+				new OutputStreamWriter(new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")),"UTF-8"));
 		switch (settings.getTemplatesType()) {
 		case iom: {
 			stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
