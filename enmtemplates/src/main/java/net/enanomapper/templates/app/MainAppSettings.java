@@ -3,7 +3,19 @@ package net.enanomapper.templates.app;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import net.enanomapper.templates.IAnnotator;
+
 public class MainAppSettings {
+	protected IAnnotator annotator;
+
+	public IAnnotator getAnnotator() {
+		return annotator;
+	}
+
+	public void setAnnotator(IAnnotator annotator) {
+		this.annotator = annotator;
+	}
+
 	public enum _TEMPLATES_TYPE {
 		jrc, iom, all, undefuned
 	}
@@ -15,7 +27,7 @@ public class MainAppSettings {
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
 	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.extract;
 	private String assayname;
-	
+
 	public String getAssayname() {
 		return assayname;
 	}

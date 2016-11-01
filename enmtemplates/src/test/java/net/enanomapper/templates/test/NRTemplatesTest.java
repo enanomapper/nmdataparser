@@ -10,14 +10,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.lucene.search.spell.LevensteinDistance;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import junit.framework.Assert;
 import net.enanomapper.templates.ExtractSynonymsList;
 import net.enanomapper.templates.Term;
 import net.enanomapper.templates.Tools;
-
-import org.apache.lucene.search.spell.LevensteinDistance;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class NRTemplatesTest extends TestWithExternalFiles {
 	protected static Properties templates;
@@ -45,7 +45,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 						baseDir);
 				Assert.assertTrue(file.exists());
 				// verify we can read it and extract some stats
-				Tools.readJRCExcelTemplate(file , key, templates.get(key).toString(), histogram, stats);
+				Tools.readJRCExcelTemplate(file , key, templates.get(key).toString(), histogram, stats,null);
 			} catch (Exception x) {
 
 			}

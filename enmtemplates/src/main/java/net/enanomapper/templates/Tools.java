@@ -109,7 +109,8 @@ public class Tools {
 	}
 
 	public static void readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
-			BufferedWriter stats) throws InvalidFormatException, IOException {
+			BufferedWriter stats, IAnnotator annotator) throws InvalidFormatException, IOException {
+
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
 			workbook = new XSSFWorkbook(file);
@@ -119,6 +120,7 @@ public class Tools {
 			throw new InvalidFormatException(file.getName());
 
 		int nsh = workbook.getNumberOfSheets();
+		TR record = new TR();
 		for (int i = 0; i < nsh; i++) {
 			Sheet sheet = workbook.getSheetAt(i);
 			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
@@ -138,26 +140,27 @@ public class Tools {
 					try {
 						if (value != null) {
 							gatherStats(value, histogram);
-							// try to split the term
-							/*
-							 * String[] splitted = value.split(" "); for (int
-							 * ii=0;ii<splitted.length;ii++) { String val =
-							 * splitted[ii].trim(); if ("".equals(val))
-							 * continue; Term scount = histogram.get(val); if
-							 * (scount == null) { histogram.put(val, new
-							 * Term()); } else {
-							 * scount.setFrequency(scount.getFrequency() + 1);
-							 * histogram.put(val, scount); } }
-							 */
-							HashCode hc = hf.newHasher()
-								       .putString(value,  Charsets.UTF_8)
-								       .hash();
-							if (!"".equals(value.trim()))
-								stats.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",,,,,,,,\n", 
-										hc,key.toString(), templateName,
-										sheet.getSheetName(), row.getRowNum(), cell.getColumnIndex(), value));
-							
-							
+
+							HashCode hc = hf.newHasher().putString(value, Charsets.UTF_8).hash();
+							if (!"".equals(value.trim())) {
+								if (annotator == null)
+									stats.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",,,,,,,,\n", hc,
+											key.toString(), templateName, sheet.getSheetName(), row.getRowNum(),
+											cell.getColumnIndex(), value));
+								else {
+									record.clear();
+									TR.hix.ID.set(record, hc);
+									TR.hix.Folder.set(record, key.toString());
+									TR.hix.File.set(record, templateName);
+									TR.hix.Sheet.set(record, sheet.getSheetName());
+									TR.hix.Row.set(record, row.getRowNum());
+									TR.hix.Column.set(record, cell.getColumnIndex());
+									TR.hix.Value.set(record, value);
+									annotator.process(record);
+									record.write(stats);
+								}
+							}
+
 						}
 					} catch (Exception x) {
 						x.printStackTrace();

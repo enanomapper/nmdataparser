@@ -19,6 +19,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
+import net.enanomapper.templates.TR;
 import net.enanomapper.templates.Term;
 import net.enanomapper.templates.Tools;
 import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_CMD;
@@ -179,7 +180,7 @@ public class MainApp {
 			break;
 		}
 		default: {
-			stats.write("ID,Folder,File,Sheet,Row,Column,Value,Annotation,header1,cleanedvalue,unit,hint,JSON_LEVEL1,JSON_LEVEL2,JSON_LEVEL3\n");
+			stats.write(TR.header_string+"\n");
 		}
 		}
 
@@ -194,7 +195,7 @@ public class MainApp {
 					}
 					default: {
 						Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(), histogram,
-								stats);
+								stats,settings.getAnnotator());
 					}
 					}
 
