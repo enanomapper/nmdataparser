@@ -102,7 +102,7 @@ public class TR extends HashMap<String, Object> {
 	public void write(Writer writer) throws Exception {
 		for (hix h : hix.values()) {
 			Object v = get(h.name());
-			writer.write(v == null ? "" : (v instanceof String) ? ('"' + v.toString() + '"') : v.toString());
+			writer.write(v == null ? "" : (v instanceof String) ? ('"' + ((String)v) + '"') : v.toString());
 			writer.write(",");
 		}
 		writer.write("\n");

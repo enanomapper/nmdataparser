@@ -84,7 +84,9 @@ public class Tools {
 		switch (cell.getCellType()) {
 		case Cell.CELL_TYPE_STRING: {
 			value = new String(cell.getStringCellValue().getBytes(Charset.forName("UTF-8")));
+		//	System.out.println(value);
 			value = value.toLowerCase().replace("\n", " ").replace("\r", "").trim();
+			
 			break;
 		}
 		case Cell.CELL_TYPE_FORMULA: {

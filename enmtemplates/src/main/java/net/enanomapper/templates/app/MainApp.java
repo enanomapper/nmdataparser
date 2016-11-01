@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -174,7 +175,9 @@ public class MainApp {
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 		BufferedWriter stats = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")),"UTF-8"));
+				new OutputStreamWriter(new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")),StandardCharsets.UTF_8));
+		//BOM
+		stats.write('\ufeff');
 		switch (settings.getTemplatesType()) {
 		case iom: {
 			stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
