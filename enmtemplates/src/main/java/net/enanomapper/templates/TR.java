@@ -3,13 +3,17 @@ package net.enanomapper.templates;
 import java.io.Writer;
 import java.util.HashMap;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+
 public class TR extends HashMap<String, Object> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4974769546259809851L;
-	public static final String header_string = "ID,Folder,File,Sheet,Row,Column,Value,Annotation,header1,cleanedvalue,unit,hint,JSON_LEVEL1,JSON_LEVEL2,JSON_LEVEL3,Warning,term_uri,term_label,term_score";
-	public static final String[] header = header_string.split(",");
+	public static final String header_string = "ID\tFolder\tFile\tSheet\tRow\tColumn\tValue\tAnnotation\theader1\tcleanedvalue\tunit\thint\tJSON_LEVEL1\tJSON_LEVEL2\tJSON_LEVEL3\tWarning\tterm_uri\tterm_label\tterm_score";
+	public static final String[] header = header_string.split("\t");
 
 	public enum hix {
 		ID {
@@ -102,10 +106,36 @@ public class TR extends HashMap<String, Object> {
 	public void write(Writer writer) throws Exception {
 		for (hix h : hix.values()) {
 			Object v = get(h.name());
-			writer.write(v == null ? "" : (v instanceof String) ? ('"' + ((String)v) + '"') : v.toString());
-			writer.write(",");
+			writer.write(v == null ? "" : (v instanceof String) ? ('"' + ((String) v) + '"') : v.toString());
+			writer.write("\t");
 		}
 		writer.write("\n");
+	}
+
+	public static void writeHeader(XSSFSheet sheet) throws Exception {
+		XSSFRow row = sheet.createRow(0);
+		for (hix h : hix.values()) {
+			Cell cell = row.createCell(h.ordinal());
+			cell.setCellValue(h.name());
+		}
+
+	}
+
+	public void write(XSSFSheet sheet, int rownum) throws Exception {
+		XSSFRow row = sheet.createRow(rownum);
+		for (hix h : hix.values()) {
+			Object v = get(h.name());
+			if (v != null) {
+				Cell cell = row.createCell(h.ordinal());
+				if (v instanceof String)
+					cell.setCellValue((String)v);
+				else if (v instanceof Number)
+					cell.setCellValue(((Number)v).doubleValue());
+				else
+					cell.setCellValue(v.toString());
+			}
+		}
+
 	}
 
 }

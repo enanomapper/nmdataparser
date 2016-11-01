@@ -1,12 +1,9 @@
 package net.enanomapper.templates.app;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ConnectException;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +17,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import net.enanomapper.templates.TR;
 import net.enanomapper.templates.Term;
@@ -36,6 +35,7 @@ import net.enanomapper.templates.app.MainAppSettings._TEMPLATES_TYPE;
 public class MainApp {
 	protected static Logger logger_cli = Logger.getLogger(MainApp.class.getName());
 	protected MainAppSettings settings;
+
 	public MainAppSettings getSettings() {
 		return settings;
 	}
@@ -91,12 +91,13 @@ public class MainApp {
 				s.setTemplatesCommand(_TEMPLATES_CMD.valueOf(getOption(line, 'a')));
 			} catch (Exception x) {
 			}
-			
+
 			try {
 				s.setAssayname(getOption(line, 's'));
 			} catch (Exception x) {
 			}
-			if (s.getAssayname()==null) s.setAssayname("COMET");
+			if (s.getAssayname() == null)
+				s.setAssayname("COMET");
 			return s;
 		} catch (Exception x) {
 			printHelp(options, x.getMessage());
@@ -174,22 +175,30 @@ public class MainApp {
 		System.out.println(settings);
 		File[] files = settings.getInputfolder().listFiles();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
-		BufferedWriter stats = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".csv")),StandardCharsets.UTF_8));
-		//BOM
-		stats.write('\ufeff');
+		/*
+		 * BufferedWriter stats = new BufferedWriter( new OutputStreamWriter(new
+		 * FileOutputStream(new File(settings.getOutputfolder(),
+		 * settings.getInputfolder().getName() +
+		 * ".txt")),StandardCharsets.UTF_8)); //BOM stats.write('\ufeff');
+		 */
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		FileOutputStream out = new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".xlsx"));
+		XSSFSheet stats = workbook.createSheet();
 		switch (settings.getTemplatesType()) {
 		case iom: {
-			stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
+			// stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
+			// todo
 			break;
 		}
 		default: {
-			stats.write(TR.header_string+"\n");
+			TR.writeHeader(stats);
+			// todostats.write(TR.header_string+"\n");
 		}
 		}
 
 		try {
-			for (File file : files)
+			int rownum = 0;
+			for (File file : files) {
 				try {
 					switch (settings.getTemplatesType()) {
 					case iom: {
@@ -198,19 +207,23 @@ public class MainApp {
 						break;
 					}
 					default: {
-						Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(), histogram,
-								stats,settings.getAnnotator());
+						rownum = Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(), histogram,
+								stats, settings.getAnnotator(),rownum);
 					}
 					}
 
-					stats.flush();
+					// stats.flush();
 				} catch (Exception x) {
 					x.printStackTrace();
 				}
+			}	
 		} catch (Exception x) {
 
+			
 		} finally {
-			stats.close();
+			workbook.write(out);
+			workbook.close();
+			out.close();
 		}
 
 	}

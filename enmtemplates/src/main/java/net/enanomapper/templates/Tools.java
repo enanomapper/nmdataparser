@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.google.common.base.Charsets;
@@ -49,7 +50,7 @@ public class Tools {
 	}
 
 	public static void readIOMtemplates(File file, Object key, String templateName, Map<String, Term> histogram,
-			BufferedWriter stats) throws InvalidFormatException, IOException {
+			XSSFSheet stats) throws InvalidFormatException, IOException {
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
 			workbook = new XSSFWorkbook(file);
@@ -72,9 +73,12 @@ public class Tools {
 				continue;
 			gatherStats(value1, histogram);
 			gatherStats(value2, histogram);
-			stats.write(String.format("%s,\"%s\",%s,%d,%d,%d,%s,%s\n", key.toString(), templateName,
-					sheet.getSheetName(), row.getRowNum(), cell1 == null ? -1 : cell1.getColumnIndex(),
-					cell2 == null ? -1 : cell2.getColumnIndex(), value1, value2));
+			/*
+			 * stats.write(String.format("%s,\"%s\",%s,%d,%d,%d,%s,%s\n",
+			 * key.toString(), templateName, sheet.getSheetName(),
+			 * row.getRowNum(), cell1 == null ? -1 : cell1.getColumnIndex(),
+			 * cell2 == null ? -1 : cell2.getColumnIndex(), value1, value2));
+			 */
 		}
 		workbook.close();
 	}
@@ -117,8 +121,8 @@ public class Tools {
 		return;
 	}
 
-	public static void readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
-			BufferedWriter stats, IAnnotator annotator) throws InvalidFormatException, IOException {
+	public static int readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
+			XSSFSheet stats, IAnnotator annotator, int rownum) throws InvalidFormatException, IOException {
 
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
@@ -130,6 +134,7 @@ public class Tools {
 
 		int nsh = workbook.getNumberOfSheets();
 		TR record = new TR();
+
 		for (int i = 0; i < nsh; i++) {
 			Sheet sheet = workbook.getSheetAt(i);
 			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
@@ -139,6 +144,7 @@ public class Tools {
 			HashFunction hf = Hashing.murmur3_32();
 
 			Iterator<Row> rowIterator = sheet.rowIterator();
+
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
 				Iterator<Cell> cellIterator = row.cellIterator();
@@ -146,39 +152,37 @@ public class Tools {
 				while (cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
 					String value = getValue(cell, false);
-					String values[] = value==null?null:value.split("\n");
-					value = value==null?null:value.replace("\n", " ").replace("\r", "").trim();
+					String values[] = value == null ? null : value.split("\n");
+					value = value == null ? null : value.replace("\n", " ").replace("\r", "").trim();
+
 					try {
 						if (value != null) {
 							gatherStats(value, histogram);
 
 							HashCode hc = hf.newHasher().putString(value, Charsets.UTF_8).hash();
 							if (!"".equals(value.trim())) {
-								if (annotator == null)
-									stats.write(String.format("\"%s\",\"%s\",\"%s\",\"%s\",%d,%d,\"%s\",,,,,,,,\n", hc,
-											key.toString(), templateName, sheet.getSheetName(), row.getRowNum(),
-											cell.getColumnIndex(), value));
-								else {
-									record.clear();
-									try {
-										TR.hix.cleanedvalue.set(record, values[0]);
-									} catch (Exception x) {
-									}
-									try {
-										TR.hix.hint.set(record, values[1]);
-									} catch (Exception x) {
-									}
-
-									TR.hix.ID.set(record, hc);
-									TR.hix.Folder.set(record, key.toString());
-									TR.hix.File.set(record, templateName);
-									TR.hix.Sheet.set(record, sheet.getSheetName());
-									TR.hix.Row.set(record, row.getRowNum());
-									TR.hix.Column.set(record, cell.getColumnIndex());
-									TR.hix.Value.set(record, value);
-									annotator.process(record);
-									record.write(stats);
+								rownum++;
+								record.clear();
+								try {
+									TR.hix.cleanedvalue.set(record, values[0]);
+								} catch (Exception x) {
 								}
+								try {
+									TR.hix.hint.set(record, values[1]);
+								} catch (Exception x) {
+								}
+
+								TR.hix.ID.set(record, hc);
+								TR.hix.Folder.set(record, key.toString());
+								TR.hix.File.set(record, templateName);
+								TR.hix.Sheet.set(record, sheet.getSheetName());
+								TR.hix.Row.set(record, row.getRowNum());
+								TR.hix.Column.set(record, cell.getColumnIndex());
+								TR.hix.Value.set(record, value);
+								if (annotator != null)
+									annotator.process(record);
+								record.write(stats, rownum);
+
 							}
 
 						}
@@ -196,6 +200,7 @@ public class Tools {
 
 		}
 		workbook.close();
+		return rownum;
 	}
 
 	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor)

@@ -2,6 +2,7 @@ package net.enanomapper.templates.test;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.lucene.search.spell.LevensteinDistance;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,7 +30,6 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		templates = Tools.initJRCTemplateNames();
 	}
 
-
 	@Test
 	public void testTemplatesAvailable() throws Exception {
 		File baseDir = new File(System.getProperty("java.io.tmpdir"));
@@ -35,25 +37,30 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 		Assert.assertEquals(33, templates.size());
 		Enumeration<Object> e = templates.keys();
 		final Map<String, Term> histogram = new HashMap<String, Term>();
-		BufferedWriter stats = new BufferedWriter(new FileWriter(new File(
-				baseDir + "/nrtemplate.txt")));
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		FileOutputStream out = new FileOutputStream(new File(baseDir + "/nrtemplate.xlsx"));
+		
+		XSSFSheet stats = workbook.createSheet();
+		int rownum=0;
 		while (e.hasMoreElements())
 			try {
 				Object key = e.nextElement();
 				String fileUrl = templates.getProperty(key.toString());
-				File file = Tools.getTestFile(fileUrl, key.toString(), ".xlsx",
-						baseDir);
+				File file = Tools.getTestFile(fileUrl, key.toString(), ".xlsx", baseDir);
 				Assert.assertTrue(file.exists());
 				// verify we can read it and extract some stats
-				Tools.readJRCExcelTemplate(file , key, templates.get(key).toString(), histogram, stats,null);
+				rownum = Tools.readJRCExcelTemplate(file, key, templates.get(key).toString(), histogram, stats, null, rownum+1);
 			} catch (Exception x) {
 
 			}
-		stats.close();
+		workbook.write(out);
+		out.close();
+		workbook.close();
 
 		similarity(histogram, baseDir);
 		System.out.println("Estimating annotations");
-		Tools.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		Tools.smash(
+				"http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, new ExtractSynonymsList() {
 					LevensteinDistance d = new LevensteinDistance();
 
@@ -65,7 +72,8 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 							double sim = d.getDistance(key1, label);
 							Term term = histogram.get(key1);
 							if (sim > term.getDistance()) {
-								if (term.getSecondbest()==null) term.setSecondbest(new Term());
+								if (term.getSecondbest() == null)
+									term.setSecondbest(new Term());
 								term.getSecondbest().setDistance(term.getDistance());
 								term.getSecondbest().setAnnotation(term.getAnnotation());
 								term.getSecondbest().setLabel(term.getLabel());
@@ -78,8 +86,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 					}
 				});
 		System.out.println("Writing annotated terms");
-		BufferedWriter annotated = new BufferedWriter(new FileWriter(new File(
-				baseDir + "/annotated.txt")));
+		BufferedWriter annotated = new BufferedWriter(new FileWriter(new File(baseDir + "/annotated.txt")));
 		Iterator<String> terms1 = histogram.keySet().iterator();
 		while (terms1.hasNext()) {
 			String key1 = terms1.next();
@@ -90,13 +97,10 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 
 	}
 
-	protected void similarity(Map<String, Term> histogram, File baseDir)
-			throws IOException {
+	protected void similarity(Map<String, Term> histogram, File baseDir) throws IOException {
 		// histogram
-		BufferedWriter terms = new BufferedWriter(new FileWriter(new File(
-				baseDir + "/terms.txt")));
-		BufferedWriter similar = new BufferedWriter(new FileWriter(new File(
-				baseDir + "/similar.txt")));
+		BufferedWriter terms = new BufferedWriter(new FileWriter(new File(baseDir + "/terms.txt")));
+		BufferedWriter similar = new BufferedWriter(new FileWriter(new File(baseDir + "/similar.txt")));
 		Iterator<String> terms1 = histogram.keySet().iterator();
 
 		LevensteinDistance d = new LevensteinDistance();
@@ -116,12 +120,10 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 					mostSimilar = key2;
 					max = sim;
 				}
-				terms.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1, key2,
-						sim));
+				terms.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1, key2, sim));
 			}
 			if (max >= 0.5)
-				similar.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1,
-						mostSimilar, max));
+				similar.write(String.format("\"%s\"\t\"%s\"\t%s\n", key1, mostSimilar, max));
 		}
 		terms.close();
 		similar.close();
