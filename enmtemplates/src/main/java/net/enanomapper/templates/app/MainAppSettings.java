@@ -27,6 +27,15 @@ public class MainAppSettings {
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
 	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.extract;
 	private String assayname;
+	private String endpointname;
+	
+	public String getEndpointname() {
+		return endpointname;
+	}
+
+	public void setEndpointname(String endpointname) {
+		this.endpointname = endpointname;
+	}
 
 	public String getAssayname() {
 		return assayname;
@@ -59,9 +68,9 @@ public class MainAppSettings {
 	}
 
 	public void setInputfolder(File inputfolder) throws FileNotFoundException {
-		if (inputfolder.exists())
+		if (inputfolder!=null && inputfolder.exists())
 			this.inputfolder = inputfolder;
-		else
+		else if (_TEMPLATES_CMD.extract.equals(getTemplatesCommand()))
 			throw new FileNotFoundException(inputfolder == null ? "null" : inputfolder.getAbsolutePath());
 	}
 
@@ -71,7 +80,7 @@ public class MainAppSettings {
 
 	public void setOutputfolder(File outputfolder) throws FileNotFoundException {
 
-		if (outputfolder.exists())
+		if (outputfolder!=null && outputfolder.exists())
 			this.outputfolder = outputfolder;
 		else
 			throw new FileNotFoundException(outputfolder == null ? "null" : outputfolder.getAbsolutePath());

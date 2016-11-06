@@ -80,8 +80,6 @@ public class MainApp {
 			CommandLine line = parser.parse(options, args, false);
 
 			MainAppSettings s = new MainAppSettings();
-			s.setInputfolder(new File(getOption(line, 'i')));
-			s.setOutputfolder(new File(getOption(line, 'o')));
 			try {
 				s.setTemplatesType(_TEMPLATES_TYPE.valueOf(getOption(line, 't')));
 			} catch (Exception x) {
@@ -92,10 +90,20 @@ public class MainApp {
 			} catch (Exception x) {
 			}
 
+			s.setInputfolder(new File(getOption(line, 'i')));
+
+			s.setOutputfolder(new File(getOption(line, 'o')));
+
 			try {
 				s.setAssayname(getOption(line, 's'));
 			} catch (Exception x) {
 			}
+			try {
+				s.setEndpointname(getOption(line, 'e'));
+				if (!s.getEndpointname().endsWith(".xlsx")) s.setEndpointname(s.getEndpointname()+".xlsx");
+			} catch (Exception x) {
+			}			
+			
 			if (s.getAssayname() == null)
 				s.setAssayname("COMET");
 			return s;
@@ -128,12 +136,16 @@ public class MainApp {
 		Option assay = OptionBuilder.hasArg().withLongOpt("assay").withArgName("assayname")
 				.withDescription("Sheet name as defined in JRC templates").create("s");
 
+		Option endpoint = OptionBuilder.hasArg().withLongOpt("endpoint").withArgName("endpointname")
+				.withDescription("Endpoint name as defined in JRC templates").create("e");
+		
 		Option help = OptionBuilder.withLongOpt("help").withDescription("This help").create("h");
 
 		options.addOption(input);
 		options.addOption(output);
 		options.addOption(template);
 		options.addOption(assay);
+		options.addOption(endpoint);
 		options.addOption(cmd);
 
 		options.addOption(help);
@@ -182,7 +194,8 @@ public class MainApp {
 		 * ".txt")),StandardCharsets.UTF_8)); //BOM stats.write('\ufeff');
 		 */
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		FileOutputStream out = new FileOutputStream(new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".xlsx"));
+		FileOutputStream out = new FileOutputStream(
+				new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".xlsx"));
 		XSSFSheet stats = workbook.createSheet();
 		switch (settings.getTemplatesType()) {
 		case iom: {
@@ -207,8 +220,8 @@ public class MainApp {
 						break;
 					}
 					default: {
-						rownum = Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(), histogram,
-								stats, settings.getAnnotator(),rownum);
+						rownum = Tools.readJRCExcelTemplate(file, settings.getInputfolder().getName(), file.getName(),
+								histogram, stats, settings.getAnnotator(), rownum);
 					}
 					}
 
@@ -216,10 +229,9 @@ public class MainApp {
 				} catch (Exception x) {
 					x.printStackTrace();
 				}
-			}	
+			}
 		} catch (Exception x) {
 
-			
 		} finally {
 			workbook.write(out);
 			workbook.close();
