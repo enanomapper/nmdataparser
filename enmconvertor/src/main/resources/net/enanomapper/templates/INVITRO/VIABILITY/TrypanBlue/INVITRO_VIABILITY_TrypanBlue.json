@@ -1,7 +1,7 @@
 {
 	"TEMPLATE_INFO": {
 		"NAME": "MammalianToxicology-InVitroViability-Trypan blue",
-		"VERSION": "01",
+		"VERSION": "Oct 2016",
 		"TYPE": 1
 	},
 
@@ -80,7 +80,7 @@
 
 			"PROTOCOL_GUIDELINE": {
 				"guideline1": {
-					"COLUMN_INDEX": "Q"
+					"COLUMN_INDEX": "AQ"
 				}
 			},
 
@@ -97,7 +97,9 @@
 			},
 
 			"PARAMETERS": {
-
+				"Test method": {
+					"COLUMN_INDEX": "Q"
+				},
 				"Replicate number": {
 					"COLUMN_INDEX": "A"
 				},
