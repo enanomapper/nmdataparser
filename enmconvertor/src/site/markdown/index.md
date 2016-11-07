@@ -29,7 +29,7 @@ See more about
 
 * [How to convert](convertor.html) Excel data files into ISA-JSON or RDF.
 
-* [How to import](enanomapper.html) into eNanoMapper database instance.
+* [How to import](parser.html) into eNanoMapper database instance.
 
 ---
 
