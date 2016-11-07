@@ -32,22 +32,19 @@ The schema is available at the enanomapper/isa-api fork at GitHub [https://githu
 
 Feedback is welcome!
 
-## ISA-JSON export for enanoMapper database
+### ISA-JSON export for enanoMapper database
+
+![Export: ISA-JSON](images/isa_json.jpg "ISA-JSON export")
+
+More information at [How to convert](convertor.html) Excel data files into ISA-JSON or RDF.
 
  
+## Towards user friendly tools to generate ISA formatted files  
 
-
-### 
-
- Currently ISA model is utilized via  following file formats: the new ISA-JSON file format (actively developed in last two years by the Oxford group), the original ISA-TAB format that relies on tab delimited text files and ISA-TAB-Nano format which is a nano extension to ISA-TAB. We conduct active communication and close contacts with ISA development team from Oxford, the National Cancer Institute (NCI), National Cancer Informatics Program (NCIP) and Nanotechnology Informatics Working Group (US Nano WG) in order to take into account the latest developments of ISA platform and to have most adequate data model for ISA mapping into eNanoMapper database. eNanoMapper ISA utilities are based on:
- - ISA-JSON version 1 which covers the original ISA-TAB model developed by S. Sansone’s group (published in 2008) on top of new ISA-JSON format;
-- Material Schema - developed by eNanoMapper extension to ISA-JSON core which covers the data model developed within the frame of ISA-Tab-Nano project (NCI, NCIP and US NanoWG). 
-
-
-ISA-JSON export software tools are available at:
-
-https://svn.code.sf.net/p/ambit/code/trunk/ambit2-all/ambit2-apps/ambit2-export/
-
+With previous experience of [formatting experimental data as ISA-Tab files manually as very time consuming](http://www.beilstein-journals.org/bjnano/single/articleFullText.htm?publicId=2190-4286-6-165#data-format-conversions),
+we have been exploring various solutions to improve the user friendliness. Taking into account the observation that the majority of [EU NanoSafety Cluster projects](http://www.nanosafetycluster.eu/) 
+prefer to prepare their experimental data using custom spreadsheet templates, the eNanoMapper team took an alternative, but pragmatic, approach by implementing support for a large set of custom spreadsheet templates for data preparation. 
+We developed the configurable [Excel parser](parser.html), allowing to parse diverse spreadsheets into the same internal data model and export the data from this data model into different formats allows us to provide format converters, in the same fashion as OpenBabel [64] (http://openbabel.org/) interconverts between chemical formats. Extending the tools to include ontology annotations and to be able to write the internal data model into ISA-Tab files will not only accomplish the second goal of automatically generating the files, but will also enable exporting query results from the database in a desired format.  
 
 
 ## `ISA-TAB Logic` templates
@@ -57,5 +54,6 @@ While not strictly following the [ISA-TAB](http://isa-tools.org/) and [ISA-TAB-N
 
 >NANoREG has produced a set of easy-to-use 'templates'. The templates have been built by experts in different fields (phys-chem, in vivo and in vitro toxicology) and are aimed at harmonising the logging of experimentally-produced data, and include meaningful and detailed information to support causal correlation analyses, modelling and Safe-by-Design (SbD).
 
-We developed tools to read the NANoREG Excel templates and convert into eNanoMapper data model. This enable import into eNanoMapper database and conversion of the NANoREG Excel templates to ISA-JSON v1 compliant files.
+We developed tools to read the NANoREG Excel templates and convert into eNanoMapper data model. This enable import into eNanoMapper database and [conversion](convertor.html) of the NANoREG Excel templates to ISA-JSON v1 compliant files.
 The ISA-JSON v1 files can be converted to the legacy ISA-TAB files via the Python tools available at [ISA](http://isa-tools.org/).  
+
