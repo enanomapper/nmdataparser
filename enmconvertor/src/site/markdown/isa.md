@@ -44,7 +44,11 @@ More information at [How to convert](convertor.html) Excel data files into ISA-J
 With previous experience of [formatting experimental data as ISA-Tab files manually as very time consuming](http://www.beilstein-journals.org/bjnano/single/articleFullText.htm?publicId=2190-4286-6-165#data-format-conversions),
 we have been exploring various solutions to improve the user friendliness. Taking into account the observation that the majority of [EU NanoSafety Cluster projects](http://www.nanosafetycluster.eu/) 
 prefer to prepare their experimental data using custom spreadsheet templates, the eNanoMapper team took an alternative, but pragmatic, approach by implementing support for a large set of custom spreadsheet templates for data preparation. 
-We developed the configurable [Excel parser](parser.html), allowing to parse diverse spreadsheets into the same internal data model and export the data from this data model into different formats allows us to provide format converters, in the same fashion as OpenBabel [64] (http://openbabel.org/) interconverts between chemical formats. Extending the tools to include ontology annotations and to be able to write the internal data model into ISA-Tab files will not only accomplish the second goal of automatically generating the files, but will also enable exporting query results from the database in a desired format.  
+We developed the configurable [Excel parser](parser.html), and are able to parse diverse spreadsheets into the same internal data model and export the data from this data model into different formats. 
+This allows us to provide format converters, in the same fashion as [OpenBabel](http://openbabel.org/) interconverts between chemical formats.
+ 
+Being able to write the internal data model into ISA-JSON files accomplishes the goal of automatically generating the ISA files, 
+and enables exporting query results from the database in a desired format.  
 
 
 ## `ISA-TAB Logic` templates
