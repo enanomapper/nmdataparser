@@ -28,9 +28,15 @@ The JSON schemas describe various components of the 3 layer of ISA platform (i.e
 
 We have developed a Substance/Material JSON schema which is a nano material extension of ISA-JSON v1, the counterpart of the ISA-Tab-Nano format. 
 
-The schema is available at the enanomapper/isa-api fork at GitHub [https://github.com/enanomapper/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/material](https://github.com/enanomapper/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/material).
+The schema is available at the [enanomapper/isa-api](https://github.com/enanomapper/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/material) fork at GitHub .
 
-Feedback is welcome!
+The main JSON schema, [mcm_material_schema.json](https://github.com/enanomapper/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/material/mcm_material_schema.json), 
+defines a material (substance) with several basic properties: `id`, `lotIdentifier`, `name` etc. The material composition is an array of constituents.
+
+A separate helper JSON schema [constituent_schema.json](https://github.com/enanomapper/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/material/constituent_schema.json) is implemented for definition of all constituents of the nanomaterial. 
+The composition of a nanomaterial may contain one or several constituents. Each constituent has a role (core, coating, etc.) and linkages to other constituents. The linkage describes the relation between two components. For example two components may be covalently bonded, one be embedded or encapsulated within another constituent etc.
+
+>Feedback is welcome!
 
 ### ISA-JSON export for enanoMapper database
 
