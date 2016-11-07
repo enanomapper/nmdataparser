@@ -9,8 +9,14 @@
 			<name>LGPL</name>
 			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
 			<distribution>repo</distribution>
-			<comments>LGPL 2</comments>
+			<comments>Softwrae license</comments>
 		</license>
+		<license>
+			<name>CC-BY-SA 4.0</name>
+			<url>https://creativecommons.org/licenses/by-sa/4.0/</url>
+			<distribution>repo</distribution>
+			<comments>Data templates license</comments>
+		</license>		
 	</licenses>
 	<repositories>
 		<repository>

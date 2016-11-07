@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="Data templates">
+
+	<bannerLeft>
+		<name></name>
+	</bannerLeft>
+	<bannerRight>
+		<name>Data templates</name>
+		<href>index.html</href>
+	</bannerRight>
+	<googleAnalyticsAccountId>UA-32347361-5</googleAnalyticsAccountId>
+	<publishDate position="bottom" format="yyyy-MM-dd" />
+	<version position="bottom" />
+
+	<skin>
+		<groupId>lt.velykis.maven.skins</groupId>
+		<artifactId>reflow-maven-skin</artifactId>
+		<version>1.1.1</version>
+	</skin>
+	<custom>
+		<reflowSkin>
+			<theme>bootswatch-united</theme>
+			<highlightJs>true</highlightJs>
+			<smoothScroll>true</smoothScroll>
+			<highlightJsTheme>github</highlightJsTheme>
+
+			<brand>
+				<name><![CDATA[   
+      <img src='images/logo.png'>
+      ]]></name>
+				<href>https://github.com/enanomapper/nmdataparser</href>
+			</brand>
+			<slogan></slogan>
+			<titleTemplate>%2$s | %1$s</titleTemplate>
+			<toc></toc>
+			<topNav></topNav>
+			<bottomNav>
+				<column>reports</column>
+				<column>Templates</column>
+				<column>ISA</column>
+				<column>Acknowledgements</column>				
+			</bottomNav>
+			<bottomDescription>
+				eNanoMapper data templates
+			</bottomDescription>
+			<pages>
+				<index>
+					<shortTitle></shortTitle>
+					<bannerRight>
+						<name></name>
+						<href></href>
+					</bannerRight>
+
+					<shortTitle></shortTitle>
+					<breadcrumbs>true</breadcrumbs>
+					<toc>true</toc>
+					<markPageHeader>false</markPageHeader>
+					<sections>
+						<body/>
+						<sidebar />
+					</sections>
+				</index>
+				<convertor>
+					<shortTitle>enm | convertor</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</convertor>	
+				<isa>
+					<shortTitle>enm | isa</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</isa>
+				<parser>
+					<shortTitle>enm | parser</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</parser>										
+				<templates_pchem>
+					<shortTitle>templates | physchem</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</templates_pchem>
+				<templates_invitro>
+					<shortTitle>templates | invitro</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</templates_invitro>	
+				<templates_invivo>
+					<shortTitle>templates | invivo</shortTitle>
+					<sections>
+						<body/>
+					</sections>
+				</templates_invivo>							
+		
+			</pages>
+		</reflowSkin>
+	</custom>
+
+  <body>
+		<head>
+			<link rel="author" href="https://plus.google.com/+NinaJeliazkova" />
+			<meta name="description" content="enanomapper" />
+			<meta name="keywords"
+				content="QMRF" />
+			<meta name="author" content="Ideaconsult Ltd." />
+			<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+		</head>
+		
+		<links>
+			<item name="Home" href="/index.html" />
+			<item name="P-CHEM" href="/templates_pchem.html" />
+			<item name="In-vitro" href="/templates_invitro.html" />
+			<item name="In-vivo" href="/templates_invivo.html" />
+			<item name="Usage" href="/convertor.html" />
+		</links>
+		<menu name="Home">
+			<item name="Welcome" href="/index.html" />
+			<item name="REST" href="/rest.html" />
+			<item name="RDF" href="/rdf.html" />
+		</menu>
+		<menu name="ISA"  >
+			<item name="ISA-TAB" href="/isa.html" />
+			<item name="ISA-TAB-Nano" href="/isa.html" />
+			<item name="ISA-JSON" href="/isa.html" />
+		</menu>
+			
+		<menu name="Templates">
+			<item name="P-CHEM" href="/templates_pchem.html" />
+			<item name="In-vitro" href="/templates_invitro.html" />
+			<item name="In-vivo" href="/templates_invivo.html" />
+			<item name="License" href="https://creativecommons.org/licenses/by-sa/4.0/" />
+		</menu>
+		
+		<menu name="Acknowledgements">
+			<item name="FP7 eNanoMapper" href="http://enanomapper.net" />
+			<item name="NANoREG templates" href="http://www.nanoreg.eu/media-and-downloads/templates" />
+		</menu>
+	
+     <menu name="Maven documentation" ref="reports" inherit="bottom" />
+         
+  </body>
+  
+	  
+</project>
