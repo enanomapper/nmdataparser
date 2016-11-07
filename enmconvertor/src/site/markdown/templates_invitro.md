@@ -1,22 +1,22 @@
 # Excel templates for in-vitro assays
 
-![Templates: in vitro](images/templates_invitro.png "In-vitro")
+![Templates: in vitro](./images/templates_INVITRO.png "In-vitro")
 
 Each folder consists of Excel and JSON file for the specific assay. 
 
-## [Genotoxicity](templates/INVITRO/GENOTOXICITY)
+## [Genotoxicity](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY)
 
-* [COMET](templates/INVITRO/GENOTOXICITY/COMET)
+* [COMET](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
 
-* [Micronucleus](templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
+* [Micronucleus](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
 
-## [Cell viability](templates/INVITRO/VIABILITY)
+## [Cell viability](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY)
 
-* [MTS](templates/INVITRO/VIABILITY/MTS)
+* [MTS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/MTS)
 
-* [Trypan blue](templates/INVITRO/VIABILITY/TrypanBlue)
+* [Trypan blue](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/TrypanBlue)
 
-## [Immunotoxicity](templates/INVITRO/IMMUNOTOX)
+## [Immunotoxicity](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
 
-* [Cytokine secretion](templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
+* [Cytokine secretion](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
 

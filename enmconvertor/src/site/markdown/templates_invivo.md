@@ -1,6 +1,6 @@
 # Excel templates for in-vivo assays
 
-![Templates: in vivo](images/templates_invivo.png "In-vivo")
+![Templates: in vivo](./images/templates_INVIVO.png "In-vivo")
 
-## [ECOTOX](templates/INVIVO/ECOTOX)
+## [ECOTOX](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVIVO/ECOTOX)
 

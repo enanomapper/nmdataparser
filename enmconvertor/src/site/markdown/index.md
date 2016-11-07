@@ -2,15 +2,15 @@
 
 ### [Physicochemical characterisation](templates_pchem.html)
 
-![Templates: phys-chem](images/templates_pchem.png "P-CHEM")
+![Templates: phys-chem](images/templates_PCHEM.png "P-CHEM")
 
 ### [In-vitro assays](templates_invitro.html)
 
-![Templates: in vitro](images/templates_invitro.png "In-vitro")
+![Templates: in vitro](./images/templates_INVITRO.png "In-vitro")
 
 ### [In-vivo assays](templates_invivo.html)
 
-![Templates: in vivo](images/templates_invivo.png "In-vivo")
+![Templates: in vivo](./images/templates_INVIVO.png "In-vivo")
 
 ---
 

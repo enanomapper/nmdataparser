@@ -1,8 +1,8 @@
 # Excel templates for phys-chem characterisation
 
-![Templates: phys-chem](images/templates_pchem.png "P-CHEM")
+![Templates: phys-chem](images/templates_PCHEM.png "P-CHEM")
 
-## [Size distribution](templates/PCHEM/SIZE)
+## [Size distribution](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 
-## [Isoelectric point, zeta potential](templates/PCHEM/IEP)
+## [Isoelectric point, zeta potential](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
 
