@@ -23,6 +23,7 @@
 			<highlightJs>true</highlightJs>
 			<smoothScroll>true</smoothScroll>
 			<highlightJsTheme>github</highlightJsTheme>
+                        <protocolRelativeURLs>true</protocolRelativeURLs>
 
 			<brand>
 				<name><![CDATA[   
