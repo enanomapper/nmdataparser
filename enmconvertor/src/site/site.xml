@@ -117,6 +117,7 @@
 			<item name="In-vitro" href="/templates_invitro.html" />
 			<item name="In-vivo" href="/templates_invivo.html" />
 			<item name="Usage" href="/convertor.html" />
+			<item name="Database search" href="https://search.data.enanomapper.net" />
 		</links>
 		<menu name="Home">
 			<item name="Welcome" href="/index.html" />
