@@ -23,8 +23,8 @@
 			<highlightJs>true</highlightJs>
 			<smoothScroll>true</smoothScroll>
 			<highlightJsTheme>github</highlightJsTheme>
-                        <protocolRelativeURLs>true</protocolRelativeURLs>
-
+     <protocolRelativeURLs>true</protocolRelativeURLs>
+			<skinAttribution>false</skinAttribution>
 			<brand>
 				<name><![CDATA[   
       <img src='images/logo.png'>
