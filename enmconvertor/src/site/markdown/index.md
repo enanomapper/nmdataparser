@@ -29,7 +29,9 @@ See more about
 
 * [How to convert](convertor.html) Excel data files into ISA-JSON or RDF.
 
-* [How to import](parser.html) into eNanoMapper [database](database) instance.
+* [How to import](database.html) into [eNanoMapper database](http://ambit.sourceforge.net/enanomapper.html) instance.
+
+* [How this works](parser.html)
 
 ---
 
@@ -37,7 +39,7 @@ See more about
  
 * Conversion between formats [DataConvertor](convertor.html)
 
-* Database import [eNanoMapper database](http://ambit.sourceforge.net/enanomapper.html)
+* Database [import](database.html)
 
 ---
 

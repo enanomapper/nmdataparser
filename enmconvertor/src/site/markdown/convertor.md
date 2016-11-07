@@ -12,4 +12,3 @@
 
 ### RDF
 
-## Database import
