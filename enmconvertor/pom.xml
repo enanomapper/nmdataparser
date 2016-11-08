@@ -107,4 +107,24 @@
 				</plugins>		
 		</pluginManagement>
 	</build>
+	<profiles>
+	<profile>
+			<id>remote</id>
+			<activation>
+			<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+			<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
+			</properties>
+	</profile>	
+	<profile>
+			<id>local</id>
+			<activation>
+			<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+			<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
+			</properties>
+	</profile>
+	</profiles>
 </project>
