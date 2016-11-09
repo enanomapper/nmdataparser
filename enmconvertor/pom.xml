@@ -70,12 +70,22 @@
 										<Package>net.enanomapper.parser.app</Package>
 										<Implementation-Build>${buildNumber}</Implementation-Build>
 										<url>https://github.com/enanomapper/nmdataparser</url>
-
 									</manifestEntries>
+
 								</transformer>
 							</transformers>
 							<doCheck>true</doCheck>
 							<doUpdate>true</doUpdate>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>
