@@ -5,7 +5,15 @@ The **nmdataparser** Java library is a configurable parser allowing to importing
 
 #####N. Jeliazkova, C. Chomenidis, P. Doganis, B. Fadeel, R. Grafström, B. Hardy, J. Hastings, M. Hegi, V. Jeliazkov, N. Kochev, P. Kohonen, C. R. Munteanu, H. Sarimveis, B. Smeets, P. Sopasakis, G. Tsiliki, D. Vorgrimmler, and E. Willighagen, The eNanoMapper database for nanomaterial safety information,Beilstein J. Nanotechnol., vol. 6, pp. 1609-1634, Jul. 2015. [doi:10.3762/bjnano.6.165](http://dx.doi.org/10.3762/bjnano.6.165)
 
---
+### Command line application
+
+Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoMapper RDF or ISA-JSON or JSON format.
+
+* Download [enmconvertor-version.jar](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
+
+* [More details](http://ambit.sourceforge.net/enanomapper/templates/convertor.html)
+
+### For developers
 
 ````
 <dependency>
@@ -35,14 +43,6 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 - [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
 - [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
 - [More examples](https://github.com/enanomapper/nmdataparser/tree/master/src/test/resources/net/enanomapper/parser/csv)
-
-#### Command line application
-
-Download [enmconvertor-version.jar](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
-
-Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoMapper RDF or ISA-JSON or JSON format.
-
-[More details](http://ambit.sourceforge.net/enanomapper/templates/convertor.html)
 
 
 
