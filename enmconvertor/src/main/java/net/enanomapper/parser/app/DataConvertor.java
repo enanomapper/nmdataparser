@@ -167,12 +167,16 @@ public class DataConvertor {
 		case rdf: {
 			return writeAsRDF(reader, validator, outputFile);
 		}
+		case report: {
+			return writeAsReport(reader, validator, outputFile);
+		}
 		default: {
 
 		}
 		}
 		return 0;
 	}
+	
 
 	public int writeAsJSON(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
@@ -239,6 +243,46 @@ public class DataConvertor {
 		return records;
 	}
 
+	
+	public int writeAsReport(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
+			throws Exception {
+
+		Request hack = new Request();
+		hack.setRootRef(new Reference("http://localhost/ambit2"));
+		
+		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, MediaType.TEXT_RDF_N3);
+		Model model = ModelFactory.createDefaultModel();
+		exporter.header(model, null);
+		exporter.setOutput(model);
+
+		int records = 0;
+		try {
+			while (reader.hasNext()) {
+				Object record = reader.next();
+				if (record == null)
+					continue;
+				try {
+					validator.process((IStructureRecord) record);
+					exporter.processItem((SubstanceRecord) record);
+				} catch (Exception x) {
+					logger_cli.log(Level.FINE, x.getMessage());
+				}
+				records++;
+			}
+			FileOutputStream out = new FileOutputStream(outputFile);
+			RDFDataMgr.write(out, model, RDFFormat.TURTLE);
+			out.close();
+		} catch (Exception x) {
+			logger_cli.log(Level.WARNING, x.getMessage(), x);
+		} finally {
+			if (exporter != null)
+				exporter.close();
+			logger_cli.log(Level.INFO, "MSG_IMPORTED", new Object[] { records });
+		}
+		return records;
+	}
+
+	
 	public int writeAsISA(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 		SubstanceEndpointsBundle endpointBundle = null;

@@ -15,6 +15,10 @@ public enum IO_FORMAT {
 		@Override
 		public String toString() {
 			return "Excel (.xlsx) spreadsheet, requires JSON configuration file (option -x) on input";
+		}
+		@Override
+		public boolean isWrite() {
+			return false;
 		}		
 	},
 	json {
@@ -51,6 +55,16 @@ public enum IO_FORMAT {
 		public boolean isWrite() {
 			return false;
 		}		
+	},
+	report {
+		@Override
+		public String toString() {
+			return "Human readable Excel export";
+		}
+		@Override
+		public boolean isRead() {
+			return false;
+		}
 	};
 	// xlsx
 	public boolean isRead() {
