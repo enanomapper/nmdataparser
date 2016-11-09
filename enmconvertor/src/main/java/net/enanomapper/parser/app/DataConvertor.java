@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.ConnectException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -17,11 +16,6 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.log4j.PropertyConfigurator;
@@ -50,7 +44,7 @@ import net.idea.loom.nm.nanowiki.ENanoMapperRDFReader;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 
 public class DataConvertor {
-
+	protected Settings settings;
 	protected static Logger logger_cli = Logger.getLogger(DataConvertor.class.getName());
 	static final String loggingProperties = "net/enanomapper/logging.properties";
 	static final String log4jProperties = "net/enanomapper/log4j.properties";
@@ -89,38 +83,30 @@ public class DataConvertor {
 		}
 
 	}
-	protected boolean gzipped = false;
-	protected File jsonConfig;
-	protected File inputFile;
-	protected File outputFile;
-	protected IO_FORMAT outformat = IO_FORMAT.json;
-	protected IO_FORMAT informat = IO_FORMAT.xlsx;
 
-	public File getInputFile() {
-		return inputFile;
-	}
-
-	public void setInputFile(File inputFile) {
-		this.inputFile = inputFile;
-		if (inputFile.toString().toLowerCase().endsWith(".gz"))
-			gzipped = true;
-		else
-			gzipped = false;
+	public DataConvertor() {
+		settings = new Settings(logger_cli);
 	}
 
 	protected IRawReader<IStructureRecord> createParser(InputStream stream, String extension) throws Exception {
 
 		InputStream in = null;
-		if (gzipped)
+		if (settings.isGzipped())
 			in = new GZIPInputStream(stream);
 		else
 			in = stream;
 
-		switch (informat) {
-		case xls:
-			return new GenericExcelParser(in, jsonConfig, false);
-		case xlsx:
-			return new GenericExcelParser(in, jsonConfig, true);
+		switch (settings.getInformat()) {
+		case xls: {
+			if (settings.getJsonConfig() == null)
+				throw new FileNotFoundException("No JSON config file, use option -x");
+			return new GenericExcelParser(in, settings.getJsonConfig(), false);
+		}
+		case xlsx: {
+			if (settings.getJsonConfig() == null)
+				throw new FileNotFoundException("No JSON config file, use option -x");
+			return new GenericExcelParser(in, settings.getJsonConfig(), true);
+		}
 		case NWrdf:
 			return new NanoWikiRDFReader(new InputStreamReader(in));
 		case rdf:
@@ -128,110 +114,13 @@ public class DataConvertor {
 		case json:
 			return new SubstanceStudyParser(new InputStreamReader(in, "UTF-8"));
 		default:
-			throw new Exception("Unsupported format " + informat);
+			throw new Exception("Unsupported format " + settings.getInformat());
 		}
 
-	}
-
-	protected static IO_FORMAT getOutputFormat(CommandLine line) throws Exception {
-		String format = _OPTIONS.outputformat.getOption(line);
-		IO_FORMAT f = IO_FORMAT.json;
-		try {
-			f = IO_FORMAT.valueOf(format);
-		} catch (Exception x) {
-		}
-		if (!f.isWrite())
-			throw new Exception("Not an output format!");
-		return f;
-	}
-
-	protected static IO_FORMAT getInputFormat(CommandLine line, IO_FORMAT defautlformat) throws Exception {
-		String format = _OPTIONS.inputformat.getOption(line);
-		IO_FORMAT f = defautlformat;
-		try {
-			f = IO_FORMAT.valueOf(format);
-		} catch (Exception x) {
-		}
-		if (f==null || !f.isRead())
-			throw new Exception("Not an input format!");
-		return f;
-	}
-
-	protected static File getJSONConfig(CommandLine line) throws FileNotFoundException {
-		String fname = _OPTIONS.xconfig.getOption(line);
-		if (fname != null) {
-			File file = new File(fname);
-			if (!file.exists())
-				throw new FileNotFoundException(file.getName());
-			else
-				return file;
-		} else
-			return null;
-	}
-
-	protected static File getInput(CommandLine line) throws FileNotFoundException {
-		String fname = _OPTIONS.input.getOption(line);
-		if (fname != null) {
-			File file = new File(fname);
-			if (!file.exists())
-				throw new FileNotFoundException(file.getName());
-			else
-				return file;
-		} else
-			return null;
-	}
-
-	protected static File getOutput(CommandLine line) {
-		String fname = _OPTIONS.output.getOption(line);
-		return fname == null ? null : new File(fname);
 	}
 
 	public boolean parse(String[] args) throws Exception {
-		final Options options = createOptions();
-		CommandLineParser parser = new PosixParser();
-		try {
-			CommandLine line = parser.parse(options, args, false);
-
-			if (_OPTIONS.listformats.getOption(line) != null) {
-				System.out.println(IO_FORMAT.list());
-				return false;
-
-			} else {
-
-				setInputFile(getInput(line));
-
-				if (inputFile == null && !inputFile.exists())
-					throw new Exception("Missing input file");
-				jsonConfig = getJSONConfig(line);
-
-				String extension = inputFile.getName().toLowerCase();
-				IO_FORMAT informat = extension == null ? null
-						: extension.endsWith("xlsx") ? IO_FORMAT.xlsx
-								: (extension.endsWith("xls") ? IO_FORMAT.xls :  (extension.endsWith("rdf") ? IO_FORMAT.rdf:null));
-
-				switch (informat) {
-				case xlsx:
-				case xls: {
-					if (jsonConfig == null)
-						throw new Exception("Missing JSON config file, mandatory for importing XLSX! Use option -"
-								+ _OPTIONS.xconfig.command());
-					break;
-				}
-				default:
-				}
-
-				outputFile = getOutput(line);
-				informat = getInputFormat(line,informat);
-				outformat = getOutputFormat(line);
-
-				return true;
-			}
-		} catch (Exception x) {
-			printHelp(options, x.getMessage());
-			throw x;
-		} finally {
-
-		}
+		return settings.parse(args);
 	}
 
 	/**
@@ -239,17 +128,17 @@ public class DataConvertor {
 	 * @return
 	 * @throws Exception
 	 */
-	protected int convertFile() throws Exception {
-		if (inputFile.isDirectory()) {
-			logger_cli.log(Level.INFO, "MSG_IMPORT", new Object[] { "folder", inputFile.getAbsolutePath() });
-			File[] allFiles = inputFile.listFiles();
+	protected int convertFiles() throws Exception {
+		if (settings.getInputFile().isDirectory()) {
+			logger_cli.log(Level.INFO, "MSG_IMPORT", new Object[] { "folder", settings.getInputFile().getAbsolutePath() });
+			File[] allFiles = settings.getInputFile().listFiles();
 			long started = System.currentTimeMillis();
 			int allrecords = 0;
 			for (int i = 0; i < allFiles.length; i++) {
 				File file = allFiles[i];
-				setInputFile(file);
+				settings.setInputFile(file);
 				try {
-					allrecords += convertFile();
+					allrecords += convertFiles();
 				} catch (Exception x) {
 					logger_cli.log(Level.INFO, "MSG_ERR", new Object[] { x.getMessage() });
 				} finally {
@@ -261,8 +150,7 @@ public class DataConvertor {
 			}
 			return allrecords;
 		} else {
-			String ext = inputFile.toString().toLowerCase();
-			return convertFile(ext.endsWith(".xlsx"));
+			return convertSingleFile();
 
 		}
 	}
@@ -355,8 +243,8 @@ public class DataConvertor {
 			throws Exception {
 		SubstanceEndpointsBundle endpointBundle = null;
 		endpointBundle = new SubstanceEndpointsBundle();
-		endpointBundle.setDescription(inputFile.getName());
-		endpointBundle.setTitle(inputFile.getName());
+		endpointBundle.setDescription(settings.getInputFile().getName());
+		endpointBundle.setTitle(settings.getInputFile().getName());
 
 		ISAJsonExporter1_0 exporter;
 		try {
@@ -405,17 +293,16 @@ public class DataConvertor {
 		return records;
 	}
 
-	protected int convertFile(boolean xlsx) throws Exception {
+	protected int convertSingleFile() throws Exception {
 		IRawReader<IStructureRecord> parser = null;
-		Connection c = null;
-		try {
-			FileInputStream fin = new FileInputStream(inputFile);
 
-			parser = createParser(fin, inputFile.getName());
+		try (FileInputStream fin = new FileInputStream(settings.getInputFile())) {
+
+			parser = createParser(fin, settings.getInputFile().getName());
 			logger_cli.log(Level.INFO, "MSG_IMPORT",
-					new Object[] { parser.getClass().getName(), inputFile.getAbsolutePath() });
+					new Object[] { parser.getClass().getName(), settings.getInputFile().getAbsolutePath() });
 
-			StructureRecordValidator validator = new StructureRecordValidator(inputFile.getName(), true) {
+			StructureRecordValidator validator = new StructureRecordValidator(settings.getInputFile().getName(), true) {
 				@Override
 				public IStructureRecord validate(SubstanceRecord record) throws Exception {
 					if (record.getRelatedStructures() != null && !record.getRelatedStructures().isEmpty()) {
@@ -438,25 +325,13 @@ public class DataConvertor {
 				}
 			};
 
-			return write(parser, validator, outformat, outputFile);
+			return write(parser, validator, settings.getOutformat(), settings.getOutputFile());
 		} catch (Exception x) {
 			throw x;
 		} finally {
 			if (parser != null)
 				parser.close();
-			try {
-				c.close();
-			} catch (Exception x) {
-			}
 		}
-	}
-
-	protected Options createOptions() {
-		Options options = new Options();
-		for (_OPTIONS o : _OPTIONS.values())
-			options.addOption(o.createOption());
-
-		return options;
 	}
 
 	public static void main(String[] args) {
@@ -466,7 +341,7 @@ public class DataConvertor {
 		try {
 			DataConvertor object = new DataConvertor();
 			if (object.parse(args)) {
-				object.convertFile();
+				object.convertFiles();
 			} else
 				code = -1;
 
@@ -488,16 +363,6 @@ public class DataConvertor {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
 		}
-	}
-
-	protected static void printHelp(Options options, String message) {
-		if (message != null)
-			logger_cli.log(Level.WARNING, message);
-
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("enmconvertor-{version}", options);
-		Runtime.getRuntime().runFinalization();
-		Runtime.getRuntime().exit(0);
 	}
 
 }
