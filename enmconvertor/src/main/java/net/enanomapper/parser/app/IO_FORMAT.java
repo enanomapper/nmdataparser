@@ -30,7 +30,16 @@ public enum IO_FORMAT {
 		public boolean isWrite() {
 			return false;
 		}
-	}, 
+	},
+	NWrdf {
+		@Override
+		public String toString() {
+			return "NanoWiki RDF (Semantic Media Wiki RDF export)";
+		}
+		public boolean isWrite() {
+			return false;
+		}		
+	},	
 	rdf {
 		@Override
 		public String toString() {
@@ -47,15 +56,7 @@ public enum IO_FORMAT {
 			return "ISA-JSON v1 (see https://github.com/ISA-tools/isa-api)";
 		}
 	},
-	NWrdf {
-		@Override
-		public String toString() {
-			return "NanoWiki RDF (Semantic Media Wiki RDF export)";
-		}
-		public boolean isWrite() {
-			return false;
-		}		
-	},
+
 	report {
 		@Override
 		public String toString() {
