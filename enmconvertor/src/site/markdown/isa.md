@@ -21,7 +21,8 @@ used for the description of the NM composition and nominal NM characteristics (s
 The ISA group started migration in 2015 to a new JSON format, instead of tab delimited files as more flexible and efficient way to store the experimental meta-data.
 Currently, there are ISA v1 and ISA v2 JSON versions. The ISA v2 is based solely on JSON, where the backward compatibility with the ISA v1 and ISA-TAB format is preserved via ISA-tools project utilities.
 
-The new ISA format is labelled ISA-JSON version 1 and uses . The ISA-JSON specification is based on a set of JSON schemas used to validate the syntactical and logical correctness of the ISA-JSON information. It distinguishes between core components and extensions, for example the support for nanomaterials is considered an [extension](https://media.readthedocs.org/pdf/isatools/latest/isatools.pdf). 
+The ISA team develops and maintains [documentation](https://isatools.readthedocs.io/en/latest/) and [tools](https://github.com/ISA-tools/isa-api) supporting the new ISA ISA-JSON formats.  
+The ISA-JSON specification is based on a set of JSON schemas used to validate the syntactical and logical correctness of the ISA-JSON information. It distinguishes between core components and extensions, for example the support for nanomaterials is considered an [extension](https://media.readthedocs.org/pdf/isatools/latest/isatools.pdf). 
 The JSON schemas describe various components of the 3 layer of ISA platform (i.e. investigation, study, assay, sample, source, ontology annotation, etc). The schemas are available at [https://github.com/ISA-tools/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/core](https://github.com/ISA-tools/isa-api/tree/master/isatools/schemas/isa_model_version_1_0_schemas/core)
 
 ### New material schema for ISA-JSON

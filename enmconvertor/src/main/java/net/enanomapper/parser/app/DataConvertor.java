@@ -41,10 +41,12 @@ import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.core.io.IRawReader;
+import ambit2.core.io.json.SubstanceStudyParser;
 import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
 import ambit2.rest.substance.SubstanceRDFReporter;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.InvalidCommand;
+import net.idea.loom.nm.nanowiki.ENanoMapperRDFReader;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
 
 public class DataConvertor {
@@ -91,7 +93,8 @@ public class DataConvertor {
 	protected File jsonConfig;
 	protected File inputFile;
 	protected File outputFile;
-	protected _OUTPUT_FORMAT outformat = _OUTPUT_FORMAT.json;
+	protected IO_FORMAT outformat = IO_FORMAT.json;
+	protected IO_FORMAT informat = IO_FORMAT.xlsx;
 
 	public File getInputFile() {
 		return inputFile;
@@ -113,26 +116,45 @@ public class DataConvertor {
 		else
 			in = stream;
 
-		boolean xlsx = extension == null ? false : extension.toLowerCase().endsWith("xlsx");
-		boolean xls = extension == null ? false : extension.toLowerCase().endsWith("xls");
-		boolean rdf = extension == null ? false : extension.toLowerCase().endsWith("rdf");
-		if (xlsx || xls) {
-			return new GenericExcelParser(in, jsonConfig, xlsx);
-		} else if (rdf)
+		switch (informat) {
+		case xls:
+			return new GenericExcelParser(in, jsonConfig, false);
+		case xlsx:
+			return new GenericExcelParser(in, jsonConfig, true);
+		case NWrdf:
 			return new NanoWikiRDFReader(new InputStreamReader(in));
-		else
-			throw new Exception("Unsupported format");
+		case rdf:
+			return new ENanoMapperRDFReader(new InputStreamReader(in), "ENM");
+		case json:
+			return new SubstanceStudyParser(new InputStreamReader(in, "UTF-8"));
+		default:
+			throw new Exception("Unsupported format " + informat);
+		}
+
 	}
 
-	protected static _OUTPUT_FORMAT getOutputFormat(CommandLine line) throws FileNotFoundException {
+	protected static IO_FORMAT getOutputFormat(CommandLine line) throws Exception {
 		String format = _OPTIONS.outputformat.getOption(line);
-		_OUTPUT_FORMAT f = _OUTPUT_FORMAT.json;
+		IO_FORMAT f = IO_FORMAT.json;
 		try {
-			f = _OUTPUT_FORMAT.valueOf(format);
+			f = IO_FORMAT.valueOf(format);
 		} catch (Exception x) {
 		}
+		if (!f.isWrite())
+			throw new Exception("Not an output format!");
 		return f;
+	}
 
+	protected static IO_FORMAT getInputFormat(CommandLine line, IO_FORMAT defautlformat) throws Exception {
+		String format = _OPTIONS.inputformat.getOption(line);
+		IO_FORMAT f = defautlformat;
+		try {
+			f = IO_FORMAT.valueOf(format);
+		} catch (Exception x) {
+		}
+		if (f==null || !f.isRead())
+			throw new Exception("Not an input format!");
+		return f;
 	}
 
 	protected static File getJSONConfig(CommandLine line) throws FileNotFoundException {
@@ -171,7 +193,7 @@ public class DataConvertor {
 			CommandLine line = parser.parse(options, args, false);
 
 			if (_OPTIONS.listformats.getOption(line) != null) {
-				System.out.println(_OUTPUT_FORMAT.list());
+				System.out.println(IO_FORMAT.list());
 				return false;
 
 			} else {
@@ -183,15 +205,22 @@ public class DataConvertor {
 				jsonConfig = getJSONConfig(line);
 
 				String extension = inputFile.getName().toLowerCase();
-				boolean xlsx = extension == null ? false : extension.endsWith("xlsx");
-				boolean xls = extension == null ? false : extension.endsWith("xls");
+				IO_FORMAT informat = extension == null ? null
+						: extension.endsWith("xlsx") ? IO_FORMAT.xlsx
+								: (extension.endsWith("xls") ? IO_FORMAT.xls :  (extension.endsWith("rdf") ? IO_FORMAT.rdf:null));
 
-				if (xlsx || xls)
+				switch (informat) {
+				case xlsx:
+				case xls: {
 					if (jsonConfig == null)
-						throw new Exception("Missing JSON config file, mandatory for importing XLSX!");
+						throw new Exception("Missing JSON config file, mandatory for importing XLSX! Use option -"
+								+ _OPTIONS.xconfig.command());
+					break;
+				}	
+				}
 
 				outputFile = getOutput(line);
-
+				informat = getInputFormat(line,informat);
 				outformat = getOutputFormat(line);
 
 				return true;
@@ -237,7 +266,7 @@ public class DataConvertor {
 		}
 	}
 
-	public int write(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, _OUTPUT_FORMAT outformat,
+	public int write(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, IO_FORMAT outformat,
 			File outputFile) throws Exception {
 		switch (outformat) {
 		case json: {
@@ -457,7 +486,7 @@ public class DataConvertor {
 		} finally {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
-	}
+		}
 	}
 
 	protected static void printHelp(Options options, String message) {
