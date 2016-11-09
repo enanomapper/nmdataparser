@@ -51,21 +51,16 @@ public class MainApp {
 		long now = System.currentTimeMillis();
 		int code = 0;
 		try {
-			settings = parse(args);
-			process(settings);
-
-		} catch (ConnectException x) {
-			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
-			Runtime.getRuntime().runFinalization();
-			code = -1;
-
-		} catch (SQLException x) {
-			logger_cli.log(Level.SEVERE, "MSG_ERR_SQL", new Object[] { x.getMessage() });
-			code = -1;
-		} catch (Exception x) {
-			x.printStackTrace();
-			logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });
-			code = -1;
+			final Options options = createOptions();
+			CommandLineParser parser = new PosixParser();
+			try {
+				CommandLine line = parser.parse(options, args, false);
+				settings = parse(parser,line);
+				process(settings);
+			} catch (Exception x) {
+				printHelp(options, x.getMessage());
+				logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });	
+			}
 		} finally {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
@@ -73,11 +68,8 @@ public class MainApp {
 		return code;
 	}
 
-	public MainAppSettings parse(String[] args) throws Exception {
-		final Options options = createOptions();
-		CommandLineParser parser = new PosixParser();
+	public MainAppSettings parse(CommandLineParser parser, CommandLine line) throws Exception {
 		try {
-			CommandLine line = parser.parse(options, args, false);
 
 			MainAppSettings s = new MainAppSettings();
 			try {
@@ -108,11 +100,12 @@ public class MainApp {
 				s.setAssayname("COMET");
 			return s;
 		} catch (Exception x) {
-			printHelp(options, x.getMessage());
+
 			throw x;
 		} finally {
 
 		}
+		
 	}
 
 	protected String getOption(CommandLine line, char option) throws FileNotFoundException {
