@@ -31,7 +31,7 @@ See more about
 
 * [How to import](database.html) into [eNanoMapper database](http://ambit.sourceforge.net/enanomapper.html) instance.
 
-* [How this works](parser.html)
+* [How the conversion works](convertor_how.html)
 
 > UNDER DEVELOPMENT <
 

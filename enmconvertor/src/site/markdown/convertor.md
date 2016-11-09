@@ -2,6 +2,7 @@
 
 A command line application for converting between supported data formats with nanomaterial safety data.
 
+
 * Download [https://github.com/enanomapper/nmdataparser](https://github.com/enanomapper/nmdataparser)
 
 * Usage
@@ -13,16 +14,17 @@ usage: enmconvertor
  -h,--help                    This help
  -i,--input <file>            Input file or folder
  -I,--inputformat <format>    xls|xlsx|json|rdf|NWrdf
-                              If not specified, recognised from input file
-                              extension
+                              If not specified, recognised from the input file extension
  -L,--listformats             List supported formats
  -o,--output <file>           Output file or folder
  -O,--outputformat <format>   xls|xlsx|json|rdf|isa
-                              If not specified, recognised from output
-                              file extension
+                              If not specified, recognised from the output file extension
  -x,--xconfig <file>          JSON config file for input formats xls,xlsx
 
 ````
+
+Excel spreadsheets import requires a separate JSON configuration file. More details about the [Excel parser](parser.html). 
+Predefined JSON configuration files for the [NANoREG templates](./index.html) are provided next to each Excel file, e.g. [INVITRO/GENOTOXICITY/COMET](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET).   
 
 * Supported formats
 
@@ -40,11 +42,11 @@ java -jar enmconvertor.jar -L
 
 ## Examples
 
-### Converting Nanosafety Cluster Excel spreadsheets
+### Converting NanoSafety Cluster Excel spreadsheets
 
-* Example `xlsx` file [INVITRO_VIABILITY_Trypanblue_TEST.xlsx](./examples/INVITRO_VIABILITY_Trypanblue_TEST.xlsx) [?](./index.html)
+* Example `xlsx` file [INVITRO_VIABILITY_Trypanblue_TEST.xlsx](./examples/INVITRO_VIABILITY_Trypanblue_TEST.xlsx)
 
-* Example `json configuration` file [INVITRO_VIABILITY_Trypanblue.json](./templates/INVITRO/VIABILITY/TrypanBlue/INVITRO_VIABILITY_TrypanBlue.json)  [?](./jsonconfig.html)
+* Example `json configuration` file [INVITRO_VIABILITY_Trypanblue.json](./templates/INVITRO/VIABILITY/TrypanBlue/INVITRO_VIABILITY_TrypanBlue.json)  
 
 
 #### to ISA-JSONv1
@@ -94,7 +96,7 @@ Result file (zipped) [nanowiki.cczero.4.enm.n3.zip](./examples/nanowiki.cczero.4
 </dependency>
 ````
 
-* Excel parser
+* [Excel parser](parser.html)
 
 ````
 <dependency>
