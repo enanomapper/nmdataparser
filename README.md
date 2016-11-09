@@ -38,7 +38,7 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 
 #### Command line application
 
-Download [enmconvertor-version-jar-with-dependencies](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
+Download [enmconvertor-version.jar](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
 
 Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoMapper RDF or ISA-JSON or JSON format.
 
