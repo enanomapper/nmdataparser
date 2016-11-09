@@ -49,31 +49,40 @@
 		<finalName>enmconvertor</finalName>
 		<plugins>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version>
 				<executions>
 					<execution>
-						<id>create-executable-jar</id>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<descriptorRefs>
-								<descriptorRef>
-									jar-with-dependencies
-								</descriptorRef>
-							</descriptorRefs>
-							<archive>
-								<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-							</archive>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<Main-Class>net.enanomapper.parser.app.DataConvertor</Main-Class>
+										<Build-Number>${buildNumber}</Build-Number>
+										<Package-Vendor>Ideaconsult Ltd.</Package-Vendor>
+										<Package-Version>${project.version}</Package-Version>
+										<Package>net.enanomapper.parser.app</Package>
+										<Implementation-Build>${buildNumber}</Implementation-Build>
+										<url>https://github.com/enanomapper/nmdataparser</url>
+
+									</manifestEntries>
+								</transformer>
+							</transformers>
+							<doCheck>true</doCheck>
+							<doUpdate>true</doUpdate>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
-		<plugins>
+			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
@@ -104,27 +113,62 @@
 							<version>1.7</version> </dependency> -->
 					</dependencies>
 				</plugin>
-				</plugins>		
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.4</version>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>create</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<revisionOnScmFailure>-${maven.build.timestamp}</revisionOnScmFailure>
+						<doCheck>false</doCheck>
+						<doUpdate>false</doUpdate>
+						<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+						<locale>US</locale>
+						<providerImplementations>
+							<svn>javasvn</svn>
+						</providerImplementations>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+							<artifactId>maven-scm-provider-svnjava</artifactId>
+							<version>2.0.2</version>
+						</dependency>
+						<dependency>
+							<groupId>org.tmatesoft.svnkit</groupId>
+							<artifactId>svnkit</artifactId>
+							<version>1.8.3-1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
 		</pluginManagement>
 	</build>
 	<profiles>
-	<profile>
+		<profile>
 			<id>remote</id>
 			<activation>
-			<activeByDefault>false</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-			<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
+				<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
 			</properties>
-	</profile>	
-	<profile>
+		</profile>
+		<profile>
 			<id>local</id>
 			<activation>
-			<activeByDefault>false</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-			<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
+				<property.protocolRelativeURLs>false</property.protocolRelativeURLs>
 			</properties>
-	</profile>
+		</profile>
 	</profiles>
 </project>
