@@ -41,11 +41,13 @@ The composition of a nanomaterial may contain one or several constituents. Each 
 
 ### ISA-JSON export for enanoMapper database
 
+The ISA-JSON export is enabled for each [data collection in the eNanoMapper database](https://data.enanomapper.net/bundle), indicated by the ISA icon.
+
 ![Export: ISA-JSON](images/isa_json.jpg "ISA-JSON export")
 
-More information at [How to convert](convertor.html) Excel data files into ISA-JSON or RDF.
+Converting files into ISA-JSON format is also possible without import into the database, more information at [How to convert](convertor.html) input files into ISA-JSON or RDF.
 
- 
+
 ## Towards user friendly tools to generate ISA formatted files  
 
 With previous experience of [formatting experimental data as ISA-Tab files manually as very time consuming](http://www.beilstein-journals.org/bjnano/single/articleFullText.htm?publicId=2190-4286-6-165#data-format-conversions),
