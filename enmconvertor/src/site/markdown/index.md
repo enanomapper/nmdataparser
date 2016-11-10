@@ -41,7 +41,7 @@ See more about
 
 The NANoREG templates are developed by JRC with collaboration with [FP7 NANoREG](http://www.nanoreg.eu/) project partners and released under open license at [http://www.nanoreg.eu/media-and-downloads/templates](http://www.nanoreg.eu/media-and-downloads/templates).
 
-Within eNanoMapper project (WP3 Database) the templates are analysed, cleaned and [JSON configuration](jsonconfig) files created. The number of [unique terms](terms.html) in the templates is over 800.
+Within eNanoMapper project (WP3 Database) the templates are analysed, [fields](./fields) cleaned and [JSON configuration](jsonconfig) files created. The number of [unique terms](terms.html) in the templates is over 800.
  
 The NANoREG templates are organized as one spreadsheet per assay, multiple NM can be entered as rows. One Excel file may contain more than one assay, measuring the same endpoint.
 The metadata is organised in several groups:
