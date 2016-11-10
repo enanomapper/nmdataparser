@@ -36,8 +36,8 @@ $(document).ready( function () {
     	"lengthMenu": [[25,50, 100, 500, -1], [25,50,100, 500, "All"]],
     	data:templates,
 			columns: [
-        { data: 'module' , title : 'Module'},
-        { data: 'endpoint', title : 'Endpoint' ,
+        { data: 'module' , title : 'Module' , sWidth: "5%"},
+        { data: 'endpoint', title : 'Endpoint' , sWidth: "10%",
       	"render": function ( data, type, full, meta ) {
         		 var sOut = data;
         		 
@@ -48,22 +48,23 @@ $(document).ready( function () {
     				}
         	
         },
-        { data: 's_uuid', title: 'Assay' , sWidth: "20%",
+        { data: 's_uuid', title: 'Assay' , sWidth: "30%",
    					"render": function ( data, type, full, meta ) {
         		 var sOut = data;
       				
-      			  sOut +=	(full.sheet_uri===undefined)?"":('<br/>[term: <a href="'+full.sheet_uri+'" target="bioportal" title="Click for ontology URI">'
+      			  sOut +=	(full.sheet_uri===undefined)?"":('<br/><a href="'+full.sheet_uri+'" target="bioportal" title="Click for ontology URI">'
       			  
-      			  +full.sheet_label+' ('+full.sheet_score+')</a>]');
+      			  +full.sheet_label+'</a> ('+full.sheet_score.toFixed(1)+')');
 				
       			 return sOut;		
     				}
         	        	
         	},
-        { data: 'Value' , title: 'Field'},
-        { data: 'cleanedvalue', title : "Field (cleaned)", defaultContent : "WARNING: NOT SET" },
-        { data: 'unit', title : "Units" , defaultContent : "" },
-        { data: 'term_uri', title : "Term (auto)" , defaultContent : "",
+
+        { data: 'Value' , title: 'Field' , sWidth: "10%"},
+        { data: 'cleanedvalue', title : "Field (cleaned)", sWidth: "10%", defaultContent : "WARNING: NOT SET" },
+        { data: 'unit', title : "Units" , defaultContent : "" ,sWidth: "5%"},
+        { data: 'term_uri', title : "Term (auto)" , defaultContent : "",sWidth: "10%",
         	"render": function ( data, type, full, meta ) {
 
         		if (data === undefined) return "";
@@ -71,7 +72,13 @@ $(document).ready( function () {
       				return '<a href="'+full.term_uri+'" target="bioportal" title="'+full.term_uri+'" title="Click for ontology URI">'+full.term_label+'</a>';
     				}
        	},
-				{ data: 'term_score', title : "Term score" , defaultContent : ""}       	
+				{ data: 'term_score', title : "Term score" , defaultContent : "", sWidth: "5%",
+					"render": function ( data, type, full, meta ) {
+						return (data===undefined)?"":data.toFixed(1);
+				  }	
+				},
+        { data: 'Row' , title: 'Row'  , sWidth: "3%" },	
+        { data: 'Column' , title: 'Column'  , sWidth: "3%"}					
     	]
     });
 } );
