@@ -38,13 +38,28 @@ $(document).ready( function () {
 			columns: [
         { data: 'module' , title : 'Module'},
         { data: 'endpoint', title : 'Endpoint' ,
-        	"render": function ( data, type, full, meta ) {
-      				return '<a href="https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/'+
-      					full.module+'/'+full.endpoint + '" target="bioportal" title="Click for template" target=_template>'+full.endpoint+'</a>';
+      	"render": function ( data, type, full, meta ) {
+        		 var sOut = data;
+        		 
+      			 sOut += '<br/><a href="https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/'+
+      					full.module+'/'+full.endpoint + '" target="bioportal" title="Click for template" target=_template>Template</a>';
+				
+      			 return sOut;		
     				}
         	
         },
-        { data: 's_uuid', title: 'Assay' , sWidth: "15%"},
+        { data: 's_uuid', title: 'Assay' , sWidth: "20%",
+   					"render": function ( data, type, full, meta ) {
+        		 var sOut = data;
+      				
+      			  sOut +=	(full.sheet_uri===undefined)?"":('<br/>[term: <a href="'+full.sheet_uri+'" target="bioportal" title="Click for ontology URI">'
+      			  
+      			  +full.sheet_label+' ('+full.sheet_score+')</a>]');
+				
+      			 return sOut;		
+    				}
+        	        	
+        	},
         { data: 'Value' , title: 'Field'},
         { data: 'cleanedvalue', title : "Field (cleaned)", defaultContent : "WARNING: NOT SET" },
         { data: 'unit', title : "Units" , defaultContent : "" },
