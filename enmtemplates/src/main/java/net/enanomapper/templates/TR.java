@@ -7,6 +7,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import ambit2.base.json.JSONUtils;
+
 public class TR extends HashMap<String, Object> {
 	/**
 	 * 
@@ -128,9 +130,9 @@ public class TR extends HashMap<String, Object> {
 			if (v != null) {
 				Cell cell = row.createCell(h.ordinal());
 				if (v instanceof String)
-					cell.setCellValue((String)v);
+					cell.setCellValue((String) v);
 				else if (v instanceof Number)
-					cell.setCellValue(((Number)v).doubleValue());
+					cell.setCellValue(((Number) v).doubleValue());
 				else
 					cell.setCellValue(v.toString());
 			}
@@ -138,4 +140,26 @@ public class TR extends HashMap<String, Object> {
 
 	}
 
+	public String toJson() {
+		StringBuilder b = new StringBuilder();
+		String comma = "";
+		b.append("\n{");
+		for (String key : keySet()) {
+			Object value = get(key);
+			if (value != null) {
+				if (value instanceof TR) {
+					b.append(String.format("\n\t\t%s\"%s\":\t%s", comma,key,((TR)value).toJson()));
+				} else if (value instanceof Integer)
+					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).intValue()));
+				else if (value instanceof Double)
+					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).doubleValue()));
+				else  if (!"".equals(value.toString()))
+					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key,
+							JSONUtils.jsonQuote(JSONUtils.jsonEscape(value.toString()))));
+				comma = ",";
+			}
+		}
+		b.append("\n}");
+		return b.toString();
+	}
 }
