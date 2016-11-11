@@ -39,47 +39,57 @@ $(document).ready( function () {
         { data: 'module' , title : 'Module' , sWidth: "5%"},
         { data: 'endpoint', title : 'Endpoint' , sWidth: "10%",
       	"render": function ( data, type, full, meta ) {
-        		 var sOut = data;
+        		 var sOut = data.value;
         		 
       			 sOut += '<br/><a href="https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/'+
       					full.module+'/'+full.endpoint + '" target="bioportal" title="Click for template" target=_template>Template</a>';
 				
+								sOut += "<span style='font-size:75%;'>";
+								$.each(  data.term, function( key, value ) {
+      									sOut = sOut +'<br/>' + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
+      									((value.label===undefined)?value.uri:value.label)
+      									+'</a>'
+      									+ " " + value.score.toFixed(1)
+      									);									  	
+									});
+								sOut += "</span>";					
       			 return sOut;		
     				}
         	
         },
-        { data: 'sheet', title: 'Assay' , sWidth: "30%",
-   					"render": function ( data, type, full, meta ) {
-   						
-        		 var sOut = data.value;
-        		 try {
-        		 	
-      			  sOut +=	(data.term===undefined  || data.term.uri===undefined)?"":
-      			  			('<br/><a href="'+data.term.uri+'" target="bioportal" title="Click for ontology URI">'
-      			  			+ data.term.label+'</a> ('+ data.term.score+')');
-						} catch (err) {
-								console.log(full.sheet);      											
-						}
-      			 return sOut;		
-    				}
+        { data: 'sheet', title: 'Assay' , sWidth: "25%",
+        	"render": function ( data, type, full, meta ) {
+									var sOut= data.value ;	
+									sOut += "<span style='font-size:75%;'>";
+									$.each(  data.term, function( key, value ) {
+      									sOut = sOut +'<br/>' + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
+      									((value.label===undefined)?value.uri:value.label)
+      									+'</a>'
+      									+ " " + value.score.toFixed(1)
+      									);									  	
+									});
+									sOut += "</span>";					
+									return sOut;
+    				}    				
         	},
 
         { data: 'Value' , title: 'Field' , sWidth: "10%"},
         { data: 'cleanedvalue.value', title : "Field (cleaned)", sWidth: "10%", defaultContent : "WARNING: NOT SET" },
-        { data: 'unit', title : "Units" , defaultContent : "" ,sWidth: "5%"},
-        { data: 'cleanedvalue.term.uri', title : "Term (auto)" , defaultContent : "",sWidth: "10%",
+        { data: 'unit', title : "Units" , defaultContent : ""},
+        { data: 'cleanedvalue.term', title : "Term (auto)" , defaultContent : "",
         	"render": function ( data, type, full, meta ) {
-
-        		if (data === undefined) return "";
-        		if (data = "") return "";
-      				return '<a href="'+full.cleanedvalue.term.uri+'" target="bioportal" title="'+full.cleanedvalue.term.uri+'" title="Click for ontology URI">'+full.cleanedvalue.term.label+'</a>';
+									var sOut="";	
+									$.each( data, function( key, value ) {
+//									  	alert( key + ": " + value );
+      									sOut = sOut + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
+      									((value.label===undefined)?value.uri:value.label)
+      									+'</a>'
+      									+ " " + value.score.toFixed(1)
+      									+'<br/>');									  	
+									});
+									return sOut;
     				}
        	},
-				{ data: 'cleanedvalue.term.score', title : "Term score" , defaultContent : "", sWidth: "5%",
-					"render": function ( data, type, full, meta ) {
-						return (data===undefined)?"":data;
-				  }	
-				},
         { data: 'Row' , title: 'Row'  , sWidth: "3%" },	
         { data: 'Column' , title: 'Column'  , sWidth: "3%"}					
     	]

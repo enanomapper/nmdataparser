@@ -151,7 +151,7 @@ public class TR extends HashMap<String, Object> {
 					b.append(String.format("\n\t\t%s\"%s\":\t%s", comma,key,((TR)value).toJson()));
 				} else if (value instanceof Integer)
 					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).intValue()));
-				else if (value instanceof Double)
+				else if (value instanceof Number)
 					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).doubleValue()));
 				else  if (!"".equals(value.toString()))
 					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key,
