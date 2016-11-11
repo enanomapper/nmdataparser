@@ -79,6 +79,7 @@ $(document).ready( function () {
         { data: 'cleanedvalue.term', title : "Term (auto)" , defaultContent : "",
         	"render": function ( data, type, full, meta ) {
 									var sOut="";	
+									sOut += "<span style='font-size:90%;'>";
 									$.each( data, function( key, value ) {
 //									  	alert( key + ": " + value );
       									sOut = sOut + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
@@ -87,6 +88,7 @@ $(document).ready( function () {
       									+ " " + value.score.toFixed(1)
       									+'<br/>');									  	
 									});
+									sOut += "</span>";					
 									return sOut;
     				}
        	},

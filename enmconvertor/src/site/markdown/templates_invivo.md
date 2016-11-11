@@ -11,7 +11,7 @@
 *	Cellularity
 ##	INVIVO_BIODISTRIBUTION.xlsx
 *	Biodistribution
-##	[ECOTOX](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVIVO/ECOTOX)
+##	Exotoxicity [INVIVO_ECOTOX.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVIVO/ECOTOX)
 *	soil - C. Elegans
 *	water - algae - P.subcap
 *	water - fish - D Rerio

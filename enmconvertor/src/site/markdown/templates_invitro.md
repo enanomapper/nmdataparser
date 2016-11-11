@@ -24,13 +24,13 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	Resazurin
 *	Trypan blue
 	
-##	[Genotoxicity](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY)
+##	Genotoxicity [INVITRO_GENOTOXICITY.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY)
 *   chromosomal damage in vitro
 *	[COMET](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
 *	[Micronucleus](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
 *	TEM observation
 
-## [Immunotoxicity](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
+## Immunotoxicity [INVITRO_IMMUNOTOX.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
 *	Apoptosis
 *   [Cytokine secretion](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
 *	NO production
@@ -43,7 +43,7 @@ Each folder consists of Excel and JSON file for the specific assay.
 ##	INVITRO_OCCULARIRRITATON.xlsx
 *	hemolysis
 	
-##	[Cell viability](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY)
+##	Cell viability [INVITRO_VIABILITY.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY)
 *	Alamar blue
 *	CFE
 *	Impedence_flow cytom

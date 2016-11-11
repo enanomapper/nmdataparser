@@ -25,13 +25,13 @@
 *	Dustiness with small drum
 *	Dustiness with Vortex Shaker
 
-##	[Isoelectric point, zeta potential](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
+##	Isoelectric point, zeta potential [PCHEM_IEP.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
 *	isoElectric point
 
 ##	PCHEM_POTENTIOMETRY.xlsx
 *	Potentiometry_H2O sosp
 
-##	[Size distribution](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+##	Size distribution [PCHEM_SIZE.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 *	size PTA
 *	size SAXS
 *	size TEM
