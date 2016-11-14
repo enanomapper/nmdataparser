@@ -3,11 +3,6 @@ var t_endpoints =
 	"epithelial barrier integrity": {
 		"file": ["INVITRO_BARRIERCROSSING.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 12.36,
-				"label": "Saccharomyces boulardii Probiotic Supplement",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C102567"
-			},
 			"enm": {
 				"score": 22.87,
 				"label": "Barrier integrity",
@@ -25,11 +20,6 @@ var t_endpoints =
 	"biodistribution": {
 		"file": ["INVIVO_BIODISTRIBUTION.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 7.61,
-				"label": "Indium In 111-labeled Macroaggregated Albumin",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C116856"
-			}
 		},
 		"abbr": "BIODISTRIBUTION",
 		"value": "Biodistribution"
@@ -142,16 +132,7 @@ var t_endpoints =
 	"nanomaterial deposition / aerosol characterisation": {
 		"file": ["INVITRO_NMDEPOSITION.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 17.94,
-				"label": "Nanomaterial",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C62371"
-			},
-			"enm": {
-				"score": 13.02,
-				"label": "engineered nanomaterial",
-				"uri": "http://purl.bioontology.org/ontology/npo#NPO_1909"
-			},
+
 			"chmo": {
 				"score": 15.06,
 				"label": "aerosol-assisted chemical vapour deposition",
@@ -181,11 +162,6 @@ var t_endpoints =
 	"occular irritation": {
 		"file": ["INVITRO_OCCULARIRRITATON.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 12.01,
-				"label": "Have Vaginal Itching or Irritation",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C118271"
-			},
 			"enm": {
 				"score": 9.56,
 				"label": "irritation AE",
@@ -215,11 +191,6 @@ var t_endpoints =
 	"organ burden": {
 		"file": ["INVIVO_ORGANBURDEN.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 11.96,
-				"label": "Economic Burden",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C19250"
-			},
 			"enm": {
 				"score": 10.07,
 				"label": "in vivo assay measuring T cell epitope specific protection from infectious challenge based on pathogen burden",
@@ -263,11 +234,6 @@ var t_endpoints =
 				"score": 16.36,
 				"label": "surface chemistry assay",
 				"uri": "http://purl.enanomapper.org/onto/ENM_9000009"
-			},
-			"chmo": {
-				"score": 6.38,
-				"label": "Schlenk tube",
-				"uri": "http://purl.obolibrary.org/obo/CHMO_0002572"
 			}
 		},
 		"abbr": "SURFACECHEMISTRY",
@@ -276,11 +242,6 @@ var t_endpoints =
 	"density": {
 		"file": ["PCHEM_DENSITY.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 10.68,
-				"label": "Microvascular Density",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C96517"
-			},
 			"enm": {
 				"score": 8.59,
 				"label": "density modifier",
@@ -298,11 +259,6 @@ var t_endpoints =
 	"air liquid interface": {
 		"file": ["INVIVO_ALI.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 15.11,
-				"label": "Nebulizer",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C28172"
-			},
 			"enm": {
 				"score": 10.06,
 				"label": "barrier",
@@ -342,11 +298,6 @@ var t_endpoints =
 	"zeta potential": {
 		"file": ["PCHEM_ZETAPOTENTIAL.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 14.91,
-				"label": "Laser Doppler Velocimetry-Phase Analysis Light Scattering",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C78870"
-			},
 			"enm": {
 				"score": 22.92,
 				"label": "zeta potential",
@@ -446,11 +397,6 @@ var t_endpoints =
 				"score": 21.02,
 				"label": "specific surface area",
 				"uri": "http://semanticscience.org/resource/CHEMINF_000515"
-			},
-			"chmo": {
-				"score": 9.08,
-				"label": "microscope",
-				"uri": "http://purl.obolibrary.org/obo/CHMO_0000953"
 			}
 		},
 		"abbr": "VSSA",
@@ -463,11 +409,6 @@ var t_endpoints =
 				"score": 12.61,
 				"label": "Transformation",
 				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C17212"
-			},
-			"enm": {
-				"score": 8.97,
-				"label": "required feature",
-				"uri": "http://purl.enanomapper.org/onto/ENM_8000090"
 			},
 			"chmo": {
 				"score": 9.59,
@@ -532,21 +473,12 @@ var t_endpoints =
 	"physiologically based pharmacokinetic modelling (pbpk)": {
 		"file": ["INVIVO_PBPK.xlsx"],
 		"term": {
-			"ncit": {
-				"score": 13.23,
-				"label": "Talairach Space",
-				"uri": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C94990"
-			},
 			"enm": {
 				"score": 13.80,
 				"label": "pharmacokinetic parameter",
 				"uri": "http://purl.bioontology.org/ontology/npo#NPO_1530"
-			},
-			"chmo": {
-				"score": 5.16,
-				"label": "immobilised pH gradient-based isoelectric focusing",
-				"uri": "http://purl.obolibrary.org/obo/CHMO_0002254"
 			}
+
 		},
 		"abbr": "PBPK",
 		"value": "Physiologically based pharmacokinetic modelling (PBPK)"
