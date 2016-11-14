@@ -2,6 +2,7 @@ package net.enanomapper.templates;
 
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -14,7 +15,7 @@ public class TR extends HashMap<String, Object> {
 	 * 
 	 */
 	private static final long serialVersionUID = -4974769546259809851L;
-	public static final String header_string = "ID\tFolder\tFile\tSheet\tRow\tColumn\tValue\tAnnotation\theader1\tcleanedvalue\tunit\thint\tJSON_LEVEL1\tJSON_LEVEL2\tJSON_LEVEL3\tWarning\tterm_uri\tterm_label\tterm_score";
+	public static final String header_string = "ID\tFolder\tFile\tSheet\tRow\tColumn\tValue\tAnnotation\theader1\tcleanedvalue\tunit\thint\tJSON_LEVEL1\tJSON_LEVEL2\tJSON_LEVEL3\tWarning\tterm_uri\tterm_label\tterm_score\tendpoint";
 	public static final String[] header = header_string.split("\t");
 
 	public enum hix {
@@ -87,7 +88,7 @@ public class TR extends HashMap<String, Object> {
 				return false;
 			}
 		},
-		term_uri, term_label, term_score;
+		term_uri, term_label, term_score, endpoint;
 		public Object get(TR record) {
 			return record.get(name());
 		}
@@ -140,22 +141,41 @@ public class TR extends HashMap<String, Object> {
 
 	}
 
-	public String toJson() {
+	public String serialize(Object value) {
+		if (value != null) {
+			if (value instanceof List) {
+				StringBuilder b = new StringBuilder();
+				b.append("[");
+				String d = "";
+				for (Object v : ((List) value)) {
+					b.append(d);
+					b.append(serialize(v));
+					d = ",";
+				}
+				b.append("]");
+				return b.toString();
+
+			} else if (value instanceof TR) {
+				return ((TR) value).toJSON();
+			} else if (value instanceof Integer)
+				return Integer.toString(((Number) value).intValue());
+			else if (value instanceof Number)
+				return String.format("%4.2f", ((Number) value).doubleValue());
+			else if (!"".equals(value.toString()))
+				return JSONUtils.jsonQuote(JSONUtils.jsonEscape(value.toString()));
+		}
+		return "";
+
+	}
+
+	public String toJSON() {
 		StringBuilder b = new StringBuilder();
 		String comma = "";
 		b.append("\n{");
 		for (String key : keySet()) {
 			Object value = get(key);
 			if (value != null) {
-				if (value instanceof TR) {
-					b.append(String.format("\n\t\t%s\"%s\":\t%s", comma,key,((TR)value).toJson()));
-				} else if (value instanceof Integer)
-					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).intValue()));
-				else if (value instanceof Number)
-					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, ((Number) value).doubleValue()));
-				else  if (!"".equals(value.toString()))
-					b.append(String.format("\n\t%s\"%s\":\t%s", comma, key,
-							JSONUtils.jsonQuote(JSONUtils.jsonEscape(value.toString()))));
+				b.append(String.format("\n\t%s\"%s\":\t%s", comma, key, serialize(value)));
 				comma = ",";
 			}
 		}
