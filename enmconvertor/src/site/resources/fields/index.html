@@ -2,12 +2,16 @@
 <head>
 <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
  
-<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.12.3.js"></script> 
+<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.12.4.js"></script> 
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
+
+<script type="text/javascript" charset="utf8" src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script type="text/javascript" charset="utf8" src="templates_annotation.js"></script> 
 <script type="text/javascript" charset="utf8" src="endpoint_terms.js"></script> 
 <script type="text/javascript" charset="utf8" src="assay_terms_curated.js"></script> 
 <script type="text/javascript" charset="utf8" src="field_terms.js"></script> 
+
 
 <link rel="stylesheet" href="https://search.data.enanomapper.net/style/skeleton/base.css" type="text/css">
 <link rel="stylesheet" href="https://search.data.enanomapper.net/style/skeleton/skeleton-fluid.css" type="text/css">
@@ -18,7 +22,9 @@
 <link rel="stylesheet" href="https://search.data.enanomapper.net/style/skeleton/ambit2.css" type="text/css">
 <link rel="stylesheet" href="https://search.data.enanomapper.net/style/skeleton/toplinks.css" type="text/css">
 <link rel="stylesheet" href="https://search.data.enanomapper.net/style/skeleton/cssflow.css" type="text/css">
-
+  
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  
 <!-- menus
 ================================================== -->
 <script src="https://search.data.enanomapper.net/lib/jquery.smartmenus.min.js" type="text/javascript" language="JavaScript"></script>
@@ -32,7 +38,30 @@
 
 <link rel="shortcut icon" href="https://search.data.enanomapper.net/favicon.ico">	
 <script>
+	
+function showTerm(data, terms)	 {
+				var sOut = "";
+	 			var lookup = terms[data];
+				if (lookup!=undefined) {
+								sOut += "<span style='font-size:90%;'>";
+								$.each(  lookup.term, function( key, value ) {
+      									sOut = sOut +'<br/>' + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
+      									((value.label===undefined)?value.uri:value.label)
+      									+'</a>'
+      									+ " " + value.score.toFixed(1)
+      									);									  	
+									});
+								sOut += "</span>";					
+							}
+				return sOut;					
+}
+
+function showTemplate(file) {
+	return '<br/><a href="https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/'+
+      					file + '" target="bioportal" title="Click for template" target=_template>'+file+'</a>';
+}
 $(document).ready( function () {
+	  $( "#tabs" ).tabs();
     $('#templates').DataTable({
     	"dom": '<"top"ip>rt<"bottom"flp><"clear">',
     	"pagingType": "full_numbers",
@@ -44,41 +73,14 @@ $(document).ready( function () {
       	"render": function ( data, type, full, meta ) {
         		 var sOut = data;
         		 
-        		 var lookup = t_endpoints[data];
-        		 
       			 sOut += '<br/><a href="https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/'+
       					full.module+'/'+full.endpoint + '" target="bioportal" title="Click for template" target=_template>Template</a>';
-				
-								sOut += "<span style='font-size:75%;'>";
-								$.each(  lookup.term, function( key, value ) {
-      									sOut = sOut +'<br/>' + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
-      									((value.label===undefined)?value.uri:value.label)
-      									+'</a>'
-      									+ " " + value.score.toFixed(1)
-      									);									  	
-									});
-								sOut += "</span>";					
-      			 return sOut;		
-    				}
-        	
+						return sOut + showTerm(data,t_endpoints);
+					}        	
         },
         { data: 'sheet', title: 'Assay' , sWidth: "25%",
         	"render": function ( data, type, full, meta ) {
-									var sOut= data ;	
-									
-									var lookup = t_assay[data];
-									if (lookup!=undefined) {
-										sOut += "<span style='font-size:75%;'>";
-										$.each(  lookup.term, function( key, value ) {
-	      									sOut = sOut +'<br/>' + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
-	      									((value.label===undefined)?value.uri:value.label)
-	      									+'</a>'
-	      									+ " " + value.score.toFixed(1)
-	      									);									  	
-										});
-										sOut += "</span>";			
-									}		
-									return sOut;
+									return data + showTerm(data,t_assay);
     				}    				
         	},
 
@@ -87,27 +89,96 @@ $(document).ready( function () {
         { data: 'unit', title : "Units" , defaultContent : ""},
         { data: 'cleanedvalue', title : "Term (auto)" , defaultContent : "",
         	"render": function ( data, type, full, meta ) {
-        			
-        					var lookup = t_fields[data];
-									var sOut="";	
-									if (lookup!=null) {
-										sOut += "<span style='font-size:90%;'>";
-										$.each( lookup.term, function( key, value ) {
-	//									  	alert( key + ": " + value );
-	      									sOut = sOut + (key + ': <a href="'+ value.uri+'" target="bioportal" title="'+ value.uri+'" title="Click for ontology URI">'+
-	      									((value.label===undefined)?value.uri:value.label)
-	      									+'</a>'
-	      									+ " " + value.score
-	      									+'<br/>');									  	
-										});
-										sOut += "</span>";	
-								  }				
-									return sOut;
+        					return showTerm(data,t_fields);
     				}
        	},
         { data: 'Row' , title: 'Row'  , sWidth: "3%" },	
         { data: 'Column' , title: 'Column'  , sWidth: "3%"}					
     	]
+    });
+    
+    var o_endpoints =[];
+    jQuery.each(t_endpoints,function(val,i) {
+    		o_endpoints.push(i);
+    });
+    var o_assays =[];
+    jQuery.each(t_assay,function(val,i) {
+    		o_assays.push(i);
+    });
+    var o_fields =[];
+    jQuery.each(t_fields,function(val,i) {
+    		o_fields.push(i);
+    });
+    $('#e_list').DataTable({
+    	"dom": '<"top"ip>rt<"bottom"flp><"clear">',
+    	"pagingType": "full_numbers",
+    	"lengthMenu": [[25,50, 100, 500, -1], [25,50,100, 500, "All"]],
+    	data:o_endpoints,
+    	columns: [
+            { data: 'value' , title : 'Endpoint'},
+            { data: 'value', title: 'Term' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+									return showTerm(data,t_endpoints);
+    					}    				
+        		},
+        		{ data: 'file', title: 'File(s)' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+        				  var s = "";
+									jQuery.each(data,function(val,i) {
+										s+= showTemplate(i);
+								  });
+								  return s;
+    					}    				
+        		}
+       ]     
+    });
+    //
+     $('#a_list').DataTable({
+    	"dom": '<"top"ip>rt<"bottom"flp><"clear">',
+    	"pagingType": "full_numbers",
+    	"lengthMenu": [[25,50, 100, 500, -1], [25,50,100, 500, "All"]],
+    	data:o_assays,
+    	columns: [
+            { data: 'value' , title : 'Assay'},
+            { data: 'value', title: 'Term' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+									return showTerm(data.toLowerCase(),t_assay);
+    					}    				
+        		},
+        		{ data: 'file', title: 'File(s)' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+        				  var s = "";
+									jQuery.each(data,function(val,i) {
+											s+= showTemplate(i);
+								  });
+								  return s;
+    					}    				
+        		}
+       ]     
+    });
+    //
+     $('#f_list').DataTable({
+    	"dom": '<"top"ip>rt<"bottom"flp><"clear">',
+    	"pagingType": "full_numbers",
+    	"lengthMenu": [[25,50, 100, 500, -1], [25,50,100, 500, "All"]],
+    	data:o_fields,
+    	columns: [
+            { data: 'value' , title : 'Fields'},
+            { data: 'value', title: 'Term' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+									return showTerm(data.toLowerCase(),t_fields);
+    					}    				
+        		},
+        		{ data: 'file', title: 'File(s)' , sWidth: "25%",
+        			"render": function ( data, type, full, meta ) {
+        				  var s = "";
+									jQuery.each(data,function(val,i) {
+											s+= showTemplate(i);
+								  });
+								  return s;
+    					}    				
+        		}
+       ]     
     });
 } );
 	
@@ -164,18 +235,63 @@ $(document).ready( function () {
 		</div>
 							
 <div class="row half-bottom cc-fixed">
-<div class="sixteen columns">
-<table id="templates"  width='90%' class="display row-border" width="100%">
-<thead>
+<div class="sixteen columns" id="tabs">
+
+  <ul>
+    <li><a href="#tabs_templates">Templates</a></li>
+    <li><a href="#tabs_endpoints">Terms (Endpoints)</a></li>
+    <li><a href="#tabs_assays">Terms (Assays)</a></li>
+    <li><a href="#tabs_fields">Terms (Fields)</a></li>
+  </ul>
+
+	<div id="tabs_templates">  	
+	<table id="templates"  width='100%' class="display row-border" width="100%">
+	<thead>
+		
+	</thead>	
+	<tbody>
+	  	
+	</tbody>	
+	</table>	
+	</div>
 	
-</thead>	
-<tbody>
-  	
-</tbody>	
-</table>	
+	<div id="tabs_endpoints"> 
+			<table id="e_list"  width='100%' class="display row-border" width="100%">
+			<thead></thead>	
+		  <tbody></tbody>	
+		  </table>	
+	</div>	
+	<div id="tabs_assays">
+			<table id="a_list"  width='100%' class="display row-border" width="100%">
+			<thead></thead>	
+		  <tbody></tbody>	
+		  </table>			
+	</div>	
+	<div id="tabs_fields">
+			<table id="f_list"  width='100%' class="display row-border" width="100%">
+			<thead></thead>	
+		  <tbody></tbody>	
+		  </table>	
+	</div>	
+
+
 </div>
+
 
 </div>
 </div>
+<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-32347361-5']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
 </body>	
 </html>
