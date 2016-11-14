@@ -1,3 +1,4 @@
+var templates=
 [
 
 {
@@ -82818,3 +82819,4 @@
 	,"JSON_LEVEL2":	"PROTOCOL_GUIDELINE"
 }
 ]
+;

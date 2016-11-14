@@ -1,4 +1,4 @@
-vat r_endpoints =
+var t_endpoints =
 {
 	"epithelial barrier integrity": {
 		"file": ["INVITRO_BARRIERCROSSING.xlsx"],
