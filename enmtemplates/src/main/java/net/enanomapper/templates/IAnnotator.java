@@ -9,6 +9,6 @@ public interface IAnnotator {
 	public String getQueryField();
 	public void setQueryField(String queryField);
 	enum _termtag {
-		uri,label,score
+		uri,label,score,rank
 	}
 }
