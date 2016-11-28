@@ -118,7 +118,7 @@ $(document).ready( function () {
             { data: 'value' , title : 'Endpoint'},
             { data: 'value', title: 'Term' , sWidth: "25%",
         			"render": function ( data, type, full, meta ) {
-									return showTerm(data,t_endpoints);
+									return showTerm(data.toLowerCase(),t_endpoints);
     					}    				
         		},
         		{ data: 'file', title: 'File(s)' , sWidth: "25%",
