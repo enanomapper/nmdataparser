@@ -1,0 +1,274 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Solubility Dissolution Dispersability. Sheet: filtration ICP-MS",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "filtration ICP-MS"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AQ"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Solvent medium for dispersion": {
+					"COLUMN_INDEX": "R"
+				},
+				
+				"initial concentration": {
+					"COLUMN_INDEX": "S",
+					"UNIT": "μg/g"
+				},
+				
+				"Temperature": {
+					"COLUMN_INDEX": "T",
+					"UNIT": "°C"
+				},
+				
+				"Dissolution time": {
+					"COLUMN_INDEX": "U",
+					"UNIT": "h"
+				},
+				
+				"initial pH": {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"Stirring/ shaking method": {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"Gas atmosphere": {
+					"COLUMN_INDEX": "X",
+					"UNIT": "mm"
+				},
+				
+				"Undissolved material still present in suspension before filtration/centrifugation": {
+					"COLUMN_INDEX": "Y"
+				},
+				
+				"filter type": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"filter material": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"pore size": {
+					"COLUMN_INDEX": "AB",
+					"UNIT": "Kda"
+				},
+				
+				"RCF": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "g"
+				},
+				
+				"duration of centrifugation": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "min"
+				},
+				
+				"final pH": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "S"
+				},
+				
+				"total time to dissolution": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"model / brand instrument": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"source power": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"interference correction method": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"injector flow": {
+					"COLUMN_INDEX": "AJ",
+					"UNIT": "mL/min"
+				},
+				
+				"calibration range": {
+					"COLUMN_INDEX": "AK",
+					"UNIT": "ng/mL"
+				},
+				
+				"analytes detected": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"replicates for each measurements": {
+					"COLUMN_INDEX": "AM"
+				}
+				
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "analyte concentration already corrected for dilutions and blank"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AN"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ng/mL"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AP",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AP"
+					}
+                },
+				
+				{				
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AO",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AO"
+					}
+                }
+				
+			]
+		}
+	]
+}

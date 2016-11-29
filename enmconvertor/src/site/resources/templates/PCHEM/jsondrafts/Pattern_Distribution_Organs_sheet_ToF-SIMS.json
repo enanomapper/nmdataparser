@@ -1,0 +1,416 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology-in vivo. Pattern_Distribution_Organs. Sheet: ToF-SIMS",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "ToF-SIMS"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "BD"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Application system: Exposure route": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Application system: Exposure time": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Application system: Exposure system": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Application system: Animal model": {
+					"COLUMN_INDEX": "AC"
+				},
+				
+				"Application system: concentration": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "mg/L"
+				},
+				
+				"Application system: Tissue type": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"Application system: sample status": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Sample preparation. Freeze drying: amount of fresh sample": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Sample preparation. Freeze drying: Sample status": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"Sample preparation. Freeze drying: Instrument type": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"Sample preparation. Freeze drying: Temperature range": {
+					"COLUMN_INDEX": "AJ",
+					"UNIT": "°C"
+				},
+				
+				"Sample preparation. Freeze drying: Pressure range": {
+					"COLUMN_INDEX": "AK",
+					"UNIT": "bar"
+				},
+				
+				"Sample preparation. Freeze drying: Run time": {
+					"COLUMN_INDEX": "AL",
+					"UNIT": "h"
+				},
+				
+				"Imaging technique - ToF-SIMS: Instrument type": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"Imaging technique - ToF-SIMS: type of samples": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"Imaging technique - ToF-SIMS: Source": {
+					"COLUMN_INDEX": "AO"
+				},
+				
+				"Imaging technique - ToF-SIMS: Analyser": {
+					"COLUMN_INDEX": "AP"
+				},
+				
+				"Imaging technique - ToF-SIMS: Detector": {
+					"COLUMN_INDEX": "AQ"
+				},
+				
+				"Imaging technique - ToF-SIMS: Ion Range": {
+					"COLUMN_INDEX": "AR"
+				},
+				
+				"Imaging technique - ToF-SIMS: Image Size": {
+					"COLUMN_INDEX": "AS",
+					"UNIT": "pixel"
+				},
+				
+				"Imaging technique - ToF-SIMS: Calibration": {
+					"COLUMN_INDEX": "AT"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Pattern of NP distribution"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AU"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Pattern of NP distribution- penetration visible"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AV"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NP localization and internalization  in pneumocytes, machrophages, blood vessels, BALT etc"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AW"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "quantification of NP uptake weighted to cellular protein content in alveola, ATI and ATII pneumocytes"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AX"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "r.u."
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AY",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AY"
+					}
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "quantification of NP uptake weighted to cellular protein content in macrophages"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AZ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "r.u."
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BA",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BA"
+					}
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "quantification of NP uptake weighted to cellular protein content in bronchi"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BB"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "r.u."
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BC",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BC"
+					}
+				}
+				
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse method": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"Diameter": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "nm"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+				
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+					}
+                }
+			]
+			
+		}
+
+		
+	]
+	
+	
+}

@@ -1,0 +1,219 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Surface chemistry. Sheet: functional groups_TGA",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 3,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "functional groups_TGA"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AF"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Sample weight": {
+					"COLUMN_INDEX": "R",
+					"UNIT": "g"
+				},
+				
+				"Sample holder (crucible) composition": {
+					"COLUMN_INDEX": "S"
+				},
+				
+				"Sample holder (crucible shape)": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Reaction gas composition": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Reaction gas flow": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mL/min"
+				},
+				
+				"Purging gas (inert) flow": {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"Time-temperature program: Number of regions in program": {
+					"COLUMN_INDEX": "X"
+				},
+				
+				"Time-temperature program: Initial time": {
+					"COLUMN_INDEX": "Y",
+					"UNIT": "min"
+				},
+				
+				"Time-temperature program: Initial temperature": {
+					"COLUMN_INDEX": "Z",
+					"UNIT": "°C"
+				},
+				
+				"Time-temperature program: Heating/cooling rate": {
+					"COLUMN_INDEX": "AA",
+					"UNIT": "°C/min"
+				},
+				
+				"Time-temperature program: Final time": {
+					"COLUMN_INDEX": "AB",
+					"UNIT": "min"
+				},
+				
+				"Time-temperature program: Final temperature": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "°C"
+				}
+				
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Weight loss"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AD"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AE",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+					}
+                }
+				
+			]
+		}
+	]
+}

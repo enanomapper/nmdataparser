@@ -1,0 +1,474 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Elemental composition chemical purity. Sheet: elemental composition_ICP-MS",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "elemental composition_ICP-MS"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "BD"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Method description: Protocol REF=SOP": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Method description: Instrument brand and model": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Method description: Tunning date/aquisition date": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Method description: Sample weight": {
+					"COLUMN_INDEX": "AC"
+				},
+				
+				"Method description: Dissolution medium composition": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"Method description: Dissolution medium volume": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "mL"
+				},
+				
+				"Method description: Dissolution method": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Method description: Dissolution time": {
+					"COLUMN_INDEX": "AG",
+					"UNIT": "min"
+				},
+				
+				"Method description: Dissolution prgramme / Max. T": {
+					"COLUMN_INDEX": "AH",
+					"UNIT": "°C"
+				},
+				
+				"Method description: Final volume or weight after dissolution": {
+					"COLUMN_INDEX": "AI",
+					"UNIT": "mL or g"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Concentration of element 1 in the sample"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AR"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg element/ mL sample"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AS",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AS"
+					},
+					
+					"CONDITIONS": {
+						
+						"Element 1 mass-to-charge ratio": {
+							"COLUMN_INDEX": "AK",
+							"UNIT": "m/z"
+						},
+					
+						"Element 1. Collision/ Reaction Cell": {
+							"COLUMN_INDEX": "AL"
+						},
+						
+						"Element 1. Gas Mode / Flow": {
+							"COLUMN_INDEX": "AM",
+							"UNIT": "mL/min"
+						},
+						
+						"Element 1. On Mass / Mass Shift": {
+							"COLUMN_INDEX": "AN"
+						},
+					
+						"Element 1. Element Calibration range": {
+							"COLUMN_INDEX": "AO",
+							"UNIT": "μg/mL"
+						},
+						
+						"Element 1. Replicates number": {
+							"COLUMN_INDEX": "AP"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Concentration of the element detected"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AQ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "μg/mL"
+					},
+					
+					"CONDITIONS": {
+						
+						"Element 1 mass-to-charge ratio": {
+							"COLUMN_INDEX": "AK",
+							"UNIT": "m/z"
+						},
+					
+						"Element 1. Collision/ Reaction Cell": {
+							"COLUMN_INDEX": "AL"
+						},
+						
+						"Element 1. Gas Mode / Flow": {
+							"COLUMN_INDEX": "AM",
+							"UNIT": "mL/min"
+						},
+						
+						"Element 1. On Mass / Mass Shift": {
+							"COLUMN_INDEX": "AN"
+						},
+					
+						"Element 1. Element Calibration range": {
+							"COLUMN_INDEX": "AO",
+							"UNIT": "μg/mL"
+						},
+						
+						"Element 1. Replicates number": {
+							"COLUMN_INDEX": "AP"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Concentration of element 2 in the sample"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BB"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg element/ mL sample"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BC",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BC"
+					},
+					
+					"CONDITIONS": {
+						
+						"Element 2 mass-to-charge ratio": {
+							"COLUMN_INDEX": "AU",
+							"UNIT": "m/z"
+						},
+					
+						"Element 2. Collision/ Reaction Cell": {
+							"COLUMN_INDEX": "AV"
+						},
+						
+						"Element 2. Gas Mode / Flow": {
+							"COLUMN_INDEX": "AW",
+							"UNIT": "mL/min"
+						},
+						
+						"Element 2. On Mass / Mass Shift": {
+							"COLUMN_INDEX": "AX"
+						},
+					
+						"Element 2. Element Calibration range": {
+							"COLUMN_INDEX": "AY",
+							"UNIT": "μg/mL"
+						},
+						
+						"Element 2. Replicates number": {
+							"COLUMN_INDEX": "AZ"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Concentration of the element detected"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BA"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "μg/mL"
+					},
+					
+					"CONDITIONS": {
+						
+						"Element 2 mass-to-charge ratio": {
+							"COLUMN_INDEX": "AU",
+							"UNIT": "m/z"
+						},
+					
+						"Element 2. Collision/ Reaction Cell": {
+							"COLUMN_INDEX": "AV"
+						},
+						
+						"Element 2. Gas Mode / Flow": {
+							"COLUMN_INDEX": "AW",
+							"UNIT": "mL/min"
+						},
+						
+						"Element 2. On Mass / Mass Shift": {
+							"COLUMN_INDEX": "AX"
+						},
+					
+						"Element 2. Element Calibration range": {
+							"COLUMN_INDEX": "AY",
+							"UNIT": "μg/mL"
+						},
+						
+						"Element 2. Replicates number": {
+							"COLUMN_INDEX": "AZ"
+						}
+					}
+                }
+				
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse method": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "W"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                }
+			
+			]
+		
+		}
+		
+	]
+	
+	
+}

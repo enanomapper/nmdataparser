@@ -1,0 +1,292 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Phys-Chem: batch_dispersion",
+		"VERSION": "03",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+	
+	   "SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+				
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+        
+        "EXTERNAL_IDENTIFIERS": [
+    			{
+                "ID": {
+                    "COLUMN_INDEX": "B",
+                    "ITERATION": "ROW_SINGLE"
+                },
+                "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                }
+            }
+        ],
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-CHEM"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "batch_dispersion"
+			},
+			
+			"CITATION_OWNER": {
+				"ITERATION":"ROW_SINGLE",
+				"COLUMN_INDEX": "K"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+                "guideline1": {
+                    "COLUMN_INDEX": "AI"
+                }
+            },
+			
+            "PARAMETERS": {
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersion protocol ": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Sonicator": {
+                    "COLUMN_INDEX": "N"
+                },
+				
+				"DLS Instrument specifications": {
+					"COLUMN_INDEX": "S"
+				},
+						
+				"Dispersion medium": {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"Deviation from Dispersion protocols": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Power": {
+					"COLUMN_INDEX": "O",
+					"UNIT": "W"
+				},
+				
+				"Sonication time": {
+					"COLUMN_INDEX": "P",
+					"UNIT": "s"
+				},
+				
+				"Tip thickness": {
+					"COLUMN_INDEX": "Q",
+					"UNIT": "mm"
+				},
+				
+				"Tip composition": {
+					"COLUMN_INDEX": "R"
+				},
+				
+				"Concentration": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "mg mL-1"
+				},
+				
+				"Measurement Viscosity": {
+					"COLUMN_INDEX": "Y",
+					"UNIT": "cP"
+				},
+				
+				"Measurement temperature": {
+					"COLUMN_INDEX": "Z",
+					"UNIT": "C"
+				},
+				
+				"references to SOPs": {
+					"COLUMN_INDEX": "AI"
+				}
+
+            },
+            "EFFECTS": [
+                {
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "X"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean Hydrodynamic diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AA"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Intensity Peak 1"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AB"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Intensity Peak 2"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AC"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Intensity Peak 3"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AD"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "in weight"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AE"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "numer"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AF"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "PDI"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AG"
+                    }
+                },
+				
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Derived count rate"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AH"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "cps"
+                    }
+                }
+            ]
+        }
+		
+		
+		
+	]
+	
+}
+	
+	

@@ -1,0 +1,218 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Solubility dissolution dispersability. Sheet: Colorimetry",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 4,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Colorimetry"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AF"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"filtration/centrifugation phase: Number of measurement replicates": {
+					"COLUMN_INDEX": "R"
+				},
+				
+				"filtration/centrifugation phase: Dispersion concentraiton": {
+					"COLUMN_INDEX": "S",
+					"UNIT": "mg/mL"
+				},
+				
+				"filtration/centrifugation phase: Indicate stage of digestion step": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"filtration/centrifugation phase: Net absorption intensity (AU) at 556 nm for Zn2+ test": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"filtration/centrifugation phase: Net absorption intensity (AU) at ? nm for ?cations/anions? test": {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"filtration/centrifugation phase: Estimated": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "µg/mL"
+				},
+				
+				"filtration/centrifugation phase: SEM: NM particles present in the images": {
+					"COLUMN_INDEX": "X"
+				},
+				
+				"filtration/centrifugation phase: DLS Z-Ave Hydrodynamic diameter": {
+					"COLUMN_INDEX": "Y",
+					"UNIT": "nm"
+				},
+				
+				"filtration/centrifugation phase: PDI": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"filtration/centrifugation phase: Temperature range that the particles were subjected to": {
+					"COLUMN_INDEX": "AA",
+					"UNIT": "°C"
+				},
+				
+				"filtration/centrifugation phase: Residence time = total amount of time (in hours/minutes) that the particles spend in the liquid system.": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"filtration/centrifugation phase: Indicate separation method/s used to remove particles": {
+					"COLUMN_INDEX": "AC"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Estimated  [Zn2+]"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AD"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µg/mL"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AE",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+					}
+				}
+				
+			]
+		}
+		
+	]
+	
+	
+}

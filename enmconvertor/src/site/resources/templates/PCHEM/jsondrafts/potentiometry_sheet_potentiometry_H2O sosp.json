@@ -1,0 +1,344 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Potentiometry. Sheet: potentiometry_H2O sosp",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Potentiometry H2O sosp"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AK"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Date of preparation of the sample to test": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Total NM concentration in the sample to test": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "mg/L"
+				},
+				
+				"pH of the sample to test": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"Calibration and Assay Temperature": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "°C"
+				},
+				
+				"Calibration and Assay Strirring condition": {
+					"COLUMN_INDEX": "AF"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Measured potential of the sample to test"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AG"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mV"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Ion conc. in the sample to test"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AH"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg/L"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Dissolved NM in the sample to test"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AI"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg/L"
+					},
+					
+					"LO_QUALIFIER": {
+						"ITERATION": "ABSOLUTE_LOCATION",
+						"COLUMN_INDEX": "AJ",
+						"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+						"COLUMN_INDEX": "AJ"
+					}
+                }
+				
+			]
+		},
+	
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Calibration"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AK"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+							
+					"Instrument specifications":{
+						"COLUMN_INDEX": "R"
+					},
+				
+					"Reference electrode":{
+						"COLUMN_INDEX": "S"
+					},
+				
+					"Ionic strength adjuster for the assay":{
+						"COLUMN_INDEX": "T"
+					},
+				
+					"Ratio of ionic strength adjuster to standard or samples to be measured":{
+						"COLUMN_INDEX": "U",
+						"UNIT": "v/v"
+					},
+				
+					"Calibration date":{
+						"COLUMN_INDEX": "V"
+					},
+				
+					"Mother solution for calibration":{
+						"COLUMN_INDEX": "W"
+					}
+				
+			},
+			
+			"EFFECTS": [
+			
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Non linear area: Calibration curve points and responses"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg/L-mv"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Non linear area: Calibration curve"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "Y"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mv"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Linear area: Calibration curve points and responses"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "Z"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg/L-mv"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Linear area: Calibration curve"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AA"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mv"
+					}
+                }
+			
+			]
+		}
+	]
+}

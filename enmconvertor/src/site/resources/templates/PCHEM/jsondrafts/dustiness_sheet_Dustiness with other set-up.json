@@ -1,0 +1,319 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Dustiness. Sheet: Dustiness with other set-up",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 5,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Dustiness with other set-up"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AR"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Power characteristics: Bulk density": {
+					"COLUMN_INDEX": "R",
+					"UNIT": "g/cm3"
+				},
+				
+				"Power characteristics: BET surface": {
+					"COLUMN_INDEX": "S",
+					"UNIT": "m2/g"
+				},
+				
+				"Power characteristics: Water content": {
+					"COLUMN_INDEX": "T",
+					"UNIT": "%"
+				},
+				
+				"Nanodrum characteristics: Volume of the drum": {
+					"COLUMN_INDEX": "U",
+					"UNIT": "L"
+				},
+				
+				"Nanodrum characteristics: Drum diameter": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "cm"
+				},
+				
+				"Nanodrum characteristics: Flowrate": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "L/min"
+				},
+				
+				"Nanodrum characteristics: Rotation speed": {
+					"COLUMN_INDEX": "X",
+					"UNIT": "rpm"
+				},
+				
+				"Air conditioning: Humidity of the incoming air": {
+					"COLUMN_INDEX": "Y",
+					"UNIT": "%"
+				},
+				
+				"Air conditioning: Temperature of the incoming air": {
+					"COLUMN_INDEX": "Z",
+					"UNIT": "°C"
+				},
+				
+				"Sample Characteristics: Volume of the sample": {
+					"COLUMN_INDEX": "AA",
+					"UNIT": "cm3"
+				},
+				
+				"Sample Characteristics: Mass of the sample": {
+					"COLUMN_INDEX": "AB",
+					"UNIT": "mg"
+				},
+				
+				"Sample Characteristics: Humidity of the sample prior to the test": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "%"
+				},
+				
+				"Test informations: duration of the vibration": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "S"
+				},
+				
+				"Test informations: duration of the real-time measurement": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "S"
+				},
+				
+				"Test informations: duration of the respirable sampling": {
+					"COLUMN_INDEX": "AF",
+					"UNIT": "S"
+				},
+				
+				"Instrument: Respirable sampler used": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Instrument: Instrument used for counting": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"Instrument: Instrument #1 used for size distrubution": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"Instrument: Instrument #2 used for size distrubution": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"Instrument: Other instrument #3 used": {
+					"COLUMN_INDEX": "AK"
+				}
+				
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Dustiness indice in respirable number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AL"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "1/mg"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Dustiness indice in respirable mass"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AM"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "mg/kg"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Number of modes on the emitted aerosol"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AN"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Number or mass size distribution"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AO"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size of the highest mode"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AP"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µm"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size of the 2nd mode"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AQ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µm"
+					}
+                }
+				
+			]
+		}
+	]
+}

@@ -1,0 +1,295 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "P-Chem. Solubility dissolution dispersability. Sheet: Filtration WDXRF",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 3,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Filtration WDXRF"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AX"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"filtration/centrifugation phase: Dispersion": {
+					"COLUMN_INDEX": "R"
+				},
+				
+				"filtration/centrifugation phase: Solvent medium": {
+					"COLUMN_INDEX": "S"
+				},
+				
+				"filtration/centrifugation phase: Initial concentration": {
+					"COLUMN_INDEX": "T",
+					"UNIT": "μg/g"
+				},
+				
+				"filtration/centrifugation phase: Temperature": {
+					"COLUMN_INDEX": "U",
+					"UNIT": "°C"
+				},
+				
+				"filtration/centrifugation phase: Dissolution time": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "h"
+				},
+				
+				"filtration/centrifugation phase: Initial pH": {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"filtration/centrifugation phase: Stirring/ shaking method": {
+					"COLUMN_INDEX": "X"
+				},
+				
+				"filtration/centrifugation phase: Gas atmosphere": {
+					"COLUMN_INDEX": "Y"
+				},
+				
+				"filtration/centrifugation phase: Undissolved material still present in suspension before filtration/centrifugatio": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"filtration/centrifugation phase: filter type": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"filtration/centrifugation phase: filter material": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"filtration/centrifugation phase: pore size": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "kDa"
+				},
+				
+				"filtration/centrifugation phase: RCF": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "g"
+				},
+				
+				"filtration/centrifugation phase: duration of centrifugation": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "min"
+				},
+				
+				"filtration/centrifugation phase: final pH": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"filtration/centrifugation phase: total time to dissolution": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"WDXRF: model / brand instrument": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"WDXRF: method type": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"WDXRF: method name": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"WDXRF: calibration range": {
+					"COLUMN_INDEX": "AK",
+					"UNIT": "%"
+				},
+				
+				"WDXRF: elements/oxides detected": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"WDXRF: line": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"WDXRF: Tube": {
+					"COLUMN_INDEX": "AN",
+					"UNIT": "kV"
+				},
+				
+				"WDXRF: Tube": {
+					"COLUMN_INDEX": "AO",
+					"UNIT": "mA"
+				},
+				
+				"WDXRF: Filter": {
+					"COLUMN_INDEX": "AP"
+				},
+				
+				"WDXRF: Mask": {
+					"COLUMN_INDEX": "AQ"
+				},
+				
+				"WDXRF: Collimator": {
+					"COLUMN_INDEX": "AR"
+				},
+				
+				"WDXRF: NetIntensity": {
+					"COLUMN_INDEX": "AS"
+				},
+				
+				"WDXRF: replicates for each measurements": {
+					"COLUMN_INDEX": "AT"
+				},
+				
+				"WDXRF: lower limit of detection": {
+					"COLUMN_INDEX": "AU"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "concentration already corrected for foil and matrix"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AV"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AW",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AW"
+					}
+				}
+				
+			]
+		}
+		
+	]
+	
+	
+}
