@@ -1,0 +1,273 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology – in vivo_biological_effects_of_pulmonary_deposition_sheet_cytokine levels",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 5,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "cytokines levels"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AI"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Concentration": {
+					"COLUMN_INDEX": "Z",
+					"UNIT": "mg/m3"
+				},
+				
+				"Exposure method": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Exposure system": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Animal model": {
+					"COLUMN_INDEX": "AC"
+				},
+				
+				"Tissue type": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"Cytokine/Chemokine": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"Post-exposure time": {
+					"COLUMN_INDEX": "AF",
+					"UNIT": "days"
+				}
+				
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Cytokine/Chemokine conc"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AG"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AH",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AH"
+					}
+                }
+				
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse method": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				}, 
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "W"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+					}
+                }
+			]
+		
+		}
+	]
+}

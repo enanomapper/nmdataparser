@@ -1,0 +1,399 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology – organ_burden",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+			
+			{
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+            } 
+		]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "organ_burden"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AY"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+				
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				}
+			},
+			
+			"EFFECTS": [
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Analyte concentration as average of the replicates and repeated samples"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AW"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ppb"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AX",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AX"
+					}
+				}			
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse method": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"Diameter": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "nm"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+				
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+					}
+                }
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Application system"	
+			},
+			
+			"PARAMETERS": {
+			
+				"Exposure route": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Exposure method": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Exposure system": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Animal model": {
+					"COLUMN_INDEX": "AC"
+				},
+				
+				"concentration": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "mg/L"
+				},
+				
+				"Tissue type": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"sample status": {
+					"COLUMN_INDEX": "AF"
+				}
+				
+			},
+			
+			"EFFECTS": [
+				
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Sample preparation - freeze drying"	
+			},
+			
+			"PARAMETERS": {
+			
+				"amount of fresh sample": {
+					"COLUMN_INDEX": "AG",
+					"UNIT": "mg"
+				},
+				
+				"temperature": {
+					"COLUMN_INDEX": "AH",
+					"UNIT": "°C"
+				},
+				
+				"freeze-drying time": {
+					"COLUMN_INDEX": "AI",
+					"UNIT": "h"
+				}
+				
+			},
+			
+			"EFFECTS": [
+				
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "ANALYTICAL PARAMETERS - MW assisted ACID DIGESTION "	
+			},
+			
+			"PARAMETERS": {
+				
+				"Sample status": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"Instrument type": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"temperature": {
+					"COLUMN_INDEX": "AL",
+					"UNIT": "°C"
+				},
+				
+				"Pressure range": {
+					"COLUMN_INDEX": "AM",
+					"UNIT": "bar"
+				},
+				
+				"Run time": {
+					"COLUMN_INDEX": "AN",
+					"UNIT": "min"
+				}
+				
+			},
+			
+			"EFFECTS": [
+				
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "ANALYTICAL PARAMETERS - QUANTIFICATION - ICP-MS"	
+			},
+			
+			"PARAMETERS": {
+				
+				"Instrument type": {
+					"COLUMN_INDEX": "AO"
+				},
+				
+				"Internal standards": {
+					"COLUMN_INDEX": "AP"
+				},
+				
+				"Isotopes": {
+					"COLUMN_INDEX": "AQ"
+				},
+				
+				"daily tune minimal requirements - min In counts": {
+					"COLUMN_INDEX": "AR"
+				},
+				
+				"daily tune minimal requirements - Oxidation rate": {
+					"COLUMN_INDEX": "AS"
+				},
+				
+				"number of calibration points": {
+					"COLUMN_INDEX": "AT"
+				},
+				
+				"calibration range": {
+					"COLUMN_INDEX": "AU"
+				},
+				
+				"correlation coefficient ≥ 0.999": {
+					"COLUMN_INDEX": "AV"
+				}
+				
+			},
+			
+			"EFFECTS": [
+				
+			]
+			
+		}
+	]
+
+}

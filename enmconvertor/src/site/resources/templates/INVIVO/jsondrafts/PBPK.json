@@ -1,0 +1,370 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology – PBPK",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 2,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+			
+			{
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+            } 
+		]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "PBPK"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AW"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+				
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Exposure route": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Dose": {
+					"COLUMN_INDEX": "AA",
+					"UNIT": "µg"
+				},
+				
+				"Animal type": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Post injection follow up time": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "h"
+				},
+				
+				"Number of sampling times": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"Number of organs and tissues monitored": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"Analytical method": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Number of compartments in model": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Compartment structure": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"body weight": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"cardiac output": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"fraction of cardiac output to organs": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"organ weight": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"fraction of blood in organs": {
+					"COLUMN_INDEX": "AM"
+				}
+				
+			},
+			
+			"EFFECTS": [
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NM Uptak, and removal rate in phagocytic cell"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AN"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NM uptake capacity in organs by phagocytic cells"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AO"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NM permeability in organs"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AP"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NM  through blood brain barrier"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AQ"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "partition between blood, and tissues"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AR"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "clearance rate to urine, and feces"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AS"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Sensitivity analysis"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AT"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Number of optimized parameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AU"
+                    }
+				},
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "R square"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AV"
+                    }
+				}
+				
+				
+			]
+			
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse method": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"Diameter": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "nm"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+				
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+					}
+                }
+			]
+			
+		}
+	]
+
+}

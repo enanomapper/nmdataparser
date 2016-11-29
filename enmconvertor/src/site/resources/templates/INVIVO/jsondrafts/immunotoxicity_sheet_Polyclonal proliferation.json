@@ -1,0 +1,315 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology - in vivo. Sheet_Polyclonal proliferation",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 4,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		"EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+	
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Polyclonal proliferation"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "AR"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Animal model": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Exposure route": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Exposure method": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Exposure time": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "days"
+				},
+				
+				"Gender": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "M/F"
+				},
+				
+				"Dose": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "mg/kgBW/day"
+				},
+				
+				"Animals/group": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Cell type": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Medium": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"In vitro stimulation": {
+					"COLUMN_INDEX": "AI",
+					"UNIT": "mg/ml"
+				},
+				
+				"Plate": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"Number cell/well": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"Volume": {
+					"COLUMN_INDEX": "AL",
+					"UNIT": "ml"
+				},
+				
+				"Incubation time": {
+					"COLUMN_INDEX": "AM",
+					"UNIT": "h"
+				},
+				
+				"Method": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"Experimental groups": {
+					"COLUMN_INDEX": "AO"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result(average of the repliacates)"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AP"
+                    },
+										
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AQ",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AQ"
+					}
+                }
+			
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse technique": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "W"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                }
+			
+			]
+		
+		}
+	
+	]
+	
+	}
+
+}

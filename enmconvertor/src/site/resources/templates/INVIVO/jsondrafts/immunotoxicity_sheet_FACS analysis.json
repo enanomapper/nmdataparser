@@ -1,0 +1,466 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology - in vivo. Immunotoxicity_Sheet_FACS analysis",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 8,
+        "START_ROW": 3,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 2,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		"EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+	
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "FACS analysis"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "BB"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Animal model": {
+					"COLUMN_INDEX": "Z"
+				},
+				
+				"Exposure route": {
+					"COLUMN_INDEX": "AA"
+				},
+				
+				"Exposure method": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Exposure time": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "days"
+				},
+				
+				"Gender": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "M/F"
+				},
+				
+				"Dose": {
+					"COLUMN_INDEX": "AE",
+					"UNIT": "mg/kgBW/day"
+				},
+				
+				"Animals/group": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Cell/Tissue": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Method": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"Experimental groups": {
+					"COLUMN_INDEX": "AI"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AK"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AL",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AL"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AJ"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AN"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AO",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AO"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AM"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AQ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AR",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AR"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AP"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AT"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AU",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AU"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AS"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AW"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AX",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AX"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AV"
+						}
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Result"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AZ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "X 10^3 / μl"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BA",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BA"
+					},
+					
+					"CONDITIONS": {
+						
+						"Cell type": {
+                        "COLUMN_INDEX": "AY"
+						}
+					}
+                }
+				
+			
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse technique": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Mass concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"PDI": {
+					"COLUMN_INDEX": "Y"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "W"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "In weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                }
+			
+			]
+		
+		}
+	
+	]
+	
+	}
+
+}
