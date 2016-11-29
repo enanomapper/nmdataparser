@@ -19,11 +19,11 @@
 *	density [PCHEM_DENSITY_density_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DENSITY)
 *	effective density [PCHEM_DENSITY_effective density_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DENSITY)
 
-##	PCHEM_DUSTINESS.xlsx
-*	Dustiness with large drum
-*	Dustiness with other set-up
-*	Dustiness with small drum
-*	Dustiness with Vortex Shaker
+##	Dustiness
+*	Dustiness with large drum [PCHEM_DUSTINESS_Dustiness with large drum_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DUSTINESS)
+*	Dustiness with other set-up [PCHEM_DUSTINESS_Dustiness with other set-up_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DUSTINESS)
+*	Dustiness with small drum [PCHEM_DUSTINESS_Dustiness with small drum_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DUSTINESS)
+*	Dustiness with Vortex Shaker [PCHEM_DUSTINESS_Dustiness with Vortex Shaker_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DUSTINESS)
 
 ##	Isoelectric point, zeta potential 
 *	isoElectric point [PCHEM_IEP.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
