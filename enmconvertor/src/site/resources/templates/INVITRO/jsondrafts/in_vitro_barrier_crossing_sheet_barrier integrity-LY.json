@@ -1,0 +1,628 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology - in vitro. In vitro barrier crossing. Sheet: Barrier integrity-LY",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 3,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		"EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+	
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "barrier integrity - LY"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "BO"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"In vitro barrier model": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"Cell type": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"Passage number": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"Cell colture medium composition": {
+					"COLUMN_INDEX": "AO"
+				},
+				
+				"Insert": {
+					"COLUMN_INDEX": "AP"
+				},
+				
+				"Number of cells/insert": {
+					"COLUMN_INDEX": "AQ"
+				},
+				
+				"Volume of medium in apical compartment": {
+					"COLUMN_INDEX": "AR",
+					"UNIT": "mL"
+				},
+				
+				"Volume of medium in basolateral compartment": {
+					"COLUMN_INDEX": "AS",
+					"UNIT": "mL"
+				},
+				
+				"Days of differentiation": {
+					"COLUMN_INDEX": "AT"
+				},
+				
+				"Incubation time with NPs": {
+					"COLUMN_INDEX": "BA",
+					"UNIT": "h"
+				},
+				
+				"Incubation time with LY": {
+					"COLUMN_INDEX": "BB",
+					"UNIT": "h"
+				},
+				
+				"Apical LY concentration": {
+					"COLUMN_INDEX": "BC"
+				}
+				
+			},
+			
+			"EFFECTS": [
+			
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of replicates per condition"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BD"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NPs tested concentrations"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BE"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µg/mL"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Corresponding dose/surface unit"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BF"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µg/cm2"
+					}
+                },
+				
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean % of basolateral lucyfer yellow (LY) through intestinal epithelium"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BG"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BH",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BH"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean LY Papp through intestinal epithelium"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BI"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "cm/s"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BJ",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BJ"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean % of basolateral LY through cell free inserts"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BK"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BL",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BL"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean LY Papp through cell free inserts"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BM"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "cm/s"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BN",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BN"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Integrity control quality: mean TEER values - before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AU"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm2"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AV",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AV"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Maximum TEER value before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AW"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm2"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AX",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AX"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Minimum TEER value before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AY"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm2"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AZ",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AZ"
+					}
+                }
+			
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse technique": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"CLS particle refraction index": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"CLS particle absorption": {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"CLS particle non-sphericity": {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"CLS injected volume": {
+					"COLUMN_INDEX": "X",
+					"UNIT": "µl"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "Y"
+				},
+				
+				"Concentration": {
+					"COLUMN_INDEX": "Z",
+					"UNIT": "mg/mL"
+				},
+				
+				"Incubation time": {
+					"COLUMN_INDEX": "AA",
+					"UNIT": "h"
+				}
+			},
+			
+			"EFFECTS": [
+			
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+								
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean Hydrodynamic diameter in weight or numer"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AB"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AC",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AC"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "PDI"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AJ"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AK",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AK"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 1 - main peak"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AD"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 1 weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AE"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 2- main peak"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AF"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 2 weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AG"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 3- main peak"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AH"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Peak 3 weight or number"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AI"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "w or n"
+                    }
+                }
+			
+			]
+		
+		}
+	
+	]
+	
+	}
+
+}

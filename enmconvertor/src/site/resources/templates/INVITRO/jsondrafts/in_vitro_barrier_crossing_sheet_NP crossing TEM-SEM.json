@@ -1,0 +1,492 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "Mammalian toxicology – in vitro. In vitro barrier crossing. Sheet: NP crossing TEM-SEM",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 7,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+		
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+            {
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+        ],
+		
+        "COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+        
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "NP crossing TEM-SEM"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "BH"
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+			
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"TEM or SEM": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Microscopy Model": {
+					"COLUMN_INDEX": "AC"
+				},
+				
+				"Resolution": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "nm"
+				},
+				
+				"Accelaration voltage": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"Use of EDX": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"EDX model": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"In vitro barrier model": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"Cell type": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"Passage number": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"Cell culture medium composition": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"Insert": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"Number of cells/insert": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"volume of medium in apical compartment": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"volume of medium in basolateral compartment": {
+					"COLUMN_INDEX": "AY"
+				},
+				
+				"Days of differentiation": {
+					"COLUMN_INDEX": "AP"
+				},
+				
+				"Incubation time with NPs": {
+					"COLUMN_INDEX": "AW",
+					"UNIT": "h"
+				},
+				
+				"Pretreatment of basolateral medium before observation/analysis ": {
+					"COLUMN_INDEX": "AZ"
+				}
+            },
+				
+			
+            "EFFECTS": [
+         
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Integrity control quality: mean TEER values before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AQ"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm²"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AR",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AR"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Maximum TEER value before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AS"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm²"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AT",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AT"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Minimum TEER value before starting NPs exposure"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AU"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "ohms/cm²"
+					},
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AV",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AV"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "NPs tested concentrations"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AX"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µg/ml"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Corresponding dose/surface unit"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AY"
+                    },
+					
+					"UNIT": {
+						"ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "µg/cm2"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Observation of NPs-like structures in basolateral medium of intestinal epithelium"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BA"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Number of replicates containing intracellular NPs-like structures"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BD"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Observed replicates"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BE"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Confirmation of presence of NPs in intestinal epithelium basolateral side  by EDX"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BF"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Observation of NPs in basolateral medium of cell free insert"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BG"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean size of detected NPs-like structures"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BB"
+                    },
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "BC",
+					"ROW_INDEX": 2
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "BC"
+					}
+				}
+				
+			]
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+			
+				"Size distribution analyse technique": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"Incubation time": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "h"
+				}
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean Hydrodynamic diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "Y",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "Y"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "PDI"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "Z"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AA",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AA"
+					}
+                }
+			]
+		
+		}
+	]
+}

@@ -1,0 +1,687 @@
+{
+	"TEMPLATE_INFO":{
+		"NAME": "MammalianToxicology-InVitroViability-Impedence flow cytom",
+		"VERSION": "01",
+		"TYPE": 1	
+	},
+	
+	"DATA_ACCESS": {
+		"ITERATION":"ROW_SINGLE",
+		"SHEET_INDEX": 9,
+        "START_ROW": 4,
+		"START_HEADER_ROW": 1,
+        "END_HEADER_ROW": 3,
+        "ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX"	
+	},
+	
+	"SUBSTANCE_RECORD": {
+	
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "B"
+		},
+				
+		"OWNER_NAME": {
+			"COLUMN_INDEX": "F"
+        },
+		
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "G"
+		},
+		
+		"COMPANY_NAME": {
+			"COLUMN_INDEX": "J"
+        },
+		
+		
+        "EXTERNAL_IDENTIFIERS": [
+			{
+                 "TYPE": {
+                	"ITERATION": "ABSOLUTE_LOCATION",
+                    "COLUMN_INDEX": "B",
+                    "ROW_INDEX" : 2
+                },
+				
+                "ID": {
+                    "ITERATION": "ROW_SINGLE",
+					"COLUMN_INDEX": "B"
+                }
+            }
+		],
+		
+		"COMPOSITION": [
+            {
+                "STRUCTURE_RELATION": "HAS_CORE",
+				
+				"NAME": {
+                    "COLUMN_INDEX": "C"
+                },
+				
+				"CAS RN": {
+					"COLUMN_INDEX": "D"
+				}
+                
+            }            
+        ]
+	},
+	
+	"PROTOCOL_APPLICATIONS": [
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"COLUMN_INDEX": "O"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Impedence_flow cytom"
+			},
+			
+			"PROTOCOL_CATEGORY_CODE": {
+                "COLUMN_INDEX": "P"
+            },
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "Q"
+                }
+			},
+			
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "K"
+			},
+			
+            "PARAMETERS": {
+				
+				"Replicate number":{
+					"COLUMN_INDEX": "A"
+				},
+				
+				"Vial number": {
+					"COLUMN_INDEX": "E"
+				},
+				
+				"Use of dispersant": {
+                    "COLUMN_INDEX": "H"
+                },
+				
+				"Dispersant reference": {
+                    "COLUMN_INDEX": "I"
+                },
+				
+				"Operator": {
+					"COLUMN_INDEX": "L"
+				},
+				
+				"date of preparation": {
+					"COLUMN_INDEX": "M"
+				},
+				
+				"date of analysis": {
+					"COLUMN_INDEX": "N"
+				},
+				
+				"Instrument model": {
+					"COLUMN_INDEX": "AB"
+				},
+				
+				"Pre-exposure time": {
+					"COLUMN_INDEX": "AC",
+					"UNIT": "h"
+				},
+				
+				"Exposure duration": {
+					"COLUMN_INDEX": "AD",
+					"UNIT": "h"
+				},
+				
+				"Cell type": {
+					"COLUMN_INDEX": "AE"
+				},
+				
+				"Culture medium composition": {
+					"COLUMN_INDEX": "AF"
+				},
+				
+				"Percentage of FBS": {
+					"COLUMN_INDEX": "AG"
+				},
+				
+				"Well plate size": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"Number of cells/well": {
+					"COLUMN_INDEX": "AI"
+				},
+				
+				"Number of cells/cm2": {
+					"COLUMN_INDEX": "AJ"
+				},
+				
+				"Volume of incubation medium during exposure/well": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"Control concentration": {
+					"COLUMN_INDEX": "AL",
+					"UNIT": "µg/mL"
+				},
+				
+				"Concentration 1": {
+					"COLUMN_INDEX": "AM",
+					"UNIT": "µg/mL"
+				},
+				
+				"Concentration 2": {
+					"COLUMN_INDEX": "AN",
+					"UNIT": "µg/mL"
+				},
+				
+				"Concentration 3": {
+					"COLUMN_INDEX": "AO",
+					"UNIT": "µg/mL"
+				},
+				
+				"Concentration 4": {
+					"COLUMN_INDEX": "AP",
+					"UNIT": "µg/mL"
+				},
+				
+				"Concentration 5": {
+					"COLUMN_INDEX": "AQ",
+					"UNIT": "µg/mL"
+				},
+				
+				"Control concentration": {
+					"COLUMN_INDEX": "AR",
+					"UNIT": "µg/cm2"
+				},
+				
+				"Tested concentration 1": {
+					"COLUMN_INDEX": "AS",
+					"UNIT": "µg/cm2"
+				},
+				
+				"Tested concentration 2": {
+					"COLUMN_INDEX": "AT",
+					"UNIT": "µg/cm2"
+				},
+				
+				"Tested concentration 3": {
+					"COLUMN_INDEX": "AU",
+					"UNIT": "µg/cm2"
+				},
+				
+				"Tested concentration 4": {
+					"COLUMN_INDEX": "AV",
+					"UNIT": "µg/cm2"
+				},
+				
+				"Tested concentration 5": {
+					"COLUMN_INDEX": "AW",
+					"UNIT": "µg/cm2"
+				}				
+				
+			},
+			
+			"EFFECTS": [
+			
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells ctr"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AX"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability ctr"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AY"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis ctr"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "AZ"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis ctr"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BA"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells 1"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BB"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability 1"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BC"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis 1"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BD"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis 1"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BE"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells 2"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BF"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability 2"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BG"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis 2"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BH"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis 2"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BI"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells 3"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BJ"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability 3"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BK"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis 3"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BL"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis 3"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BM"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells 4"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BJ"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability 4"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BO"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis 4"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BP"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis 4"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BQ"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Total number of analysed cells 5"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BR"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure cell viability 5"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BS"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure apoptosis 5"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BT"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Normalized post-exposure necrosis 5"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "BU"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "%"
+                    }
+                }
+			]	
+		},
+		
+		{
+			"PROTOCOL_TOP_CATEGORY": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "P-Chem"	
+			},
+			
+			"PROTOCOL_ENDPOINT": {
+				"ITERATION": "JSON_VALUE",
+				"JSON_VALUE": "Size Distribution"
+			},
+			
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": {
+                    "COLUMN_INDEX": "R"
+                }
+			},
+			
+			"PARAMETERS": {
+				
+				"Size distribution analyse technique": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"Dispersion medium": {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"Concentration": {
+					"COLUMN_INDEX": "V",
+					"UNIT": "mg/mL"
+				},
+				
+				"Incubation time": {
+					"COLUMN_INDEX": "W",
+					"UNIT": "h"
+				}
+			
+			},
+			
+			"EFFECTS": [
+				{
+                    "ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Size Distribution"
+                    },
+                    
+                    "TEXT_VALUE": {
+                        "COLUMN_INDEX": "S"
+                    }
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "Mean Hydrodynamic diameter"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "X"
+                    },
+					
+					"UNIT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "nm"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "Y",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "Y"
+					}
+                },
+				
+				{				
+					"ENDPOINT": {
+                        "ITERATION": "JSON_VALUE",
+                        "JSON_VALUE": "PDI"
+                    },
+                    
+                    "VALUE": {
+                        "COLUMN_INDEX": "Z"
+                    },
+					
+					"LO_QUALIFIER": {
+					"ITERATION": "ABSOLUTE_LOCATION",
+					"COLUMN_INDEX": "AA",
+					"ROW_INDEX": 3
+					},
+					
+					"ERR_VALUE": {
+					"COLUMN_INDEX": "AA"
+					}
+                }
+			
+			]
+		
+		}
+	]	
+}
