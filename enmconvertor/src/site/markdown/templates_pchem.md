@@ -2,8 +2,8 @@
 
 ![Templates: phys-chem](images/templates_PCHEM.png "P-CHEM")
 
-##	PCHEM_BATCHDISPERSION.xlsx
-*	batch dispersion
+##	Batch dispersion 
+*	batch dispersion [PCHEM_BATCHDISPERSION_batch dispersion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/BATCHDISPERSION)
 
 ##	PCHEM_COMPOSITIONCHEMICAL.xlsx
 *	composition_EDX
