@@ -15,9 +15,9 @@
 *	WAXD
 *	XRD
 
-##	PCHEM_DENSITY.xlsx
-*	density
-*	effective density
+##	Density
+*	density [PCHEM_DENSITY_density_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DENSITY)
+*	effective density [PCHEM_DENSITY_effective density_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DENSITY)
 
 ##	PCHEM_DUSTINESS.xlsx
 *	Dustiness with large drum
@@ -25,8 +25,8 @@
 *	Dustiness with small drum
 *	Dustiness with Vortex Shaker
 
-##	Isoelectric point, zeta potential [PCHEM_IEP.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
-*	isoElectric point
+##	Isoelectric point, zeta potential 
+*	isoElectric point [PCHEM_IEP.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
 
 ##	PCHEM_POTENTIOMETRY.xlsx
 *	Potentiometry_H2O sosp
