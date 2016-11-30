@@ -31,8 +31,8 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	TEM observation
 
 ## Immunotoxicity [INVITRO_IMMUNOTOX.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
-*	Apoptosis
-*   [Cytokine secretion](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
+*	Apoptosis [INVITRO_IMMUNOTOX_Apoptosis_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/APOPTOSIS)
+*   Cytokine secretion [INVITRO_IMMUNOTOX_Cytokine secretion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
 *	NO production
 	
 ##	INVITRO_NMDEPOSITION.xlsx
