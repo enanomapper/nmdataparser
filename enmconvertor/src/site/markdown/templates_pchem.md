@@ -50,8 +50,8 @@
 *	functional groups_ATR-FTIR
 *	functional groups_TGA
 
-##	PCHEM_VSSA.xlsx
-*	VSSA
+##	Volume specific surface area
+*	VSSA [PCHEM_VSSA_VSSA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/VSSA)
 
 ##	PCHEM_ZETAPOTENTIAL.xlsx
 *	z-pot
