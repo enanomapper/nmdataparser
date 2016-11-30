@@ -40,11 +40,12 @@
 *	size_WAXD [PCHEM_WAXD_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 *	size_XRD [PCHEM_XRD_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 
-##	PCHEM_SOLUBILITY.xlsx
-*	colorimetry
-*	filtration_ICP-MS
-*	filtration_WDXRF
-*	PCHEM_SURFACECHEMISTRY.xlsx
+##	Solubility
+*	colorimetry [PCHEM_SOLUBILITY_colorimetry_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SOLUBILITY)
+*	filtration_ICP-MS [PCHEM_SOLUBILITY_filtration_ICP-MS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SOLUBILITY)
+*	filtration_WDXRF [PCHEM_SOLUBILITY_filtration_WDXRF_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SOLUBILITY)
+
+##	PCHEM_SURFACECHEMISTRY.xlsx
 *	coating_MALDI-TOF
 *	coating_STEM-EDS
 *	functional groups_ATR-FTIR
