@@ -11,9 +11,9 @@
 *	elemental composition_ICP-MS
 *	elemental compostion_CHN analys
 
-##	PCHEM_CRYSTALLINEPHASE.xlsx
-*	WAXD
-*	XRD
+##	Crystalline phase
+*	WAXD [PCHEM_CRYSTALLINEPHASE_WAXD_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/CRYSTALLINEPHASE)
+*	XRD [PCHEM_CRYSTALLINEPHASE_XRD_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/CRYSTALLINEPHASE)
 
 ##	Density
 *	density [PCHEM_DENSITY_density_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/DENSITY)
