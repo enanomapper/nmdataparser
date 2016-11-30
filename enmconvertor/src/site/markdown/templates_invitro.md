@@ -24,13 +24,13 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	Resazurin [INVITRO_CYTOTOXICITY_Resazurin_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/RESAZURIN)
 *	Trypan blue [INVITRO_CYTOTOXICITY_Trypan blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/TRYPAN_BLUE)
 
-##	Genotoxicity [INVITRO_GENOTOXICITY.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY)
-*   chromosomal damage in vitro [INVITRO_GENOTOXICITY_chromosomal damage in vitro_COLUMNS.xlsx]((https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/CHROMOSOMAL_DAMAGE)
+##	Genotoxicity 
+*   chromosomal damage in vitro [INVITRO_GENOTOXICITY_chromosomal damage in vitro_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/CHROMOSOMAL_DAMAGE)
 *	COMET [INVITRO_GENOTOXICITY_COMET_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
 *	Micronucleus [INVITRO_GENOTOXICITY_Micronucleus_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
 *	TEM observation
 
-## Immunotoxicity [INVITRO_IMMUNOTOX.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
+## Immunotoxicity 
 *	Apoptosis [INVITRO_IMMUNOTOX_Apoptosis_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/APOPTOSIS)
 *   Cytokine secretion [INVITRO_IMMUNOTOX_Cytokine secretion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
 *	NO production [INVITRO_IMMUNOTOX_NO production_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/NITRIC_OXIDE_PRODUCTION)
