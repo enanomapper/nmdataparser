@@ -40,8 +40,8 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	Aspect of deposit
 *	TEM observation
 	
-##	INVITRO_OCCULARIRRITATON.xlsx
-*	hemolysis
+##	Occular irritation
+*	hemolysis [INVITRO_OCCULARIRRITATON_hemolysis_COLUMNS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/OCCULARIRRITATION)
 	
 ##	Cell viability [INVITRO_VIABILITY.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY)
 *	Alamar blue
