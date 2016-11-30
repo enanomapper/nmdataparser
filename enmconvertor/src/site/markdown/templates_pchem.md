@@ -31,14 +31,14 @@
 ##	Potentiometry
 *	Potentiometry_H2O sosp [PCHEM_POTENTIOMETRY_Potentiometry_H2O sosp_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/POTENTIOMETRY)
 
-##	Size distribution [PCHEM_SIZE.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
-*	size PTA
-*	size SAXS
-*	size TEM
-*	size&PSD_sp-ICP-MS
-*	size_DLS
-*	size_WAXD
-*	size_XRD
+##	Size distribution 
+*	size PTA [PCHEM_SIZE_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size SAXS [PCHEM_SAXS_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size TEM [PCHEM_TEM_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size&PSD_sp-ICP-MS [PCHEM_SIZE_size&PSD_sp-ICP-MS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size_DLS [PCHEM_DLS_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size_WAXD [PCHEM_WAXD_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
+*	size_XRD [PCHEM_XRD_size PTA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 
 ##	PCHEM_SOLUBILITY.xlsx
 *	colorimetry
