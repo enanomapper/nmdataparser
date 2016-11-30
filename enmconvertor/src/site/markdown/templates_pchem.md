@@ -5,11 +5,11 @@
 ##	Batch dispersion 
 *	batch dispersion [PCHEM_BATCHDISPERSION_batch dispersion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/BATCHDISPERSION)
 
-##	PCHEM_COMPOSITIONCHEMICAL.xlsx
-*	composition_EDX
-*	composizion_ICP-OES
-*	elemental composition_ICP-MS
-*	elemental compostion_CHN analys
+##	Chemical composition
+*	composition_EDX [PCHEM_COMPOSITIONCHEMICAL_composition_EDX_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/COMPOSITIONCHEMICAL)
+*	composizion_ICP-OES [PCHEM_COMPOSITIONCHEMICAL_composizion_ICP-OES_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/COMPOSITIONCHEMICAL)
+*	elemental composition_ICP-MS [PCHEM_COMPOSITIONCHEMICAL_elemental composition_ICP-MS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/COMPOSITIONCHEMICAL)
+*	elemental compostion_CHN analys [PCHEM_COMPOSITIONCHEMICAL_elemental compostion_CHN analys_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/COMPOSITIONCHEMICAL)
 
 ##	Crystalline phase
 *	WAXD [PCHEM_CRYSTALLINEPHASE_WAXD_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/CRYSTALLINEPHASE)
