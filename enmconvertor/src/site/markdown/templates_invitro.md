@@ -36,8 +36,8 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	NO production [INVITRO_IMMUNOTOX_NO production_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/NITRIC_OXIDE_PRODUCTION)
 	
 ##	INVITRO_NMDEPOSITION.xlsx
-*	Aerosol Characterisation
-*	Aspect of deposit
+*	Aerosol Characterisation [INVITRO_NMDEPOSITION_Aerosol Characterisation_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/NMDEPOSITION)
+*	Aspect of deposit [INVITRO_NMDEPOSITION_Aspect of deposit_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/NMDEPOSITION)
 *	TEM observation
 	
 ##	Occular irritation
