@@ -46,10 +46,10 @@ Each folder consists of Excel and JSON file for the specific assay.
 ##	Cell viability 
 *	Alamar blue [INVITRO_VIABILITY_Alamar blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/AlamarBlue)
 *	CFE [INVITRO_VIABILITY_CFE_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CFE)
-*	Impedance_flow cytom [INVITRO_VIABILITY_Impedance_flow cytom_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/ImpedanceFlowCytometry)
+*	Impedance flow cytometry [INVITRO_VIABILITY_Impedance_flow cytom_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/ImpedanceFlowCytometry)
 *	LDH [INVITRO_VIABILITY_LDH_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/LDH)
 *	MTS [INVITRO_VIABILITY_MTS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/MTS)
 *	Neutral red [INVITRO_VIABILITY_Neutral red_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/NeutralRed)
 *	Resazurin [INVITRO_VIABILITY_Resazurin_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/Resazurin)
-*	RT- Impedence_adherence cell [INVITRO_VIABILITY_RT- Impedence_adherence cell_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/RTImpedanceAdherenceCell)
+*	RT- Impedance adherence cell [INVITRO_VIABILITY_RT- Impadence_adherence cell_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/RTImpedanceAdherenceCell)
 *	Trypan blue [INVITRO_VIABILITY_Trypan blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/TrypanBlue)
