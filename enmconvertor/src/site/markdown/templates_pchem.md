@@ -53,6 +53,6 @@
 ##	Volume specific surface area
 *	VSSA [PCHEM_VSSA_VSSA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/VSSA)
 
-##	PCHEM_ZETAPOTENTIAL.xlsx
-*	z-pot
+##	Zeta potential
+*	z-pot [PCHEM_ZETAPOTENTIAL_z-pot_COLUMNS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/ZETAPOTENTIAL)
 	
