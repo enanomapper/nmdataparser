@@ -28,8 +28,8 @@
 ##	Isoelectric point, zeta potential 
 *	isoElectric point [PCHEM_IEP.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/IEP)
 
-##	PCHEM_POTENTIOMETRY.xlsx
-*	Potentiometry_H2O sosp
+##	Potentiometry
+*	Potentiometry_H2O sosp [PCHEM_POTENTIOMETRY_Potentiometry_H2O sosp_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/POTENTIOMETRY)
 
 ##	Size distribution [PCHEM_SIZE.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SIZE)
 *	size PTA
