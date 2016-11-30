@@ -45,11 +45,11 @@
 *	filtration_ICP-MS [PCHEM_SOLUBILITY_filtration_ICP-MS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SOLUBILITY)
 *	filtration_WDXRF [PCHEM_SOLUBILITY_filtration_WDXRF_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SOLUBILITY)
 
-##	PCHEM_SURFACECHEMISTRY.xlsx
-*	coating_MALDI-TOF
-*	coating_STEM-EDS
-*	functional groups_ATR-FTIR
-*	functional groups_TGA
+##	Surface chemistry
+*	coating_MALDI-TOF [PCHEM_SURFACECHEMISTRY_coating_MALDI-TOF_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SURFACECHEMISTRY)
+*	coating_STEM-EDS [PCHEM_SURFACECHEMISTRY_coating_STEM-EDS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SURFACECHEMISTRY)
+*	functional groups_ATR-FTIR [PCHEM_SURFACECHEMISTRY_functional groups_ATR-FTIR_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SURFACECHEMISTRY)
+*	functional groups_TGA [PCHEM_SURFACECHEMISTRY_functional groups_TGA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/SURFACECHEMISTRY)
 
 ##	Volume specific surface area
 *	VSSA [PCHEM_VSSA_VSSA_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/PCHEM/VSSA)
