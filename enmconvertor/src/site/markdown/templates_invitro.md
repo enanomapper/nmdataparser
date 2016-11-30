@@ -15,8 +15,8 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	TEM observation
 *	TEM-SEM - intracell penetration
 
-##	INVITRO_CTA.xlsx
-*	hCTA
+##	Cell Transformation Assay
+*	hCTA [INVITRO_CTA_hCTA_COLUMNS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CTA)
 
 ##	INVITRO_CYTOTOXICITY.xlsx
 *	LDH
