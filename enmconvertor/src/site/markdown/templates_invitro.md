@@ -18,16 +18,16 @@ Each folder consists of Excel and JSON file for the specific assay.
 ##	Cell Transformation Assay
 *	hCTA [INVITRO_CTA_hCTA_COLUMNS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CTA)
 
-##	INVITRO_CYTOTOXICITY.xlsx
-*	LDH
-*	MTS
-*	Resazurin
-*	Trypan blue
-	
+##	Cytotoxicity
+*	LDH [INVITRO_CYTOTOXICITY_LDH_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/LDH)
+*	MTS [INVITRO_CYTOTOXICITY_MTS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/MTS)
+*	Resazurin [INVITRO_CYTOTOXICITY_Resazurin_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/RESAZURIN)
+*	Trypan blue [INVITRO_CYTOTOXICITY_Trypan blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/TRYPAN_BLUE)
+
 ##	Genotoxicity [INVITRO_GENOTOXICITY.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY)
-*   chromosomal damage in vitro
-*	[COMET](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
-*	[Micronucleus](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
+*   chromosomal damage in vitro [INVITRO_GENOTOXICITY_chromosomal damage in vitro_COLUMNS.xlsx]((https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/CHROMOSOMAL_DAMAGE)
+*	COMET [INVITRO_GENOTOXICITY_COMET_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
+*	Micronucleus [INVITRO_GENOTOXICITY_Micronucleus_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
 *	TEM observation
 
 ## Immunotoxicity [INVITRO_IMMUNOTOX.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX)
