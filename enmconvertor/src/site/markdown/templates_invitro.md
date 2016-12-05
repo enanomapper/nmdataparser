@@ -5,13 +5,13 @@
 Each folder consists of Excel and JSON file for the specific assay. 
 
 ##	Barrier crossing
-*	barrier integrity - LY [INVITRO_BARRIERCROSSING_barrier integrity - LY_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
+*	Barrier integrity - LY [INVITRO_BARRIERCROSSING_barrier integrity - LY_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 *	NP crossing ICP-OES [INVITRO_BARRIERCROSSING_NP crossing ICP-OES_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 *	NP crossing ToF-SIMS [INVITRO_BARRIERCROSSING_NP crossing ToF-SIMS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 *	NP intracell pen(confocal micro [INVITRO_BARRIERCROSSING_NP intracell pen(confocal micro_COLUMNS.xlsx] (https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 *	NPs crossing TEM-SEM [INVITRO_BARRIERCROSSING_NPs crossing TEM-SEM_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
-*	oral mucosa 3Dmodel penetration [INVITRO_BARRIERCROSSING_oral mucosa 3Dmodel penetration_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
-*	TEER [INVITRO_BARRIERCROSSING_TEER_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
+*	Oral mucosa 3Dmodel penetration [INVITRO_BARRIERCROSSING_oral mucosa 3Dmodel penetration_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
+*	Transepithelial electrical resistance (TEER) [INVITRO_BARRIERCROSSING_TEER_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 *	TEM observation 
 *	TEM-SEM - intracell penetration [INVITRO_BARRIERCROSSING_TEM-SEM - intracell penetration_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/BARRIERCROSSING)
 
@@ -19,20 +19,20 @@ Each folder consists of Excel and JSON file for the specific assay.
 *	hCTA [INVITRO_CTA_hCTA_COLUMNS](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CTA)
 
 ##	Cytotoxicity
-*	LDH [INVITRO_CYTOTOXICITY_LDH_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/LDH)
+*	Lactate Dehydrogenase (LDH) Assay [INVITRO_CYTOTOXICITY_LDH_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/LDH)
 *	MTS [INVITRO_CYTOTOXICITY_MTS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/MTS)
 *	Resazurin [INVITRO_CYTOTOXICITY_Resazurin_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/RESAZURIN)
 *	Trypan blue [INVITRO_CYTOTOXICITY_Trypan blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/CYTOTOXICITY/TRYPAN_BLUE)
 
 ##	Genotoxicity 
-*   chromosomal damage in vitro [INVITRO_GENOTOXICITY_chromosomal damage in vitro_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/CHROMOSOMAL_DAMAGE)
+* Chromosomal damage in vitro [INVITRO_GENOTOXICITY_chromosomal damage in vitro_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/CHROMOSOMAL_DAMAGE)
 *	COMET [INVITRO_GENOTOXICITY_COMET_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/COMET)
 *	Micronucleus [INVITRO_GENOTOXICITY_Micronucleus_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/GENOTOXICITY/MICRONUCLEUS)
 *	TEM observation
 
 ## Immunotoxicity 
 *	Apoptosis [INVITRO_IMMUNOTOX_Apoptosis_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/APOPTOSIS)
-*   Cytokine secretion [INVITRO_IMMUNOTOX_Cytokine secretion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
+* Cytokine secretion [INVITRO_IMMUNOTOX_Cytokine secretion_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/CYTOKINE_SECRETION)
 *	NO production [INVITRO_IMMUNOTOX_NO production_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/IMMUNOTOX/NITRIC_OXIDE_PRODUCTION)
 	
 ## Nanomaterial deposition
@@ -45,7 +45,7 @@ Each folder consists of Excel and JSON file for the specific assay.
 	
 ##	Cell viability 
 *	Alamar blue [INVITRO_VIABILITY_Alamar blue_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/AlamarBlue)
-*	CFE [INVITRO_VIABILITY_CFE_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/CFE)
+*	Colony Forming Efficiency (CFE) assay [INVITRO_VIABILITY_CFE_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/CFE)
 *	Impedance flow cytometry [INVITRO_VIABILITY_Impedance_flow cytom_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/ImpedanceFlowCytometry)
 *	LDH [INVITRO_VIABILITY_LDH_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/LDH)
 *	MTS [INVITRO_VIABILITY_MTS_COLUMNS.xlsx](https://github.com/enanomapper/nmdataparser/tree/master/enmconvertor/src/site/resources/templates/INVITRO/VIABILITY/MTS)
