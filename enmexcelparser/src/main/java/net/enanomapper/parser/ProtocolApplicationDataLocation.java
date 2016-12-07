@@ -30,7 +30,7 @@ public class ProtocolApplicationDataLocation
 	
 	public ArrayList<EffectRecordDataLocation> effects = null;  //The other effect related fields to be removed
 	
-	public ExcelDataBlockLocation effectsBlock = null; //This is a block of data used to define a set/block of effects
+	public ArrayList<ExcelDataBlockLocation> effectsBlock = null; //Blocks of data used to define sets of effects measurements
 														
 	
 	public String toJSONKeyWord(String offset)
@@ -230,13 +230,22 @@ public class ProtocolApplicationDataLocation
 			sb.append(offset + "\t]\n\n"); 
 		}
 		
+		
 		if (effectsBlock != null)
 		{	
 			if (nSections > 0)
 				sb.append(",\n\n");
-			sb.append(effectsBlock.toJSONKeyWord(offset+"\t", "EFFECTS_BLOCK"));
+			 
+			sb.append(offset+"\t" + "\"EFFECTS_BLOCK\":\n");
+			sb.append(offset+"\t[\n");
+			
+			for (ExcelDataBlockLocation exEfBl: effectsBlock) 
+				sb.append(exEfBl.toJSONKeyWord(offset+"\t\t", null, true) + "\n");
+			
+			sb.append(offset+"\t]\n");
 			nSections++;
 		}
+		
 		
 		if (nSections > 0)
 			sb.append("\n");

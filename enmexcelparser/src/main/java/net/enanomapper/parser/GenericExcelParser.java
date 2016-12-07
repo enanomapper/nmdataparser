@@ -1234,16 +1234,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		// Read effects from EFFECTS_BLOCK
-		if (padl.effectsBlock != null) {
-
-			List<DataBlockElement> effDataBlock = getDataBlock(padl.effectsBlock);
-			for (DataBlockElement dbe : effDataBlock) {
-				EffectRecord effect = dbe.generateEffectRecord();
-
-				// TODO (2) set unit
-
-				pa.addEffect(effect);
-			}
+		if (padl.effectsBlock != null) 
+		{
+			for (ExcelDataBlockLocation excelEffectBlock : padl.effectsBlock)
+			{	
+				List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
+				for (DataBlockElement dbe : effDataBlock) {
+					EffectRecord effect = dbe.generateEffectRecord();
+					// TODO (2) set unit
+					pa.addEffect(effect);
+				}
+			}	
 		}
 
 		return pa;
