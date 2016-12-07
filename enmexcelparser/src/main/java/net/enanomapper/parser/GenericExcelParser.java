@@ -2462,14 +2462,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						for (int i = bvgei.startRow - 1; i <= bvgei.endRow - 1; i++)
 							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
 								Object o = ExcelUtils
-										.getObjectFromCell(cells[row0 + i][column0
-												+ k]);
+										.getObjectFromCell(cells[row0 + i][column0 + k]);
 								DataBlockElement dbEl = new DataBlockElement();
 								dbEl.blockValueGroup = bvgei.name;
 								dbEl.unit = bvgei.unit; // The unit may be
 														// overriden by the
 														// setValue() function
 								dbEl.setValue(o, rvParser);
+								if (bvgei.errorColumnShift != 0 || bvgei.errorRowShift != 0)
+								{	
+									Number d  = (Double)ExcelUtils.getNumericValue(
+												cells[row0 + i + bvgei.errorRowShift]
+												[column0 + k + bvgei.errorColumnShift]);
+									if (d != null)
+										dbEl.error = d.doubleValue();
+								}	
 
 								// Handle parameters
 								if (bvgei.paramInfo != null)
@@ -2567,6 +2574,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		bvgei.endColumn = getIntegerFromExpression(bvg.endColumn);
 		bvgei.startRow = getIntegerFromExpression(bvg.startRow);
 		bvgei.endRow = getIntegerFromExpression(bvg.endRow);
+		
+		bvgei.errorColumnShift = getIntegerFromExpression(bvg.errorColumnShift);
+		bvgei.errorRowShift = getIntegerFromExpression(bvg.errorRowShift);
 
 		logger.info("--- Extracting inffo for value group: " + bvg.name);
 		logger.info("--- startColumn " + bvgei.startColumn);
@@ -2608,6 +2618,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			if (bvgei.startRow > bvgei.endRow) {
 				bvgei.errors.add("START_ROW > END_ROW");
+				bvgei.FlagValues = false;
+			}
+			
+			if (bvgei.errorColumnShift == null)
+			{	
+				bvgei.errors.add("ERROR_COLUMN_SHIFT:  incorrect result for expression: "
+						+ bvg.errorColumnShift);
+				bvgei.FlagValues = false;
+			}
+			
+			if (bvgei.errorRowShift == null)
+			{	
+				bvgei.errors.add("ERROR_ROW_SHIFT:  incorrect result for expression: "
+						+ bvg.errorRowShift);
 				bvgei.FlagValues = false;
 			}
 		}

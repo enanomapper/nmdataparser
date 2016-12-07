@@ -27,6 +27,8 @@ public class BlockValueGroupExtractedInfo
 	public Integer endColumn = null;
 	public Integer startRow = null;
 	public Integer endRow = null;
+	public Integer errorColumnShift = null;
+	public Integer errorRowShift = null;
 	
 	public List<ParamInfo> paramInfo = null;
 	
