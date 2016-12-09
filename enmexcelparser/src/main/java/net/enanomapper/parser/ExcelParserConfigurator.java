@@ -349,7 +349,7 @@ public class ExcelParserConfigurator
 			JsonNode varNode = curNode.path("VARIABLES");
 			if (!varNode.isMissingNode())
 			{
-				conf.variableLocations = extractDynamicSection(varNode, conf);
+				conf.variableLocations = extractDynamicSection(varNode, conf, null);
 			}
 			
 			//VARIABLE_MAPPINGS
@@ -1033,7 +1033,7 @@ public class ExcelParserConfigurator
 		if (!pglNode.isMissingNode())
 		{
 			ArrayList<ExcelDataLocation> protGuidline = new ArrayList<ExcelDataLocation>();
-			HashMap<String, ExcelDataLocation> pglLocs = extractDynamicSection(pglNode, conf);
+			HashMap<String, ExcelDataLocation> pglLocs = extractDynamicSection(pglNode, conf, null);
 			for (int i = 1; i < numGuideLinesToCheck; i++)
 			{
 				ExcelDataLocation pglLoc = pglLocs.get(guideLineJSONField + i);
@@ -1049,7 +1049,8 @@ public class ExcelParserConfigurator
 		JsonNode parNode = node.path("PARAMETERS");
 		if (!parNode.isMissingNode())
 		{
-			padl.parameters = extractDynamicSection(parNode, conf);
+			String otherFields[] = {"UNIT", "NAME"};
+			padl.parameters = extractDynamicSection(parNode, conf, otherFields); 
 		}
 		
 		
@@ -1271,7 +1272,7 @@ public class ExcelParserConfigurator
 		JsonNode effCondNode = node.path("CONDITIONS");
 		if (!effCondNode.isMissingNode())
 		{
-			efrdl.conditions = extractDynamicSection(effCondNode, conf);
+			efrdl.conditions = extractDynamicSection(effCondNode, conf, null);
 		}
 		
 		return efrdl;
@@ -1493,7 +1494,7 @@ public class ExcelParserConfigurator
 		JsonNode varNode = node.path("VARIABLES");
 		if (!varNode.isMissingNode())
 		{
-			eshc.variableLocations = extractDynamicSection(varNode, conf);
+			eshc.variableLocations = extractDynamicSection(varNode, conf, null);
 		}
 		
 		//DYNAMIC_ITERATION_SPAN
@@ -1522,7 +1523,9 @@ public class ExcelParserConfigurator
 		return eshc;
 	}
 	
-	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf)
+	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, 
+																		ExcelParserConfigurator conf,
+																		String otherLocationFieldNames[])
 	{
 		HashMap<String, ExcelDataLocation> hmap = new HashMap<String, ExcelDataLocation>();
 		
@@ -1530,13 +1533,15 @@ public class ExcelParserConfigurator
 		while (it.hasNext())
 		{
 			Entry<String,JsonNode> entry = it.next();
-			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(entry.getValue(), conf);
+			ExcelDataLocation loc = 
+					ExcelDataLocation.extractDataLocation(entry.getValue(), null, conf, otherLocationFieldNames);
 			loc.sectionName = entry.getKey();
 			hmap.put(entry.getKey(), loc);
 		}
 		
 		return hmap;
 	}
+	
 	
 	public static CompositionDataLocation extractCompositionDataLocation(JsonNode node, ExcelParserConfigurator conf, int jsonArrayIndex)
 	{
@@ -1621,7 +1626,7 @@ public class ExcelParserConfigurator
 		JsonNode propNode = node.path("PROPERTIES");
 		if (!propNode.isMissingNode())
 		{
-			cdl.properties = extractDynamicSection(propNode, conf);
+			cdl.properties = extractDynamicSection(propNode, conf, null);
 		}
 		
 		

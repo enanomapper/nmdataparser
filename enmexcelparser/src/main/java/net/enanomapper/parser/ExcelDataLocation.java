@@ -1,6 +1,8 @@
 package net.enanomapper.parser;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import net.enanomapper.parser.ParserConstants.DataType;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
@@ -91,7 +93,7 @@ public class ExcelDataLocation
 	}
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
-				ExcelParserConfigurator conf, String otherLocationFields[])
+				ExcelParserConfigurator conf, String otherLocationFieldNames[])
 	{
 		//Error messages are stored globally in 'conf' variable and are
 		//counted locally in return variable 'loc'
@@ -512,6 +514,23 @@ public class ExcelDataLocation
 			}
 		}
 		
+		
+		if (otherLocationFieldNames != null)
+		{	
+			loc.otherLocationFields = new HashMap<String, ExcelDataLocation>();
+			for (String otherField : otherLocationFieldNames)
+			{
+				JsonNode otherFieldNode = sectionNode.path(otherField);
+				if (otherFieldNode.isMissingNode())
+					continue;				
+				//recursion				
+				ExcelDataLocation otherLocField =  extractDataLocation(otherFieldNode, null, conf, null);
+				otherLocField.sectionName = otherField; 
+				loc.otherLocationFields.put(otherField, otherLocField);
+			}
+		}
+		
+		
 		return loc;
 	}
 	
@@ -688,12 +707,24 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (otherLocationFields != null)
+		{
+			Set<String> fieldNames =  otherLocationFields.keySet();
+			for (String field : fieldNames)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				
+				ExcelDataLocation fedl = otherLocationFields.get(field);
+				sb.append(fedl.toJSONKeyWord(offset + "\t"));
+				nFields++;
+			}
+		}
+		
 		if (nFields > 0)
 			sb.append("\n");
 		
 		sb.append(offset + "}");
-		
-		
 		
 		return sb.toString();
 	}
