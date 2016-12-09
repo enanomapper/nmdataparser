@@ -1143,9 +1143,21 @@ public class ExcelParserConfigurator
 		JsonNode effectsBlockNode = node.path("EFFECTS_BLOCK");
 		if (!effectsBlockNode.isMissingNode())
 		{
-			ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(node, "EFFECTS_BLOCK", conf);
-			//TODO ?? handle errors if any
-			padl.effectsBlock = block;
+			padl.effectsBlock = new ArrayList<ExcelDataBlockLocation>();
+			if (effectsBlockNode.isArray())
+			{
+				for (int i = 0; i < effectsBlockNode.size(); i++)
+				{
+					ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(
+								effectsBlockNode.get(i), null, conf);
+					padl.effectsBlock.add(block);
+				}
+			}
+			else
+			{
+				ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(node, "EFFECTS_BLOCK", conf);
+				padl.effectsBlock.add(block);
+			}
 		}
 		
 		return padl;

@@ -213,7 +213,7 @@ public class ExcelDataBlockLocation
 	}
 	
 	
-	public String toJSONKeyWord(String offset, String blockName)
+	public String toJSONKeyWord(String offset, String blockName, boolean isBlockPartOfArray)
 	{
 		int nFields = 0;
 		StringBuffer sb = new StringBuffer();
@@ -224,7 +224,8 @@ public class ExcelDataBlockLocation
 		if (secName == null)
 			secName = "NON_NAME_BLOCK";
 		
-		sb.append(offset + "\"" + secName + "\":\n");
+		if (!isBlockPartOfArray)
+			sb.append(offset + "\"" + secName + "\":\n");
 		sb.append(offset + "{\n");
 		
 		if (location != null)

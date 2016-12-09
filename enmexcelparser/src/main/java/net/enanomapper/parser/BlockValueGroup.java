@@ -36,7 +36,9 @@ public class BlockValueGroup
 	public Object endRow = null;
 	public boolean FlagEndRow = false;
 
-	//The shifts are relative to the corresponding value position ('value' by default is considered to be lo-value or text-value)
+	//The shifts are relative to the corresponding value position. 
+	//'value' by default is considered to be lo-value, rich-value or text-value
+	
 	public Object qualifierColumnShift = new Integer(0); 
 	public boolean FlagQualifierColumnShift = false;
 
@@ -58,7 +60,7 @@ public class BlockValueGroup
 	public Object errorColumnShift = new Integer(0); 
 	public boolean FlagErrorColumnShift = false;
 
-	public Object errorRowShift = new Integer(0); 
+	public Object errorRowShift = new Integer(0);
 	public boolean FlagErrorRowShift = false;
 	
 	public List<BlockParameter> parameters = null;
@@ -197,9 +199,63 @@ public class BlockValueGroup
 					bvg.FlagEndRow = true;
 				}	
 			}	
-		}	
+		}
 		
-		//TODO
+		//ERROR_COLUMN_SHIFT
+		nd = node.path("ERROR_COLUMN_SHIFT");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"ERROR_COLUMN_SHIFT\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"ERROR_COLUMN_SHIFT\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.errorColumnShift = obj;
+					bvg.FlagErrorColumnShift = true;
+				}	
+			}	
+		}
+		
+		//ERROR_ROW_SHIFT
+		nd = node.path("ERROR_ROW_SHIFT");
+		if (!nd.isMissingNode())
+		{	
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{
+				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+						"], keyword \"ERROR_ROW_SHIFT\" is incorrect!");
+			}
+			else
+			{	
+				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
+				if (expr_error != null)
+				{
+					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
+							"], keyword \"ERROR_ROW_SHIFT\" is incorrect! expression: " 
+							+ expr_error + " --> \"" + obj.toString() + "\"");
+				}
+				else
+				{	
+					bvg.errorRowShift = obj;
+					bvg.FlagErrorRowShift = true;
+				}	
+			}	
+		}
+		
+		//TODO handle qualifierColumnShift, qualifierRowShift, ...
 		
 		
 		//PARAMETERS
@@ -281,6 +337,24 @@ public class BlockValueGroup
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"END_ROW\" : " + JsonUtilities.objectToJsonField(endRow));
+			nFields++;
+		}
+		
+		if (FlagErrorColumnShift)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"ERROR_COLUMN_SHIFT\" : " + JsonUtilities.objectToJsonField(errorColumnShift));
+			nFields++;
+		}
+		
+		if (FlagErrorRowShift)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"ERROR_ROW_SHIFT\" : " + JsonUtilities.objectToJsonField(errorRowShift));
 			nFields++;
 		}
 		
