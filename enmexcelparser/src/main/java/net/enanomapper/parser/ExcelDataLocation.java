@@ -83,17 +83,19 @@ public class ExcelDataLocation
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, ExcelParserConfigurator conf)
 	{
-		return extractDataLocation(node, null, conf, null);
+		return extractDataLocation(node, null, conf, null, true);
 	}
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
 			ExcelParserConfigurator conf)
 	{
-		return extractDataLocation(node, jsonSection, conf, null);
+		return extractDataLocation(node, jsonSection, conf, null, true);
 	}
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
-				ExcelParserConfigurator conf, String otherLocationFieldNames[])
+								ExcelParserConfigurator conf, 
+								String otherLocationFieldNames[], 
+								boolean allowShortJSONValueDefinition)
 	{
 		//Error messages are stored globally in 'conf' variable and are
 		//counted locally in return variable 'loc'
@@ -112,6 +114,26 @@ public class ExcelDataLocation
 		
 		ExcelDataLocation loc = new ExcelDataLocation();
 		loc.sectionName = jsonSection;
+		
+		
+		if (allowShortJSONValueDefinition)
+		{	
+			//Short JSON value definitions
+			//The textual and numeric values are interpreted as data locations 
+			//with ITERATION = JSON_VALUE
+			if (sectionNode.isTextual())
+			{	
+				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
+				loc.jsonValue = sectionNode.getTextValue();
+				return loc;
+			}
+			if (sectionNode.isNumber())
+			{	
+				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
+				loc.jsonValue = sectionNode.getNumberValue();
+				return loc;
+			}
+		}
 		
 		//SOURCE_COMBINATION
 		if (!sectionNode.path("SOURCE_COMBINATION").isMissingNode())
@@ -524,7 +546,7 @@ public class ExcelDataLocation
 				if (otherFieldNode.isMissingNode())
 					continue;				
 				//recursion				
-				ExcelDataLocation otherLocField =  extractDataLocation(otherFieldNode, null, conf, null);
+				ExcelDataLocation otherLocField =  extractDataLocation(otherFieldNode, null, conf, null, true);
 				otherLocField.sectionName = otherField; 
 				loc.otherLocationFields.put(otherField, otherLocField);
 			}

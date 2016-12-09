@@ -1534,7 +1534,7 @@ public class ExcelParserConfigurator
 		{
 			Entry<String,JsonNode> entry = it.next();
 			ExcelDataLocation loc = 
-					ExcelDataLocation.extractDataLocation(entry.getValue(), null, conf, otherLocationFieldNames);
+					ExcelDataLocation.extractDataLocation(entry.getValue(), null, conf, otherLocationFieldNames, true);
 			loc.sectionName = entry.getKey();
 			hmap.put(entry.getKey(), loc);
 		}
