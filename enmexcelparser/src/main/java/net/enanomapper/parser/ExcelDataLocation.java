@@ -1,5 +1,7 @@
 package net.enanomapper.parser;
 
+import java.util.Map;
+
 import net.enanomapper.parser.ParserConstants.DataType;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
@@ -73,13 +75,23 @@ public class ExcelDataLocation
 	
 	public String variableKeys[] = null; //Used only in mode IterationAccess.COMBINATION
 	
+	//This is a recursive approach used for other fields defined by excel data location
+	public Map<String, ExcelDataLocation> otherLocationFields = null;
+	
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, ExcelParserConfigurator conf)
 	{
-		return extractDataLocation(node, null, conf);
+		return extractDataLocation(node, null, conf, null);
 	}
 	
-	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
+			ExcelParserConfigurator conf)
+	{
+		return extractDataLocation(node, jsonSection, conf, null);
+	}
+	
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
+				ExcelParserConfigurator conf, String otherLocationFields[])
 	{
 		//Error messages are stored globally in 'conf' variable and are
 		//counted locally in return variable 'loc'
