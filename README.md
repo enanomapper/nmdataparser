@@ -16,7 +16,7 @@ Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoM
 
 ### Data entry templates (NEW!)
 
-[data entry templates](http://ambit.sourceforge.net/enanomapper/templates) 
+[Nanomaterial characterisation and bioassay templates (based on NANoREG/JRC templates)](http://ambit.sourceforge.net/enanomapper/templates) 
 
 ### For developers
 
