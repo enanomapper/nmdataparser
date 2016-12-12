@@ -52,6 +52,9 @@ public class TemplateMaker {
 	protected final static String header_sop = "sop";
 	protected final static String header_result_endpoint = "End-Point Outcome metric";
 
+	public TemplateMaker() {
+		this(Logger.getAnonymousLogger());
+	}
 	public TemplateMaker(Logger logger) {
 		this.logger_cli = logger;
 	}
@@ -62,7 +65,7 @@ public class TemplateMaker {
 	}
 
 	protected void generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
-		System.out.println(String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
+		logger_cli.log(Level.INFO,String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
 		Iterable<TR> records = getJSONConfig();
 		String sheetname = settings.getAssayname();
 		String endpoint = settings.getEndpointname();
@@ -111,7 +114,7 @@ public class TemplateMaker {
 					Object header1 = record.get("header1");
 					Object hint = record.get("hint");
 
-					System.out.println(String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
+					logger_cli.log(Level.FINE,String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
 
 					if (hint != null && hint.toString().indexOf("yes/no") >= 0) {
 						validation_common(workbook, sheet, col, new String[] { "yes", "no" });
@@ -417,9 +420,9 @@ public class TemplateMaker {
 			Iterable<TR> records = getJSONConfig();
 			HashSet<String> assays = new HashSet<String>();
 			for (TR record : records) {
-
+				//System.out.println(record.get("File"));
 				if (settings.getEndpointname().equals(record.get("File").toString().trim())) {
-					System.out.println(record);
+					//System.out.println(record);
 					if (settings.getAssayname() == null || record.get("Sheet").equals(settings.getAssayname()))
 						assays.add(record.get("Sheet").toString());
 				}
