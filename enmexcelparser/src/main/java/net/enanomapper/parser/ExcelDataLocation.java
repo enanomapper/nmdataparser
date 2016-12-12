@@ -1,5 +1,9 @@
 package net.enanomapper.parser;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import net.enanomapper.parser.ParserConstants.DataType;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
@@ -73,13 +77,25 @@ public class ExcelDataLocation
 	
 	public String variableKeys[] = null; //Used only in mode IterationAccess.COMBINATION
 	
+	//This is a recursive approach used for other fields defined by excel data location
+	public Map<String, ExcelDataLocation> otherLocationFields = null;
+	
 	
 	public static ExcelDataLocation extractDataLocation(JsonNode node, ExcelParserConfigurator conf)
 	{
-		return extractDataLocation(node, null, conf);
+		return extractDataLocation(node, null, conf, null, true);
 	}
 	
-	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, ExcelParserConfigurator conf)
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
+			ExcelParserConfigurator conf)
+	{
+		return extractDataLocation(node, jsonSection, conf, null, true);
+	}
+	
+	public static ExcelDataLocation extractDataLocation(JsonNode node, String jsonSection, 
+								ExcelParserConfigurator conf, 
+								String otherLocationFieldNames[], 
+								boolean allowShortJSONValueDefinition)
 	{
 		//Error messages are stored globally in 'conf' variable and are
 		//counted locally in return variable 'loc'
@@ -98,6 +114,26 @@ public class ExcelDataLocation
 		
 		ExcelDataLocation loc = new ExcelDataLocation();
 		loc.sectionName = jsonSection;
+		
+		
+		if (allowShortJSONValueDefinition)
+		{	
+			//Short JSON value definitions
+			//The textual and numeric values are interpreted as data locations 
+			//with ITERATION = JSON_VALUE
+			if (sectionNode.isTextual())
+			{	
+				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
+				loc.jsonValue = sectionNode.getTextValue();
+				return loc;
+			}
+			if (sectionNode.isNumber())
+			{	
+				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
+				loc.jsonValue = sectionNode.getNumberValue();
+				return loc;
+			}
+		}
 		
 		//SOURCE_COMBINATION
 		if (!sectionNode.path("SOURCE_COMBINATION").isMissingNode())
@@ -500,6 +536,23 @@ public class ExcelDataLocation
 			}
 		}
 		
+		
+		if (otherLocationFieldNames != null)
+		{	
+			loc.otherLocationFields = new HashMap<String, ExcelDataLocation>();
+			for (String otherField : otherLocationFieldNames)
+			{
+				JsonNode otherFieldNode = sectionNode.path(otherField);
+				if (otherFieldNode.isMissingNode())
+					continue;				
+				//recursion				
+				ExcelDataLocation otherLocField =  extractDataLocation(otherFieldNode, null, conf, null, true);
+				otherLocField.sectionName = otherField; 
+				loc.otherLocationFields.put(otherField, otherLocField);
+			}
+		}
+		
+		
 		return loc;
 	}
 	
@@ -676,12 +729,24 @@ public class ExcelDataLocation
 			nFields++;
 		}
 		
+		if (otherLocationFields != null)
+		{
+			Set<String> fieldNames =  otherLocationFields.keySet();
+			for (String field : fieldNames)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				
+				ExcelDataLocation fedl = otherLocationFields.get(field);
+				sb.append(fedl.toJSONKeyWord(offset + "\t"));
+				nFields++;
+			}
+		}
+		
 		if (nFields > 0)
 			sb.append("\n");
 		
 		sb.append(offset + "}");
-		
-		
 		
 		return sb.toString();
 	}

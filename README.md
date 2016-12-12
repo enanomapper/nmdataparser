@@ -11,7 +11,12 @@ Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoM
 
 * Download [enmconvertor-version.jar](https://nexus.ideaconsult.net/#nexus-search;gav~~enmconvertor~~jar~)
 
-* [More details](http://ambit.sourceforge.net/enanomapper/templates/convertor.html) and [data entry templates](http://ambit.sourceforge.net/enanomapper/templates)
+* [More details](http://ambit.sourceforge.net/enanomapper/templates/convertor.html) 
+
+
+### Data entry templates (NEW!)
+
+[Nanomaterial characterisation and bioassay templates (based on NANoREG/JRC templates)](http://ambit.sourceforge.net/enanomapper/templates) 
 
 ### For developers
 
