@@ -2,6 +2,8 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 
 
 public class ProportionDataLocation 

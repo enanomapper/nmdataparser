@@ -123,13 +123,13 @@ public class ExcelDataLocation
 			if (sectionNode.isTextual())
 			{	
 				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
-				loc.jsonValue = sectionNode.getTextValue();
+				loc.jsonValue = sectionNode.textValue();
 				return loc;
 			}
 			if (sectionNode.isNumber())
 			{	
 				loc.iteration = ParserConstants.IterationAccess.JSON_VALUE;
-				loc.jsonValue = sectionNode.getNumberValue();
+				loc.jsonValue = sectionNode.numberValue();
 				return loc;
 			}
 		}

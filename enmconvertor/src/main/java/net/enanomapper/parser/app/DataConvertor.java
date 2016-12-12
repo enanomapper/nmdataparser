@@ -23,6 +23,7 @@ import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -316,7 +317,7 @@ public class DataConvertor {
 			}
 			try {
 				ObjectMapper mapper = new ObjectMapper();
-				mapper.setSerializationInclusion(Inclusion.NON_EMPTY);
+				mapper.setSerializationInclusion(Include.NON_EMPTY);
 				mapper.writerWithDefaultPrettyPrinter().writeValue(outputFile, exporter.getOutput());
 			} catch (Exception x) {
 				logger_cli.log(Level.WARNING, x.getMessage());

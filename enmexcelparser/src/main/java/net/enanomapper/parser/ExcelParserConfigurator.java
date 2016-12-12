@@ -1529,7 +1529,7 @@ public class ExcelParserConfigurator
 	{
 		HashMap<String, ExcelDataLocation> hmap = new HashMap<String, ExcelDataLocation>();
 		
-		Iterator<Entry<String,JsonNode>> it = node.getFields();
+		Iterator<Entry<String,JsonNode>> it = node.fields();
 		while (it.hasNext())
 		{
 			Entry<String,JsonNode> entry = it.next();
@@ -1657,7 +1657,7 @@ public class ExcelParserConfigurator
 	
 	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf)
 	{
-		Iterator<Entry<String,JsonNode>> it = node.getFields();
+		Iterator<Entry<String,JsonNode>> it = node.fields();
 		while (it.hasNext())
 		{
 			Entry<String,JsonNode> entry = it.next();
