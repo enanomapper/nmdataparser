@@ -351,9 +351,13 @@ public class MainApp {
 	}
 
 	protected Iterable<TR> getJSONConfig() throws Exception {
+		return getJSONConfig("net/enanomapper/templates/JRCTEMPLATES_102016.json");
+	}
+	
+	protected Iterable<TR> getJSONConfig(String config) throws Exception {
 
 		InputStream in = MainApp.class.getClassLoader()
-				.getResourceAsStream("net/idea/magicmapper/JRCTEMPLATES_102016.json");
+				.getResourceAsStream(config);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 		List<TR> records = new ArrayList<TR>();
