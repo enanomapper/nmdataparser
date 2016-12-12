@@ -3,7 +3,8 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 
 import org.apache.poi.hssf.util.CellReference;
-import org.codehaus.jackson.JsonNode;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ExcelParserUtils 
 {

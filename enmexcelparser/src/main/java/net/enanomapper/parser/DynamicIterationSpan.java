@@ -1,27 +1,20 @@
 package net.enanomapper.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.codehaus.jackson.JsonNode;
 
-import ambit2.base.data.SubstanceRecord;
-import ambit2.base.data.study.EffectRecord;
-import ambit2.base.data.study.Protocol;
-import ambit2.base.data.study.ProtocolApplication;
-import ambit2.base.relation.composition.CompositionRelation;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
-import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
+import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.excel.ExcelUtils;
-import net.enanomapper.parser.excel.ExcelUtils.IndexInterval;
 import net.enanomapper.parser.json.JsonUtilities;
 
 

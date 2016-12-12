@@ -1,6 +1,8 @@
 package net.enanomapper.parser;
 
-import org.codehaus.jackson.JsonNode;
+
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import net.enanomapper.parser.ParserConstants.ObjectType;
 import net.enanomapper.parser.json.JsonUtilities;

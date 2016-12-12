@@ -1,8 +1,9 @@
 package net.enanomapper.parser;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.enanomapper.parser.json.JsonUtilities;
 
-import org.codehaus.jackson.JsonNode;
 
 public class VariableMapping 
 {

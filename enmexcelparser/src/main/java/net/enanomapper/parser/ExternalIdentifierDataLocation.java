@@ -2,7 +2,9 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
+
+
 
 public class ExternalIdentifierDataLocation 
 {

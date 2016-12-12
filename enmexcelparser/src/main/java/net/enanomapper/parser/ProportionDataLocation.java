@@ -2,9 +2,7 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
-import net.enanomapper.parser.json.JsonUtilities;
 
-import org.codehaus.jackson.JsonNode;
 
 public class ProportionDataLocation 
 {

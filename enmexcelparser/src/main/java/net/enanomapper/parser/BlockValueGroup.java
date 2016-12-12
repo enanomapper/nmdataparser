@@ -3,10 +3,10 @@ package net.enanomapper.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
-
-import org.codehaus.jackson.JsonNode;
 
 
 /**

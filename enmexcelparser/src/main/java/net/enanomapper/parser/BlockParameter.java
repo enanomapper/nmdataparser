@@ -1,9 +1,8 @@
 package net.enanomapper.parser;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
-import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
 
