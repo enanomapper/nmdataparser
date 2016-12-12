@@ -1,4 +1,4 @@
-package net.enanomapper.templates;
+package net.enanomapper.maker;
 
 public interface IAnnotator {
 	void process(TR record,String queryField, String query, int maxhits, String label);

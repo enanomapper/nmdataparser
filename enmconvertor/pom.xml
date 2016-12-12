@@ -25,6 +25,11 @@
 			<artifactId>ambit2-rest</artifactId>
 			<version>${ambit.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>ambit</groupId>
+			<artifactId>ambit2-export</artifactId>
+			<version>${ambit.version}</version>
+		</dependency>		
 	</dependencies>
 	<reporting>
 		<plugins>

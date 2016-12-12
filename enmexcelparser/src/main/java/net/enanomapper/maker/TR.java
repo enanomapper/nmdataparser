@@ -1,4 +1,4 @@
-package net.enanomapper.templates;
+package net.enanomapper.maker;
 
 import java.io.Writer;
 import java.util.HashMap;

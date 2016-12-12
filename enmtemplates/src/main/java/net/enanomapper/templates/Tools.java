@@ -35,6 +35,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import ambit2.base.io.DownloadTool;
+import net.enanomapper.maker.IAnnotator;
+import net.enanomapper.maker.TR;
 
 public class Tools {
 

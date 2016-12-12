@@ -1,11 +1,9 @@
-package net.enanomapper.templates.app;
+package net.enanomapper.maker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import net.enanomapper.templates.IAnnotator;
-
-public class MainAppSettings {
+public class TemplateMakerSettings {
 	protected IAnnotator annotator;
 
 	public IAnnotator getAnnotator() {
@@ -20,7 +18,7 @@ public class MainAppSettings {
 		jrc, iom, all, undefuned
 	}
 
-	enum _TEMPLATES_CMD {
+	public enum _TEMPLATES_CMD {
 		extract, generate
 	}
 
