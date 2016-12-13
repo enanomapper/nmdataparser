@@ -2,9 +2,10 @@ package net.enanomapper.maker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
-public class TemplateMakerSettings {
-	protected IAnnotator annotator;
+public class TemplateMakerSettings implements Serializable {
+	transient protected IAnnotator annotator;
 
 	public IAnnotator getAnnotator() {
 		return annotator;

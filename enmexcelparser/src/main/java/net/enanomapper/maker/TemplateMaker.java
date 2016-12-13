@@ -2,6 +2,7 @@ package net.enanomapper.maker;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class TemplateMaker {
 		throw new Exception("Unsupported");
 	}
 
-	protected void generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
+	public Workbook generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
 		logger_cli.log(Level.INFO,String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
 		Iterable<TR> records = getJSONConfig();
 		String sheetname = settings.getAssayname();
@@ -238,12 +239,18 @@ public class TemplateMaker {
 		}
 
 		validation_endpoint(workbook, sheet, mincol.get(header_endpoint));
-		FileOutputStream out = new FileOutputStream(new File(settings.getOutputfolder(), String
-				.format("%s_%s_COLUMNS.xlsx", endpoint == null ? "" : endpoint.replaceAll(".xlsx", ""), sheetname)));
-		workbook.write(out);
-		workbook.close();
-		out.close();
+		return workbook;
 
+	}
+	
+	public void write(Workbook workbook, TemplateMakerSettings settings) throws IOException {
+		String endpoint = settings.getEndpointname();
+		try  (FileOutputStream out = new FileOutputStream(new File(settings.getOutputfolder(), String
+				.format("%s_%s_COLUMNS.xlsx", endpoint == null ? "" : endpoint.replaceAll(".xlsx", ""), settings.getAssayname())))) {
+			workbook.write(out);
+		} finally {
+			workbook.close();
+		}
 	}
 
 	protected void setStyle(Workbook workbook, Sheet sheet, String annotation, Map<String, Integer> mincol,
@@ -438,7 +445,8 @@ public class TemplateMaker {
 						settings.setAssayname(assayname);
 						switch (ttype) {
 						case jrc: {
-							generateJRCTemplates(settings);
+							Workbook workbook = generateJRCTemplates(settings);
+							write(workbook, settings);
 							break;
 						}
 						case iom: {
