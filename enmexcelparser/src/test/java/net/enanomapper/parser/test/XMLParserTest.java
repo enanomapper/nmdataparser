@@ -2,6 +2,7 @@ package net.enanomapper.parser.test;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,45 +11,39 @@ import java.io.Writer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import net.idea.modbcum.i.json.JSONUtils;
-
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import net.idea.modbcum.i.json.JSONUtils;
 
 public class XMLParserTest {
 	int maxlevel = 0;
 
 	@Test
 	public void testDOM() throws Exception {
-		BufferedWriter out = null;
-		InputStream in = getClass().getClassLoader().getResourceAsStream(
-				"net/enanomapper/tree/det_model_morgan_32_24.xml");
-		try {
-			String outname = "det_model.json";
-			File baseDir = new File(System.getProperty("java.io.tmpdir"));
-			baseDir = new File("D:/src-ideaconsult/Toxtree.js-ivan");
-			System.out.println(baseDir);
-			out = new BufferedWriter(new FileWriter(new File(baseDir, outname)));
-
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(in);
-			NodeList det_model = doc.getDocumentElement().getElementsByTagName(
-					"det_model");
-			traverse(det_model.item(0), 0, "", out);
-			System.out.println(maxlevel);
-		} finally {
-			in.close();
-			if (out != null)
-				out.close();
+		try (InputStream in = getClass().getClassLoader()
+				.getResourceAsStream("net/enanomapper/tree/det_model_morgan_32_24.xml")) {
+			parseDOM(in, new File("D:/src-ideaconsult/Toxtree.js-ivan"));
 		}
 	}
 
-	private int traverse(Node node, int level, String lr, Writer out)
-			throws IOException {
+	public void parseDOM(InputStream in, File outDir) throws Exception {
+		System.out.println(outDir);
+
+		String outname = "det_model.json";
+		try (BufferedWriter out = new BufferedWriter(new FileWriter(new File(outDir, outname)));) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(in);
+			NodeList det_model = doc.getDocumentElement().getElementsByTagName("det_model");
+			traverse(det_model.item(0), 0, "", out);
+			System.out.println(maxlevel);
+		}
+	}
+
+	private int traverse(Node node, int level, String lr, Writer out) throws IOException {
 		if (level > maxlevel)
 			maxlevel = level;
 
@@ -98,8 +93,7 @@ public class XMLParserTest {
 			// name.append(lr);
 
 			try {
-				name.append(String.format("%s%2.0e",
-						lr.equals("R")?">":"<",Double.parseDouble(splitValue)));
+				name.append(String.format("%s%2.0e", lr.equals("R") ? ">" : "<", Double.parseDouble(splitValue)));
 				// name.append(splitValue);
 			} catch (Exception x) {
 				x.printStackTrace();
@@ -113,7 +107,7 @@ public class XMLParserTest {
 		out.write(",");
 		out.write("\n\"name\":");
 		out.write(JSONUtils.jsonQuote(JSONUtils.jsonEscape(name.toString())));
-		
+
 		if (left != null || right != null) {
 			out.write(",\n\"children\": [\n");
 			size += traverse(left, (level + 1), "L", out);
@@ -122,7 +116,6 @@ public class XMLParserTest {
 			size += traverse(right, (level + 1), "R", out);
 			out.write("\n]");
 		}
-
 
 		out.write(",");
 
@@ -136,5 +129,15 @@ public class XMLParserTest {
 		out.write("\n}");
 		out.flush();
 		return s;
+	}
+
+	public static void main(String[] args) {
+		XMLParserTest t = new XMLParserTest();
+		File outDir = new File(System.getProperty("java.io.tmpdir"));
+		try (FileInputStream in = new FileInputStream(new File(args[0]))) {
+			t.parseDOM(in, outDir);
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
 	}
 }
