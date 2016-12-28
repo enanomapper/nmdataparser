@@ -51,6 +51,7 @@ import ambit2.base.data.study.Params;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.ReliabilityParams;
+import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
@@ -1195,29 +1196,99 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (reliability != null)
 			pa.setReliability(reliability);
 
+		
 		// Read parameters
-		if (padl.parameters != null) {
+		if (padl.parameters != null) 
+		{
 			IParams params = new Params();
-			for (String param : padl.parameters.keySet()) {
+			for (String param : padl.parameters.keySet()) 
+			{	
 				ExcelDataLocation loc = padl.parameters.get(param);
-				// Param is allowed to be String or Numeric object
+				String parameterName = param;
+				
+				//Handle parameter name from other excel data location
+				if (loc.otherLocationFields != null)
+				{
+					ExcelDataLocation pNameLoc = loc.otherLocationFields.get("NAME");
+					if (pNameLoc != null)
+					{
+						try {
+							String nameString = getStringValue(pNameLoc);
+							if (nameString != null)
+								parameterName = nameString;
+						} catch (Exception x) {
+							logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),pNameLoc.toString()));
+						}	
+					}
+				}
+				
+				Value pVal = null;
 				String paramStringValue = null;
+				
+				// Parameter is allowed to be Rich Value, String or Numeric object 
 				try {
 					paramStringValue = getStringValue(loc);
 				} catch (Exception x) {
 					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
 				}
 				if (paramStringValue != null)
-					params.put(param, paramStringValue);
-				else try {
+				{	
+					RichValue rv = rvParser.parse(paramStringValue);
+					String rv_error = rvParser.getAllErrorsAsString();
+
+					if (rv_error == null) 
+					{
+						pVal = new Value();
+						if (rv.unit != null)
+							pVal.setUnits(rv.unit);
+						if (rv.loValue != null)
+							pVal.setLoValue(rv.loValue);
+						if (rv.loQualifier != null)
+							pVal.setLoQualifier(rv.loQualifier);
+						if (rv.upValue != null)
+							pVal.setUpValue(rv.upValue);
+						if (rv.upQualifier != null)
+							pVal.setUpQualifier(rv.upQualifier);
+					}
+				}	
+				else try 
+				{
 					Number paramDoubleValue = getNumericValue(loc);
 					if (paramDoubleValue != null)
-						params.put(param, paramDoubleValue);
+					{	
+						pVal = new Value();
+						pVal.setLoValue(paramDoubleValue);
+					}	
 				} catch (Exception x) {
 					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
 				}
 				
+				
+				if (pVal != null) //Parameters is stored as a Value object
+				{	
+					//Handle parameter unit from other excel data location
+					ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
+					if (pUnitLoc != null)
+					{
+						try {
+							String unitString = getStringValue(pUnitLoc);
+							if (unitString != null)
+								pVal.setUnits(unitString);
+						} catch (Exception x) {
+							logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),pUnitLoc.toString()));
+						}	
+					}
+					
+					params.put(parameterName, pVal);
+				}
+				else
+				{
+					//Parameter is stored as a string
+					if (paramStringValue != null)
+						params.put(parameterName, paramStringValue);
+				}
 			}
+			
 			pa.setParameters(params);
 		}
 
