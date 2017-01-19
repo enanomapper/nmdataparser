@@ -105,7 +105,8 @@ public class TemplateMaker {
 						CellUtil.setAlignment(cell, workbook, CellStyle.ALIGN_CENTER);
 					}
 
-					String value = record.get("cleanedvalue").toString();
+					Object v = record.get("cleanedvalue"); 
+					String value = v==null?"?????":v.toString();
 
 					if ("material state".equals(value)) {
 						validation_materialstate(workbook, sheet, col);
