@@ -1,5 +1,7 @@
 package net.enanomapper.maker;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +15,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -21,6 +25,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Header;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -37,6 +42,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import ambit2.db.reporters.xlsx.AddDimensionedImage;
 
 public class TemplateMaker {
 	protected Logger logger_cli;
@@ -56,6 +63,7 @@ public class TemplateMaker {
 	public TemplateMaker() {
 		this(Logger.getAnonymousLogger());
 	}
+
 	public TemplateMaker(Logger logger) {
 		this.logger_cli = logger;
 	}
@@ -65,8 +73,95 @@ public class TemplateMaker {
 		throw new Exception("Unsupported");
 	}
 
+	protected void insertLogo1(Sheet sheet) {
+		sheet.createRow(0).createCell(0).setCellValue("NANoREG templates");
+		sheet.createRow(1).createCell(0).setCellValue("http://www.nanoreg.eu/media-and-downloads/templates");
+		sheet.createRow(3).createCell(0).setCellValue(
+				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
+		sheet.createRow(4).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
+
+		sheet.createRow(6).createCell(0).setCellValue(
+				"The templates are licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.");
+		sheet.createRow(7).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
+
+		BufferedImage img = null;
+		InputStream in = null;
+		try {
+			in = TemplateMaker.class.getClassLoader().getResourceAsStream("net/enanomapper/templates/logonr.png");
+			img = ImageIO.read(in);
+		} catch (Exception x) {
+			x.printStackTrace();
+			img = null;
+		} finally {
+			try {
+				in.close();
+			} catch (Exception x) {
+			}
+		}
+		if (img != null)
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				AddDimensionedImage imgHelper = new AddDimensionedImage();
+				Drawing drawing = sheet.createDrawingPatriarch();
+				ImageIO.write(img, "png", baos);
+				baos.flush();
+				baos.close();
+				sheet.createRow(8).createCell(0);
+				imgHelper.addImageToSheet(8, 0, sheet, drawing, baos.toByteArray(), Workbook.PICTURE_TYPE_PNG, 1076,
+						1394, AddDimensionedImage.OVERLAY_ROW_AND_COLUMN);
+			} catch (Exception x) {
+				logger_cli.log(Level.WARNING, x.getMessage());
+			} finally {
+			}
+	}
+
+	protected void insertLogo(Workbook workbook, Sheet sheet) {
+		sheet.createRow(0).createCell(0).setCellValue("NANoREG templates");
+		sheet.createRow(1).createCell(0).setCellValue("http://www.nanoreg.eu/media-and-downloads/templates");
+		sheet.createRow(3).createCell(0).setCellValue(
+				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
+		sheet.createRow(4).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
+
+		sheet.createRow(6).createCell(0).setCellValue(
+				"The templates are licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.");
+		sheet.createRow(7).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
+
+		InputStream in = null;
+		try {
+			in = TemplateMaker.class.getClassLoader().getResourceAsStream("net/enanomapper/templates/logonr.png");
+			BufferedImage img = ImageIO.read(in);
+
+			final CreationHelper helper = workbook.getCreationHelper();
+			final Drawing drawing = sheet.createDrawingPatriarch();
+
+			final ClientAnchor anchor = helper.createClientAnchor();
+			anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(img, "png", baos);
+			baos.flush();
+			baos.close();
+
+			final int pictureIndex = workbook.addPicture(baos.toByteArray(), Workbook.PICTURE_TYPE_PNG);
+
+			anchor.setCol1(0);
+			anchor.setRow1(8); // same row is okay
+			anchor.setRow2(8);
+			anchor.setCol2(1);
+			final Picture pict = drawing.createPicture(anchor, pictureIndex);
+			pict.resize();
+		} catch (Exception x) {
+
+		} finally {
+			try {
+				in.close();
+			} catch (Exception x) {
+			}
+		}
+
+	}
+
 	public Workbook generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
-		logger_cli.log(Level.INFO,String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
+		logger_cli.log(Level.INFO, String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
 		Iterable<TR> records = getJSONConfig();
 		String sheetname = settings.getAssayname();
 		String endpoint = settings.getEndpointname();
@@ -77,8 +172,9 @@ public class TemplateMaker {
 
 		Workbook workbook = new XSSFWorkbook();
 		CreationHelper factory = workbook.getCreationHelper();
-		workbook.createSheet("instruction for data logging");
-		Sheet sheet = workbook.createSheet(sheetname);
+		Sheet sheet = workbook.createSheet("instruction for data logging");
+		insertLogo(workbook,sheet);
+		sheet = workbook.createSheet(sheetname);
 		workbook.setActiveSheet(1);
 		Header header = sheet.getHeader();
 		header.setCenter("Center Header");
@@ -105,8 +201,8 @@ public class TemplateMaker {
 						CellUtil.setAlignment(cell, workbook, CellStyle.ALIGN_CENTER);
 					}
 
-					Object v = record.get("cleanedvalue"); 
-					String value = v==null?"?????":v.toString();
+					Object v = record.get("cleanedvalue");
+					String value = v == null ? "?????" : v.toString();
 
 					if ("material state".equals(value)) {
 						validation_materialstate(workbook, sheet, col);
@@ -116,7 +212,7 @@ public class TemplateMaker {
 					Object header1 = record.get("header1");
 					Object hint = record.get("hint");
 
-					logger_cli.log(Level.FINE,String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
+					logger_cli.log(Level.FINE, String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
 
 					if (hint != null && hint.toString().indexOf("yes/no") >= 0) {
 						validation_common(workbook, sheet, col, new String[] { "yes", "no" });
@@ -243,11 +339,12 @@ public class TemplateMaker {
 		return workbook;
 
 	}
-	
+
 	public void write(Workbook workbook, TemplateMakerSettings settings) throws IOException {
 		String endpoint = settings.getEndpointname();
-		try  (FileOutputStream out = new FileOutputStream(new File(settings.getOutputfolder(), String
-				.format("%s_%s_COLUMNS.xlsx", endpoint == null ? "" : endpoint.replaceAll(".xlsx", ""), settings.getAssayname())))) {
+		try (FileOutputStream out = new FileOutputStream(
+				new File(settings.getOutputfolder(), String.format("%s_%s_COLUMNS.xlsx",
+						endpoint == null ? "" : endpoint.replaceAll(".xlsx", ""), settings.getAssayname())))) {
 			workbook.write(out);
 		} finally {
 			workbook.close();
@@ -428,9 +525,9 @@ public class TemplateMaker {
 			Iterable<TR> records = getJSONConfig();
 			HashSet<String> assays = new HashSet<String>();
 			for (TR record : records) {
-				//System.out.println(record.get("File"));
+				// System.out.println(record.get("File"));
 				if (settings.getEndpointname().equals(record.get("File").toString().trim())) {
-					//System.out.println(record);
+					// System.out.println(record);
 					if (settings.getAssayname() == null || record.get("Sheet").equals(settings.getAssayname()))
 						assays.add(record.get("Sheet").toString());
 				}
