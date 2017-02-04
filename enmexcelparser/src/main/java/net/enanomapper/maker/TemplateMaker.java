@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,8 +46,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import ambit2.db.reporters.xlsx.AddDimensionedImage;
-
 public class TemplateMaker {
 	protected Logger logger_cli;
 	protected final static String header_results = "results";
@@ -73,58 +74,19 @@ public class TemplateMaker {
 		throw new Exception("Unsupported");
 	}
 
-	protected void insertLogo1(Sheet sheet) {
-		sheet.createRow(0).createCell(0).setCellValue("NANoREG templates");
-		sheet.createRow(1).createCell(0).setCellValue("http://www.nanoreg.eu/media-and-downloads/templates");
-		sheet.createRow(3).createCell(0).setCellValue(
-				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
-		sheet.createRow(4).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
-
-		sheet.createRow(6).createCell(0).setCellValue(
-				"The templates are licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.");
-		sheet.createRow(7).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
-
-		BufferedImage img = null;
-		InputStream in = null;
-		try {
-			in = TemplateMaker.class.getClassLoader().getResourceAsStream("net/enanomapper/templates/logonr.png");
-			img = ImageIO.read(in);
-		} catch (Exception x) {
-			x.printStackTrace();
-			img = null;
-		} finally {
-			try {
-				in.close();
-			} catch (Exception x) {
-			}
-		}
-		if (img != null)
-			try {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				AddDimensionedImage imgHelper = new AddDimensionedImage();
-				Drawing drawing = sheet.createDrawingPatriarch();
-				ImageIO.write(img, "png", baos);
-				baos.flush();
-				baos.close();
-				sheet.createRow(8).createCell(0);
-				imgHelper.addImageToSheet(8, 0, sheet, drawing, baos.toByteArray(), Workbook.PICTURE_TYPE_PNG, 1076,
-						1394, AddDimensionedImage.OVERLAY_ROW_AND_COLUMN);
-			} catch (Exception x) {
-				logger_cli.log(Level.WARNING, x.getMessage());
-			} finally {
-			}
-	}
-
 	protected void insertLogo(Workbook workbook, Sheet sheet) {
 		sheet.createRow(0).createCell(0).setCellValue("NANoREG templates");
 		sheet.createRow(1).createCell(0).setCellValue("http://www.nanoreg.eu/media-and-downloads/templates");
-		sheet.createRow(3).createCell(0).setCellValue(
-				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
-		sheet.createRow(4).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
-
-		sheet.createRow(6).createCell(0).setCellValue(
+		sheet.createRow(2).createCell(0).setCellValue(
 				"The templates are licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.");
-		sheet.createRow(7).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
+		sheet.createRow(3).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
+		
+		sheet.createRow(5).createCell(0).setCellValue(
+				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
+		sheet.createRow(6).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		sheet.createRow(7).createCell(0).setCellValue(String.format("Generated on %s", dateFormat.format(date)));
 
 		InputStream in = null;
 		try {
@@ -144,8 +106,8 @@ public class TemplateMaker {
 			final int pictureIndex = workbook.addPicture(baos.toByteArray(), Workbook.PICTURE_TYPE_PNG);
 
 			anchor.setCol1(0);
-			anchor.setRow1(8); // same row is okay
-			anchor.setRow2(8);
+			anchor.setRow1(9); // same row is okay
+			anchor.setRow2(9);
 			anchor.setCol2(1);
 			final Picture pict = drawing.createPicture(anchor, pictureIndex);
 			pict.resize();
