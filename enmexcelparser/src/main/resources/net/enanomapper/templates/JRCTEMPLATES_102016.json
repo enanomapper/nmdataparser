@@ -10316,7 +10316,7 @@
 	"module":	"INVITRO"
 	,"s_uuid":	"LDH"
 	,"Folder":	"JRCTEMPLATES_102016"
-	,"Annotation":	"method and instrument information"
+	,"Annotation":	"results"
 	,"endpoint":	"cytotoxicity"
 	,"cleanedvalue":	"corresponding dose/surface"
 	,"Column":	39
@@ -11991,7 +11991,7 @@
 	"module":	"INVITRO"
 	,"s_uuid":	"Resazurin"
 	,"Folder":	"JRCTEMPLATES_102016"
-	,"Annotation":	"method and instrument information"
+	,"Annotation":	"results"
 	,"endpoint":	"cytotoxicity"
 	,"cleanedvalue":	"corresponding dose/surface"
 	,"Column":	39
@@ -12787,7 +12787,7 @@
 	"module":	"INVITRO"
 	,"s_uuid":	"Trypan blue"
 	,"Folder":	"JRCTEMPLATES_102016"
-	,"Annotation":	"method and instrument information"
+	,"Annotation":	"results"
 	,"endpoint":	"cytotoxicity"
 	,"cleanedvalue":	"corresponding dose/surface"
 	,"Column":	39
