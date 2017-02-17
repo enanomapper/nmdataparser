@@ -425,6 +425,11 @@ public class ExcelUtils
 	}
 	
 	public static Number getNumericValue(Cell c)
+	{	
+		return getNumericValue(c, false);
+	}
+	
+	public static Number getNumericValue(Cell c, boolean FlagTreatBlankAs0)
 	{
 		if (c == null)
 			return null;
@@ -432,7 +437,12 @@ public class ExcelUtils
 		switch (c.getCellType())
 		{
 		case Cell.CELL_TYPE_BLANK:
-			return null;
+		{	
+			if (FlagTreatBlankAs0)
+				return new Double(0.0);
+			else
+				return null;
+		}	
 		case Cell.CELL_TYPE_NUMERIC:
 			return new Double(c.getNumericCellValue());
 		case Cell.CELL_TYPE_FORMULA: {	
