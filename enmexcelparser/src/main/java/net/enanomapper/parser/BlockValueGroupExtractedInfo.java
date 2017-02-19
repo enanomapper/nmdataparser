@@ -15,6 +15,7 @@ public class BlockValueGroupExtractedInfo
 		public Integer rowPos = null;
 		public String mapping = null;
 		public String unit = null;
+		public Object jsonValue = null;
 	}
 	
 	protected List<String> errors = new ArrayList<String>();
@@ -36,7 +37,5 @@ public class BlockValueGroupExtractedInfo
 	{
 		return errors;
 	}
-	
-	
 	
 }

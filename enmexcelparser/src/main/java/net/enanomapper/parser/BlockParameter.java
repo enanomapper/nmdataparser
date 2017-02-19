@@ -30,6 +30,10 @@ public class BlockParameter
 	public String unit = null;
 	public boolean FlagUnit = false;
 	
+	public Object jsonValue = null;
+	public boolean FlagJsonValue = false;
+	
+	
 	
 	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf, 
 											JsonUtilities jsonUtils, int paramNum )
@@ -53,10 +57,26 @@ public class BlockParameter
 			}
 		}
 		
+		//JSON_VALUE
+		JsonNode nd = node.path("JSON_VALUE");
+		if (!nd.isMissingNode())
+		{
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null)
+			{	
+			}
+			else
+			{	
+				bp.jsonValue = obj;
+				bp.FlagJsonValue = true;
+			}
+		}
+		
 		//ASSIGN
 		if (node.path("ASSIGN").isMissingNode())
 		{
-			conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) +  "], keyword \"ASSIGN\" is missing!");
+			if (!bp.FlagJsonValue)
+				conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) +  "], keyword \"ASSIGN\" is missing!");
 		}
 		else
 		{	
@@ -75,10 +95,11 @@ public class BlockParameter
 		
 		
 		//COLUMN_POS
-		JsonNode nd = node.path("COLUMN_POS");
+		nd = node.path("COLUMN_POS");
 		if (nd.isMissingNode())
 		{
-			conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) + 
+			if (!bp.FlagJsonValue)
+				conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) + 
 					"], keyword \"COLUMN_POS\" is missing!");
 		}
 		else
@@ -110,7 +131,8 @@ public class BlockParameter
 		nd = node.path("ROW_POS");
 		if (nd.isMissingNode())
 		{
-			conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) + 
+			if (!bp.FlagJsonValue)
+				conf.configErrors.add("In JSON Section PARAMETERS[" + (paramNum + 1) + 
 					"], keyword \"ROW_POS\" is missing!");
 		}
 		else
@@ -226,6 +248,15 @@ public class BlockParameter
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"UNIT\" : " + JsonUtilities.objectToJsonField(unit));
+			nFields++;
+		}
+		
+		if (FlagJsonValue)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"JSON_VALUE\" : " + JsonUtilities.objectToJsonField(jsonValue));
 			nFields++;
 		}
 		
