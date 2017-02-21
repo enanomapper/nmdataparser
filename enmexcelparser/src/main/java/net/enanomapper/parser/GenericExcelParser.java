@@ -2555,6 +2555,26 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									if (!bvgei.paramInfo.isEmpty()) {
 										dbEl.params = new Params();
 										for (BlockValueGroupExtractedInfo.ParamInfo pi : bvgei.paramInfo) {
+											if (pi.jsonValue != null)
+											{
+												//json value takes precedence over ASSIGN
+												Object value = pi.jsonValue;
+
+												if (pi.mapping != null)													
+													value = getMappingValue(
+															pi.jsonValue,
+															pi.mapping);
+
+												value = RichValue
+														.recognizeRichValueFromObject(
+																value,
+																pi.unit,
+																rvParser);
+												dbEl.params.put(pi.name,value);
+												continue;
+											}
+											
+											
 											Cell c = null;
 											switch (pi.assign) {
 											case ASSIGN_TO_BLOCK:
@@ -2722,6 +2742,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						FlagParamOK = false;
 					} else
 						pi.name = bp.name;
+					
+					if (bp.jsonValue != null)
+						pi.jsonValue = bp.jsonValue;
 
 					if (bp.assign == BlockParameterAssign.UNDEFINED) {
 						bvgei.errors.add("Parameter " + (i + 1)
