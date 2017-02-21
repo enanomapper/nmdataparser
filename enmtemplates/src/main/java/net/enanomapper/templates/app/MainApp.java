@@ -18,10 +18,10 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import net.enanomapper.maker.TemplateMakerSettings;
-import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
 import net.enanomapper.maker.TR;
 import net.enanomapper.maker.TemplateMaker;
+import net.enanomapper.maker.TemplateMakerSettings;
+import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
 import net.enanomapper.templates.Term;
 import net.enanomapper.templates.Tools;
 
@@ -46,6 +46,7 @@ public class MainApp {
 		super();
 		maker = createTemplateMaker(logger_cli);
 	}
+
 	protected TemplateMaker createTemplateMaker(Logger logger) {
 		return new TemplateMaker(logger);
 	}
@@ -136,7 +137,7 @@ public class MainApp {
 				.withDescription("Template type jrc|iom|all|undefined").create("t");
 
 		Option cmd = OptionBuilder.hasArg().withLongOpt("command").withArgName("cmd")
-				.withDescription("What to do: extract|generate").create("a");
+				.withDescription("What to do: extract|generate|annotate").create("a");
 
 		Option assay = OptionBuilder.hasArg().withLongOpt("assay").withArgName("assayname")
 				.withDescription("Sheet name as defined in JRC templates").create("s");
@@ -178,10 +179,18 @@ public class MainApp {
 			maker.generate(settings);
 			break;
 		}
+		case annotate: {
+			annotate(settings);
+			break;
+		}
 		default: {
 			System.out.println("Unsupported command " + settings.getTemplatesCommand());
 		}
 		}
+	}
+
+	protected void annotate(TemplateMakerSettings settings) throws Exception {
+		throw new Exception("Unsupported command " + settings.getTemplatesCommand());
 	}
 
 	protected void extract(TemplateMakerSettings settings) throws Exception {

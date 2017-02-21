@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 public class TemplateMakerSettings implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7761828667318892718L;
 	transient protected IAnnotator annotator;
 
 	public IAnnotator getAnnotator() {
@@ -20,7 +24,7 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public enum _TEMPLATES_CMD {
-		extract, generate
+		extract, generate,annotate
 	}
 
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
