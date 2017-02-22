@@ -376,12 +376,22 @@ public class ExcelUtils
 		case Cell.CELL_TYPE_BLANK:
 			return "";
 		case Cell.CELL_TYPE_NUMERIC:
-			return "" + c.getNumericCellValue();
+		{	
+			if (c.getCellStyle().getDataFormatString().contains("%"))
+				return "" + (c.getNumericCellValue()*100.0) + "%";
+			else
+				return "" + c.getNumericCellValue();
+		}	
 		case Cell.CELL_TYPE_STRING:
 			return c.getStringCellValue();
 		case Cell.CELL_TYPE_FORMULA: {	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
-				return "" + c.getNumericCellValue();
+			{	
+				if (c.getCellStyle().getDataFormatString().contains("%"))
+					return "" + (c.getNumericCellValue()*100.0) + "%";
+				else
+					return "" + c.getNumericCellValue();
+			}	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
 				return c.getStringCellValue();
 		}	
@@ -401,7 +411,12 @@ public class ExcelUtils
 			return null;
 			
 		case Cell.CELL_TYPE_NUMERIC:
-			return new Double(c.getNumericCellValue());
+		{	
+			Double v = new Double(c.getNumericCellValue());
+			if (c.getCellStyle().getDataFormatString().contains("%"))
+				v = 100.0 * v;
+			return v;
+		}	
 			
 		case Cell.CELL_TYPE_BOOLEAN:
 			return new Boolean(c.getBooleanCellValue());	
@@ -411,7 +426,12 @@ public class ExcelUtils
 			
 		case Cell.CELL_TYPE_FORMULA: {	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
-				return new Double(c.getNumericCellValue());
+			{	
+				if (c.getCellStyle().getDataFormatString().contains("%"))
+					return new Double(c.getNumericCellValue()*100.0);
+				else
+					return new Double(c.getNumericCellValue());
+			}	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_BOOLEAN)
 				return new Boolean(c.getBooleanCellValue());
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
@@ -444,10 +464,20 @@ public class ExcelUtils
 				return null;
 		}	
 		case Cell.CELL_TYPE_NUMERIC:
-			return new Double(c.getNumericCellValue());
+		{	
+			Double v = new Double(c.getNumericCellValue());
+			if (c.getCellStyle().getDataFormatString().contains("%"))
+				v = 100.0 * v;
+			return v;
+		}	
 		case Cell.CELL_TYPE_FORMULA: {	
 			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
-				return new Double(c.getNumericCellValue());
+			{	
+				if (c.getCellStyle().getDataFormatString().contains("%"))
+					return new Double(c.getNumericCellValue()*100.0);
+				else
+					return new Double(c.getNumericCellValue());
+			}	
 		}	
 		}
 		
