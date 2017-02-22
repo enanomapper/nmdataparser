@@ -2085,7 +2085,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @param loc
 	 * @return
 	 */
-	protected Object[] getArray(ExcelDataLocation loc) {
+	protected Object[] getArray(ExcelDataLocation loc) throws Exception
+	{
 		switch (loc.iteration) {
 		case ROW_SINGLE:
 			// TODO
@@ -2108,12 +2109,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		case JSON_VALUE: {
-			/*
-			 * Object value = loc.getJsonValue(); if (value != null) if (value
-			 * instanceof Object[]) return (Object[]) value; else
-			 * parseErrors.add("[" + locationStringForErrorMessage(loc) +
-			 * "] JSON_VALUE is not an array!");
-			 */
+			Object value = loc.getJsonValue(); 
+			if (value != null) 
+			{	
+				if (value instanceof Object[]) 
+					return (Object[]) value; 
+				else
+					throw new ExceptionAtLocation(loc, -1, "JSON_VALUE",
+							" is not an array!");
+			}
 			return null;
 		}
 

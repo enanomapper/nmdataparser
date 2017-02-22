@@ -200,7 +200,22 @@ public class JsonUtilities
 			return new Double(d);
 		}
 		
-		//TODO - eventually add array object extraction
+		if (node.isBoolean())
+		{
+			boolean b = node.asBoolean();
+			return new Boolean(b);
+		}
+		
+		if (node.isArray())
+		{
+			Object obj[] = new Object[node.size()];
+			for (int i = 0; i < node.size(); i++)
+			{
+				JsonNode elNode = node.get(i);
+				obj[i] = extractObject(elNode);
+			}
+			return obj;
+		}
 		
 		return null;
 	}
