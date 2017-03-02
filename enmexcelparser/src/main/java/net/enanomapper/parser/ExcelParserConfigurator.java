@@ -16,6 +16,7 @@ import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
+import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 
 /**
@@ -87,6 +88,10 @@ public class ExcelParserConfigurator
 	
 	public String dynamicIterationColumnName = null;
 	public boolean FlagDynamicIterationColumnName = false;
+	
+	//public Object skipRows = null;
+	public boolean FlagSkipRows = false;
+	public IndexSet skipRowsIndexSet = null;
 	
 	
 	//Specific data locations
@@ -343,6 +348,22 @@ public class ExcelParserConfigurator
 					conf.FlagDynamicIterationColumnName = true;
 				}
 			}
+			
+			//SKIP_ROWS
+			JsonNode skipRowsNode = curNode.path("SKIP_ROWS");
+			if (!skipRowsNode.isMissingNode())
+			{
+				try {
+					conf.skipRowsIndexSet = IndexSet.getFromJsonNode(skipRowsNode);
+				}
+				catch (Exception x)
+				{
+					conf.configErrors.add("In JSON section \"DATA_ACESS\", "
+							+ "keyword \"SKIP_ROWS\" is incorrectly defined: " 
+							+ x.getMessage());
+				}
+			}
+
 			
 			
 			//VARIABLES

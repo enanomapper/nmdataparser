@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * 
  * @author nick
@@ -46,5 +48,25 @@ public class IndexSet
 	public void addRegion(int region[])
 	{
 		//TODO
+	}
+	
+	public static IndexSet getFromJsonNode(JsonNode node) throws Exception
+	{
+		if (node.isArray())
+		{
+			//TODO
+		}
+		 
+		if (node.isTextual())
+		{
+			//TODO
+		}
+			
+		if (node.isInt())
+		{
+			//TODO
+		}
+		
+		return null;
 	}
 }
