@@ -1203,6 +1203,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			IParams params = new Params();
 			for (String param : padl.parameters.keySet()) 
 			{	
+				readParameter(param, padl.parameters.get(param), params);
+				
+				/*
 				ExcelDataLocation loc = padl.parameters.get(param);
 				String parameterName = param;
 				
@@ -1287,6 +1290,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (paramStringValue != null)
 						params.put(parameterName, paramStringValue);
 				}
+				*/
 			}
 			
 			pa.setParameters(params);
@@ -1319,6 +1323,93 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		return pa;
+	}
+	
+	void readParameter(String param, ExcelDataLocation loc, IParams destinationParams)
+	{	
+		String parameterName = param;
+		
+		//Handle parameter name from other excel data location
+		if (loc.otherLocationFields != null)
+		{
+			ExcelDataLocation pNameLoc = loc.otherLocationFields.get("NAME");
+			if (pNameLoc != null)
+			{
+				try {
+					String nameString = getStringValue(pNameLoc);
+					if (nameString != null)
+						parameterName = nameString;
+				} catch (Exception x) {
+					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),pNameLoc.toString()));
+				}	
+			}
+		}
+		
+		Value pVal = null;
+		String paramStringValue = null;
+		
+		// Parameter is allowed to be Rich Value, String or Numeric object 
+		try {
+			paramStringValue = getStringValue(loc);
+		} catch (Exception x) {
+			logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
+		}
+		if (paramStringValue != null)
+		{	
+			RichValue rv = rvParser.parse(paramStringValue);
+			String rv_error = rvParser.getAllErrorsAsString();
+
+			if (rv_error == null) 
+			{
+				pVal = new Value();
+				if (rv.unit != null)
+					pVal.setUnits(rv.unit);
+				if (rv.loValue != null)
+					pVal.setLoValue(rv.loValue);
+				if (rv.loQualifier != null)
+					pVal.setLoQualifier(rv.loQualifier);
+				if (rv.upValue != null)
+					pVal.setUpValue(rv.upValue);
+				if (rv.upQualifier != null)
+					pVal.setUpQualifier(rv.upQualifier);
+			}
+		}	
+		else try 
+		{
+			Number paramDoubleValue = getNumericValue(loc);
+			if (paramDoubleValue != null)
+			{	
+				pVal = new Value();
+				pVal.setLoValue(paramDoubleValue);
+			}	
+		} catch (Exception x) {
+			logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),loc.toString()));	
+		}
+		
+		
+		if (pVal != null) //Parameters is stored as a Value object
+		{	
+			//Handle parameter unit from other excel data location
+			ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
+			if (pUnitLoc != null)
+			{
+				try {
+					String unitString = getStringValue(pUnitLoc);
+					if (unitString != null)
+						pVal.setUnits(unitString);
+				} catch (Exception x) {
+					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),pUnitLoc.toString()));
+				}	
+			}
+			
+			destinationParams.put(parameterName, pVal);
+		}
+		else
+		{
+			//Parameter is stored as a string
+			if (paramStringValue != null)
+				destinationParams.put(parameterName, paramStringValue);
+		}
 	}
 
 	/**
@@ -1654,7 +1745,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		Set<Entry<String, ExcelDataLocation>> locEntries = conditionsInfo
 				.entrySet();
-		for (Entry<String, ExcelDataLocation> entry : locEntries) {
+		for (Entry<String, ExcelDataLocation> entry : locEntries) 
+		{
 			String value = getString(entry.getValue());
 			conditions.put(entry.getKey(), value);
 
