@@ -1747,18 +1747,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				.entrySet();
 		for (Entry<String, ExcelDataLocation> entry : locEntries) 
 		{
-			String value = getString(entry.getValue());
-			conditions.put(entry.getKey(), value);
-
-			/*
-			 * ExcelDataLocation loc = entry.getValue();
-			 * FlagAddParserStringError = false; String condStrValue =
-			 * getStringValue(loc); FlagAddParserStringError = true; if
-			 * (condStrValue != null) params.put(entry.getKey(),
-			 * condStrValue); else { Double condDoubleValue =
-			 * getNumericValue(loc); if (condDoubleValue != null)
-			 * params.put(entry.getKey(), condDoubleValue); }
-			 */
+			//Conditions are read in the same way as parameters are read 
+			readParameter(entry.getKey(), entry.getValue(), conditions);
+			
+			//This is the old simple approach: condition is always read as text
+			//String value = getString(entry.getValue());
+			//conditions.put(entry.getKey(), value);
 		}
 		
 		return conditions;
