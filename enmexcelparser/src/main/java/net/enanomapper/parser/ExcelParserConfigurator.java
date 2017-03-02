@@ -1272,7 +1272,8 @@ public class ExcelParserConfigurator
 		JsonNode effCondNode = node.path("CONDITIONS");
 		if (!effCondNode.isMissingNode())
 		{
-			efrdl.conditions = extractDynamicSection(effCondNode, conf, null);
+			String otherFields[] = {"UNIT", "NAME"};
+			efrdl.conditions = extractDynamicSection(effCondNode, conf, otherFields);
 		}
 		
 		return efrdl;

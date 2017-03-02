@@ -1641,29 +1641,35 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		if (efrdl.conditions != null) {
-			IParams params = new Params();
-
-			Set<Entry<String, ExcelDataLocation>> locEntries = efrdl.conditions
-					.entrySet();
-			for (Entry<String, ExcelDataLocation> entry : locEntries) {
-				String value = getString(entry.getValue());
-				params.put(entry.getKey(), value);
-
-				/*
-				 * ExcelDataLocation loc = entry.getValue();
-				 * FlagAddParserStringError = false; String condStrValue =
-				 * getStringValue(loc); FlagAddParserStringError = true; if
-				 * (condStrValue != null) params.put(entry.getKey(),
-				 * condStrValue); else { Double condDoubleValue =
-				 * getNumericValue(loc); if (condDoubleValue != null)
-				 * params.put(entry.getKey(), condDoubleValue); }
-				 */
-			}
-
-			effect.setConditions(params);
+			IParams conditions = readConditions (efrdl.conditions);
+			effect.setConditions(conditions);
 		}
 
 		return effect;
+	}
+	
+	IParams readConditions(HashMap<String, ExcelDataLocation> conditionsInfo) throws Exception
+	{
+		IParams conditions = new Params();
+
+		Set<Entry<String, ExcelDataLocation>> locEntries = conditionsInfo
+				.entrySet();
+		for (Entry<String, ExcelDataLocation> entry : locEntries) {
+			String value = getString(entry.getValue());
+			conditions.put(entry.getKey(), value);
+
+			/*
+			 * ExcelDataLocation loc = entry.getValue();
+			 * FlagAddParserStringError = false; String condStrValue =
+			 * getStringValue(loc); FlagAddParserStringError = true; if
+			 * (condStrValue != null) params.put(entry.getKey(),
+			 * condStrValue); else { Double condDoubleValue =
+			 * getNumericValue(loc); if (condDoubleValue != null)
+			 * params.put(entry.getKey(), condDoubleValue); }
+			 */
+		}
+		
+		return conditions;
 	}
 
 	/**
