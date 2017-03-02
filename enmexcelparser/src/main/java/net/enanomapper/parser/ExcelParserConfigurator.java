@@ -355,12 +355,13 @@ public class ExcelParserConfigurator
 			{
 				try {
 					conf.skipRowsIndexSet = IndexSet.getFromJsonNode(skipRowsNode);
+					if (conf.skipRowsIndexSet != null)
+						conf.FlagSkipRows = true;
 				}
 				catch (Exception x)
 				{
 					conf.configErrors.add("In JSON section \"DATA_ACESS\", "
-							+ "keyword \"SKIP_ROWS\" is incorrectly defined: " 
-							+ x.getMessage());
+							+ "keyword \"SKIP_ROWS\" is incorrectly defined: ");
 				}
 			}
 
@@ -719,6 +720,13 @@ public class ExcelParserConfigurator
 			if (nDAFields > 0)
 				sb.append(",\n");
 			sb.append("\t\t\"DYNAMIC_ITERATION_COLUMN_NAME\" : \"" + dynamicIterationColumnName + "\"" );
+			nDAFields++;
+		}
+		if (FlagSkipRows)
+		{
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"SKIP_ROWS\" : " + skipRowsIndexSet.toJSONKeyWord());
 			nDAFields++;
 		}
 		

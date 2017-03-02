@@ -50,23 +50,58 @@ public class IndexSet
 		//TODO
 	}
 	
+	public String toJSONKeyWord()
+	{	
+		StringBuffer sb = new StringBuffer();
+		if (!indexSet.isEmpty())
+		{	
+			sb.append("[");
+			int n = 0;
+			for (Integer iObj : indexSet)
+			{
+				if (n>0)
+					sb.append(",");
+				sb.append(iObj.toString());
+				n++;
+			}
+			sb.append("]");
+				
+		}
+		else
+		{
+			sb.append("\"");
+			//TODO
+			sb.append("\"");
+		}
+		return sb.toString();
+	}	
+	
 	public static IndexSet getFromJsonNode(JsonNode node) throws Exception
 	{
 		if (node.isArray())
 		{
-			//TODO
+			IndexSet iSet = new IndexSet(); 
+			for (int i = 0; i < node.size(); i++)
+			{
+				if (node.get(i).isInt())
+					iSet.addIndex(node.get(i).intValue());				
+			}
+			return iSet;
 		}
 		 
 		if (node.isTextual())
 		{
 			//TODO
+			return null;
 		}
 			
 		if (node.isInt())
 		{
 			//TODO
+			return null;
 		}
 		
-		return null;
+		throw new Exception ("incorrect index set");
+		//return null;
 	}
 }
