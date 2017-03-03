@@ -61,7 +61,7 @@ public class IndexSet
 			{
 				if (n>0)
 					sb.append(",");
-				sb.append(iObj.toString());
+				sb.append((iObj+1)); //0-base to 1-base indexing
 				n++;
 			}
 			sb.append("]");
@@ -84,7 +84,7 @@ public class IndexSet
 			for (int i = 0; i < node.size(); i++)
 			{
 				if (node.get(i).isInt())
-					iSet.addIndex(node.get(i).intValue());				
+					iSet.addIndex(node.get(i).intValue() - 1);	//1-base to 0-base indexing			
 			}
 			return iSet;
 		}

@@ -480,7 +480,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					// nextRecordBuffer = new SubstanceRecord();
 					// FlagNextRecordLoaded = true;
 
-					iterateExcel();
+					if (config.FlagSkipRows)
+						iterateExcel_skipRows();
+					else
+						iterateExcel();
 					return FlagNextRecordLoaded;
 				} catch (Exception x) {
 					logger.log(Level.SEVERE, x.getMessage(), x);
@@ -687,6 +690,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected void initialIteration() {
 		switch (config.substanceIteration) {
 		case ROW_SINGLE: {
+			if (config.FlagSkipRows)
+			{	
+				while (config.skipRowsIndexSet.contains(curRowNum) 
+						&& curRowNum <= primarySheet.getLastRowNum()) 
+					curRowNum++;
+			}
 			curRow = primarySheet.getRow(curRowNum);
 
 			// Initial iteration for each parallel sheet
@@ -798,6 +807,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return 0;
 	}
+	
+	protected void iterateExcel_skipRows()
+	{
+		iterateExcel();
+		while (config.skipRowsIndexSet.contains(curRowNum) 
+				&& curRowNum <= primarySheet.getLastRowNum()) {
+			iterateExcel();
+		}
+	}
+	
 
 	protected int iterateToNextNonEmptyRow() {
 		curRowNum++;
