@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.ParserConstants.DataType;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
@@ -42,6 +43,9 @@ public class ExcelDataLocation
 	
 	public Recognition recognition = Recognition.BY_INDEX;
 	public boolean FlagRecognition = false;
+	
+	public DataInterpretation dataInterpretation = DataInterpretation.DEFAULT;
+	public boolean FlagDataInterpretation = false;
 	
 	//public CellType cellType = CellType.STRING;
 	//public boolean FlagCellType = false;
@@ -207,7 +211,28 @@ public class ExcelDataLocation
 			}
 		}
 		
-		
+		//DATA_INTERPRETATION
+		if (!sectionNode.path("DATA_INTERPRETATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "DATA_INTERPRETATION", false);
+			if (keyword == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"DATA_INTERPRETATION\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.FlagDataInterpretation = true;
+				loc.dataInterpretation = DataInterpretation.fromString(keyword);
+				if (loc.dataInterpretation == DataInterpretation.UNDEFINED)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"DATA_INTERPRETATION\" is incorrect or UNDEFINED!");
+					loc.nErrors++;
+				}	
+			}
+		}
+
+
 		//RECOGNITION
 		if (sectionNode.path("RECOGNITION").isMissingNode())
 		{
@@ -591,6 +616,14 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"DATA_TYPE\" : \"" + dataType.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagDataInterpretation)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DATA_INTERPRETATION\" : \"" + dataInterpretation.toString() + "\"");
 			nFields++;
 		}
 		
