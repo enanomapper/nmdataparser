@@ -105,6 +105,23 @@ public class ParserConstants
 		}
 	}
 	
+	public enum DataInterpretation {
+		DEFAULT, AS_TEXT, UNDEFINED;
+		
+		public static DataInterpretation fromString(String s)
+		{
+			try
+			{
+				DataInterpretation di  = DataInterpretation.valueOf(s) ;
+				return (di);
+			}
+			catch (Exception e)
+			{
+				return DataInterpretation.UNDEFINED;
+			}
+		}
+	}
+	
 	public enum CellType {
 		BLANK, BOOLEAN, ERROR, FORMULA, NUMERIC, STRING, UNDEFINED;
 		
