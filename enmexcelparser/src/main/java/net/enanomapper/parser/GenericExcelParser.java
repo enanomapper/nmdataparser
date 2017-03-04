@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
+import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
@@ -1344,7 +1345,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return pa;
 	}
 	
-	void readParameter(String param, ExcelDataLocation loc, IParams destinationParams)
+	void readParameter(String param, ExcelDataLocation loc, IParams destinationParams) throws Exception
 	{	
 		String parameterName = param;
 		
@@ -1362,6 +1363,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					logger.log(Level.FINE,String.format("%s\t%s\t%s", param,x.getMessage(),pNameLoc.toString()));
 				}	
 			}
+		}
+		
+		//Enforcing parameter to be read as string
+		if (loc.dataInterpretation == DataInterpretation.AS_TEXT)
+		{
+			String s = getString(loc);
+			if (s != null)
+				destinationParams.put(parameterName, s);
+			return;			
 		}
 		
 		Value pVal = null;
