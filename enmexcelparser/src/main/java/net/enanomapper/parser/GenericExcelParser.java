@@ -1746,6 +1746,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			for (String propName : cdl.properties.keySet()) {
 				ExcelDataLocation loc = cdl.properties.get(propName);
 				Object propObj = null;
+				
+				if (loc.dataInterpretation == DataInterpretation.AS_TEXT)
+					try{
+						propObj = getString(loc);
+					}catch (Exception x) {
+						logger.log(Level.FINE, x.getMessage());
+					}
+				
 				try {
 
 					propObj = getStringValue(loc);
