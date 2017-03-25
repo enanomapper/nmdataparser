@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1285,6 +1286,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				destinationParams.put(parameterName, s);
 			return;			
 		}
+				
+		//Enforcing parameter to be read as date
+		if (loc.dataInterpretation == DataInterpretation.AS_DATE)
+		{
+			Date d = getDate(loc);
+			if (d != null)
+				destinationParams.put(parameterName, d);
+			return;			
+		}
 		
 		Value pVal = null;
 		String paramStringValue = null;
@@ -2023,6 +2033,74 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 		}
 	}
+	
+	/**
+	 * Generic function (regardless of the iteration access)
+	 * 
+	 * @param loc
+	 * @return
+	 * @throws Exception
+	 */
+	protected Date getDate(ExcelDataLocation loc) throws Exception {
+		switch (loc.iteration) {
+		case ROW_SINGLE:
+			if (loc.isFromParallelSheet()) {
+				Row row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
+				if (row != null)
+					return getDate(row, loc);
+				else
+					return null;
+			} else
+				return getDate(curRow, loc); // from basic sheet
+		
+	case ROW_MULTI_FIXED:
+	case ROW_MULTI_DYNAMIC:
+		// Taking the value from the first row
+		ArrayList<Row> rows;
+		if (loc.isFromParallelSheet())
+			rows = parallelSheetStates[loc.getParallelSheetIndex()].curRows;
+		else
+			rows = curRows;
+		if (rows != null)
+			if (!rows.isEmpty())
+				return getDate(rows.get(0), loc);
+		return null;
+	
+	case ABSOLUTE_LOCATION: {
+		Object value = loc.getAbsoluteLocationValue();
+		if (value == null) {
+			value = getDateFromAbsoluteLocation(loc);
+			loc.setAbsoluteLocationValue(value);
+		}
+		if (value != null && (value instanceof Date))
+			return (Date) value;
+		return null;
+	}
+
+	case JSON_VALUE: {
+		Object value = loc.getJsonValue();
+		//TODO
+		return null;
+	}
+
+	case JSON_REPOSITORY: {
+		String key = loc.getJsonRepositoryKey();
+		Object value = config.jsonRepository.get(key);
+		//TODO
+		return null;
+	}
+
+	case VARIABLE: {
+		//TODO
+		return null;
+	}
+
+	default:
+		return null;
+	}	
+}
+
+	
 
 	/**
 	 * Generic function (regardless of the iteration access)
@@ -2266,6 +2344,37 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param loc
+	 * @return
+	 * @throws Exception
+	 */
+	protected Date getDateFromAbsoluteLocation(ExcelDataLocation loc)
+			throws Exception {
+		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		if (sheet != null) {
+			Row r = sheet.getRow(loc.rowIndex);
+			if (r == null)
+				return null;
+
+			Cell c = r.getCell(loc.columnIndex);
+
+			Date d = ExcelUtils.getDateFromCell(c);
+			if (d != null)
+				return d;
+			else {
+				String msg = String.format(
+						"[%s]: Cell is not of formatted as date!",
+						locationStringForErrorMessage(loc));
+				logger.log(Level.WARNING, msg);
+				throw new Exception(msg);
+				// return null;
+			}			
+		}
+		return null;
+	}
 
 	/**
 	 * 
@@ -2407,6 +2516,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected String getString(Row row, ExcelDataLocation loc) {
 		Cell c = row.getCell(loc.columnIndex);
 		return ExcelUtils.getStringFromCell(c);
+	}
+	
+	/**
+	 * 
+	 * @param row
+	 * @param loc
+	 * @return
+	 */
+	protected Date getDate(Row row, ExcelDataLocation loc) {
+		Cell c = row.getCell(loc.columnIndex);
+		return ExcelUtils.getDateFromCell(c);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -481,6 +482,40 @@ public class ExcelUtils
 		}	
 		}
 		
+		return null;
+	}
+	
+	public static Date getDateFromCell(Cell c)
+	{
+		if (c == null)
+			return null;
+		
+		switch (c.getCellType())
+		{
+		case Cell.CELL_TYPE_BLANK:
+		{	
+			return null;
+		}	
+		case Cell.CELL_TYPE_NUMERIC:
+		{	
+			String format = c.getCellStyle().getDataFormatString();
+			if (format.indexOf('/') > 0 || format.indexOf('y') > 0 
+					|| format.indexOf('m') > 0 || format.indexOf('d') > 0)
+				return c.getDateCellValue();
+			return null;
+		}	
+		case Cell.CELL_TYPE_FORMULA: 
+		{	
+			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+			{	
+				String format = c.getCellStyle().getDataFormatString();
+				if (format.indexOf('/') > 0 || format.indexOf('y') > 0 
+						|| format.indexOf('m') > 0 || format.indexOf('d') > 0)
+					return c.getDateCellValue();
+			}	
+			return null;
+		}	
+		}
 		return null;
 	}
 	
