@@ -47,6 +47,9 @@ public class ExcelDataLocation
 	public DataInterpretation dataInterpretation = DataInterpretation.DEFAULT;
 	public boolean FlagDataInterpretation = false;
 	
+	public String dateFormat = "yyyy-MM-dd"; //default date format
+	public boolean FlagDateFormat = false;
+	
 	//public CellType cellType = CellType.STRING;
 	//public boolean FlagCellType = false;
 	
@@ -229,6 +232,22 @@ public class ExcelDataLocation
 					conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"DATA_INTERPRETATION\" is incorrect or UNDEFINED!");
 					loc.nErrors++;
 				}	
+			}
+		}
+
+		//DATE_FORMAT
+		if (!sectionNode.path("DATE_FORMAT").isMissingNode())
+		{	
+			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "DATE_FORMAT", false);
+			if (keyword == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + jsonSection + "\", keyword \"DATE_FORMAT\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			}	
+			else
+			{	
+				loc.FlagDateFormat = true;
+				loc.dateFormat = keyword;	
 			}
 		}
 
@@ -624,6 +643,14 @@ public class ExcelDataLocation
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"DATA_INTERPRETATION\" : \"" + dataInterpretation.toString() + "\"");
+			nFields++;
+		}
+		
+		if (FlagDateFormat)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DATE_FORMAT\" : \"" + dateFormat + "\"");
 			nFields++;
 		}
 		

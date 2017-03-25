@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -23,6 +24,7 @@ import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.exceptions.CellException;
 import net.enanomapper.parser.exceptions.ExceptionAtLocation;
+import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
@@ -2079,7 +2081,23 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	case JSON_VALUE: {
 		Object value = loc.getJsonValue();
-		//TODO
+		if (value != null)
+			if (value instanceof String)
+			{	
+				try
+				{
+					SimpleDateFormat formatter = new SimpleDateFormat(loc.dateFormat);
+					Date d = formatter.parse((String) value);
+					if (d != null)
+						return d;
+				}
+				catch (Exception e){
+					String msg = "JSON_VALUE value \"" 
+							+ value + "\" is not correclty formatted date! ";
+					throw new Exception(msg);
+				}
+				
+			}
 		return null;
 	}
 

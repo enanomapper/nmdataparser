@@ -1,9 +1,10 @@
 package net.enanomapper.parser.json;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class JsonUtilities 
-{
+{	
 	private String error = "";
 	/**
 	 * 
