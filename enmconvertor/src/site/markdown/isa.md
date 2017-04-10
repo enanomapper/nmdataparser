@@ -62,7 +62,7 @@ and enables exporting query results from the database in a desired format.
 
 ## `ISA-TAB Logic` templates
 
-NANoREG released a large set of Excel templates at [http://www.nanoreg.eu/media-and-downloads/templates/269-templates-for-experimental-data-logging](http://www.nanoreg.eu/media-and-downloads/templates/269-templates-for-experimental-data-logging).
+NANoREG released a large set of Excel templates at [http://www.rivm.nl/en/About_RIVM/International/International_Projects/Completed/NANoREG/NANoREG_Results_Repository_sub_page_ISA_TAB_nano_templates](http://www.rivm.nl/en/About_RIVM/International/International_Projects/Completed/NANoREG/NANoREG_Results_Repository_sub_page_ISA_TAB_nano_templates).
 While not strictly following the [ISA-TAB](http://isa-tools.org/) and [ISA-TAB-Nano](https://wiki.nci.nih.gov/display/icr/isa-tab-nano) formats, the NANoREG templates have been designed around ISA-Tab-logic, i.e. structuring the data in investigation-study-assay related groups.
 
 >NANoREG has produced a set of easy-to-use 'templates'. The templates have been built by experts in different fields (phys-chem, in vivo and in vitro toxicology) and are aimed at harmonising the logging of experimentally-produced data, and include meaningful and detailed information to support causal correlation analyses, modelling and Safe-by-Design (SbD).

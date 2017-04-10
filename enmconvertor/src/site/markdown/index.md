@@ -16,7 +16,7 @@
 
 ### About
 
-The Excel templates are automatically regenerated based on fields defined in the [**NANoREG templates**](http://www.nanoreg.eu/media-and-downloads/templates). 
+The Excel templates are automatically regenerated based on fields defined in the [**NANoREG templates**](http://www.rivm.nl/en/About_RIVM/International/International_Projects/Completed/NANoREG/NANoREG_Results_Repository_sub_page_ISA_TAB_nano_templates). 
 The generation process includes cleaning of the JRC fields and facilitates the automatic generation of [JSON configuration files](jsonconfig.html), necessary to enable import into an [eNanoMapper database instance](https://data.enanomapper.net)
 
 While not strictly following the [ISA-TAB](http://isa-tools.org/) and [ISA-TAB-Nano](https://wiki.nci.nih.gov/display/icr/isa-tab-nano) formats, the NANoREG templates have been designed around `ISA-Tab-logic`, i.e. structuring the data in investigation-study-assay related groups.
@@ -39,7 +39,7 @@ See more about
 
 ### NANoREG templates structure
 
-The NANoREG templates are developed by JRC with collaboration with [FP7 NANoREG](http://www.nanoreg.eu/) project partners and released under open license at [http://www.nanoreg.eu/media-and-downloads/templates](http://www.nanoreg.eu/media-and-downloads/templates).
+The NANoREG templates are developed by JRC with collaboration with [FP7 NANoREG](http://www.nanoreg.eu/) project partners and released under open license at [http://www.rivm.nl/en/About_RIVM/International/International_Projects/Completed/NANoREG/NANoREG_Results_Repository_sub_page_ISA_TAB_nano_templates](http://www.rivm.nl/en/About_RIVM/International/International_Projects/Completed/NANoREG/NANoREG_Results_Repository_sub_page_ISA_TAB_nano_templates).
 
 Within eNanoMapper project (WP3 Database) the templates are analysed, [fields](./fields) cleaned and [JSON configuration](jsonconfig) files created. The number of [unique terms](./fields) in the templates is over 800.
  
