@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 public class ProtocolApplicationDataLocation 
 {
+	public ExcelDataLocation protocolApplicationUUID = null;
+	public ExcelDataLocation investigationUUID = null;
+	
 	public ExcelDataLocation citationTitle = null;
 	public ExcelDataLocation citationYear = null;
 	public ExcelDataLocation citationOwner = null;
@@ -39,8 +42,26 @@ public class ProtocolApplicationDataLocation
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
+		if (protocolApplicationUUID != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(protocolApplicationUUID.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (investigationUUID != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(investigationUUID.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
 		if (citationTitle != null)
 		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
 			sb.append(citationTitle.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
