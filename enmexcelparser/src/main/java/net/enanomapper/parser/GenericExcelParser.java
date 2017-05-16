@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,7 +67,6 @@ import net.enanomapper.parser.recognition.RichValueParser;
 public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	public final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
-
 	protected RichValueParser rvParser = new RichValueParser();
 	// protected ArrayList<String> parseErrors = new ArrayList<String>();
 	protected ArrayList<String> parallelSheetsErrors = new ArrayList<String>();
@@ -134,11 +132,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @throws Exception
 	 */
 	public GenericExcelParser(InputStream input, File jsonConfig, boolean xlsxFormat) throws Exception {
+		this(input, jsonConfig, xlsxFormat, "XLSX");
+	}
+
+	public GenericExcelParser(InputStream input, File jsonConfig, boolean xlsxFormat, String prefix) throws Exception {
 		super();
 		this.xlsxFormat = xlsxFormat;
 		this.input = input;
 
 		config = ExcelParserConfigurator.loadFromJSON(jsonConfig);
+		config.setPrefix(prefix);
 		if (config.configErrors.size() > 0)
 			throw new Exception("GenericExcelParser configuration errors:\n" + config.getAllErrorsAsString());
 
@@ -488,7 +491,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			// Decision logic: at least one row must be left on the primary
 			// sheet
 			if (curRowNum <= iterationLastRowNum /*
-													 * primarySheet.getLastRowNum()
+													 * primarySheet.
+													 * getLastRowNum()
 													 */)
 				return true;
 			else
@@ -916,15 +920,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		ExcelDataLocation loc = config.substanceLocations.get("SubstanceRecord.substanceUUID");
 		if (loc != null) {
 			String s = getString(loc);
-			if (s != null && !"".equals(s.trim()))
-				r.setSubstanceUUID("XLSX-" + UUID.nameUUIDFromBytes(s.getBytes()).toString());
+			if (s != null && !"".equals(s.trim())) {
+				r.setSubstanceUUID(ExcelParserConfigurator.generateUUID(config.getPrefix(), s));
+			}
 		}
 
 		loc = config.substanceLocations.get("SubstanceRecord.referenceSubstanceUUID");
 		if (loc != null) {
 			String s = getString(loc);
 			if (s != null)
-				r.setReferenceSubstanceUUID("XLSX-" + UUID.nameUUIDFromBytes(s.getBytes()).toString());
+				r.setReferenceSubstanceUUID(ExcelParserConfigurator.generateUUID(config.getPrefix(), s));
 		}
 
 		loc = config.substanceLocations.get("SubstanceRecord.substanceName");
@@ -1018,7 +1023,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return;
 
 		// Handle dynamic span
-		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo);
+		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo,config);
 
 		if (config.dynamicIterationSpan != null) {
 			switch (config.substanceIteration) {
@@ -1287,7 +1292,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		{
 			// Handle parameter unit from other excel data location
 
-			//System.out.println(parameterName + "\t" + pVal + "\t" + loc + "\t" + loc.otherLocationFields);
+			// System.out.println(parameterName + "\t" + pVal + "\t" + loc +
+			// "\t" + loc.otherLocationFields);
 			if (loc.otherLocationFields != null) {
 				ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
 				if (pUnitLoc != null) {
