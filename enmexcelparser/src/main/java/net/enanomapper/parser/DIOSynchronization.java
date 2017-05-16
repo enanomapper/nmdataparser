@@ -21,21 +21,14 @@ public class DIOSynchronization
 	private ArrayList<SubstanceRecord> curRecords = null;
 	
 	private DynamicIterationObject primaryDIO = null;  //It is used for the definition of SubstanceRecord or an array of SubstanceRecords
-	
 
-	public DIOSynchronization()
-	{	
-	}
-	
-	public DIOSynchronization(DynamicSpanInfo dsInfo)
-	{	
-		this.dsInfo = dsInfo;
-	}
-	
-	public DIOSynchronization(SubstanceRecord basicRecord, DynamicSpanInfo dsInfo)
+	protected ExcelParserConfigurator config;
+
+	public DIOSynchronization(SubstanceRecord basicRecord, DynamicSpanInfo dsInfo, ExcelParserConfigurator config)
 	{	
 		this.dsInfo = dsInfo;
 		this.basicRecord = basicRecord;
+		this.config = config;
 	}
 	
 	public SubstanceRecord getBasicRecord() {
@@ -272,16 +265,16 @@ public class DIOSynchronization
 			switch (de.synchType)
 			{
 			case PUT_IN_CUMULATIVE_OBJECT:
-				de.putElementInUniversalObject(elObj, dio);
+				de.putElementInUniversalObject(elObj, dio, config);
 				break;
 
 			case PUT_IN_GROUP:
 				if (go != null)
-					de.putElementInUniversalObject(elObj, go);
+					de.putElementInUniversalObject(elObj, go, config);
 				break;
 
 			case PUT_IN_ROW:
-				de.putElementInUniversalObject(elObj, ro);
+				de.putElementInUniversalObject(elObj, ro, config);
 				break;
 
 			default: //cases: NONE, UNDEFINED	
