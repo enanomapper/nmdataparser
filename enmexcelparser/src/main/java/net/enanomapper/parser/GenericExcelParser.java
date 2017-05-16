@@ -1085,6 +1085,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		logger.log(Level.FINE, "Reading protocol application ...");
 		Protocol protocol = readProtocol(padl);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
+		
+		//pa.setDocumentUUID(documentUUID);
 
 		if (padl.citationTitle != null) {
 			String s = getString(padl.citationTitle);
