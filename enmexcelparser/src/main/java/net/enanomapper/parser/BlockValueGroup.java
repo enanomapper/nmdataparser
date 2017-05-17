@@ -85,15 +85,19 @@ public class BlockValueGroup
 		BlockValueGroup bvg = new BlockValueGroup();
 		
 		JsonUtilities jsonUtils = new JsonUtilities();
+		String keyword;
 		
 		//NAME
-		String keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
-		if (keyword == null)
-			conf.configErrors.add(jsonUtils.getError());
-		else
+		if (!node.path("NAME").isMissingNode())
 		{	
-			bvg.name = keyword;
-			bvg.FlagName = true;
+			keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.name = keyword;
+				bvg.FlagName = true;
+			}
 		}
 		
 		//NAME_ASSIGN
@@ -101,7 +105,7 @@ public class BlockValueGroup
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_ASSIGN\" is missing!");
+						"], keyword \"NAME_ASSIGN\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
@@ -124,7 +128,7 @@ public class BlockValueGroup
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_COLUMN_POS\" is missing!");
+						"], keyword \"NAME_COLUMN_POS\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
@@ -157,7 +161,7 @@ public class BlockValueGroup
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_ROW_POS\" is missing!");
+						"], keyword \"NAME_ROW_POS\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
