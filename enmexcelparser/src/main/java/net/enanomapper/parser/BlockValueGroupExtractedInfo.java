@@ -21,6 +21,10 @@ public class BlockValueGroupExtractedInfo
 	protected List<String> errors = new ArrayList<String>();
 	
 	public String name = null;
+	public BlockParameterAssign nameAssign = BlockParameterAssign.UNDEFINED;
+	public Integer nameColumnPos = null;
+	public Integer nameRowPos = null;
+	public String nameMapping = null;
 	public String unit = null;
 	
 	public boolean FlagValues = false;
