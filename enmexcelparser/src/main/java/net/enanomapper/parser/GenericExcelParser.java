@@ -2598,6 +2598,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
 								Object o = ExcelUtils.getObjectFromCell(cells[row0 + i][column0 + k]);
 								DataBlockElement dbEl = new DataBlockElement();
+								//Setting the endpoint name stored in the field dbEl.blockValueGroup
 								dbEl.blockValueGroup = bvgei.name;
 								dbEl.unit = bvgei.unit; // The unit may be
 														// overriden by the
@@ -2689,7 +2690,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
-
 		
 		if (bvg.name != null) 
 		{
