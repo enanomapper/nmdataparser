@@ -1086,7 +1086,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		Protocol protocol = readProtocol(padl);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
 		
-		//pa.setDocumentUUID(documentUUID);
+		if (padl.protocolApplicationUUID  != null) {
+			String s = getString(padl.protocolApplicationUUID);
+			if (s != null && !"".equals(s.trim())) {
+				String docUUID = ExcelParserConfigurator.generateUUID(config.getPrefix(), s);
+				pa.setDocumentUUID(docUUID);
+			}
+		}
+				
+		if (padl.investigationUUID  != null) {
+			String s = getString(padl.investigationUUID);
+			if (s != null && !"".equals(s.trim())) {
+				String investUUID = ExcelParserConfigurator.generateUUID(config.getPrefix(), s);
+				pa.setInvestigationUUID(investUUID);
+			}
+		}
 
 		if (padl.citationTitle != null) {
 			String s = getString(padl.citationTitle);
