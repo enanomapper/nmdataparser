@@ -18,21 +18,20 @@ import net.enanomapper.parser.recognition.ExpressionUtils;
  */
 public class BlockValueGroup 
 {	
-	//Direct setting of endpoint name
+	//Value group name is used as endpoint if FlagEndpointAssign = false
 	public String name = null;  
 	public boolean FlagName = false;
 	
-	//If FlagName == false then endpoint name is set by assigning 
-	//to particular element (block/sub-block/value)
+	//Assigning of endpoint name to particular element (block/sub-block/value)
 	//This is analogous to the block parameters assignment
-	public BlockParameterAssign nameAssign = BlockParameterAssign.ASSIGN_TO_SUBBLOCK;
-	public boolean FlagNameAssign = false;	
-	public Object nameColumnPos = new Integer(0); 
-	public boolean FlagNameColumnPos = false;	
-	public Object nameRowPos = new Integer(0);
-	public boolean FlagNameRowPos = false;	
-	public String nameMapping = null;
-	public boolean FlagNameMapping = false;
+	public BlockParameterAssign endpointAssign = BlockParameterAssign.ASSIGN_TO_SUBBLOCK;
+	public boolean FlagEndpointAssign = false;	
+	public Object endpointColumnPos = new Integer(0); 
+	public boolean FlagEndpointColumnPos = false;	
+	public Object endpointRowPos = new Integer(0);
+	public boolean FlagEndpointRowPos = false;	
+	public String endpointMapping = null;
+	public boolean FlagEndpointMapping = false;
 	
 	public String unit = null;
 	public boolean FlagUnit = false;
@@ -100,35 +99,35 @@ public class BlockValueGroup
 			}
 		}
 		
-		//NAME_ASSIGN
-		if (node.path("NAME_ASSIGN").isMissingNode())
+		//ENDPOINT_ASSIGN
+		if (node.path("ENDPOINT_ASSIGN").isMissingNode())
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_ASSIGN\" is required when NAME is not directly defined!");
+						"], keyword \"ENDPOINT_ASSIGN\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
-			keyword =  jsonUtils.extractStringKeyword(node, "NAME_ASSIGN", false);
+			keyword =  jsonUtils.extractStringKeyword(node, "ENDPOINT_ASSIGN", false);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 			{	
-				bvg.nameAssign = BlockParameterAssign.fromString(keyword);
-				bvg.FlagNameAssign = true;
-				if (bvg.nameAssign == BlockParameterAssign.UNDEFINED)
+				bvg.endpointAssign = BlockParameterAssign.fromString(keyword);
+				bvg.FlagEndpointAssign = true;
+				if (bvg.endpointAssign == BlockParameterAssign.UNDEFINED)
 					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-							"], keyword \"NAME_ASSIGN\" is incorrect or UNDEFINED!");
+							"], keyword \"ENDPOINT_ASSIGN\" is incorrect or UNDEFINED!");
 			}
 		}
 		
-		//NAME_COLUMN_POS
-		JsonNode nd = node.path("NAME_COLUMN_POS");
+		//ENDPOINT_COLUMN_POS
+		JsonNode nd = node.path("ENDPOINT_COLUMN_POS");
 		if (nd.isMissingNode())
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_COLUMN_POS\" is required when NAME is not directly defined!");
+						"], keyword \"ENDPOINT_COLUMN_POS\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
@@ -136,7 +135,7 @@ public class BlockValueGroup
 			if (obj == null)
 			{
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_COLUMN_POS\" is incorrect!");
+						"], keyword \"ENDPOINT_COLUMN_POS\" is incorrect!");
 			}
 			else
 			{	
@@ -144,24 +143,24 @@ public class BlockValueGroup
 				if (expr_error != null)
 				{
 					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  + 
-							"], keyword \"NAME_COLUMN_POS\" is incorrect expression: " 
+							"], keyword \"ENDPOINT_COLUMN_POS\" is incorrect expression: " 
 							+ expr_error + " --> \"" + obj.toString() + "\"");
 				}
 				else
 				{	
-					bvg.nameColumnPos = obj;
-					bvg.FlagNameColumnPos = true;
+					bvg.endpointColumnPos = obj;
+					bvg.FlagEndpointColumnPos = true;
 				}	
 			}	
 		}
 		
-		//NAME_ROW_POS
-		nd = node.path("NAME_ROW_POS");
+		//ENDPOINT_ROW_POS
+		nd = node.path("ENDPOINT_ROW_POS");
 		if (nd.isMissingNode())
 		{
 			if (!bvg.FlagName)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_ROW_POS\" is required when NAME is not directly defined!");
+						"], keyword \"ENDPOINT_ROW_POS\" is required when NAME is not directly defined!");
 		}
 		else
 		{	
@@ -169,7 +168,7 @@ public class BlockValueGroup
 			if (obj == null)
 			{
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"NAME_ROW_POS\" is incorrect!");
+						"], keyword \"ENDPOINT_ROW_POS\" is incorrect!");
 			}
 			else
 			{	
@@ -177,27 +176,27 @@ public class BlockValueGroup
 				if (expr_error != null)
 				{
 					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  + 
-							"], keyword \"NAME_ROW_POS\" is incorrect expression: " 
+							"], keyword \"ENDPOINT_ROW_POS\" is incorrect expression: " 
 							+ expr_error + " --> \"" + obj.toString() + "\"");
 				}
 				else
 				{	
-					bvg.nameRowPos = obj;
-					bvg.FlagNameRowPos = true;
+					bvg.endpointRowPos = obj;
+					bvg.FlagEndpointRowPos = true;
 				}	
 			}	
 		}
 		
-		//NAME_MAPPING
-		if (!node.path("NAME_MAPPING").isMissingNode())
+		//ENDPOINT_MAPPING
+		if (!node.path("ENDPOINT_MAPPING").isMissingNode())
 		{	
-			keyword =  jsonUtils.extractStringKeyword(node, "NAME_MAPPING", false);
+			keyword =  jsonUtils.extractStringKeyword(node, "ENDPOINT_MAPPING", false);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else
 			{	
-				bvg.nameMapping = keyword;
-				bvg.FlagNameMapping = true;
+				bvg.endpointMapping = keyword;
+				bvg.FlagEndpointMapping = true;
 			}
 		}
 		
@@ -415,39 +414,39 @@ public class BlockValueGroup
 			nFields++;
 		}
 		
-		if (FlagNameAssign)
+		if (FlagEndpointAssign)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"NAME_ASSIGN\" : \"" + nameAssign.toString() + "\"");
+			sb.append(offset + "\t\"ENDPOINT_ASSIGN\" : \"" + endpointAssign.toString() + "\"");
 			nFields++;
 		}
 		
-		if (FlagNameColumnPos)
+		if (FlagEndpointColumnPos)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"NAME_COLUMN_POS\" : " + JsonUtilities.objectToJsonField(nameColumnPos));
+			sb.append(offset + "\t\"ENDPOINT_COLUMN_POS\" : " + JsonUtilities.objectToJsonField(endpointColumnPos));
 			nFields++;
 		}
 		
-		if (FlagNameRowPos)
+		if (FlagEndpointRowPos)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"NAME_ROW_POS\" : " + JsonUtilities.objectToJsonField(nameRowPos));
+			sb.append(offset + "\t\"ENDPOINT_ROW_POS\" : " + JsonUtilities.objectToJsonField(endpointRowPos));
 			nFields++;
 		}
 		
-		if (FlagNameMapping)
+		if (FlagEndpointMapping)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
 			
-			sb.append(offset + "\t\"NAME_MAPPING\" : " + JsonUtilities.objectToJsonField(nameMapping));
+			sb.append(offset + "\t\"ENDPOINT_MAPPING\" : " + JsonUtilities.objectToJsonField(endpointMapping));
 			nFields++;
 		}
 		

@@ -2700,25 +2700,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		else
 		{	
-			//Setting of the endpoint NAME by assigning it to block/sub-block/value
+			//Setting of the endpoint by assigning it to block/sub-block/value
 			
-			if (bvg.nameAssign == BlockParameterAssign.UNDEFINED) 
-				bvgei.errors.add("NAME_ASSIGN is UNDEFINED!");
+			if (bvg.endpointAssign == BlockParameterAssign.UNDEFINED) 
+				bvgei.errors.add("ENDPOINT_ASSIGN is UNDEFINED!");
 			else
-				bvgei.nameAssign = bvg.nameAssign;
+				bvgei.endpointAssign = bvg.endpointAssign;
 			
-			bvgei.nameColumnPos = getIntegerFromExpression(bvg.nameColumnPos);
-			if (bvgei.nameColumnPos == null) {
-				bvgei.errors.add("NAME_COLUMN_POS:  incorrect result for expression: " + bvg.nameColumnPos);
+			bvgei.endpointColumnPos = getIntegerFromExpression(bvg.endpointColumnPos);
+			if (bvgei.endpointColumnPos == null) {
+				bvgei.errors.add("ENDPOINT_COLUMN_POS:  incorrect result for expression: " + bvg.endpointColumnPos);
 			}
 			
-			bvgei.nameRowPos = getIntegerFromExpression(bvg.nameRowPos);
-			if (bvgei.nameRowPos == null) {
-				bvgei.errors.add("NAME_ROW_POS:  incorrect result for expression: " + bvg.nameRowPos);
+			bvgei.endpointRowPos = getIntegerFromExpression(bvg.endpointRowPos);
+			if (bvgei.endpointRowPos == null) {
+				bvgei.errors.add("ENDPOINT_ROW_POS:  incorrect result for expression: " + bvg.endpointRowPos);
 			}
 			
-			if (bvg.nameMapping != null)
-				bvgei.nameMapping = bvg.nameMapping;
+			if (bvg.endpointMapping != null)
+				bvgei.endpointMapping = bvg.endpointMapping;
 		}
 
 		if (bvg.unit != null) {
