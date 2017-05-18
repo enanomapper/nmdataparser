@@ -903,8 +903,22 @@ public class ExcelParserConfigurator {
 			int protocolNum, ExcelParserConfigurator conf) {
 		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
 
+		// PROTOCOL_APPLICATION_UUID
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_APPLICATION_UUID", conf);
+		if (loc != null) {
+			if (loc.nErrors == 0)
+				padl.protocolApplicationUUID = loc;
+		}
+		
+		// INVESTIGATION_UUID
+		loc = ExcelDataLocation.extractDataLocation(node, "INVESTIGATION_UUID", conf);
+		if (loc != null) {
+			if (loc.nErrors == 0)
+				padl.investigationUUID = loc;
+		}
+
 		// CITATION_TITLE
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "CITATION_TITLE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, "CITATION_TITLE", conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.citationTitle = loc;
