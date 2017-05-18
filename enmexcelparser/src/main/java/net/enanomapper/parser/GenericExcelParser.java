@@ -2523,11 +2523,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
 		Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
 
-		logger.info("------------ getDataBlockFromAbsolutePosition");
-		logger.info("--- rowSubblocks = " + rowSubblocks);
-		logger.info("--- columnSubblocks = " + columnSubblocks);
-		logger.info("--- subblockSizeRows = " + sbSizeRows);
-		logger.info("--- subblockSizeColumns = " + sbSizeColumns);
+		logger.info("------ getDataBlockFromAbsolutePosition:");
+		logger.info("   --- rowSubblocks = " + rowSubblocks);
+		logger.info("   --- columnSubblocks = " + columnSubblocks);
+		logger.info("   --- subblockSizeRows = " + sbSizeRows);
+		logger.info("   --- subblockSizeColumns = " + sbSizeColumns);
 
 		if (rowSubblocks == null || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null) {
 			return null;
@@ -2578,9 +2578,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			if (bvgei.getErrors().isEmpty())
 				bvgExtrInfo.add(bvgei);
 			else {
-				logger.info("--- Value Group " + bvg.name + "errors:");
+				logger.info("------- Value Group " + bvg.name + "errors:");
 				for (String err : bvgei.getErrors())
-					logger.info("--- " + err);
+					logger.info("   --- " + err);
 			}
 		}
 
@@ -2598,8 +2598,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
 								Object o = ExcelUtils.getObjectFromCell(cells[row0 + i][column0 + k]);
 								DataBlockElement dbEl = new DataBlockElement();
+								
 								//Setting the endpoint name stored in the field dbEl.blockValueGroup
-								dbEl.blockValueGroup = bvgei.name;
+								
+								if (bvgei.endpointAssign == BlockParameterAssign.UNDEFINED)
+									dbEl.blockValueGroup = bvgei.name;
+								else
+								{
+									//dbEl.blockValueGroup = "";
+								}
+								
 								dbEl.unit = bvgei.unit; // The unit may be
 														// overriden by the
 														// setValue() function
@@ -2687,6 +2695,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return dbeList;
 	}
+	
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
@@ -2701,6 +2710,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		//Setting of the endpoint by assigning it to block/sub-block/value
 		if (bvg.endpointAssign != BlockParameterAssign.UNDEFINED)
 		{	
+			bvgei.endpointAssign = bvg.endpointAssign;
 			bvgei.endpointColumnPos = getIntegerFromExpression(bvg.endpointColumnPos);
 			if (bvgei.endpointColumnPos == null) {
 				bvgei.errors.add("ENDPOINT_COLUMN_POS:  incorrect result for expression: " + bvg.endpointColumnPos);
