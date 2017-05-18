@@ -25,6 +25,8 @@ public class BlockValueGroupExtractedInfo
 	public Integer endpointColumnPos = null;
 	public Integer endpointRowPos = null;
 	public String endpointMapping = null;
+	public boolean addValueGroupToEndpointName = false;
+	public boolean addValueGroupAsPrefix = false;
 	public String unit = null;
 	
 	public boolean FlagValues = false;

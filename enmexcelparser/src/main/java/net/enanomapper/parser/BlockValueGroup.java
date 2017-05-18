@@ -32,6 +32,10 @@ public class BlockValueGroup
 	public boolean FlagEndpointRowPos = false;	
 	public String endpointMapping = null;
 	public boolean FlagEndpointMapping = false;
+	public boolean addValueGroupToEndpointName = false;
+	public boolean FlagAddValueGroupToEndpointName = false;
+	public boolean addValueGroupAsPrefix = false;
+	public boolean FlagAddValueGroupAsPrefix = false;
 	
 	public String unit = null;
 	public boolean FlagUnit = false;
@@ -195,6 +199,31 @@ public class BlockValueGroup
 			}
 		}
 		
+		//ADD_VALUE_GROUP_TO_ENDPOINT_NAME
+		if (!node.path("ADD_VALUE_GROUP_TO_ENDPOINT_NAME").isMissingNode())
+		{	
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "ADD_VALUE_GROUP_TO_ENDPOINT_NAME", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.addValueGroupToEndpointName = b;
+				bvg.FlagAddValueGroupToEndpointName = true;
+			}
+		}
+		
+		//ADD_VALUE_GROUP_AS_PREFIX
+		if (!node.path("ADD_VALUE_GROUP_AS_PREFIX").isMissingNode())
+		{	
+			Boolean b =  jsonUtils.extractBooleanKeyword(node, "ADD_VALUE_GROUP_AS_PREFIX", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.addValueGroupAsPrefix = b;
+				bvg.FlagAddValueGroupAsPrefix = true;
+			}
+		}
 		
 		//UNIT
 		keyword = jsonUtils.extractStringKeyword(node, "UNIT", false);
@@ -442,6 +471,24 @@ public class BlockValueGroup
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"ENDPOINT_MAPPING\" : " + JsonUtilities.objectToJsonField(endpointMapping));
+			nFields++;
+		}
+		
+		if (FlagAddValueGroupToEndpointName)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"ADD_VALUE_GROUP_TO_ENDPOINT_NAME\" : " + addValueGroupToEndpointName);
+			nFields++;
+		}
+		
+		if (FlagAddValueGroupAsPrefix)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"ADD_VALUE_GROUP_AS_PREFIX\" : " + addValueGroupAsPrefix);
 			nFields++;
 		}
 		

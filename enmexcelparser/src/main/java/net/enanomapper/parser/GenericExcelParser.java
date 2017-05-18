@@ -2740,6 +2740,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			if (bvg.endpointMapping != null)
 				bvgei.endpointMapping = bvg.endpointMapping;
+			
+			bvgei.addValueGroupToEndpointName = bvg.addValueGroupToEndpointName;
+			bvgei.addValueGroupAsPrefix = bvg.addValueGroupAsPrefix; 
 		}
 
 		if (bvg.unit != null) {
