@@ -27,6 +27,7 @@ public class BlockValueGroupExtractedInfo
 	public String endpointMapping = null;
 	public boolean addValueGroupToEndpointName = false;
 	public boolean addValueGroupAsPrefix = false;
+	public String separator = " ";
 	public String unit = null;
 	
 	public boolean FlagValues = false;

@@ -36,6 +36,8 @@ public class BlockValueGroup
 	public boolean FlagAddValueGroupToEndpointName = false;
 	public boolean addValueGroupAsPrefix = false;
 	public boolean FlagAddValueGroupAsPrefix = false;
+	public String separator = "/"; //used when adding name to endpoint
+	public boolean FlagSeparator = false;
 	
 	public String unit = null;
 	public boolean FlagUnit = false;
@@ -222,6 +224,19 @@ public class BlockValueGroup
 			{	
 				bvg.addValueGroupAsPrefix = b;
 				bvg.FlagAddValueGroupAsPrefix = true;
+			}
+		}
+		
+		//SEPARATOR
+		if (!node.path("SEPARATOR").isMissingNode())
+		{	
+			keyword = jsonUtils.extractStringKeyword(node, "SEPARATOR", false);
+			if (keyword == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.separator = keyword;
+				bvg.FlagSeparator = true;
 			}
 		}
 		
@@ -489,6 +504,15 @@ public class BlockValueGroup
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"ADD_VALUE_GROUP_AS_PREFIX\" : " + addValueGroupAsPrefix);
+			nFields++;
+		}
+		
+		if (FlagSeparator)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"SEPARATOR\" : " + JsonUtilities.objectToJsonField(separator));
 			nFields++;
 		}
 		

@@ -2630,7 +2630,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											if (bvgei.endpointMapping != null)
 												value = getMappingValue(value, bvgei.endpointMapping);
 											if (value != null)
-												dbEl.blockValueGroup = value.toString();											
+											{	
+												if ((bvgei.name != null) && bvgei.addValueGroupToEndpointName )
+												{
+													if (bvgei.addValueGroupAsPrefix)
+														dbEl.blockValueGroup = bvgei.name + bvgei.separator + value.toString();
+													else
+														dbEl.blockValueGroup = value.toString() + bvgei.separator + bvgei.name;
+												}
+												else
+													dbEl.blockValueGroup = value.toString();
+											}	
 										}
 									}
 									
@@ -2743,6 +2753,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			
 			bvgei.addValueGroupToEndpointName = bvg.addValueGroupToEndpointName;
 			bvgei.addValueGroupAsPrefix = bvg.addValueGroupAsPrefix; 
+			bvgei.separator = bvg.separator;  
 		}
 
 		if (bvg.unit != null) {
