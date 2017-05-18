@@ -24,7 +24,7 @@ public class BlockValueGroup
 	
 	//Assigning of endpoint name to particular element (block/sub-block/value)
 	//This is analogous to the block parameters assignment
-	public BlockParameterAssign endpointAssign = BlockParameterAssign.ASSIGN_TO_SUBBLOCK;
+	public BlockParameterAssign endpointAssign = BlockParameterAssign.UNDEFINED;
 	public boolean FlagEndpointAssign = false;	
 	public Object endpointColumnPos = new Integer(0); 
 	public boolean FlagEndpointColumnPos = false;	
@@ -100,13 +100,7 @@ public class BlockValueGroup
 		}
 		
 		//ENDPOINT_ASSIGN
-		if (node.path("ENDPOINT_ASSIGN").isMissingNode())
-		{
-			if (!bvg.FlagName)
-				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"ENDPOINT_ASSIGN\" is required when NAME is not directly defined!");
-		}
-		else
+		if (!node.path("ENDPOINT_ASSIGN").isMissingNode())
 		{	
 			keyword =  jsonUtils.extractStringKeyword(node, "ENDPOINT_ASSIGN", false);
 			if (keyword == null)
@@ -114,10 +108,11 @@ public class BlockValueGroup
 			else
 			{	
 				bvg.endpointAssign = BlockParameterAssign.fromString(keyword);
-				bvg.FlagEndpointAssign = true;
 				if (bvg.endpointAssign == BlockParameterAssign.UNDEFINED)
 					conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
 							"], keyword \"ENDPOINT_ASSIGN\" is incorrect or UNDEFINED!");
+				else
+					bvg.FlagEndpointAssign = true;
 			}
 		}
 		
@@ -125,9 +120,9 @@ public class BlockValueGroup
 		JsonNode nd = node.path("ENDPOINT_COLUMN_POS");
 		if (nd.isMissingNode())
 		{
-			if (!bvg.FlagName)
+			if (bvg.FlagEndpointAssign)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"ENDPOINT_COLUMN_POS\" is required when NAME is not directly defined!");
+						"], keyword \"ENDPOINT_COLUMN_POS\" is required when ENDPOINT_ASSIGN is set!");
 		}
 		else
 		{	
@@ -158,9 +153,9 @@ public class BlockValueGroup
 		nd = node.path("ENDPOINT_ROW_POS");
 		if (nd.isMissingNode())
 		{
-			if (!bvg.FlagName)
+			if (bvg.FlagEndpointAssign)
 				conf.configErrors.add("In JSON section \"VALUE_GROUPS\", element[" + (valueGroupNum + 1)  +
-						"], keyword \"ENDPOINT_ROW_POS\" is required when NAME is not directly defined!");
+						"], keyword \"ENDPOINT_ROW_POS\" is required when ENDPOINT_ASSIGN is set!");
 		}
 		else
 		{	

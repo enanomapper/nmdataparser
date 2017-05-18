@@ -2692,31 +2692,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
 		
 		if (bvg.name != null) 
-		{
-			//Direct setting of the endpoint NAME
+		{	
 			bvgei.name = getStringFromExpression(bvg.name);
 			if (bvgei.name == null)
 				bvgei.errors.add("VALUE_GROUPS: \"NAME\" is an incorrect expression: " + bvg.name);
 		}
-		else
+			
+		//Setting of the endpoint by assigning it to block/sub-block/value
+		if (bvg.endpointAssign != BlockParameterAssign.UNDEFINED)
 		{	
-			//Setting of the endpoint by assigning it to block/sub-block/value
-			
-			if (bvg.endpointAssign == BlockParameterAssign.UNDEFINED) 
-				bvgei.errors.add("ENDPOINT_ASSIGN is UNDEFINED!");
-			else
-				bvgei.endpointAssign = bvg.endpointAssign;
-			
 			bvgei.endpointColumnPos = getIntegerFromExpression(bvg.endpointColumnPos);
 			if (bvgei.endpointColumnPos == null) {
 				bvgei.errors.add("ENDPOINT_COLUMN_POS:  incorrect result for expression: " + bvg.endpointColumnPos);
 			}
-			
+
 			bvgei.endpointRowPos = getIntegerFromExpression(bvg.endpointRowPos);
 			if (bvgei.endpointRowPos == null) {
 				bvgei.errors.add("ENDPOINT_ROW_POS:  incorrect result for expression: " + bvg.endpointRowPos);
 			}
-			
+
 			if (bvg.endpointMapping != null)
 				bvgei.endpointMapping = bvg.endpointMapping;
 		}
