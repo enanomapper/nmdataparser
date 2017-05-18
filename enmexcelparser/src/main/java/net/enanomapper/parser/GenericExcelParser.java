@@ -2600,12 +2600,40 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								DataBlockElement dbEl = new DataBlockElement();
 								
 								//Setting the endpoint name stored in the field dbEl.blockValueGroup
-								
 								if (bvgei.endpointAssign == BlockParameterAssign.UNDEFINED)
-									dbEl.blockValueGroup = bvgei.name;
+									dbEl.blockValueGroup = bvgei.name; 
 								else
 								{
-									//dbEl.blockValueGroup = "";
+									Cell c = null;
+									switch (bvgei.endpointAssign)
+									{
+									case ASSIGN_TO_BLOCK:
+										// -1 for 0-based
+										c = cells[bvgei.endpointRowPos - 1][bvgei.endpointColumnPos - 1]; 
+										break;
+									case ASSIGN_TO_SUBBLOCK:
+										// (endpointRowPos,endpointColumnPos) are the sub-block position
+										// -1 for 0-based indexing
+										c = cells[row0 + bvgei.endpointRowPos - 1][column0 + bvgei.endpointColumnPos - 1]; 
+										break;
+									case ASSIGN_TO_VALUE:
+										// (endpointRowPos,endpointColumnPos) are used as shifts
+										c = cells[row0 + i + bvgei.endpointRowPos][column0 + k + bvgei.endpointColumnPos]; 
+										break;	
+									}
+									
+									if (c != null) 
+									{
+										Object value = ExcelUtils.getObjectFromCell(c);
+										if (value != null) 
+										{
+											if (bvgei.endpointMapping != null)
+												value = getMappingValue(value, bvgei.endpointMapping);
+											if (value != null)
+												dbEl.blockValueGroup = value.toString();											
+										}
+									}
+									
 								}
 								
 								dbEl.unit = bvgei.unit; // The unit may be
@@ -2642,28 +2670,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											Cell c = null;
 											switch (pi.assign) {
 											case ASSIGN_TO_BLOCK:
-												c = cells[pi.rowPos - 1][pi.columnPos - 1]; // -1
-																							// for
-																							// 0-based
-																							// indexing
+												// -1 for 0-based
+												c = cells[pi.rowPos - 1][pi.columnPos - 1]; 
 												break;
 											case ASSIGN_TO_SUBBLOCK:
-												c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1]; // (rowPos,columnPos)
-																												// are
-																												// the
-																												// sub-block
-																												// position
-																												// -1
-																												// for
-																												// 0-based
-																												// indexing
+												// (rowPos,columnPos) are the sub-block position
+												// -1 for 0-based indexing
+												c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1]; 
 												break;
 											case ASSIGN_TO_VALUE:
-												c = cells[row0 + i + pi.rowPos][column0 + k + pi.columnPos]; // (rowPos,columnPos)
-																												// are
-																												// used
-																												// as
-																												// shifts
+												// (rowPos,columnPos) are used as shifts
+												c = cells[row0 + i + pi.rowPos][column0 + k + pi.columnPos]; 
 												break;
 											case UNDEFINED:
 												// nothing is done
