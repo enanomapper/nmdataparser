@@ -36,7 +36,7 @@ public class BlockValueGroup
 	public boolean FlagAddValueGroupToEndpointName = false;
 	public boolean addValueGroupAsPrefix = false;
 	public boolean FlagAddValueGroupAsPrefix = false;
-	public String separator = "/"; //used when adding name to endpoint
+	public String separator = " "; //used when adding name to endpoint
 	public boolean FlagSeparator = false;
 	
 	public String unit = null;
