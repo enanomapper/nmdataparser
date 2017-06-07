@@ -106,7 +106,7 @@ public class ParserConstants
 	}
 	
 	public enum DataInterpretation {
-		DEFAULT, AS_TEXT, AS_DATE, UNDEFINED;
+		DEFAULT, AS_TEXT, AS_DATE, AS_VALUE_OR_TEXT, UNDEFINED;
 		
 		public static DataInterpretation fromString(String s)
 		{

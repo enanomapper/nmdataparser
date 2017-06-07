@@ -1593,7 +1593,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				logger.log(Level.FINE, x.getMessage());
 			}
 
-			if (richValueString != null) {
+			if (richValueString != null) 
+			{
 				RichValue rv = rvParser.parse(richValueString);
 				String rv_error = rvParser.getAllErrorsAsString();
 
@@ -1608,8 +1609,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						effect.setUpValue(rv.upValue);
 					if (rv.upQualifier != null)
 						effect.setUpQualifier(rv.upQualifier);
-				} else {
-					logger.log(Level.WARNING, String.format("[%s] %s Value error: %s",
+				} 
+				else 
+				{
+					//The string is not recognized as a valid rich value
+					if (efrdl.value.dataInterpretation == DataInterpretation.AS_VALUE_OR_TEXT)
+						effect.setTextValue(richValueString);
+					else	
+						logger.log(Level.WARNING, String.format("[%s] %s Value error: %s",
 							locationStringForErrorMessage(efrdl.value, primarySheetNum), richValueString, rv_error));
 					// parseErrors.add("[" +
 					// locationStringForErrorMessage(efrdl.value,
