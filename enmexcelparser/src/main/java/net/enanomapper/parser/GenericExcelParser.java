@@ -21,6 +21,7 @@ import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -3023,13 +3024,33 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return map.get(originalValue);
 	}
 
-	private String locationStringForErrorMessage(ExcelDataLocation loc) {
-		return String.format("Col %d Row %d", loc.columnIndex, loc.rowIndex);
+	private String locationStringForErrorMessage(ExcelDataLocation loc) 
+	{
+		StringBuffer sb = new StringBuffer();
+		if (loc.columnIndex>0)
+			sb.append(String.format(" Col %d (%s)", loc.columnIndex,
+					CellReference.convertNumToColString(loc.columnIndex)));
+		if (loc.rowIndex > 0)
+			sb.append(String.format(" Rowl %d", loc.rowIndex));
+			
+		return sb.toString();
 	}
 
-	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet) {
-		return String.format("[Sheet %d Col %d Row %d", sheet, loc == null ? null : loc.columnIndex,
-				loc == null ? null : loc.rowIndex);
+	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet) 
+	{	
+		StringBuffer sb = new StringBuffer();
+		if (sheet > 0)
+			sb.append(String.format(" Sheet %d", sheet));
+		
+		if (loc != null)
+		{	
+			if (loc.columnIndex>0)
+				sb.append(String.format(" Col %d (%s)", loc.columnIndex,
+						CellReference.convertNumToColString(loc.columnIndex)));
+			if (loc.rowIndex > 0)
+				sb.append(String.format(" Rowl %d", loc.rowIndex));
+		}	
+		return sb.toString();
 	}
 
 	/*
