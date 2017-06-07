@@ -11,7 +11,7 @@ public class EffectSetPattern
 	public boolean FlagEffectSeparator = false;
 	
 	public String internalSeparator = "=";
-	public boolean FlaginternalSeparator = false;
+	public boolean FlagInternalSeparator = false;
 	
 	public boolean endPointAtFirstPosition = true;
 	public boolean FlagEndPointAtFirstPosition = false;
@@ -38,7 +38,77 @@ public class EffectSetPattern
 		sb.append(offset + "\"" + sectionName + "\":\n");
 		sb.append(offset + "{\n");
 		
-		//TODO
+		if (FlagSkipSpaces)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SKIP_SPACES\" : " + skipSpaces);
+			nFields++;
+		}
+		
+		if (FlagEffectSeparator)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"EFFECT_SEPARATOR\" : \"" + effectSeparator + "\"");
+			nFields++;
+		}
+		
+		if (FlagInternalSeparator)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"INTERNAL_SEPARATOR\" : \"" + internalSeparator + "\"");
+			nFields++;
+		}
+		
+		if (FlagEndPointAtFirstPosition)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ENDPOINT_AT_FIRST_POSITION\" : " + endPointAtFirstPosition);
+			nFields++;
+		}
+		
+		if (FlagEndpointPrefix)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ENDPOINT_PREFIX\" : \"" + endpointPrefix + "\"");
+			nFields++;
+		}
+		
+		if (FlagEndpointSuffix)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ENDPOINT_SUFFIX\" : \"" + endpointSuffix + "\"");
+			nFields++;
+		}
+		
+		if (FlagValuePrefix)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"VALUE_PREFIX\" : \"" + valuePrefix + "\"");
+			nFields++;
+		}
+		
+		if (FlagValueSuffix)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"VALUE_SUFFIX\" : \"" + valueSuffix + "\"");
+			nFields++;
+		}
+		
+		if (FlagUnit)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"UNIT\" : \"" + unit + "\"");
+			nFields++;
+		}
 		
 		if (nFields > 0)
 			sb.append("\n");
@@ -46,6 +116,5 @@ public class EffectSetPattern
 		sb.append(offset + "}");
 		
 		return sb.toString();
-	
 	}
 }
