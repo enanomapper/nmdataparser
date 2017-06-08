@@ -347,7 +347,7 @@ public class DataConvertor {
 			logger_cli.log(Level.INFO, "MSG_IMPORT",
 					new Object[] { parser.getClass().getName(), settings.getInputFile().getAbsolutePath() });
 
-			StructureRecordValidator validator = new StructureRecordValidator(settings.getInputFile().getName(), true) {
+			StructureRecordValidator validator = new StructureRecordValidator(settings.getInputFile().getName(), true,"XLSX") {
 				@Override
 				public IStructureRecord validate(SubstanceRecord record) throws Exception {
 					if (record.getRelatedStructures() != null && !record.getRelatedStructures().isEmpty()) {
