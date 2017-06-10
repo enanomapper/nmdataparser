@@ -99,7 +99,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	// All variables read from the primary sheet and all parallel sheets
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = new HashMap<String, HashMap<Object, Object>>();
-
+	
+	//Helpers for condition references
+	protected HashMap<String, EffectRecord> referencesEffectRecord = new HashMap<String, EffectRecord>();
+	protected ArrayList<String> addConditionRef= new ArrayList<String>();
+	protected ArrayList<EffectRecord> addConditionTargetEffectRecord= new ArrayList<EffectRecord>();
+		
 	protected boolean FlagNextRecordLoaded = false; // This flag is true when
 	// next object is iterated
 	// and successfully read to
@@ -1233,6 +1238,45 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		return pa;
+	}
+	
+	void clearReferencesInfo()
+	{
+		referencesEffectRecord.clear();
+		addConditionRef.clear();
+		addConditionTargetEffectRecord.clear();
+	}
+	
+	void setupReferenceInfo() 
+	{
+		//Setup conditions
+		for (int i = 0; i < addConditionRef.size(); i++)
+		{
+			String ref = addConditionRef.get(i);
+			EffectRecord sourceEff =  referencesEffectRecord.get(ref);
+			addConditions(sourceEff, addConditionTargetEffectRecord.get(i));  
+		}
+	}
+	
+	void addConditions(EffectRecord sourceEff, EffectRecord targetEff)
+	{
+		if ((sourceEff == null) || (targetEff == null))
+			return;
+		if (sourceEff.getConditions() == null)
+			return;
+		
+		IParams sourceCond = (IParams) sourceEff.getConditions();
+		if (targetEff.getConditions() == null)
+			targetEff.setConditions(sourceCond);
+		else
+		{
+			IParams targetCond = (IParams)targetEff.getConditions();
+			Set<String> sourceKeys = sourceCond.keySet();
+			for (String key : sourceKeys)
+			{
+				targetCond.put(key, sourceCond.get(key));
+			}
+		}
 	}
 
 	void readParameter(String param, ExcelDataLocation loc, IParams destinationParams) throws Exception {

@@ -6,7 +6,9 @@ public class EffectRecordDataLocation
 {
 	public ExcelDataLocation sampleID = null;
 	public ExcelDataLocation endpoint = null;
+	public String effectRecordReference = null;
 	public HashMap<String, ExcelDataLocation> conditions = null;
+	public String addConditionsByRef[] = null;
 	public ExcelDataLocation unit = null;
 	public ExcelDataLocation loValue = null;
 	public ExcelDataLocation loQualifier = null;
