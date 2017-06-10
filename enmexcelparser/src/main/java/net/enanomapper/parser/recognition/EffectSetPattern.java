@@ -1,6 +1,7 @@
 package net.enanomapper.parser.recognition;
 
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.json.JsonUtilities;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,6 +36,9 @@ public class EffectSetPattern
 	
 	public String unit = null;
 	public boolean FlagUnit = false;
+	
+	public DataInterpretation dataInterpretation = DataInterpretation.DEFAULT;
+	public boolean FlagDataInterpretation = false;
 	
 	
 	public static EffectSetPattern extractEffectSetPattern(JsonNode node, ExcelParserConfigurator conf)
@@ -212,12 +216,29 @@ public class EffectSetPattern
 				esp.unit = keyword;	
 			}
 		}
-
 		
-		//TODO
-		
-		
-		
+		//DATA_INTERPRETATION
+		if (!sectionNode.path("DATA_INTERPRETATION").isMissingNode())
+		{
+			String keyword =  jsonUtils.extractStringKeyword(sectionNode, "DATA_INTERPRETATION", false);
+			if (keyword == null)
+			{	
+				conf.configErrors.add("In JSON section \"" + 
+						jsonSection + "\", keyword \"DATA_INTERPRETATION\" : " + 
+						jsonUtils.getError());
+				
+			}	
+			else
+			{	
+				esp.FlagDataInterpretation = true;
+				esp.dataInterpretation = DataInterpretation.fromString(keyword);
+				if (esp.dataInterpretation == DataInterpretation.UNDEFINED)
+				{	
+					conf.configErrors.add("In JSON section \"" + jsonSection + 
+							"\", keyword \"DATA_INTERPRETATION\" is incorrect or UNDEFINED!");
+				}	
+			}
+		}
 		return esp;
 	}
 	
