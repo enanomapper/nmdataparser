@@ -1173,6 +1173,46 @@ public class ExcelParserConfigurator {
 			String otherFields[] = { "UNIT", "NAME" };
 			efrdl.conditions = extractDynamicSection(effCondNode, conf, otherFields);
 		}
+		
+		JsonUtilities jsonUtils = null;
+		
+		//REFERENCE
+		if (!node.path("REFERENCE").isMissingNode()) 
+		{
+			jsonUtils = new JsonUtilities();
+			String keyword = jsonUtils.extractStringKeyword(node, "REFERENCE", false);
+			if (keyword == null)
+				conf.configErrors.add("Incorrect effect REFERENCE : " + jsonUtils.getError());
+			else {
+				efrdl.reference = keyword;
+			}
+		}
+		
+		//ADD_CONDITIONS_BY_REF
+		JsonNode addCondNode = node.path("ADD_CONDITIONS_BY_REF"); 
+		if (!addCondNode.isMissingNode()) 
+		{
+			if (addCondNode.isArray())
+			{	
+				if (jsonUtils == null)
+					jsonUtils = new JsonUtilities();
+				
+				efrdl.addConditionsByRef = new String[addCondNode.size()];
+				for (int i = 0; i < addCondNode.size(); i++)
+				{	
+					if (addCondNode.get(i).isTextual())
+						efrdl.addConditionsByRef[i] = addCondNode.get(i).asText();
+					else					
+						conf.configErrors.add("Incorrect ADD_CONDITIONS_BY_REF [" 
+								+ (i+1) + "] : not textual ");
+				}
+			}
+			else
+			{
+				conf.configErrors.add("ADD_CONDITIONS_BY_REF is not an array!");
+				
+			}
+		}
 
 		return efrdl;
 	}

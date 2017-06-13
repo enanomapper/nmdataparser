@@ -6,7 +6,7 @@ public class EffectRecordDataLocation
 {
 	public ExcelDataLocation sampleID = null;
 	public ExcelDataLocation endpoint = null;
-	public String effectRecordReference = null;
+	public String reference = null;
 	public HashMap<String, ExcelDataLocation> conditions = null;
 	public String addConditionsByRef[] = null;
 	public ExcelDataLocation unit = null;
@@ -42,6 +42,13 @@ public class EffectRecordDataLocation
 			nSections++;
 		}
 		
+		if (reference != null)
+		{
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(offset+"\t" + "\"REFERENCE\" : \"" + reference + "\"");
+			nSections++;
+		}
 		
 		if (conditions != null)
 		{
@@ -67,6 +74,22 @@ public class EffectRecordDataLocation
 			nSections++;
 		}
 		
+		if (addConditionsByRef != null)
+		{
+			if (nSections > 0)
+				sb.append(",\n\n");
+
+			sb.append(offset + "\t\"ADD_CONDITIONS_BY_REF\" : [" );
+			
+			for (int i = 0; i < addConditionsByRef.length; i++)
+			{	
+				sb.append("\"" + addConditionsByRef[i] + "\"");				
+				if (i < (addConditionsByRef.length-1))
+					sb.append(", ");
+			}
+			sb.append("]");
+			nSections++;
+		}
 		
 		if (unit != null)
 		{	
