@@ -1217,8 +1217,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (padl.effects != null) {
 			for (int i = 0; i < padl.effects.size(); i++)
 				try {
-					EffectRecord effect = readEffect(padl.effects.get(i));
+					EffectRecordDataLocation erdl = padl.effects.get(i);
+					EffectRecord effect = readEffect(erdl);
 					pa.addEffect(effect);
+					
+					//Register effect reference
+					if (erdl.reference != null)
+						referencesEffectRecord.put(erdl.reference, effect);
+					//Register condition additions by reference
+					if (erdl.addConditionsByRef != null)
+						for (int k = 0; k < erdl.addConditionsByRef.length; k++)
+						{
+							addConditionRef.add(erdl.addConditionsByRef[k]);
+							addConditionTargetEffectRecord.add(effect);
+						}
 				} catch (Exception x) {
 					logger.log(Level.SEVERE, x.getMessage());
 					throw x;
