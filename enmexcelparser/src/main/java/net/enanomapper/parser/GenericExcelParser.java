@@ -920,6 +920,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			logger.info("Reading row: " + (curRowNum + 1));
 
 		SubstanceRecord r = new SubstanceRecord();
+		clearReferencesInfo();
 
 		// Typically substanceUUID is not set from the excel file but it is
 		// possible if needed.
@@ -1007,7 +1008,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 			r.setExternalids(ids);
 		}
-
+		
+		//Condition definition by references (if present)		
+		setupReferenceInfo();
+		
 		return r;
 	}
 
