@@ -22,7 +22,13 @@ public class BlockParameter
 	public boolean FlagColumnPos = false;
 	
 	public Object rowPos = new Integer(0);
-	public boolean FlagRowPos = false;	
+	public boolean FlagRowPos = false;
+	
+	public boolean fixColumnPosToStartValue = false;
+	public boolean FlagFixColumnPosToStartValue = false;
+	
+	public boolean fixRowPosToStartValue = false;
+	public boolean FlagFixRowPosToStartValue = false;
 	
 	public String mapping = null;
 	public boolean FlagMapping = false;
@@ -172,6 +178,33 @@ public class BlockParameter
 				bp.FlagMapping = true;
 			}
 		}
+
+		
+		//FIX_COLUMN_POS_TO_START_VALUE
+		if (!node.path("FIX_COLUMN_POS_TO_START_VALUE").isMissingNode())
+		{	
+			Boolean b  =  jsonUtils.extractBooleanKeyword(node, "FIX_COLUMN_POS_TO_START_VALUE", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bp.fixColumnPosToStartValue = b;
+				bp.FlagFixColumnPosToStartValue = true;
+			}
+		}
+		
+		//FIX_ROW_POS_TO_START_VALUE
+		if (!node.path("FIX_ROW_POS_TO_START_VALUE").isMissingNode())
+		{	
+			Boolean b  =  jsonUtils.extractBooleanKeyword(node, "FIX_ROW_POS_TO_START_VALUE", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bp.fixRowPosToStartValue = b;
+				bp.FlagFixRowPosToStartValue = true;
+			}
+		}
 		
 		//UNIT
 		if (!node.path("UNIT").isMissingNode())
@@ -230,6 +263,24 @@ public class BlockParameter
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"ROW_POS\" : " + JsonUtilities.objectToJsonField(rowPos));
+			nFields++;
+		}
+		
+		if (FlagFixColumnPosToStartValue)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"FIX_COLUMN_POS_TO_START_VALUE\" : " + fixColumnPosToStartValue);
+			nFields++;
+		}
+		
+		if (FlagFixRowPosToStartValue)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"FIX_ROW_POS_TO_START_VALUE\" : " + fixRowPosToStartValue);
 			nFields++;
 		}
 		

@@ -2740,7 +2740,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 										dbEl.error = d.doubleValue();
 								}
 
-								// Handle parameters
+								// Handle value group parameters (which are effect conditions)
 								if (bvgei.paramInfo != null)
 									if (!bvgei.paramInfo.isEmpty()) {
 										dbEl.params = new Params();
@@ -2771,8 +2771,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 												c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1]; 
 												break;
 											case ASSIGN_TO_VALUE:
-												// (rowPos,columnPos) are used as shifts
-												c = cells[row0 + i + pi.rowPos][column0 + k + pi.columnPos]; 
+												// (pi.rowPos,pi.columnPos) are used as shifts
+												int par_row;												
+												if (pi.fixRowPosToStartValue)
+													par_row = row0 + (bvgei.startRow-1) + pi.rowPos;
+												else
+													par_row = row0 + i + pi.rowPos;
+												
+												int par_col;
+												if (pi.fixColumnPosToStartValue)												
+													par_col = column0 + (bvgei.startColumn-1) + pi.columnPos;
+												else
+													par_col = column0 + k + pi.columnPos;
+												
+												c = cells[par_row][par_col]; 
 												break;
 											case UNDEFINED:
 												// nothing is done
@@ -2939,6 +2951,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						FlagParamOK = false;
 					} else
 						pi.rowPos = intVal;
+					
+					pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
+					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
 
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;

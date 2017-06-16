@@ -13,6 +13,8 @@ public class BlockValueGroupExtractedInfo
 		public BlockParameterAssign assign = BlockParameterAssign.UNDEFINED;
 		public Integer columnPos = null;
 		public Integer rowPos = null;
+		public boolean fixColumnPosToStartValue = false;
+		public boolean fixRowPosToStartValue = false;
 		public String mapping = null;
 		public String unit = null;
 		public Object jsonValue = null;
