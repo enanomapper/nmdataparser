@@ -26,6 +26,8 @@ public class BlockValueGroupExtractedInfo
 	public BlockParameterAssign endpointAssign = BlockParameterAssign.UNDEFINED;
 	public Integer endpointColumnPos = null;
 	public Integer endpointRowPos = null;
+	public boolean fixEndpointColumnPosToStartValue = false;
+	public boolean fixEndpointRowPosToStartValue = false;
 	public String endpointMapping = null;
 	public boolean addValueGroupToEndpointName = false;
 	public boolean addValueGroupAsPrefix = false;

@@ -26,16 +26,28 @@ public class BlockValueGroup
 	//This is analogous to the block parameters assignment
 	public BlockParameterAssign endpointAssign = BlockParameterAssign.UNDEFINED;
 	public boolean FlagEndpointAssign = false;	
+	
 	public Object endpointColumnPos = new Integer(0); 
 	public boolean FlagEndpointColumnPos = false;	
+	
 	public Object endpointRowPos = new Integer(0);
-	public boolean FlagEndpointRowPos = false;	
+	public boolean FlagEndpointRowPos = false;
+	
+	public boolean fixEndpointColumnPosToStartValue = false;
+	public boolean FlagFixEndpointColumnPosToStartValue = false;
+	
+	public boolean fixEndpointRowPosToStartValue = false;
+	public boolean FlagFixEndpointRowPosToStartValue = false;
+	
 	public String endpointMapping = null;
 	public boolean FlagEndpointMapping = false;
+	
 	public boolean addValueGroupToEndpointName = false;
 	public boolean FlagAddValueGroupToEndpointName = false;
+	
 	public boolean addValueGroupAsPrefix = false;
 	public boolean FlagAddValueGroupAsPrefix = false;
+	
 	public String separator = " "; //used when adding name to endpoint
 	public boolean FlagSeparator = false;
 	
@@ -187,6 +199,33 @@ public class BlockValueGroup
 				}	
 			}	
 		}
+		
+		//FIX_ENDPOINT_COLUMN_POS_TO_START_VALUE
+		if (!node.path("FIX_ENDPOINT_COLUMN_POS_TO_START_VALUE").isMissingNode())
+		{	
+			Boolean b  =  jsonUtils.extractBooleanKeyword(node, "FIX_ENDPOINT_COLUMN_POS_TO_START_VALUE", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.fixEndpointColumnPosToStartValue = b;
+				bvg.FlagFixEndpointColumnPosToStartValue = true;
+			}
+		}
+		
+		//FIX_ENDPOINT_ROW_POS_TO_START_VALUE
+		if (!node.path("FIX_ENDPOINT_ROW_POS_TO_START_VALUE").isMissingNode())
+		{	
+			Boolean b  =  jsonUtils.extractBooleanKeyword(node, "FIX_ENDPOINT_ROW_POS_TO_START_VALUE", false);
+			if (b == null)
+				conf.configErrors.add(jsonUtils.getError());
+			else
+			{	
+				bvg.fixEndpointRowPosToStartValue = b;
+				bvg.FlagFixEndpointRowPosToStartValue = true;
+			}
+		}
+
 		
 		//ENDPOINT_MAPPING
 		if (!node.path("ENDPOINT_MAPPING").isMissingNode())
@@ -477,6 +516,24 @@ public class BlockValueGroup
 				sb.append(",\n");
 			
 			sb.append(offset + "\t\"ENDPOINT_ROW_POS\" : " + JsonUtilities.objectToJsonField(endpointRowPos));
+			nFields++;
+		}
+		
+		if (FlagFixEndpointColumnPosToStartValue)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"FIX_ENDPOINT_COLUMN_POS_TO_START_VALUE\" : " + fixEndpointColumnPosToStartValue);
+			nFields++;
+		}
+		
+		if (FlagFixEndpointRowPosToStartValue)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			
+			sb.append(offset + "\t\"FIX_ENDPOINT_ROW_POS_TO_START_VALUE\" : " + fixEndpointRowPosToStartValue);
 			nFields++;
 		}
 		

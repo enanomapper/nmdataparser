@@ -2705,8 +2705,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 										break;
 									case ASSIGN_TO_VALUE:
 										// (endpointRowPos,endpointColumnPos) are used as shifts
-										c = cells[row0 + i + bvgei.endpointRowPos][column0 + k + bvgei.endpointColumnPos]; 
-										break;	
+										int ep_row;
+										if (bvgei.fixEndpointRowPosToStartValue)
+											ep_row = row0 + (bvgei.startRow-1) + bvgei.endpointRowPos;
+										else
+											ep_row = row0 + i + bvgei.endpointRowPos;
+										
+										int ep_col;
+										if (bvgei.fixEndpointColumnPosToStartValue)
+											ep_col = column0 + (bvgei.startColumn-1) + bvgei.endpointColumnPos;
+										else
+											ep_col = column0 + k + bvgei.endpointColumnPos;
+										
+										c = cells[ep_row][ep_col]; 
+										break;
 									}
 									
 									if (c != null) 
@@ -2846,7 +2858,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			if (bvgei.endpointRowPos == null) {
 				bvgei.errors.add("ENDPOINT_ROW_POS:  incorrect result for expression: " + bvg.endpointRowPos);
 			}
-
+			
+			bvgei.fixEndpointColumnPosToStartValue = bvg.fixEndpointColumnPosToStartValue;
+			bvgei.fixEndpointRowPosToStartValue = bvg.fixEndpointRowPosToStartValue;
+			
 			if (bvg.endpointMapping != null)
 				bvgei.endpointMapping = bvg.endpointMapping;
 			
