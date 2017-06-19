@@ -2677,8 +2677,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (bvgei.FlagValues) {
 						// Shifted by -1 to make it 0-based indexing
 						for (int i = bvgei.startRow - 1; i <= bvgei.endRow - 1; i++)
-							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
+							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) 
+							{
 								Object o = ExcelUtils.getObjectFromCell(cells[row0 + i][column0 + k]);
+								//Handle empty cell or incorrect values
+								if (o == null) 
+									continue;
+								
 								DataBlockElement dbEl = new DataBlockElement();
 								
 								//Setting the endpoint name stored in the field dbEl.blockValueGroup
