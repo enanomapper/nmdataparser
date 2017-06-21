@@ -1313,10 +1313,28 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		// Enforcing parameter to be read as string
-		if (loc.dataInterpretation == DataInterpretation.AS_TEXT) {
+		if (loc.dataInterpretation == DataInterpretation.AS_TEXT) 
+		{
 			String s = getString(loc);
 			if (s != null)
-				destinationParams.put(parameterName, s);
+			{	
+				String unitString = null;
+				if (loc.otherLocationFields != null) {
+					ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
+					if (pUnitLoc != null) {
+						try {
+							unitString = getStringValue(pUnitLoc);
+						} catch (Exception x) {
+							logger.log(Level.FINE, String.format("%s\t%s\t%s", param, x.getMessage(), pUnitLoc.toString()));
+						}
+					}
+				}
+				
+				if (unitString != null)
+					destinationParams.put(parameterName, s + " " + unitString);
+				else
+					destinationParams.put(parameterName, s);
+			}	
 			return;
 		}
 
