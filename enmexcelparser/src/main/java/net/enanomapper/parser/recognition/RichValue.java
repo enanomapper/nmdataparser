@@ -11,6 +11,10 @@ public class RichValue {
 	public Double upValue = null;
 	public String upQualifier = null;
 	public String unit = null;
+	public Double errorValue = null;
+	public String errorValueQualifier = null;
+	
+	//parse error
 	public String errorMsg = null;
 
 	public List<RichValue> additionalValues = null;

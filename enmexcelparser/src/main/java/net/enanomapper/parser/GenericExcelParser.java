@@ -1663,7 +1663,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		if (efrdl.value != null) {
-			// If present this takes precedence over the up/lo values and
+			// If present this takes precedence over the up/lo/err values and
 			// qualifiers and unit
 			// These are intelligently recognized
 
@@ -1692,6 +1692,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						effect.setUpValue(rv.upValue);
 					if (rv.upQualifier != null)
 						effect.setUpQualifier(rv.upQualifier);
+					/*
+					if (rv.errorValue != null)
+						effect.setErrorValue(rv.errorValue);
+					if (rv.errorValueQualifier != null)
+						effect.setErrQualifier(rv.errorValueQualifier);
+					*/	
 				} 
 				else 
 				{
