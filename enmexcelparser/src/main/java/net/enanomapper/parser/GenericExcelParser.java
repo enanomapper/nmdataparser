@@ -1223,6 +1223,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				try {
 					EffectRecordDataLocation erdl = padl.effects.get(i);
 					EffectRecord effect = readEffect(erdl);
+					if (config.clearEmptyEffectRecords) {
+						if (effect.isEmpty())
+							continue;
+					}	
 					pa.addEffect(effect);
 					
 					//Register effect reference

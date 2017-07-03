@@ -95,6 +95,10 @@ public class ExcelParserConfigurator {
 	// public Object skipRows = null;
 	public boolean FlagSkipRows = false;
 	public IndexSet skipRowsIndexSet = null;
+	
+	public boolean clearEmptyEffectRecords = false;
+	public boolean FlagClearEmptyEffectRecords = false;
+	
 
 	// Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
@@ -179,7 +183,8 @@ public class ExcelParserConfigurator {
 		curNode = root.path("DATA_ACCESS");
 		if (curNode.isMissingNode())
 			conf.configErrors.add("JSON Section \"DATA_ACCESS\" is missing!");
-		else {
+		else 
+		{
 			// BASIC_ITERATION_LOAD_SUBSTANCE_RECORD
 			if (!curNode.path("BASIC_ITERATION_LOAD_SUBSTANCE_RECORD").isMissingNode()) {
 				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "BASIC_ITERATION_LOAD_SUBSTANCE_RECORD", false);
@@ -345,6 +350,17 @@ public class ExcelParserConfigurator {
 				} catch (Exception x) {
 					conf.configErrors
 							.add("In JSON section \"DATA_ACESS\", " + "keyword \"SKIP_ROWS\" is incorrectly defined: ");
+				}
+			}
+			
+			// CLEAR_EMPTY_EFFECT_RECORDS
+			if (!curNode.path("CLEAR_EMPTY_EFFECT_RECORDS").isMissingNode()) {
+				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "CLEAR_EMPTY_EFFECT_RECORDS", false);
+				if (b == null)
+					conf.configErrors.add(jsonUtils.getError());
+				else {
+					conf.clearEmptyEffectRecords = b;
+					conf.FlagClearEmptyEffectRecords = true;
 				}
 			}
 
@@ -660,6 +676,13 @@ public class ExcelParserConfigurator {
 			if (nDAFields > 0)
 				sb.append(",\n");
 			sb.append("\t\t\"SKIP_ROWS\" : " + skipRowsIndexSet.toJSONKeyWord());
+			nDAFields++;
+		}
+		
+		if (FlagClearEmptyEffectRecords) {
+			if (nDAFields > 0)
+				sb.append(",\n");
+			sb.append("\t\t\"CLEAR_EMPTY_EFFECT_RECORDS\" : " + clearEmptyEffectRecords);
 			nDAFields++;
 		}
 
