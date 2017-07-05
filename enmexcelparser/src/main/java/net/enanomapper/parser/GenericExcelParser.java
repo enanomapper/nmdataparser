@@ -1678,7 +1678,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			if (richValueString != null) 
 			{
-				RichValue rv = rvParser.parse(richValueString);
+				//EffectRecord can handle error that is why
+				//representPlusMinusAsInterval = false
+				RichValue rv = rvParser.parse(richValueString, false);
 				String rv_error = rvParser.getAllErrorsAsString();
 
 				if (rv_error == null) {
@@ -1691,13 +1693,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (rv.upValue != null)
 						effect.setUpValue(rv.upValue);
 					if (rv.upQualifier != null)
-						effect.setUpQualifier(rv.upQualifier);
-					/*
+						effect.setUpQualifier(rv.upQualifier);					
 					if (rv.errorValue != null)
 						effect.setErrorValue(rv.errorValue);
 					if (rv.errorValueQualifier != null)
 						effect.setErrQualifier(rv.errorValueQualifier);
-					*/	
 				} 
 				else 
 				{

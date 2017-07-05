@@ -73,12 +73,19 @@ public class RichValueParser {
 	public void setDefaultIntervalUpQualifier(String defaultIntervalUpQualifier) {
 		this.defaultIntervalUpQualifier = defaultIntervalUpQualifier;
 	}
+	
+	public RichValue parse(String rvStr) {
+		//By default representPlusMinusAsInterval = true
+		//i.e. a ± b is represented as an interval [a-b, a+b]
+		return parse(rvStr, true);
+	}	
+	
 	/**
 	 * 
 	 * @param rvStr
 	 * @return
 	 */
-	public RichValue parse(String rvStr) {
+	public RichValue parse(String rvStr, boolean representPlusMinusAsInterval) {
 		errors.clear();
 
 		if (rvStr == null) {
@@ -90,13 +97,13 @@ public class RichValueParser {
 		String tokens[] = rvString.split(tokenSplitter);
 
 		curTokenNum = 0;
-		rvalue = parseToken(tokens[0]);
+		rvalue = parseToken(tokens[0], representPlusMinusAsInterval);
 		if (!errors.isEmpty())
 			return null;
 
 		for (int i = 1; i < tokens.length; i++) {
 			curTokenNum = i;
-			RichValue rv = parseToken(tokens[i]);
+			RichValue rv = parseToken(tokens[i], representPlusMinusAsInterval);
 			if (errors.isEmpty()) {
 				if (rvalue.additionalValues == null)
 					rvalue.additionalValues = new ArrayList<RichValue>();
@@ -141,7 +148,7 @@ public class RichValueParser {
 	 * @param rvStr
 	 * @return
 	 */
-	public List<RichValue> parseAsList(String rvStr) {
+	public List<RichValue> parseAsList(String rvStr, boolean representPlusMinusAsInterval) {
 		errors.clear();
 
 		if (rvStr == null) {
@@ -155,7 +162,7 @@ public class RichValueParser {
 
 		for (int i = 0; i < tokens.length; i++) {
 			curTokenNum = i;
-			RichValue rv = parseToken(tokens[i]);
+			RichValue rv = parseToken(tokens[i], representPlusMinusAsInterval);
 			if (errors.isEmpty())
 				list.add(rv);
 			else {
@@ -195,7 +202,7 @@ public class RichValueParser {
 	 * @param token
 	 * @return
 	 */
-	RichValue parseToken(String token) {
+	RichValue parseToken(String token, boolean representPlusMinusAsInterval) {
 		// TODO - check for special token values like N/A ...
 
 		curToken = token;
@@ -436,11 +443,20 @@ public class RichValueParser {
 		default: // case 2
 			
 			if (FlagPlusMinus)
-			{
+			{		
 				//In this case upValue is used for +- definition
 				double sd = rv.upValue;
-				rv.loValue = rv.loValue - sd;
-				rv.upValue = rv.loValue + 2*sd;  
+				if (representPlusMinusAsInterval)
+				{	
+					rv.loValue = rv.loValue - sd;
+					rv.upValue = rv.loValue + 2*sd;
+				}
+				else
+				{
+					rv.errorValue = rv.upValue;
+					rv.errorValueQualifier = "±";
+					rv.upValue = null;
+				}
 			}
 			
 			if (rv.loQualifier != null) {
@@ -448,17 +464,19 @@ public class RichValueParser {
 						+ " Defined interval and qualifier together!");
 				return null;
 			}
+			
+			if (rv.upValue != null)
+				if (rv.loValue > rv.upValue) {
+					errors.add("In Token #" + (curTokenNum + 1) + " " + token
+							+ " Incorrect interval: loValue > upValue!");
+					return null;
+				}
 
-			if (rv.loValue > rv.upValue) {
-				errors.add("In Token #" + (curTokenNum + 1) + " " + token
-						+ " Incorrect interval: loValue > upValue!");
-				return null;
-			}
-
-			if (FlagSetDefaultQualifiersForInterval) {
-				rv.loQualifier = defaultIntervalLoQualifier;
-				rv.upQualifier = defaultIntervalUpQualifier;
-			}
+			if (rv.upValue != null)
+				if (FlagSetDefaultQualifiersForInterval) {
+					rv.loQualifier = defaultIntervalLoQualifier;
+					rv.upQualifier = defaultIntervalUpQualifier;
+				}
 			break;
 		}
 
