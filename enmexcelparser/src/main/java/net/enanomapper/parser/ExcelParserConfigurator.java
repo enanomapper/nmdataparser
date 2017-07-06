@@ -36,7 +36,7 @@ public class ExcelParserConfigurator {
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
 	protected String prefix = "XLSX";
-	public ArrayList<String> configErrors = new ArrayList<String>();
+	private ArrayList<String> configErrors = new ArrayList<String>();
 	public ArrayList<String> configWarnings = new ArrayList<String>();
 
 	// Configuration flags
@@ -95,10 +95,9 @@ public class ExcelParserConfigurator {
 	// public Object skipRows = null;
 	public boolean FlagSkipRows = false;
 	public IndexSet skipRowsIndexSet = null;
-	
+
 	public boolean clearEmptyEffectRecords = false;
 	public boolean FlagClearEmptyEffectRecords = false;
-	
 
 	// Specific data locations
 	public ArrayList<ExcelSheetConfiguration> parallelSheets = new ArrayList<ExcelSheetConfiguration>();
@@ -130,6 +129,12 @@ public class ExcelParserConfigurator {
 		this.prefix = prefix;
 	}
 
+	public void addError(String error) {
+		configErrors.add(error);
+	}
+	public boolean hasErrors() {
+		return configErrors.size()>0;
+	}
 	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws Exception {
 		FileInputStream fin = new FileInputStream(jsonConfig);
 		ObjectMapper mapper = new ObjectMapper();
@@ -162,19 +167,19 @@ public class ExcelParserConfigurator {
 			// NAME
 			String keyword = jsonUtils.extractStringKeyword(curNode, "NAME", false);
 			if (keyword == null)
-				conf.configErrors.add(jsonUtils.getError());
+				conf.addError(jsonUtils.getError());
 			else
 				conf.templateName = keyword;
 			// VERSION
 			keyword = jsonUtils.extractStringKeyword(curNode, "VERSION", false);
 			if (keyword == null)
-				conf.configErrors.add(jsonUtils.getError());
+				conf.addError(jsonUtils.getError());
 			else
 				conf.templateVersion = keyword;
 			// TYPE
 			Integer intValue = jsonUtils.extractIntKeyword(curNode, "TYPE", true);
 			if (intValue == null)
-				conf.configErrors.add(jsonUtils.getError());
+				conf.addError(jsonUtils.getError());
 			else
 				conf.templateType = intValue;
 		}
@@ -183,13 +188,12 @@ public class ExcelParserConfigurator {
 		curNode = root.path("DATA_ACCESS");
 		if (curNode.isMissingNode())
 			conf.configErrors.add("JSON Section \"DATA_ACCESS\" is missing!");
-		else 
-		{
+		else {
 			// BASIC_ITERATION_LOAD_SUBSTANCE_RECORD
 			if (!curNode.path("BASIC_ITERATION_LOAD_SUBSTANCE_RECORD").isMissingNode()) {
 				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "BASIC_ITERATION_LOAD_SUBSTANCE_RECORD", false);
 				if (b == null)
-					conf.configErrors.add(jsonUtils.getError());
+					conf.addError(jsonUtils.getError());
 				else {
 					conf.basicIterationLoadSubstanceRecord = b;
 					conf.FlagBasicIterationLoadSubstanceRecord = true;
@@ -200,12 +204,12 @@ public class ExcelParserConfigurator {
 			if (!curNode.path("ITERATION").isMissingNode()) {
 				String keyword = jsonUtils.extractStringKeyword(curNode, "ITERATION", false);
 				if (keyword == null)
-					conf.configErrors.add(jsonUtils.getError());
+					conf.addError(jsonUtils.getError());
 				else {
 					conf.substanceIteration = IterationAccess.fromString(keyword);
 					conf.FlagSubstanceIteration = true;
 					if (conf.substanceIteration == IterationAccess.UNDEFINED)
-						conf.configErrors.add(
+						conf.addError(
 								"In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
 				}
 			}
@@ -214,7 +218,7 @@ public class ExcelParserConfigurator {
 			if (!curNode.path("SHEET_INDEX").isMissingNode()) {
 				Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
 				if (intValue == null)
-					conf.configErrors.add(jsonUtils.getError());
+					conf.addError(jsonUtils.getError());
 				else {
 					conf.sheetIndex = intValue - 1; // 1-based --> 0-based
 					conf.FlagSheetIndex = true;
@@ -352,7 +356,7 @@ public class ExcelParserConfigurator {
 							.add("In JSON section \"DATA_ACESS\", " + "keyword \"SKIP_ROWS\" is incorrectly defined: ");
 				}
 			}
-			
+
 			// CLEAR_EMPTY_EFFECT_RECORDS
 			if (!curNode.path("CLEAR_EMPTY_EFFECT_RECORDS").isMissingNode()) {
 				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "CLEAR_EMPTY_EFFECT_RECORDS", false);
@@ -447,7 +451,7 @@ public class ExcelParserConfigurator {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.substanceUUID", loc);
 			} else {
-				// depricated syntax COMPANY_UUID used for the same purpose
+				// deprecated syntax COMPANY_UUID used for the same purpose
 				loc = ExcelDataLocation.extractDataLocation(curNode, "COMPANY_UUID", conf);
 				if (loc != null) {
 					if (loc.nErrors == 0)
@@ -678,7 +682,7 @@ public class ExcelParserConfigurator {
 			sb.append("\t\t\"SKIP_ROWS\" : " + skipRowsIndexSet.toJSONKeyWord());
 			nDAFields++;
 		}
-		
+
 		if (FlagClearEmptyEffectRecords) {
 			if (nDAFields > 0)
 				sb.append(",\n");
@@ -932,7 +936,7 @@ public class ExcelParserConfigurator {
 			if (loc.nErrors == 0)
 				padl.protocolApplicationUUID = loc;
 		}
-		
+
 		// INVESTIGATION_UUID
 		loc = ExcelDataLocation.extractDataLocation(node, "INVESTIGATION_UUID", conf);
 		if (loc != null) {
@@ -1196,12 +1200,11 @@ public class ExcelParserConfigurator {
 			String otherFields[] = { "UNIT", "NAME" };
 			efrdl.conditions = extractDynamicSection(effCondNode, conf, otherFields);
 		}
-		
+
 		JsonUtilities jsonUtils = null;
-		
-		//REFERENCE
-		if (!node.path("REFERENCE").isMissingNode()) 
-		{
+
+		// REFERENCE
+		if (!node.path("REFERENCE").isMissingNode()) {
 			jsonUtils = new JsonUtilities();
 			String keyword = jsonUtils.extractStringKeyword(node, "REFERENCE", false);
 			if (keyword == null)
@@ -1210,30 +1213,24 @@ public class ExcelParserConfigurator {
 				efrdl.reference = keyword;
 			}
 		}
-		
-		//ADD_CONDITIONS_BY_REF
-		JsonNode addCondNode = node.path("ADD_CONDITIONS_BY_REF"); 
-		if (!addCondNode.isMissingNode()) 
-		{
-			if (addCondNode.isArray())
-			{	
+
+		// ADD_CONDITIONS_BY_REF
+		JsonNode addCondNode = node.path("ADD_CONDITIONS_BY_REF");
+		if (!addCondNode.isMissingNode()) {
+			if (addCondNode.isArray()) {
 				if (jsonUtils == null)
 					jsonUtils = new JsonUtilities();
-				
+
 				efrdl.addConditionsByRef = new String[addCondNode.size()];
-				for (int i = 0; i < addCondNode.size(); i++)
-				{	
+				for (int i = 0; i < addCondNode.size(); i++) {
 					if (addCondNode.get(i).isTextual())
 						efrdl.addConditionsByRef[i] = addCondNode.get(i).asText();
-					else					
-						conf.configErrors.add("Incorrect ADD_CONDITIONS_BY_REF [" 
-								+ (i+1) + "] : not textual ");
+					else
+						conf.configErrors.add("Incorrect ADD_CONDITIONS_BY_REF [" + (i + 1) + "] : not textual ");
 				}
-			}
-			else
-			{
+			} else {
 				conf.configErrors.add("ADD_CONDITIONS_BY_REF is not an array!");
-				
+
 			}
 		}
 

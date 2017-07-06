@@ -172,8 +172,9 @@ public class XMLParserTest {
 		if (!splitdim.equals("18446744073709551615")) {
 			int idx = Integer.parseInt(splitdim);
 			Double t = Double.parseDouble(splitValue);
-			//System.out.println(String.format("%s\t%s\t%s", idx, t, point[idx]));
-			if (point[idx] >= t)
+			// System.out.println(String.format("%s\t%s\t%s", idx, t,
+			// point[idx]));
+			if (point[idx] > t)
 				return String.format("%4s%s%s", splitdim, "R", apply(right, level + 1, point));
 			else
 				return String.format("%4s%s%s", splitdim, "L", apply(left, level + 1, point));
@@ -220,7 +221,7 @@ public class XMLParserTest {
 		} catch (Exception x) {
 
 		}
-		CSVFormat format = CSVFormat.DEFAULT.withDelimiter(',').withSkipHeaderRecord(false);
+		CSVFormat format = CSVFormat.DEFAULT.withDelimiter('\t').withSkipHeaderRecord(false);
 		File outDir = new File(System.getProperty("java.io.tmpdir"));
 
 		try (FileReader in = new FileReader(new File(args[1]))) {
@@ -231,12 +232,16 @@ public class XMLParserTest {
 				while (iterator.hasNext()) {
 					CSVRecord record = iterator.next();
 					for (int i = 0; i < point.length; i++)
-						point[i] = Double.parseDouble(record.get(i));
+						point[i] = Double.parseDouble(record.get(i+1));
 					String branch = t.apply(root, 0, point);
+					/*
 					for (int i = 0; i <= point.length; i++) {
 						w.write(record.get(i));
 						w.write(",");
 					}
+					*/
+					w.write(record.get(0));
+					w.write(",");
 					w.write(branch);
 					w.write("\n");
 					r++;
@@ -252,5 +257,57 @@ public class XMLParserTest {
 		 * new FileInputStream(new File(args[0]))) { t.parseDOM(in, outDir); }
 		 * catch (Exception x) { x.printStackTrace(); }
 		 */
+	}
+
+	@Test
+	public void testsplit() throws Exception {
+		CSVFormat format = CSVFormat.EXCEL.withDelimiter(',').withHeader();
+		//String sorted = "F:/Downloads/Chemical data/Ames_HONMA/ames/step-03/train_concatpaths_vecmol40_binary_std_detclass.csv";
+		String sorted = "F:/Downloads/Chemical data/Ames_HONMA/ames/step-02/det/l3/detclass.csv";
+		File outDir = new File(System.getProperty("java.io.tmpdir"));
+		try (FileReader in = new FileReader(new File(sorted))) {
+			try (BufferedWriter w = new BufferedWriter(new FileWriter(new File(outDir, "split.csv")))) {
+				CSVParser parser = format.parse(in);
+				
+				String[] header = format.getHeader();
+
+				String tag = null;
+
+				Iterator<CSVRecord> iterator = parser.iterator();
+				int r = 0;
+				int a = 0;
+				int na = 0;
+				int c  = 0;
+				while (iterator.hasNext()) {
+					CSVRecord record = iterator.next();
+
+					if (!record.get("det").equals(tag)) {
+						tag = record.get("det");
+						a = 0;
+						na = 0;
+						c++;
+					}
+
+					boolean write = "1".equals(record.get("Activity"));
+
+					if (write || (na < a) || (na==0)) {
+						
+						Iterator<String> i = record.iterator();
+						while (i.hasNext()) {
+							w.write(i.next());
+							w.write(",");
+						}
+						w.write(Integer.toString(c));
+						w.write("\n");
+					}
+					
+					if (write) a++; else na++;
+					r++;
+
+				}
+			}
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
 	}
 }

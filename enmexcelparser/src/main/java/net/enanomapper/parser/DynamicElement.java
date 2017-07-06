@@ -96,14 +96,13 @@ public class DynamicElement {
 		if (!node.path("FIELD_TYPE").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "FIELD_TYPE", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"FIELD_TYPE\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"FIELD_TYPE\": " + jsonUtils.getError());
 			else {
 				element.fieldType = ElementField.fromString(keyword);
 				if (element.fieldType == ElementField.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection
-							+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
+					conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+ " subsection ELEMENT [" + (elNum + 1)
 							+ "], keyword \"FIELD_TYPE\" is incorrect or UNDEFINED!  -->" + keyword);
 				else {
 					element.FlagFieldType = true;
@@ -112,7 +111,7 @@ public class DynamicElement {
 							|| (element.fieldType == ElementField.PROPERTY)
 							|| (element.fieldType == ElementField.EXTERNAL_IDENTIFIER)) {
 						if (node.path("PARAMETER_NAME").isMissingNode()) {
-							conf.configErrors.add("In JSON Section \"" + masterSection
+							conf.addError("In JSON Section \"" + masterSection
 									+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT ["
 									+ (elNum + 1) + "], keyword \"PARAMETER_NAME\" is missing for FIELD_TYPE = "
 									+ element.fieldType.toString());
@@ -140,9 +139,9 @@ public class DynamicElement {
 		if (!node.path("RESULT_OBJECT_INDEX").isMissingNode()) {
 			Integer resId = jsonUtils.extractIntKeyword(node, "RESULT_OBJECT_INDEX", false);
 			if (resId == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"RESULT_OBJECT_INDEX\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"RESULT_OBJECT_INDEX\": "
+						+ jsonUtils.getError());
 			else {
 				element.resultObjectIndex = resId - 1; // 1-based --> 0-based
 				element.FlagResultObjectIndex = true;
@@ -153,14 +152,13 @@ public class DynamicElement {
 		if (!node.path("SYNCH_TYPE").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "SYNCH_TYPE", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"SYNCH_TYPE\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"SYNCH_TYPE\": " + jsonUtils.getError());
 			else {
 				element.synchType = ElementSynchronization.fromString(keyword);
 				if (element.synchType == ElementSynchronization.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection
-							+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
+					conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+ " subsection ELEMENT [" + (elNum + 1)
 							+ "], keyword \"SYNCH_TYPE\" is incorrect or UNDEFINED!  -->" + keyword);
 				else {
 					element.FlagSynchType = true;
@@ -172,15 +170,15 @@ public class DynamicElement {
 		if (!node.path("SYNCH_TARGET").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "SYNCH_TARGET", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"SYNCH_TARGET\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"SYNCH_TARGET\": "
+						+ jsonUtils.getError());
 			else {
 				SynchronizationTarget st = SynchronizationTarget.parse(keyword);
 				if (st.error != null) {
-					conf.configErrors.add("In JSON Section \"" + masterSection
-							+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-							+ "], keyword \"SYNCH_TARGET\" is incorrect -->" + st.error);
+					conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"SYNCH_TARGET\" is incorrect -->"
+							+ st.error);
 				} else
 					element.synchTarget = st;
 			}
@@ -190,14 +188,13 @@ public class DynamicElement {
 		if (!node.path("POSITION").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "POSITION", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"POSITION\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"POSITION\": " + jsonUtils.getError());
 			else {
 				element.position = ElementPosition.fromString(keyword);
 				if (element.position == ElementPosition.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"" + masterSection
-							+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
+					conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+							+ " subsection ELEMENT [" + (elNum + 1)
 							+ "], keyword \"POSITION\" is incorrect or UNDEFINED!  -->" + keyword);
 				else
 					element.FlagPosition = true;
@@ -215,9 +212,8 @@ public class DynamicElement {
 			// Index is extracted as column index (but it may be a row as well)
 			int col_index = ExcelParserUtils.extractColumnIndex(node.path("INDEX"));
 			if (col_index == -1) {
-				conf.configErrors
-						.add("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
-								+ " subsection ELEMENT [" + (elNum + 1) + "], keyword  \"INDEX\" is incorrect!");
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword  \"INDEX\" is incorrect!");
 			} else {
 				element.index = col_index;
 				element.FlagIndex = true;
@@ -228,9 +224,8 @@ public class DynamicElement {
 		if (!node.path("JSON_INFO").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "JSON_INFO", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"JSON_INFO\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"JSON_INFO\": " + jsonUtils.getError());
 			else {
 				element.jsonInfo = keyword;
 			}
@@ -240,9 +235,9 @@ public class DynamicElement {
 		if (!node.path("PARAMETER_NAME").isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, "PARAMETER_NAME", false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"PARAMETER_NAME\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"PARAMETER_NAME\": "
+						+ jsonUtils.getError());
 			else {
 				element.parameterName = keyword;
 			}
@@ -252,9 +247,9 @@ public class DynamicElement {
 		if (!node.path("INFO_FROM_HEADER").isMissingNode()) {
 			Boolean b = jsonUtils.extractBooleanKeyword(node, "INFO_FROM_HEADER", true);
 			if (b == null)
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"INFO_FROM_HEADER\": " + jsonUtils.getError());
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"INFO_FROM_HEADER\": "
+						+ jsonUtils.getError());
 			else {
 				element.infoFromHeader = b;
 				element.FlagInfoFromHeader = true;
@@ -271,21 +266,20 @@ public class DynamicElement {
 					if (keyNode.isTextual()) {
 						String keyword = keyNode.asText();
 						if (keyword == null)
-							conf.configErrors.add("In JSON Section \"" + masterSection
+							conf.addError("In JSON Section \"" + masterSection
 									+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT ["
 									+ (elNum + 1) + "], keyword VARIABLE_KEYS [" + (i + 1) + "]: is incorrect!");
 						else
 							element.variableKeys[i] = keyword;
 					} else {
-						conf.configErrors.add("In JSON Section \"" + masterSection
+						conf.addError("In JSON Section \"" + masterSection
 								+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
 								+ "], keyword VARIABLE_KEYS [" + (i + 1) + "]: is not textual!");
 					}
 				}
 			} else {
-				conf.configErrors.add("In JSON Section \"" + masterSection
-						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
-						+ "], keyword \"VARIABLE_KEYS\" is not an array!");
+				conf.addError("In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
+						+ " subsection ELEMENT [" + (elNum + 1) + "], keyword \"VARIABLE_KEYS\" is not an array!");
 			}
 		}
 
@@ -299,7 +293,7 @@ public class DynamicElement {
 					if (chNode.isInt()) {
 						int intVal = chNode.asInt();
 						if (intVal <= 0)
-							conf.configErrors.add(
+							conf.addError(
 									"In JSON Section \"" + masterSection + "\" subsection \"DYNAMIC_ITERATION_SPAN\", "
 											+ " subsection ELEMENT [" + (elNum + 1) + "], keyword CHILD_ELEMENTS ["
 											+ (i + 1) + "]: is incorrect! --> " + intVal);
@@ -308,13 +302,13 @@ public class DynamicElement {
 																	// -->
 																	// 0-based
 					} else {
-						conf.configErrors.add("In JSON Section \"" + masterSection
+						conf.addError("In JSON Section \"" + masterSection
 								+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
 								+ "], keyword CHILD_ELEMENTS [" + (i + 1) + "]: is not integer!");
 					}
 				}
 			} else {
-				conf.configErrors.add("In JSON Section \"" + masterSection
+				conf.addError("In JSON Section \"" + masterSection
 						+ "\" subsection \"DYNAMIC_ITERATION_SPAN\", " + " subsection ELEMENT [" + (elNum + 1)
 						+ "], keyword \"CHILD_ELEMENTS\" is not an array!");
 			}

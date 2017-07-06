@@ -99,12 +99,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	// All variables read from the primary sheet and all parallel sheets
 	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = new HashMap<String, HashMap<Object, Object>>();
-	
-	//Helpers for condition references
+
+	// Helpers for condition references
 	protected HashMap<String, EffectRecord> referencesEffectRecord = new HashMap<String, EffectRecord>();
-	protected ArrayList<String> addConditionRef= new ArrayList<String>();
-	protected ArrayList<EffectRecord> addConditionTargetEffectRecord= new ArrayList<EffectRecord>();
-		
+	protected ArrayList<String> addConditionRef = new ArrayList<String>();
+	protected ArrayList<EffectRecord> addConditionTargetEffectRecord = new ArrayList<EffectRecord>();
+
 	protected boolean FlagNextRecordLoaded = false; // This flag is true when
 	// next object is iterated
 	// and successfully read to
@@ -148,7 +148,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		config = ExcelParserConfigurator.loadFromJSON(jsonConfig);
 		config.setPrefix(prefix);
-		if (config.configErrors.size() > 0)
+		if (config.hasErrors())
 			throw new Exception("GenericExcelParser configuration errors:\n" + config.getAllErrorsAsString());
 
 		setReader(input);
@@ -1008,10 +1008,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 			r.setExternalids(ids);
 		}
-		
-		//Condition definition by references (if present)		
+
+		// Condition definition by references (if present)
 		setupReferenceInfo();
-		
+
 		return r;
 	}
 
@@ -1033,7 +1033,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return;
 
 		// Handle dynamic span
-		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo,config);
+		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo, config);
 
 		if (config.dynamicIterationSpan != null) {
 			switch (config.substanceIteration) {
@@ -1095,16 +1095,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		logger.log(Level.FINE, "Reading protocol application ...");
 		Protocol protocol = readProtocol(padl);
 		ProtocolApplication pa = new ProtocolApplication(protocol);
-		
-		if (padl.protocolApplicationUUID  != null) {
+
+		if (padl.protocolApplicationUUID != null) {
 			String s = getString(padl.protocolApplicationUUID);
 			if (s != null && !"".equals(s.trim())) {
 				String docUUID = ExcelParserConfigurator.generateUUID(config.getPrefix(), s);
 				pa.setDocumentUUID(docUUID);
 			}
 		}
-				
-		if (padl.investigationUUID  != null) {
+
+		if (padl.investigationUUID != null) {
 			String s = getString(padl.investigationUUID);
 			if (s != null && !"".equals(s.trim())) {
 				String investUUID = ExcelParserConfigurator.generateUUID(config.getPrefix(), s);
@@ -1226,16 +1226,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (config.clearEmptyEffectRecords) {
 						if (effect.isEmpty())
 							continue;
-					}	
+					}
 					pa.addEffect(effect);
-					
-					//Register effect reference
+
+					// Register effect reference
 					if (erdl.reference != null)
 						referencesEffectRecord.put(erdl.reference, effect);
-					//Register condition additions by reference
+					// Register condition additions by reference
 					if (erdl.addConditionsByRef != null)
-						for (int k = 0; k < erdl.addConditionsByRef.length; k++)
-						{
+						for (int k = 0; k < erdl.addConditionsByRef.length; k++) {
 							addConditionRef.add(erdl.addConditionsByRef[k]);
 							addConditionTargetEffectRecord.add(effect);
 						}
@@ -1259,41 +1258,35 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return pa;
 	}
-	
-	void clearReferencesInfo()
-	{
+
+	void clearReferencesInfo() {
 		referencesEffectRecord.clear();
 		addConditionRef.clear();
 		addConditionTargetEffectRecord.clear();
 	}
-	
-	void setupReferenceInfo() 
-	{
-		//Setup conditions
-		for (int i = 0; i < addConditionRef.size(); i++)
-		{
+
+	void setupReferenceInfo() {
+		// Setup conditions
+		for (int i = 0; i < addConditionRef.size(); i++) {
 			String ref = addConditionRef.get(i);
-			EffectRecord sourceEff =  referencesEffectRecord.get(ref);
-			addConditions(sourceEff, addConditionTargetEffectRecord.get(i));  
+			EffectRecord sourceEff = referencesEffectRecord.get(ref);
+			addConditions(sourceEff, addConditionTargetEffectRecord.get(i));
 		}
 	}
-	
-	void addConditions(EffectRecord sourceEff, EffectRecord targetEff)
-	{
+
+	void addConditions(EffectRecord sourceEff, EffectRecord targetEff) {
 		if ((sourceEff == null) || (targetEff == null))
 			return;
 		if (sourceEff.getConditions() == null)
 			return;
-		
+
 		IParams sourceCond = (IParams) sourceEff.getConditions();
 		if (targetEff.getConditions() == null)
 			targetEff.setConditions(sourceCond);
-		else
-		{
-			IParams targetCond = (IParams)targetEff.getConditions();
+		else {
+			IParams targetCond = (IParams) targetEff.getConditions();
 			Set<String> sourceKeys = sourceCond.keySet();
-			for (String key : sourceKeys)
-			{
+			for (String key : sourceKeys) {
 				targetCond.put(key, sourceCond.get(key));
 			}
 		}
@@ -1317,11 +1310,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		// Enforcing parameter to be read as string
-		if (loc.dataInterpretation == DataInterpretation.AS_TEXT) 
-		{
+		if (loc.dataInterpretation == DataInterpretation.AS_TEXT) {
 			String s = getString(loc);
-			if (s != null)
-			{	
+			if (s != null) {
 				String unitString = null;
 				if (loc.otherLocationFields != null) {
 					ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
@@ -1329,16 +1320,17 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						try {
 							unitString = getStringValue(pUnitLoc);
 						} catch (Exception x) {
-							logger.log(Level.FINE, String.format("%s\t%s\t%s", param, x.getMessage(), pUnitLoc.toString()));
+							logger.log(Level.FINE,
+									String.format("%s\t%s\t%s", param, x.getMessage(), pUnitLoc.toString()));
 						}
 					}
 				}
-				
+
 				if (unitString != null)
 					destinationParams.put(parameterName, s + " " + unitString);
 				else
 					destinationParams.put(parameterName, s);
-			}	
+			}
 			return;
 		}
 
@@ -1676,10 +1668,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				logger.log(Level.FINE, x.getMessage());
 			}
 
-			if (richValueString != null) 
-			{
-				//EffectRecord can handle error that is why
-				//representPlusMinusAsInterval = false
+			if (richValueString != null) {
+				// EffectRecord can handle error that is why
+				// representPlusMinusAsInterval = false
 				RichValue rv = rvParser.parse(richValueString, false);
 				String rv_error = rvParser.getAllErrorsAsString();
 
@@ -1693,20 +1684,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (rv.upValue != null)
 						effect.setUpValue(rv.upValue);
 					if (rv.upQualifier != null)
-						effect.setUpQualifier(rv.upQualifier);					
+						effect.setUpQualifier(rv.upQualifier);
 					if (rv.errorValue != null)
 						effect.setErrorValue(rv.errorValue);
 					if (rv.errorValueQualifier != null)
 						effect.setErrQualifier(rv.errorValueQualifier);
-				} 
-				else 
-				{
-					//The string is not recognized as a valid rich value
+				} else {
+					// The string is not recognized as a valid rich value
 					if (efrdl.value.dataInterpretation == DataInterpretation.AS_VALUE_OR_TEXT)
 						effect.setTextValue(richValueString);
-					else	
-						logger.log(Level.WARNING, String.format("[%s] %s Value error: %s",
-							locationStringForErrorMessage(efrdl.value, primarySheetNum), richValueString, rv_error));
+					else
+						logger.log(Level.WARNING,
+								String.format("[%s] %s Value error: %s",
+										locationStringForErrorMessage(efrdl.value, primarySheetNum), richValueString,
+										rv_error));
 					// parseErrors.add("[" +
 					// locationStringForErrorMessage(efrdl.value,
 					// primarySheetNum) + "] " + richValueString +
@@ -2705,74 +2696,72 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					if (bvgei.FlagValues) {
 						// Shifted by -1 to make it 0-based indexing
 						for (int i = bvgei.startRow - 1; i <= bvgei.endRow - 1; i++)
-							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) 
-							{
+							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
 								Object o = ExcelUtils.getObjectFromCell(cells[row0 + i][column0 + k]);
-								//Handle empty cell or incorrect values
-								if (o == null) 
+								// Handle empty cell or incorrect values
+								if (o == null)
 									continue;
-								
+
 								DataBlockElement dbEl = new DataBlockElement();
-								
-								//Setting the endpoint name stored in the field dbEl.blockValueGroup
+
+								// Setting the endpoint name stored in the field
+								// dbEl.blockValueGroup
 								if (bvgei.endpointAssign == BlockParameterAssign.UNDEFINED)
-									dbEl.blockValueGroup = bvgei.name; 
-								else
-								{
+									dbEl.blockValueGroup = bvgei.name;
+								else {
 									Cell c = null;
-									switch (bvgei.endpointAssign)
-									{
+									switch (bvgei.endpointAssign) {
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
-										c = cells[bvgei.endpointRowPos - 1][bvgei.endpointColumnPos - 1]; 
+										c = cells[bvgei.endpointRowPos - 1][bvgei.endpointColumnPos - 1];
 										break;
 									case ASSIGN_TO_SUBBLOCK:
-										// (endpointRowPos,endpointColumnPos) are the sub-block position
+										// (endpointRowPos,endpointColumnPos)
+										// are the sub-block position
 										// -1 for 0-based indexing
-										c = cells[row0 + bvgei.endpointRowPos - 1][column0 + bvgei.endpointColumnPos - 1]; 
+										c = cells[row0 + bvgei.endpointRowPos - 1][column0 + bvgei.endpointColumnPos
+												- 1];
 										break;
 									case ASSIGN_TO_VALUE:
-										// (endpointRowPos,endpointColumnPos) are used as shifts
+										// (endpointRowPos,endpointColumnPos)
+										// are used as shifts
 										int ep_row;
 										if (bvgei.fixEndpointRowPosToStartValue)
-											ep_row = row0 + (bvgei.startRow-1) + bvgei.endpointRowPos;
+											ep_row = row0 + (bvgei.startRow - 1) + bvgei.endpointRowPos;
 										else
 											ep_row = row0 + i + bvgei.endpointRowPos;
-										
+
 										int ep_col;
 										if (bvgei.fixEndpointColumnPosToStartValue)
-											ep_col = column0 + (bvgei.startColumn-1) + bvgei.endpointColumnPos;
+											ep_col = column0 + (bvgei.startColumn - 1) + bvgei.endpointColumnPos;
 										else
 											ep_col = column0 + k + bvgei.endpointColumnPos;
-										
-										c = cells[ep_row][ep_col]; 
+
+										c = cells[ep_row][ep_col];
 										break;
 									}
-									
-									if (c != null) 
-									{
+
+									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
-										if (value != null) 
-										{
+										if (value != null) {
 											if (bvgei.endpointMapping != null)
 												value = getMappingValue(value, bvgei.endpointMapping);
-											if (value != null)
-											{	
-												if ((bvgei.name != null) && bvgei.addValueGroupToEndpointName )
-												{
+											if (value != null) {
+												if ((bvgei.name != null) && bvgei.addValueGroupToEndpointName) {
 													if (bvgei.addValueGroupAsPrefix)
-														dbEl.blockValueGroup = bvgei.name + bvgei.separator + value.toString();
+														dbEl.blockValueGroup = bvgei.name + bvgei.separator
+																+ value.toString();
 													else
-														dbEl.blockValueGroup = value.toString() + bvgei.separator + bvgei.name;
-												}
-												else
+														dbEl.blockValueGroup = value.toString() + bvgei.separator
+																+ bvgei.name;
+												} else
 													dbEl.blockValueGroup = value.toString();
-											}	
+											}
 										}
 									}
-									
+
 								}
-								
+
 								dbEl.unit = bvgei.unit; // The unit may be
 														// overriden by the
 														// setValue() function
@@ -2785,7 +2774,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 										dbEl.error = d.doubleValue();
 								}
 
-								// Handle value group parameters (which are effect conditions)
+								// Handle value group parameters (which are
+								// effect conditions)
 								if (bvgei.paramInfo != null)
 									if (!bvgei.paramInfo.isEmpty()) {
 										dbEl.params = new Params();
@@ -2808,28 +2798,30 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											switch (pi.assign) {
 											case ASSIGN_TO_BLOCK:
 												// -1 for 0-based
-												c = cells[pi.rowPos - 1][pi.columnPos - 1]; 
+												c = cells[pi.rowPos - 1][pi.columnPos - 1];
 												break;
 											case ASSIGN_TO_SUBBLOCK:
-												// (rowPos,columnPos) are the sub-block position
+												// (rowPos,columnPos) are the
+												// sub-block position
 												// -1 for 0-based indexing
-												c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1]; 
+												c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1];
 												break;
 											case ASSIGN_TO_VALUE:
-												// (pi.rowPos,pi.columnPos) are used as shifts
-												int par_row;												
+												// (pi.rowPos,pi.columnPos) are
+												// used as shifts
+												int par_row;
 												if (pi.fixRowPosToStartValue)
-													par_row = row0 + (bvgei.startRow-1) + pi.rowPos;
+													par_row = row0 + (bvgei.startRow - 1) + pi.rowPos;
 												else
 													par_row = row0 + i + pi.rowPos;
-												
+
 												int par_col;
-												if (pi.fixColumnPosToStartValue)												
-													par_col = column0 + (bvgei.startColumn-1) + pi.columnPos;
+												if (pi.fixColumnPosToStartValue)
+													par_col = column0 + (bvgei.startColumn - 1) + pi.columnPos;
 												else
 													par_col = column0 + k + pi.columnPos;
-												
-												c = cells[par_row][par_col]; 
+
+												c = cells[par_row][par_col];
 												break;
 											case UNDEFINED:
 												// nothing is done
@@ -2861,21 +2853,18 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return dbeList;
 	}
-	
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
-		
-		if (bvg.name != null) 
-		{	
+
+		if (bvg.name != null) {
 			bvgei.name = getStringFromExpression(bvg.name);
 			if (bvgei.name == null)
 				bvgei.errors.add("VALUE_GROUPS: \"NAME\" is an incorrect expression: " + bvg.name);
 		}
-			
-		//Setting of the endpoint by assigning it to block/sub-block/value
-		if (bvg.endpointAssign != BlockParameterAssign.UNDEFINED)
-		{	
+
+		// Setting of the endpoint by assigning it to block/sub-block/value
+		if (bvg.endpointAssign != BlockParameterAssign.UNDEFINED) {
 			bvgei.endpointAssign = bvg.endpointAssign;
 			bvgei.endpointColumnPos = getIntegerFromExpression(bvg.endpointColumnPos);
 			if (bvgei.endpointColumnPos == null) {
@@ -2886,16 +2875,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			if (bvgei.endpointRowPos == null) {
 				bvgei.errors.add("ENDPOINT_ROW_POS:  incorrect result for expression: " + bvg.endpointRowPos);
 			}
-			
+
 			bvgei.fixEndpointColumnPosToStartValue = bvg.fixEndpointColumnPosToStartValue;
 			bvgei.fixEndpointRowPosToStartValue = bvg.fixEndpointRowPosToStartValue;
-			
+
 			if (bvg.endpointMapping != null)
 				bvgei.endpointMapping = bvg.endpointMapping;
-			
+
 			bvgei.addValueGroupToEndpointName = bvg.addValueGroupToEndpointName;
-			bvgei.addValueGroupAsPrefix = bvg.addValueGroupAsPrefix; 
-			bvgei.separator = bvg.separator;  
+			bvgei.addValueGroupAsPrefix = bvg.addValueGroupAsPrefix;
+			bvgei.separator = bvg.separator;
 		}
 
 		if (bvg.unit != null) {
@@ -2999,7 +2988,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						FlagParamOK = false;
 					} else
 						pi.rowPos = intVal;
-					
+
 					pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
 					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
 
@@ -3147,32 +3136,29 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return map.get(originalValue);
 	}
 
-	private String locationStringForErrorMessage(ExcelDataLocation loc) 
-	{
+	private String locationStringForErrorMessage(ExcelDataLocation loc) {
 		StringBuffer sb = new StringBuffer();
-		if (loc.columnIndex>0)
+		if (loc.columnIndex > 0)
 			sb.append(String.format(" Col %d (%s)", loc.columnIndex,
 					CellReference.convertNumToColString(loc.columnIndex)));
 		if (loc.rowIndex > 0)
 			sb.append(String.format(" Rowl %d", loc.rowIndex));
-			
+
 		return sb.toString();
 	}
 
-	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet) 
-	{	
+	private String locationStringForErrorMessage(ExcelDataLocation loc, int sheet) {
 		StringBuffer sb = new StringBuffer();
 		if (sheet > 0)
 			sb.append(String.format(" Sheet %d", sheet));
-		
-		if (loc != null)
-		{	
-			if (loc.columnIndex>0)
+
+		if (loc != null) {
+			if (loc.columnIndex > 0)
 				sb.append(String.format(" Col %d (%s)", loc.columnIndex,
 						CellReference.convertNumToColString(loc.columnIndex)));
 			if (loc.rowIndex > 0)
 				sb.append(String.format(" Rowl %d", loc.rowIndex));
-		}	
+		}
 		return sb.toString();
 	}
 

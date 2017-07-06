@@ -56,7 +56,7 @@ public class NMParserTestUtils {
 		ExcelParserConfigurator parserConfig = ExcelParserConfigurator
 				.loadFromJSON(jsonFile);
 
-		if (parserConfig.configErrors.size() > 0) {
+		if (parserConfig.hasErrors()) {
 			logger.log(Level.INFO, "GenericExcelParser configuration errors:\n"
 					+ parserConfig.getAllErrorsAsString());
 			return;
