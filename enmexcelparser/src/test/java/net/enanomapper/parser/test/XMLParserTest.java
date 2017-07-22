@@ -26,7 +26,7 @@ import net.idea.modbcum.i.json.JSONUtils;
 public class XMLParserTest {
 	int maxlevel = 0;
 
-	@Test
+	
 	public void testDOM() throws Exception {
 		try (InputStream in = getClass().getClassLoader()
 				.getResourceAsStream("net/enanomapper/tree/det_model_morgan_32_24.xml")) {
@@ -251,12 +251,6 @@ public class XMLParserTest {
 			x.printStackTrace();
 		}
 
-		/*
-		 * File outDir = // new File(System.getProperty("java.io.tmpdir")); new
-		 * File("D:/src-ideaconsult/Toxtree.js-ivan"); try (FileInputStream in =
-		 * new FileInputStream(new File(args[0]))) { t.parseDOM(in, outDir); }
-		 * catch (Exception x) { x.printStackTrace(); }
-		 */
 	}
 
 	@Test

@@ -24,7 +24,7 @@ public class CSV2TreeTest {
 	static Logger logger = Logger.getLogger(CSV2TreeTest.class.getName());
 	int maxlevel = Integer.MAX_VALUE;
 
-	@Test
+	
 	public void test() throws Exception {
 		BufferedWriter out = null;
 		Reader in = new InputStreamReader(getClass().getClassLoader()
