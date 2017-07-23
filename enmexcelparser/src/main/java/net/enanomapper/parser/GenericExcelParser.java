@@ -1837,7 +1837,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			if (cdl.proportion.typical_value != null) {
 				Number d = getNumericValue(cdl.proportion.typical_value);
-				proportion.setTypical_value(d.doubleValue());
+				if (d != null)
+					proportion.setTypical_value(d.doubleValue());
 			}
 
 			if (cdl.proportion.typical_unit != null) {
