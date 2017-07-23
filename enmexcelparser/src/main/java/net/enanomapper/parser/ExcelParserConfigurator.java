@@ -1479,7 +1479,7 @@ public class ExcelParserConfigurator {
 				cdl.structureRelation = CompositionDataLocation.structureRelationFromString(keyword);
 				if (cdl.structureRelation == null)
 					conf.configErrors
-							.add("In JSON Section \"SUBSTANCE_RECORD\", subesction \"COMPOSITION\", array element "
+							.add("In JSON Section \"SUBSTANCE_RECORD\", subsection \"COMPOSITION\", array element "
 									+ (jsonArrayIndex + 1) + ", keyword \"STRUCTURE_RELATION\" is incorrect! --> "
 									+ keyword);
 				else
@@ -1496,7 +1496,7 @@ public class ExcelParserConfigurator {
 
 		if (!node.path("CONTENT").isMissingNode()) {
 			if (node.path("FORMAT").isMissingNode())
-				conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subesction \"COMPOSITION\", array element "
+				conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subsection \"COMPOSITION\", array element "
 						+ (jsonArrayIndex + 1) + ", keyword \"FORMAT\" is missing!");
 		}
 
