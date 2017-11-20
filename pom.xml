@@ -155,5 +155,7 @@
 		<module>enmexcelparser</module>
 		<module>enmtemplates</module>
 		<module>enmconvertor</module>
+		
+		<module>enmtemplategen</module>
 	</modules>
 </project>

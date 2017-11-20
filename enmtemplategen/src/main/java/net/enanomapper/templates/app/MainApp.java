@@ -94,9 +94,17 @@ public class MainApp {
 			} catch (Exception x) {
 			}
 
-			s.setInputfolder(new File(getOption(line, 'i')));
+			String infile = getOption(line, 'i');
+			if (infile != null)
+				s.setInputfolder(new File(infile));
+			else
+				s.setInputfolder(null);
 
-			s.setOutputfolder(new File(getOption(line, 'o')));
+			try {
+				s.setOutputfolder(new File(getOption(line, 'o')));
+			} catch (Exception x) {
+				s.setOutputfolder(null);
+			}
 
 			try {
 				s.setAssayname(getOption(line, 's'));
