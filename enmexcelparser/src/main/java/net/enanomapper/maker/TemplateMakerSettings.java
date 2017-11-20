@@ -24,11 +24,11 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public enum _TEMPLATES_CMD {
-		extract, generate,annotate
+		extract, generate,annotate,help
 	}
 
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
-	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.extract;
+	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.help;
 	private String assayname;
 	private String endpointname;
 	
@@ -85,7 +85,7 @@ public class TemplateMakerSettings implements Serializable {
 
 		if (outputfolder!=null && outputfolder.exists())
 			this.outputfolder = outputfolder;
-		else
+		else if (!_TEMPLATES_CMD.help.equals(getTemplatesCommand()))
 			throw new FileNotFoundException(outputfolder == null ? "null" : outputfolder.getAbsolutePath());
 	}
 

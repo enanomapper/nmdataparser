@@ -145,7 +145,7 @@ public class MainApp {
 				.withDescription("Template type jrc|iom|all|undefined").create("t");
 
 		Option cmd = OptionBuilder.hasArg().withLongOpt("command").withArgName("cmd")
-				.withDescription("What to do: extract|generate|annotate").create("a");
+				.withDescription("What to do: extract|generate|annotate|help").create("a");
 
 		Option assay = OptionBuilder.hasArg().withLongOpt("assay").withArgName("assayname")
 				.withDescription("Sheet name as defined in JRC templates").create("s");
@@ -189,6 +189,11 @@ public class MainApp {
 		}
 		case annotate: {
 			annotate(settings);
+			break;
+		}
+		case help: {
+			final Options options = createOptions();
+			printHelp(options,"");
 			break;
 		}
 		default: {
