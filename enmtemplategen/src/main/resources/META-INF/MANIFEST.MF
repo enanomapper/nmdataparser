@@ -1,5 +1,5 @@
 Package: net.enanomapper.templates.app
-Main-Class: net.enanomapper.templates.app.MainApp
+Main-Class: net.enanomapper.templates.app.TemplateGenApp
 Manifest-version: ${project.version}
 Package-Version: ${project.version}
 Package-Vendor: eNanoMapper

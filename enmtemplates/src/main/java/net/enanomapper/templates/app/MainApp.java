@@ -69,7 +69,7 @@ public class MainApp {
 				settings = parse(parser, line);
 				process(settings);
 			} catch (Exception x) {
-				x.printStackTrace();
+				//x.printStackTrace();
 				printHelp(options, x.getMessage());
 				logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });
 			}
@@ -94,26 +94,34 @@ public class MainApp {
 			} catch (Exception x) {
 			}
 
-			String infile = getOption(line, 'i');
-			if (infile != null)
-				s.setInputfolder(new File(infile));
-			else
-				s.setInputfolder(null);
-
-			try {
-				s.setOutputfolder(new File(getOption(line, 'o')));
-			} catch (Exception x) {
-				s.setOutputfolder(null);
-			}
-
 			try {
 				s.setAssayname(getOption(line, 's'));
 			} catch (Exception x) {
 			}
+
+			String infile = getOption(line, 'i');
+			if (infile != null)
+				s.setInputfolder(new File(infile));
+			else {
+				s.setInputfolder(null);
+				if (s.getTemplatesCommand().requiresInputFile())
+					throw new Exception("Input file missing, see option -i");
+
+			}
+
+			String outfile = getOption(line, 'o');
+			if (outfile != null)
+				s.setOutputfolder(new File(outfile));
+			else {
+				s.setOutputfolder(null);
+				if (s.getTemplatesCommand().requiresOutputFileFile())
+					throw new Exception("Output file/folder missing, see option -o");
+			}
+
 			try {
 				s.setEndpointname(getOption(line, 'e'));
 				if (!s.getEndpointname().endsWith(".xlsx"))
-					s.setEndpointname(s.getEndpointname() + ".xlsx");
+					s.setEndpointname(s.getEndpointname());
 			} catch (Exception x) {
 			}
 
@@ -193,7 +201,8 @@ public class MainApp {
 		}
 		case help: {
 			final Options options = createOptions();
-			printHelp(options,"");
+
+			printHelp(options, "");
 			break;
 		}
 		default: {
