@@ -24,14 +24,36 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public enum _TEMPLATES_CMD {
-		extract, generate,annotate,help
+		extract, generate {
+			@Override
+			public boolean requiresInputFile() {
+				return false;
+			}
+		}, annotate, help {
+			@Override
+			public boolean requiresInputFile() {
+				return false;
+			}
+
+			@Override
+			public boolean requiresOutputFileFile() {
+				return false;
+			}
+		};
+		public boolean requiresInputFile() {
+			return true;
+		}
+
+		public boolean requiresOutputFileFile() {
+			return true;
+		}
 	}
 
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
 	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.help;
 	private String assayname;
 	private String endpointname;
-	
+
 	public String getEndpointname() {
 		return endpointname;
 	}
@@ -71,10 +93,10 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public void setInputfolder(File inputfolder) throws FileNotFoundException {
-		if (inputfolder!=null && inputfolder.exists())
+		if (inputfolder != null && inputfolder.exists())
 			this.inputfolder = inputfolder;
-		else if (_TEMPLATES_CMD.extract.equals(getTemplatesCommand()))
-			throw new FileNotFoundException(inputfolder == null ? "null" : inputfolder.getAbsolutePath());
+		else if (getTemplatesCommand().requiresInputFile())
+			throw new FileNotFoundException(inputfolder == null ? "Input file not specified, see option -i" : inputfolder.getAbsolutePath());
 	}
 
 	public File getOutputfolder() {
@@ -83,10 +105,10 @@ public class TemplateMakerSettings implements Serializable {
 
 	public void setOutputfolder(File outputfolder) throws FileNotFoundException {
 
-		if (outputfolder!=null && outputfolder.exists())
+		if (outputfolder != null && outputfolder.exists())
 			this.outputfolder = outputfolder;
-		else if (!_TEMPLATES_CMD.help.equals(getTemplatesCommand()))
-			throw new FileNotFoundException(outputfolder == null ? "null" : outputfolder.getAbsolutePath());
+		else if (getTemplatesCommand().requiresOutputFileFile())
+			throw new FileNotFoundException(outputfolder == null ? "Output file not specified, see option -o" : outputfolder.getAbsolutePath());
 	}
 
 	File outputfolder;
