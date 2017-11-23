@@ -1779,7 +1779,7 @@ public class ExcelParserConfigurator {
 					logger.log(Level.FINE, x.getMessage());
 
 				}
-			return String.format("%s-%s", prefix, UUID.nameUUIDFromBytes(uuid.getBytes()).toString());
+			return String.format("%s-%s", prefix, UUID.nameUUIDFromBytes(uuid.getBytes()).toString().trim());
 		} else
 			return null;
 
