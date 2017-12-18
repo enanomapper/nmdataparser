@@ -48,7 +48,6 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 ##### Examples:
 - [JSON configuration](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.json)
 - [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
-- [More examples](https://github.com/enanomapper/nmdataparser/tree/master/src/test/resources/net/enanomapper/parser/csv)
-
+- [More examples](https://github.com/enanomapper/nmdataparser/tree/master/enmexcelparser/src/test/resources/net/enanomapper/parser/csv)
 
 
