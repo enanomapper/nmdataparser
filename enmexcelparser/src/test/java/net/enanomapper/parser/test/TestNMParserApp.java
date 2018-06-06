@@ -44,7 +44,6 @@ public class TestNMParserApp {
 				System.out.println( "\"Record #" + n + "\" : {");
 				System.out.print( "\"record data\" : ");
 				System.out.println( r.toJSON(null));
-				//System.out.print("}");
 				
 				List<ProtocolApplication> paList = r.getMeasurements();
 				if (paList != null)
@@ -58,32 +57,38 @@ public class TestNMParserApp {
 							System.out.println(",");
 						
 						System.out.print( "\"Protocol application " + nPA + "\" :\n"
-								+ pa.toString() + "}");
+								+ pa.toString() );
 					}
 				}	
 
-				/*
+				
 				List<CompositionRelation> composition = r
 						.getRelatedStructures();
 				
 				if (composition != null)
+				{	
 					for (CompositionRelation relation : composition) {
 						// System.out.println(" ### Composition " +
 						// structureRecordToString(relation.getSecondStructure()));
+						System.out.println(",");
 						System.out.println(								
-								" ### Composition \n"
-										+ NMParserTestUtils.compositionRelationStructureToString(relation)); 
+								"\"### Composition\" : "
+										+ NMParserTestUtils.compositionRelationStructureToJsonString(relation)); 
 												// both give the same result
+						
+						System.out.println(",");
 						System.out.println(
-								" ### Properties: "
-										+ NMParserTestUtils.structureRecordProperties(relation
+								"\"### Properties\" : "
+										+ NMParserTestUtils.structureRecordPropertiesToJsonString(relation										
 												.getSecondStructure()));
 					}
-				*/	
+				}
+				
+				System.out.println("}"); //closing record bracket
 
 			}
 			
-			System.out.println("}"); //closing json bracket
+			System.out.println("}"); //closing entire json bracket
 
 			/*
 			 * we'll get the parser errors logged or exceptions thrown if

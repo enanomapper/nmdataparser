@@ -183,6 +183,19 @@ public class NMParserTestUtils {
 		}
 		return sb.toString();
 	}
+	public static String structureRecordPropertiesToJsonString(IStructureRecord str) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("{\n");
+		int n = 0;
+		for (Property p : str.getRecordProperties()) {
+			if (n > 0)
+				sb.append(",\n");
+			n++;
+			sb.append("\"" + p.getName() + "\" : \"" + str.getRecordProperty(p) + "\"");
+		}
+		sb.append("}\n");
+		return sb.toString();
+	}
 
 	public static String compositionRelationStructureToString(
 			CompositionRelation rel) {
@@ -193,6 +206,20 @@ public class NMParserTestUtils {
 		sb.append("  Formula : \"" + rel.getFormula() + "\"\n");
 		sb.append("  Inchi : \"" + rel.getInchi() + "\"\n");
 		sb.append("  InchiKey : \"" + rel.getInchiKey() + "\"\n");
+		return sb.toString();
+	}
+	
+	public static String compositionRelationStructureToJsonString(
+			CompositionRelation rel) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("{\n");
+		sb.append("\"Content\" : \"" + rel.getContent() + "\",\n");
+		sb.append(" \"Format\" : \"" + rel.getFormat() + "\",\n");
+		sb.append("\"Smiles\" : \"" + rel.getSmiles() + "\",\n");
+		sb.append("\"Formula\" : \"" + rel.getFormula() + "\",\n");
+		sb.append("\"Inchi\" : \"" + rel.getInchi() + "\",\n");
+		sb.append("\"InchiKey\" : \"" + rel.getInchiKey() + "\"\n");
+		sb.append("}\n");
 		return sb.toString();
 	}
 
