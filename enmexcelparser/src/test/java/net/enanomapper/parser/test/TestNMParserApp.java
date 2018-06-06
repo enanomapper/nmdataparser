@@ -24,7 +24,9 @@ public class TestNMParserApp {
 		FileInputStream fin = new FileInputStream(excelFile);
 		try {
 			boolean isXLSX = excelFile.endsWith("xlsx");
-			System.out.println("isXLSX = " + isXLSX + "\n");
+			System.out.println("{"); //opening json bracket
+			
+			System.out.println("\"isXLSX\" : " + isXLSX + ",\n");
 			GenericExcelParser parser = new GenericExcelParser(fin, jsonFile,
 					isXLSX);
 			if (printJSONConfig)
@@ -32,20 +34,38 @@ public class TestNMParserApp {
 						.toJSONString() + "\n");
 
 			int n = 0;
-			while (parser.hasNext()) {
+			while (parser.hasNext()) 
+			{
 				SubstanceRecord r = parser.nextRecord();
 				n++;
-				System.out.println( "Record #" + n);
+				if (n > 1)
+					System.out.println(",");
+				
+				System.out.println( "\"Record #" + n + "\" : {");
+				System.out.print( "\"record data\" : ");
 				System.out.println( r.toJSON(null));
+				//System.out.print("}");
+				
 				List<ProtocolApplication> paList = r.getMeasurements();
-
 				if (paList != null)
+				{	
+					int nPA = 0;
+					System.out.println(",");
 					for (ProtocolApplication pa : paList)
-						System.out.println( "***Protocol application:\n"
-								+ pa.toString());
+					{	
+						nPA++;
+						if (nPA > 1)
+							System.out.println(",");
+						
+						System.out.print( "\"Protocol application " + nPA + "\" :\n"
+								+ pa.toString() + "}");
+					}
+				}	
 
+				/*
 				List<CompositionRelation> composition = r
 						.getRelatedStructures();
+				
 				if (composition != null)
 					for (CompositionRelation relation : composition) {
 						// System.out.println(" ### Composition " +
@@ -59,8 +79,11 @@ public class TestNMParserApp {
 										+ NMParserTestUtils.structureRecordProperties(relation
 												.getSecondStructure()));
 					}
+				*/	
 
 			}
+			
+			System.out.println("}"); //closing json bracket
 
 			/*
 			 * we'll get the parser errors logged or exceptions thrown if
