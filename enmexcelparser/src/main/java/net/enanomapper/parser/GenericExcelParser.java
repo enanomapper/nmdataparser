@@ -1815,13 +1815,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 				if (propObj != null) {
 					String sameas = Property.guessLabel(propName);
-					Property property = new Property(propName, "", "");
-					property.setLabel(sameas);
+					
 					if (Property.opentox_IUCLID5_UUID.equals(sameas)) {
+						Property property = Property.getI5UUIDInstance();
 						propObj = ExcelParserConfigurator.generateUUID(config.getPrefix(), propObj.toString());
 						structure.setRecordProperty(property, propObj);
-					} else
+					} else {
+						Property property = new Property(propName, "", "");
+						property.setLabel(sameas);
 						structure.setRecordProperty(property, propObj);
+					}
 				}
 			}
 		}
