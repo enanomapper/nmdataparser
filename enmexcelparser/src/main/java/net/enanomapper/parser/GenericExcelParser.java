@@ -1817,7 +1817,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					String sameas = Property.guessLabel(propName);
 					Property property = new Property(propName, "", "");
 					property.setLabel(sameas);
-					structure.setRecordProperty(property, propObj);
+					if (Property.opentox_IUCLID5_UUID.equals(sameas)) {
+						propObj = ExcelParserConfigurator.generateUUID(config.getPrefix(), propObj.toString());
+						structure.setRecordProperty(property, propObj);
+					} else
+						structure.setRecordProperty(property, propObj);
 				}
 			}
 		}
@@ -1836,11 +1840,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 
 			if (cdl.proportion.typical_value != null) {
-				Number d =null;
+				Number d = null;
 				try {
 					d = getNumericValue(cdl.proportion.typical_value);
 				} catch (Exception x) {
-					
+
 				}
 				if (d != null)
 					proportion.setTypical_value(d.doubleValue());
@@ -1862,20 +1866,27 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				proportion.setReal_lower(s);
 			}
 
-			if (cdl.proportion.real_lower_value != null) {
-				Number d = getNumericValue(cdl.proportion.real_lower_value);
-				proportion.setReal_lowervalue(d.doubleValue());
-			}
+			if (cdl.proportion.real_lower_value != null)
+				try {
+					Number d = getNumericValue(cdl.proportion.real_lower_value);
+					proportion.setReal_lowervalue(d.doubleValue());
+				} catch (Exception x) {
+					// x.printStackTrace();
+				}
 
 			if (cdl.proportion.real_upper_precision != null) {
 				String s = getString(cdl.proportion.real_upper_precision);
 				proportion.setReal_upper(s);
 			}
 
-			if (cdl.proportion.real_upper_value != null) {
-				Number d = getNumericValue(cdl.proportion.real_upper_value);
-				proportion.setReal_uppervalue(d.doubleValue());
-			}
+			if (cdl.proportion.real_upper_value != null)
+				try {
+					Number d = getNumericValue(cdl.proportion.real_upper_value);
+					if (d != null)
+						proportion.setReal_uppervalue(d.doubleValue());
+				} catch (Exception x) {
+					// x.printStackTrace();
+				}
 
 			if (cdl.proportion.real_unit != null) {
 				String s = getString(cdl.proportion.real_unit);
