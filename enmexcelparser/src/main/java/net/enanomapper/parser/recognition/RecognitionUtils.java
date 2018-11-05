@@ -10,7 +10,7 @@ public class RecognitionUtils {
 	//convert to lower case before comparison
 	public static final String[] qualifiers = { " ", "=", "<=", ">=", "<", ">",
 			 "ca.", "mean", "stddev", "sd","s.d.", "~", "±", "+-",
-			"+/-", "geo mean", "average", "median"};
+			"+/-", "geo mean", "average", "median","RSD %"};
 
 	
 	/**
