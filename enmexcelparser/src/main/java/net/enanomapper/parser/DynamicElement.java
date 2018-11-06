@@ -667,7 +667,9 @@ public class DynamicElement {
 			if (ExcelParserConfigurator.isValidQualifier(err_q))
 				effect.setErrQualifier(err_q);
 			else {
-				/* Handle error! */ }
+				/* Handle error! */
+				System.err.println(String.format("%s invalid qualifier",err_q));
+			}
 			break;
 
 		case ERR_VALUE:
