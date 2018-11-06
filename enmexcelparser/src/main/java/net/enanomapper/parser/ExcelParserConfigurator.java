@@ -133,9 +133,11 @@ public class ExcelParserConfigurator {
 	public void addError(String error) {
 		configErrors.add(error);
 	}
+
 	public boolean hasErrors() {
-		return configErrors.size()>0;
+		return configErrors.size() > 0;
 	}
+
 	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws Exception {
 		FileInputStream fin = new FileInputStream(jsonConfig);
 		ObjectMapper mapper = new ObjectMapper();
@@ -1573,7 +1575,9 @@ public class ExcelParserConfigurator {
 	}
 
 	public static boolean isValidQualifier(String qualifier) {
-		String _qualifier=qualifier.trim().toLowerCase();
+		if (qualifier == null)
+			return true;
+		String _qualifier = qualifier.trim().toLowerCase();
 		for (String q : RecognitionUtils.qualifiers)
 			if (q.equals(_qualifier))
 				return true;

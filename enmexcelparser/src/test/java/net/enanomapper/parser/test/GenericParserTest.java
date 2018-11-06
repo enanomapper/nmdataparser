@@ -18,6 +18,7 @@ public class GenericParserTest {
 
 	@Test
 	public void testValidQualifier() throws Exception {
+		Assert.assertTrue(ExcelParserConfigurator.isValidQualifier(null));
 		for (String q : RecognitionUtils.qualifiers) {
 			Assert.assertTrue(q,ExcelParserConfigurator.isValidQualifier(q.toUpperCase()));
 		}
