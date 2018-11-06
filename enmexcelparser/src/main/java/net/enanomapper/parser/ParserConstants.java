@@ -661,7 +661,7 @@ public class ParserConstants
 			}
 		},
 		
-		VALUE {      //Used for reach value approach (setting lo/up/err + qualifiers + unit at once)
+		VALUE {      //Used for rich value approach (setting lo/up/err + qualifiers + unit at once)
 			@Override
 		    public boolean isFieldOf(ObjectType type) {
 		    	if (type == ObjectType.EFFECT)

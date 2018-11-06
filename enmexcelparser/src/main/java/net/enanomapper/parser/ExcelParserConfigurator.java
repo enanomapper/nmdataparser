@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
+import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
@@ -1109,28 +1110,28 @@ public class ExcelParserConfigurator {
 		EffectRecordDataLocation efrdl = new EffectRecordDataLocation();
 
 		// ENDPOINT
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "ENDPOINT", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, ElementField.ENDPOINT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.endpoint = loc;
 		}
 
 		// SAMPLE_ID
-		loc = ExcelDataLocation.extractDataLocation(node, "SAMPLE_ID", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.SAMPLE_ID.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.sampleID = loc;
 		}
 
 		// UNIT
-		loc = ExcelDataLocation.extractDataLocation(node, "UNIT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.UNIT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.unit = loc;
 		}
 
 		// LO_VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "LO_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.LO_VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0) {
 				efrdl.loValue = loc;
@@ -1140,14 +1141,14 @@ public class ExcelParserConfigurator {
 		}
 
 		// LO_QUALIFIER
-		loc = ExcelDataLocation.extractDataLocation(node, "LO_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.LO_QUALIFIER.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.loQualifier = loc;
 		}
 
 		// UP_VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "UP_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.UP_VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0) {
 				efrdl.upValue = loc;
@@ -1157,21 +1158,21 @@ public class ExcelParserConfigurator {
 		}
 
 		// UP_QUALIFIER
-		loc = ExcelDataLocation.extractDataLocation(node, "UP_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.UP_QUALIFIER.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.upQualifier = loc;
 		}
 
 		// TEXT_VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "TEXT_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.TEXT_VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.textValue = loc;
 		}
 
 		// ERR_VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "ERR_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.ERR_VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0) {
 				efrdl.errValue = loc;
@@ -1181,14 +1182,14 @@ public class ExcelParserConfigurator {
 		}
 
 		// ERR_QUALIFIER
-		loc = ExcelDataLocation.extractDataLocation(node, "ERR_QUALIFIER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.ERR_QUALIFIER.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.errQualifier = loc;
 		}
 
 		// VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				efrdl.value = loc;
