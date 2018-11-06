@@ -1573,8 +1573,9 @@ public class ExcelParserConfigurator {
 	}
 
 	public static boolean isValidQualifier(String qualifier) {
+		String _qualifier=qualifier.trim().toLowerCase();
 		for (String q : RecognitionUtils.qualifiers)
-			if (q.equals(qualifier))
+			if (q.equals(_qualifier))
 				return true;
 		return false;
 	}
