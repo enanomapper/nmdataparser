@@ -8,7 +8,7 @@ public class RecognitionUtils {
 		public String errorMsg = null;
 	}
 	//convert to lower case before comparison
-	public static final String[] qualifiers = { ""," ", "=", "<=", ">=", "<", ">",
+	public static final String[] qualifiers = { " ", "=", "<=", ">=", "<", ">",
 			 "ca.", "mean", "stddev", "sd","s.d.", "~", "±", "+-",
 			"+/-", "geo mean", "average", "median","rsd %"};
 

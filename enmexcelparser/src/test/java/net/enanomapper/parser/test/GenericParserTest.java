@@ -4,7 +4,10 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.recognition.RecognitionUtils;
+import net.enanomapper.parser.recognition.RichValue;
+import net.enanomapper.parser.recognition.RichValueParser;
 
 public class GenericParserTest {
 	@Test
@@ -23,4 +26,16 @@ public class GenericParserTest {
 			Assert.assertTrue(q,ExcelParserConfigurator.isValidQualifier(q.toUpperCase()));
 		}
 	}
+	
+
+	@Test
+	public void testRichValue_bad() throws Exception {
+		RichValueParser rvParser = new RichValueParser();
+	
+		String paramStringValue = "MSP Model 135 Mini-MOUDI impactor";
+		RichValue rv = rvParser.parse(paramStringValue);
+		
+	}
+
+	
 }
