@@ -33,6 +33,7 @@ public class CSVParserTest  {
     		Assert.assertNotNull(resource);
 			CSV12Reader chemObjectReader = new CSV12Reader(new FileReader(resource.getFile()),entry,"TEST-");
 			reader = new CSV12SubstanceReader(chemObjectReader);
+			Assert.assertNotNull(reader);
 			int r = 0;
 			
 			while (reader.hasNext()) {
@@ -62,8 +63,11 @@ public class CSVParserTest  {
 				r++;
 			}
 			Assert.assertEquals(2,r);
+		} catch (Exception x) {
+			x.printStackTrace();
 		} finally {
-			reader.close();
+			if (reader!=null)
+					reader.close();
 		}
 	}
 	

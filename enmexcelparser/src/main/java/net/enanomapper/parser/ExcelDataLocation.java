@@ -135,7 +135,7 @@ public class ExcelDataLocation {
 		}
 
 		// SOURCE_COMBINATION
-		if (!sectionNode.path("SOURCE_COMBINATION").isMissingNode()) {
+		if (!sectionNode.path(KEYWORD.SOURCE_COMBINATION.name()).isMissingNode()) {
 			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "SOURCE_COMBINATION", false);
 			if (b == null) {
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"SOURCE_COMBINATION\" : "
@@ -148,7 +148,7 @@ public class ExcelDataLocation {
 		}
 
 		// IS_ARRAY
-		if (!sectionNode.path("IS_ARRAY").isMissingNode()) {
+		if (!sectionNode.path(KEYWORD.IS_ARRAY.name()).isMissingNode()) {
 			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "IS_ARRAY", false);
 			if (b == null) {
 				conf.addError(
@@ -161,8 +161,8 @@ public class ExcelDataLocation {
 		}
 
 		// TRIM_ARRAY
-		if (!sectionNode.path("TRIM_ARRAY").isMissingNode()) {
-			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "TRIM_ARRAY", false);
+		if (!sectionNode.path(KEYWORD.TRIM_ARRAY.name()).isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, KEYWORD.TRIM_ARRAY.name(), false);
 			if (b == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"TRIM_ARRAY\" : " + jsonUtils.getError());
@@ -174,11 +174,11 @@ public class ExcelDataLocation {
 		}
 
 		// ITERATION
-		if (sectionNode.path("ITERATION").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.ITERATION.name()).isMissingNode()) {
 			loc.iteration = conf.substanceIteration; // default value is taken
 														// form global config
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(sectionNode, "ITERATION", false);
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.ITERATION.name(), false);
 			if (keyword == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"ITERATION\" : " + jsonUtils.getError());
@@ -195,8 +195,8 @@ public class ExcelDataLocation {
 		}
 
 		// DATA_INTERPRETATION
-		if (!sectionNode.path("DATA_INTERPRETATION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(sectionNode, "DATA_INTERPRETATION", false);
+		if (!sectionNode.path(KEYWORD.DATA_INTERPRETATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.DATA_INTERPRETATION.name(), false);
 			if (keyword == null) {
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"DATA_INTERPRETATION\" : "
 						+ jsonUtils.getError());
@@ -213,8 +213,8 @@ public class ExcelDataLocation {
 		}
 
 		// DATE_FORMAT
-		if (!sectionNode.path("DATE_FORMAT").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(sectionNode, "DATE_FORMAT", false);
+		if (!sectionNode.path(KEYWORD.DATE_FORMAT.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.DATE_FORMAT.name(), false);
 			if (keyword == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"DATE_FORMAT\" : " + jsonUtils.getError());
@@ -226,11 +226,11 @@ public class ExcelDataLocation {
 		}
 
 		// RECOGNITION
-		if (sectionNode.path("RECOGNITION").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.RECOGNITION.name()).isMissingNode()) {
 			loc.recognition = conf.recognition; // default value is taken form
 												// global config
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(sectionNode, "RECOGNITION", false);
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.RECOGNITION.name(), false);
 			if (keyword == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"RECOGNITION\" : " + jsonUtils.getError());
@@ -247,7 +247,7 @@ public class ExcelDataLocation {
 		}
 
 		// COLUMN_INDEX
-		if (sectionNode.path("COLUMN_INDEX").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.COLUMN_INDEX.name()).isMissingNode()) {
 			if (loc.iteration.isColumnInfoRequired()) {
 				if (loc.recognition == Recognition.BY_INDEX) {
 					conf.addError("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_INDEX\" is missing!");
@@ -275,7 +275,7 @@ public class ExcelDataLocation {
 		}
 
 		// COLUMN_INDICES
-		JsonNode colIndices = sectionNode.path("COLUMN_INDICES");
+		JsonNode colIndices = sectionNode.path(KEYWORD.COLUMN_INDICES.name());
 		if (!colIndices.isMissingNode()) {
 			if (colIndices.isArray()) {
 				loc.columnIndices = new int[colIndices.size()];
@@ -296,7 +296,7 @@ public class ExcelDataLocation {
 		}
 
 		// COLUMN_NAME
-		if (sectionNode.path("COLUMN_NAME").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.COLUMN_NAME.name()).isMissingNode()) {
 			if (loc.iteration.isColumnInfoRequired())
 				if (loc.recognition == Recognition.BY_NAME) {
 					conf.addError("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" is missing!");
@@ -305,7 +305,7 @@ public class ExcelDataLocation {
 			// Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated
 			// in COLUMN_INDEX
 		} else {
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "COLUMN_NAME", false);
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.COLUMN_NAME.name(), false);
 			if (stringValue == null)
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"COLUMN_NAME\" : " + jsonUtils.getError());
@@ -316,7 +316,7 @@ public class ExcelDataLocation {
 		}
 
 		// ROW_INDEX
-		if (sectionNode.path("ROW_INDEX").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.ROW_INDEX.name()).isMissingNode()) {
 			if (loc.iteration.isRowInfoRequired()) {
 				if (loc.recognition == Recognition.BY_INDEX) {
 					conf.addError("In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" is missing!");
@@ -332,7 +332,7 @@ public class ExcelDataLocation {
 				}
 			}
 		} else {
-			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "ROW_INDEX", true);
+			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, KEYWORD.ROW_INDEX.name(), true);
 			if (intValue == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"ROW_INDEX\" : " + jsonUtils.getError());
@@ -344,7 +344,7 @@ public class ExcelDataLocation {
 		}
 
 		// ROW_INDICES
-		JsonNode rowIndices = sectionNode.path("ROW_INDICES");
+		JsonNode rowIndices = sectionNode.path(KEYWORD.ROW_INDICES.name());
 		if (!rowIndices.isMissingNode()) {
 			if (rowIndices.isArray()) {
 				loc.rowIndices = new int[rowIndices.size()];
@@ -371,7 +371,7 @@ public class ExcelDataLocation {
 		}
 
 		// ROW_NAME
-		if (sectionNode.path("ROW_NAME").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.ROW_NAME.name()).isMissingNode()) {
 			if (loc.iteration.isRowInfoRequired())
 				if (loc.recognition == Recognition.BY_NAME) {
 					conf.addError("In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" is missing!");
@@ -380,7 +380,7 @@ public class ExcelDataLocation {
 			// Case loc.recognition == Recognition.BY_INDEX_AND_NAME is treated
 			// in ROW_INDEX
 		} else {
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "ROW_NAME", false);
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.ROW_NAME.name(), false);
 			if (stringValue == null)
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"ROW_NAME\" : " + jsonUtils.getError());
@@ -391,8 +391,8 @@ public class ExcelDataLocation {
 		}
 
 		// SHEET_INDEX
-		if (!sectionNode.path("SHEET_INDEX").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, "SHEET_INDEX", false);
+		if (!sectionNode.path(KEYWORD.SHEET_INDEX.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(sectionNode, KEYWORD.SHEET_INDEX.name(), false);
 			if (intValue == null) {
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"SHEET_INDEX\" : " + jsonUtils.getError());
@@ -404,8 +404,8 @@ public class ExcelDataLocation {
 		}
 
 		// SHEET_NAME
-		if (!sectionNode.path("SHEET_NAME").isMissingNode()) {
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "SHEET_NAME", false);
+		if (!sectionNode.path(KEYWORD.SHEET_NAME.name()).isMissingNode()) {
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.SHEET_NAME.name(), false);
 			if (stringValue == null)
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"SHEET_NAME\" : " + jsonUtils.getError());
@@ -416,24 +416,24 @@ public class ExcelDataLocation {
 		}
 
 		// JSON_VALUE
-		if (sectionNode.path("JSON_VALUE").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.JSON_VALUE.name()).isMissingNode()) {
 			if (loc.iteration == IterationAccess.JSON_VALUE) {
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"JSON_VALUE\" is missing!");
 				loc.nErrors++;
 			}
 		} else {
-			Object jsonValue = JsonUtilities.extractObject(sectionNode.path("JSON_VALUE"));
+			Object jsonValue = JsonUtilities.extractObject(sectionNode.path(KEYWORD.JSON_VALUE.name()));
 			loc.setJsonValue(jsonValue);
 		}
 
 		// JSON_REPOSITORY_KEY
-		if (sectionNode.path("JSON_REPOSITORY_KEY").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.JSON_REPOSITORY_KEY.name()).isMissingNode()) {
 			if (loc.iteration == IterationAccess.JSON_REPOSITORY) {
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" is missing!");
 				loc.nErrors++;
 			}
 		} else {
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "JSON_REPOSITORY_KEY", true);
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.JSON_REPOSITORY_KEY.name(), true);
 			if (stringValue == null)
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"JSON_REPOSITORY_KEY\" : "
 						+ jsonUtils.getError());
@@ -443,13 +443,13 @@ public class ExcelDataLocation {
 		}
 
 		// VARIABLE_KEY
-		if (sectionNode.path("VARIABLE_KEY").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.VARIABLE_KEY.name()).isMissingNode()) {
 			if (loc.iteration == IterationAccess.VARIABLE) {
 				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" is missing!");
 				loc.nErrors++;
 			}
 		} else {
-			String stringValue = jsonUtils.extractStringKeyword(sectionNode, "VARIABLE_KEY", false);
+			String stringValue = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.VARIABLE_KEY.name(), false);
 			if (stringValue == null)
 				conf.addError(
 						"In JSON section \"" + jsonSection + "\", keyword \"VARIABLE_KEY\" : " + jsonUtils.getError());
@@ -459,7 +459,7 @@ public class ExcelDataLocation {
 		}
 
 		// VARIABLE_KEYS
-		JsonNode vkeys = sectionNode.path("VARIABLE_KEYS");
+		JsonNode vkeys = sectionNode.path(KEYWORD.VARIABLE_KEYS.name());
 		if (!vkeys.isMissingNode()) {
 			if (vkeys.isArray()) {
 				loc.variableKeys = new String[vkeys.size()];

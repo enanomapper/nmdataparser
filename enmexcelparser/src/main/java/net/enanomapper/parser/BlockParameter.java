@@ -43,10 +43,10 @@ public class BlockParameter {
 		BlockParameter bp = new BlockParameter();
 
 		// NAME
-		if (node.path("NAME").isMissingNode()) {
+		if (node.path(KEYWORD.NAME.name()).isMissingNode()) {
 			conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"NAME\" is missing!");
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.NAME.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else {
@@ -56,7 +56,7 @@ public class BlockParameter {
 		}
 
 		// JSON_VALUE
-		JsonNode nd = node.path("JSON_VALUE");
+		JsonNode nd = node.path(KEYWORD.JSON_VALUE.name());
 		if (!nd.isMissingNode()) {
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null) {
@@ -67,11 +67,11 @@ public class BlockParameter {
 		}
 
 		// ASSIGN
-		if (node.path("ASSIGN").isMissingNode()) {
+		if (node.path(KEYWORD.ASSIGN.name()).isMissingNode()) {
 			if (!bp.FlagJsonValue)
 				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"ASSIGN\" is missing!");
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(node, "ASSIGN", false);
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.ASSIGN.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else {
@@ -84,7 +84,7 @@ public class BlockParameter {
 		}
 
 		// COLUMN_POS
-		nd = node.path("COLUMN_POS");
+		nd = node.path(KEYWORD.COLUMN_POS.name());
 		if (nd.isMissingNode()) {
 			if (!bp.FlagJsonValue)
 				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"COLUMN_POS\" is missing!");
@@ -107,7 +107,7 @@ public class BlockParameter {
 		}
 
 		// ROW_POS
-		nd = node.path("ROW_POS");
+		nd = node.path(KEYWORD.ROW_POS.name());
 		if (nd.isMissingNode()) {
 			if (!bp.FlagJsonValue)
 				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"ROW_POS\" is missing!");
@@ -129,8 +129,8 @@ public class BlockParameter {
 		}
 
 		// MAPPING
-		if (!node.path("MAPPING").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "MAPPING", false);
+		if (!node.path(KEYWORD.MAPPING.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.MAPPING.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else {
@@ -140,8 +140,8 @@ public class BlockParameter {
 		}
 
 		// FIX_COLUMN_POS_TO_START_VALUE
-		if (!node.path("FIX_COLUMN_POS_TO_START_VALUE").isMissingNode()) {
-			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_COLUMN_POS_TO_START_VALUE", false);
+		if (!node.path(KEYWORD.FIX_COLUMN_POS_TO_START_VALUE.name()).isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, KEYWORD.FIX_COLUMN_POS_TO_START_VALUE.name(), false);
 			if (b == null)
 				conf.addError(jsonUtils.getError());
 			else {
@@ -151,8 +151,8 @@ public class BlockParameter {
 		}
 
 		// FIX_ROW_POS_TO_START_VALUE
-		if (!node.path("FIX_ROW_POS_TO_START_VALUE").isMissingNode()) {
-			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_ROW_POS_TO_START_VALUE", false);
+		if (!node.path(KEYWORD.FIX_ROW_POS_TO_START_VALUE.name()).isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, KEYWORD.FIX_ROW_POS_TO_START_VALUE.name(), false);
 			if (b == null)
 				conf.addError(jsonUtils.getError());
 			else {
@@ -162,8 +162,8 @@ public class BlockParameter {
 		}
 
 		// UNIT
-		if (!node.path("UNIT").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "UNIT", false);
+		if (!node.path(KEYWORD.UNIT.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.UNIT.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else {

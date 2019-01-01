@@ -21,6 +21,7 @@ import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
+import nu.xom.jaxen.function.StringFunction;
 
 /**
  * 
@@ -158,29 +159,29 @@ public class ExcelParserConfigurator {
 		ExcelParserConfigurator conf = new ExcelParserConfigurator();
 
 		// Handle Json Repository
-		JsonNode curNode = root.path("REPOSITORY");
+		JsonNode curNode = root.path(KEYWORD.REPOSITORY.name());
 		if (!curNode.isMissingNode())
 			extractJsonRepository(curNode, conf);
 
 		// Handle template info
-		curNode = root.path("TEMPLATE_INFO");
+		curNode = root.path(KEYWORD.TEMPLATE_INFO.name());
 		if (curNode.isMissingNode())
-			conf.configWarnings.add("JSON Section \"TEMPLATE_INFO\" is missing!");
+			conf.configWarnings.add(String.format("JSON Section `%s` is missing!",KEYWORD.TEMPLATE_INFO.name()));
 		else {
 			// NAME
-			String keyword = jsonUtils.extractStringKeyword(curNode, "NAME", false);
+			String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.NAME.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else
 				conf.templateName = keyword;
 			// VERSION
-			keyword = jsonUtils.extractStringKeyword(curNode, "VERSION", false);
+			keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.VERSION.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else
 				conf.templateVersion = keyword;
 			// TYPE
-			Integer intValue = jsonUtils.extractIntKeyword(curNode, "TYPE", true);
+			Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.TYPE.name(), true);
 			if (intValue == null)
 				conf.addError(jsonUtils.getError());
 			else
@@ -188,13 +189,13 @@ public class ExcelParserConfigurator {
 		}
 
 		// Handle global data access
-		curNode = root.path("DATA_ACCESS");
+		curNode = root.path(KEYWORD.DATA_ACCESS.name());
 		if (curNode.isMissingNode())
-			conf.configErrors.add("JSON Section \"DATA_ACCESS\" is missing!");
+			conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.DATA_ACCESS.name()));
 		else {
 			// BASIC_ITERATION_LOAD_SUBSTANCE_RECORD
-			if (!curNode.path("BASIC_ITERATION_LOAD_SUBSTANCE_RECORD").isMissingNode()) {
-				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "BASIC_ITERATION_LOAD_SUBSTANCE_RECORD", false);
+			if (!curNode.path(KEYWORD.BASIC_ITERATION_LOAD_SUBSTANCE_RECORD.name()).isMissingNode()) {
+				Boolean b = jsonUtils.extractBooleanKeyword(curNode, KEYWORD.BASIC_ITERATION_LOAD_SUBSTANCE_RECORD.name(), false);
 				if (b == null)
 					conf.addError(jsonUtils.getError());
 				else {
@@ -204,8 +205,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// ITERATION
-			if (!curNode.path("ITERATION").isMissingNode()) {
-				String keyword = jsonUtils.extractStringKeyword(curNode, "ITERATION", false);
+			if (!curNode.path( KEYWORD.ITERATION.name()).isMissingNode()) {
+				String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.ITERATION.name(), false);
 				if (keyword == null)
 					conf.addError(jsonUtils.getError());
 				else {
@@ -213,13 +214,13 @@ public class ExcelParserConfigurator {
 					conf.FlagSubstanceIteration = true;
 					if (conf.substanceIteration == IterationAccess.UNDEFINED)
 						conf.addError(
-								"In JSON Section \"DATA_ACCESS\", keyword \"ITERATION\" is incorrect or UNDEFINED!");
+								String.format("In JSON Section '%s', the keyword '%s' is incorrect or UNDEFINED!",KEYWORD.DATA_ACCESS.name(),KEYWORD.ITERATION.name()));
 				}
 			}
 
 			// SHEET_INDEX
-			if (!curNode.path("SHEET_INDEX").isMissingNode()) {
-				Integer intValue = jsonUtils.extractIntKeyword(curNode, "SHEET_INDEX", false);
+			if (!curNode.path( KEYWORD.SHEET_INDEX.name()).isMissingNode()) {
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.SHEET_INDEX.name(), false);
 				if (intValue == null)
 					conf.addError(jsonUtils.getError());
 				else {
@@ -229,8 +230,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// SHEET_NAME
-			if (!curNode.path("SHEET_NAME").isMissingNode()) {
-				String keyword = jsonUtils.extractStringKeyword(curNode, "SHEET_NAME", false);
+			if (!curNode.path(KEYWORD.SHEET_NAME.name()).isMissingNode()) {
+				String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.SHEET_NAME.name(), false);
 				if (keyword == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -240,8 +241,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// START_ROW
-			if (!curNode.path("START_ROW").isMissingNode()) {
-				Integer intValue = jsonUtils.extractIntKeyword(curNode, "START_ROW", false);
+			if (!curNode.path(KEYWORD.START_ROW.name()).isMissingNode()) {
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.START_ROW.name(), false);
 				if (intValue == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -251,8 +252,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// END_ROW
-			if (!curNode.path("END_ROW").isMissingNode()) {
-				Integer intValue = jsonUtils.extractIntKeyword(curNode, "END_ROW", false);
+			if (!curNode.path(KEYWORD.END_ROW.name()).isMissingNode()) {
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.END_ROW.name(), false);
 				if (intValue == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -262,8 +263,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// START_HEADER_ROW
-			if (!curNode.path("START_HEADER_ROW").isMissingNode()) {
-				Integer intValue = jsonUtils.extractIntKeyword(curNode, "START_HEADER_ROW", false);
+			if (!curNode.path(KEYWORD.START_HEADER_ROW.name()).isMissingNode()) {
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.START_HEADER_ROW.name(), false);
 				if (intValue == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -274,8 +275,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// END_HEADER_ROW
-			if (!curNode.path("END_HEADER_ROW").isMissingNode()) {
-				Integer intValue = jsonUtils.extractIntKeyword(curNode, "END_HEADER_ROW", false);
+			if (!curNode.path(KEYWORD.END_HEADER_ROW.name()).isMissingNode()) {
+				Integer intValue = jsonUtils.extractIntKeyword(curNode, KEYWORD.END_HEADER_ROW.name(), false);
 				if (intValue == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -285,8 +286,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// ALLOW_EMPTY
-			if (!curNode.path("ALLOW_EMPTY").isMissingNode()) {
-				Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, "ALLOW_EMPTY", false);
+			if (!curNode.path(KEYWORD.ALLOW_EMPTY.name()).isMissingNode()) {
+				Boolean boolValue = jsonUtils.extractBooleanKeyword(curNode, KEYWORD.ALLOW_EMPTY.name(), false);
 				if (boolValue == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -296,8 +297,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// RECOGNITION
-			if (!curNode.path("RECOGNITION").isMissingNode()) {
-				String keyword = jsonUtils.extractStringKeyword(curNode, "RECOGNITION", true);
+			if (!curNode.path(KEYWORD.RECOGNITION.name()).isMissingNode()) {
+				String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.RECOGNITION.name(), true);
 				if (keyword == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -305,13 +306,13 @@ public class ExcelParserConfigurator {
 					conf.FlagRecognition = true;
 					if (conf.recognition == Recognition.UNDEFINED)
 						conf.configErrors.add(
-								"In JSON Section \"DATA_ACCESS\", keyword \"RECOGNITION\" is incorrect or UNDEFINED!");
+								String.format("In JSON Section '%s', the keyword '%s' is incorrect or UNDEFINED!",KEYWORD.DATA_ACCESS.name(),KEYWORD.RECOGNITION.name()));
 				}
 			}
 
 			// DYNAMIC_ITERATION
-			if (!curNode.path("DYNAMIC_ITERATION").isMissingNode()) {
-				String keyword = jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION", true);
+			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION.name()).isMissingNode()) {
+				String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.DYNAMIC_ITERATION.name(), true);
 				if (keyword == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -319,17 +320,16 @@ public class ExcelParserConfigurator {
 					conf.FlagDynamicIteration = true;
 					if (conf.dynamicIteration == DynamicIteration.UNDEFINED)
 						conf.configErrors.add(
-								"In JSON Section \"DATA_ACCESS\", keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
+								String.format("In JSON Section '%s', the keyword '%s' is incorrect or UNDEFINED!",KEYWORD.DATA_ACCESS.name(),KEYWORD.DYNAMIC_ITERATION.name()));						
 				}
 			}
 
 			// DYNAMIC_ITERATION_COLUMN_INDEX
-			if (!curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode()) {
-				int col_index = ExcelParserUtils.extractColumnIndex(curNode.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name()).isMissingNode()) {
+				int col_index = ExcelParserUtils.extractColumnIndex(curNode.path(KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name()));
 				if (col_index == -1) {
-					conf.configErrors
-							.add("In JSON section \"DATA_ACESS\", keyword \"DYNAMIC_ITERATION_COLUMN_INDEX\" is incorrect! "
-									+ jsonUtils.getError());
+					conf.configErrors.add(
+							String.format("In JSON Section '%s', the keyword '%s' is incorrect or UNDEFINED!",KEYWORD.DATA_ACCESS.name(),KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name()));
 				} else {
 					conf.dynamicIterationColumnIndex = col_index;
 					conf.FlagDynamicIterationColumnIndex = true;
@@ -337,8 +337,8 @@ public class ExcelParserConfigurator {
 			}
 
 			// DYNAMIC_ITERATION_COLUMN_NAME
-			if (!curNode.path("DYNAMIC_ITERATION_COLUMN_NAME").isMissingNode()) {
-				String keyword = jsonUtils.extractStringKeyword(curNode, "DYNAMIC_ITERATION_COLUMN_NAME", false);
+			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_COLUMN_NAME.name()).isMissingNode()) {
+				String keyword = jsonUtils.extractStringKeyword(curNode, KEYWORD.DYNAMIC_ITERATION_COLUMN_NAME.name(), false);
 				if (keyword == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -348,21 +348,22 @@ public class ExcelParserConfigurator {
 			}
 
 			// SKIP_ROWS
-			JsonNode skipRowsNode = curNode.path("SKIP_ROWS");
+			JsonNode skipRowsNode = curNode.path(KEYWORD.SKIP_ROWS.name());
 			if (!skipRowsNode.isMissingNode()) {
 				try {
 					conf.skipRowsIndexSet = IndexSet.getFromJsonNode(skipRowsNode);
 					if (conf.skipRowsIndexSet != null)
 						conf.FlagSkipRows = true;
 				} catch (Exception x) {
-					conf.configErrors
-							.add("In JSON section \"DATA_ACESS\", " + "keyword \"SKIP_ROWS\" is incorrectly defined: ");
+					conf.configErrors.add(
+							String.format("In JSON Section '%s', the keyword '%s' is incorrectly defined!",KEYWORD.DATA_ACCESS.name(),KEYWORD.SKIP_ROWS.name()));
+
 				}
 			}
 
 			// CLEAR_EMPTY_EFFECT_RECORDS
-			if (!curNode.path("CLEAR_EMPTY_EFFECT_RECORDS").isMissingNode()) {
-				Boolean b = jsonUtils.extractBooleanKeyword(curNode, "CLEAR_EMPTY_EFFECT_RECORDS", false);
+			if (!curNode.path(KEYWORD.CLEAR_EMPTY_EFFECT_RECORDS.name()).isMissingNode()) {
+				Boolean b = jsonUtils.extractBooleanKeyword(curNode, KEYWORD.CLEAR_EMPTY_EFFECT_RECORDS.name(), false);
 				if (b == null)
 					conf.configErrors.add(jsonUtils.getError());
 				else {
@@ -372,17 +373,18 @@ public class ExcelParserConfigurator {
 			}
 
 			// VARIABLES
-			JsonNode varNode = curNode.path("VARIABLES");
+			JsonNode varNode = curNode.path(KEYWORD.VARIABLES.name());
 			if (!varNode.isMissingNode()) {
 				conf.variableLocations = extractDynamicSection(varNode, conf, null);
 			}
 
 			// VARIABLE_MAPPINGS
-			JsonNode mapsNode = curNode.path("VARIABLE_MAPPINGS");
+			JsonNode mapsNode = curNode.path(KEYWORD.VARIABLE_MAPPINGS.name());
 			if (!mapsNode.isMissingNode()) {
 				if (!mapsNode.isArray())
 					conf.configErrors.add(
-							"In JSON section \"DATA_ACESS\", keyword \"VARIABLE_MAPPINGS\" is not of type array! ");
+							String.format("In JSON Section '%s', the keyword '%s' is not of type array!",KEYWORD.DATA_ACCESS.name(),KEYWORD.VARIABLE_MAPPINGS.name()));					
+
 				else {
 					conf.variableMappings = new ArrayList<VariableMapping>();
 					for (int i = 0; i < mapsNode.size(); i++) {
@@ -394,41 +396,41 @@ public class ExcelParserConfigurator {
 			}
 
 			// DYNAMIC_ITERATION_SPAN
-			if (!curNode.path("DYNAMIC_ITERATION_SPAN").isMissingNode()) {
+			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 				DynamicIterationSpan span = DynamicIterationSpan
-						.extractDynamicIterationSpan(curNode.path("DYNAMIC_ITERATION_SPAN"), conf, "DATA_ACCESS");
+						.extractDynamicIterationSpan(curNode.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()), conf, KEYWORD.DATA_ACCESS.name());
 				conf.dynamicIterationSpan = span;
 				conf.dynamicIterationSpan.isPrimarySheet = true;
 			}
 
 			// COLUMN_SPAN
-			if (!curNode.path("COLUMN_SPAN").isMissingNode()) {
-				ColumnSpan span = extractColumnSpan(curNode.path("COLUMN_SPAN"), conf, "DATA_ACCESS");
+			if (!curNode.path(KEYWORD.COLUMN_SPAN.name()).isMissingNode()) {
+				ColumnSpan span = extractColumnSpan(curNode.path(KEYWORD.COLUMN_SPAN.name()), conf, KEYWORD.DATA_ACCESS.name());
 				conf.columnSpan = span;
 			}
 
 			// ROW_SPAN
-			if (!curNode.path("ROW_SPAN").isMissingNode()) {
-				RowSpan span = extractRowSpan(curNode.path("ROW_SPAN"), conf, "DATA_ACCESS");
+			if (!curNode.path(KEYWORD.ROW_SPAN.name()).isMissingNode()) {
+				RowSpan span = extractRowSpan(curNode.path(KEYWORD.ROW_SPAN.name()), conf, KEYWORD.DATA_ACCESS.name());
 				conf.rowSpan = span;
 			}
 
 		}
 
 		// Handle SubstanceRecord data locations
-		curNode = root.path("SUBSTANCE_RECORD");
+		curNode = root.path(KEYWORD.SUBSTANCE_RECORD.name());
 		if (curNode.isMissingNode())
-			conf.configErrors.add("JSON Section \"SUBSTANCE_RECORD\" is missing!");
+			conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.SUBSTANCE_RECORD.name()));
 		else {
 			// SUBSTANCE_NAME
-			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode, "SUBSTANCE_NAME", conf);
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.SUBSTANCE_NAME.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.substanceName", loc);
 				// error messages are already added to conf (this is valid for
 				// all other location extractions)
 			} else {
-				// depricated syntax COMPANY_NAME used for the same purposes
+				// deprecated syntax COMPANY_NAME used for the same purposes
 				loc = ExcelDataLocation.extractDataLocation(curNode, "COMPANY_NAME", conf);
 				if (loc != null) {
 					if (loc.nErrors == 0)
@@ -442,14 +444,14 @@ public class ExcelParserConfigurator {
 			}
 
 			// REFERENCE_SUBSTANCE_UUID
-			loc = ExcelDataLocation.extractDataLocation(curNode, "REFERENCE_SUBSTANCE_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.REFERENCE_SUBSTANCE_UUID.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.referenceSubstanceUUID", loc);
 			}
 
 			// SUBSTANCE_UUID
-			loc = ExcelDataLocation.extractDataLocation(curNode, "SUBSTANCE_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.SUBSTANCE_UUID.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.substanceUUID", loc);
@@ -463,28 +465,28 @@ public class ExcelParserConfigurator {
 			}
 
 			// OWNER_NAME
-			loc = ExcelDataLocation.extractDataLocation(curNode, "OWNER_NAME", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.OWNER_NAME.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.ownerName", loc);
 			}
 
 			// OWNER_UUID
-			loc = ExcelDataLocation.extractDataLocation(curNode, "OWNER_UUID", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.OWNER_UUID.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.ownerUUID", loc);
 			}
 
 			// SUBSTANCE_TYPE
-			loc = ExcelDataLocation.extractDataLocation(curNode, "SUBSTANCE_TYPE", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.SUBSTANCE_TYPE.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.substanceType", loc);
 			}
 
 			// PUBLIC_NAME
-			loc = ExcelDataLocation.extractDataLocation(curNode, "PUBLIC_NAME", conf);
+			loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.PUBLIC_NAME.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					conf.substanceLocations.put("SubstanceRecord.publicName", loc);
@@ -498,7 +500,7 @@ public class ExcelParserConfigurator {
 			}
 
 			// COMPOSITION
-			JsonNode composNode = curNode.path("COMPOSITION");
+			JsonNode composNode = curNode.path(KEYWORD.COMPOSITION.name());
 			if (!composNode.isMissingNode()) {
 				if (composNode.isArray()) {
 					for (int i = 0; i < composNode.size(); i++) {
@@ -506,11 +508,11 @@ public class ExcelParserConfigurator {
 						conf.composition.add(compDL);
 					}
 				} else
-					conf.configErrors.add("Section \"COMPOSITION\" is not an array!");
+					conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.COMPOSITION.name()));
 			}
 
 			// EXTERNAL_IDENTIFIERS
-			JsonNode extIdNode = curNode.path("EXTERNAL_IDENTIFIERS");
+			JsonNode extIdNode = curNode.path(KEYWORD.EXTERNAL_IDENTIFIERS.name());
 			if (!extIdNode.isMissingNode()) {
 				if (extIdNode.isArray()) {
 					for (int i = 0; i < extIdNode.size(); i++) {
@@ -519,17 +521,17 @@ public class ExcelParserConfigurator {
 						conf.externalIdentifiers.add(eidl);
 					}
 				} else
-					conf.configErrors.add("Section \"EXTERNAL_IDENTIFIERS\" is not an array!");
+					conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.EXTERNAL_IDENTIFIERS.name()));
 			}
 		}
 
 		// Handle Parallel Sheets
-		curNode = root.path("PARALLEL_SHEETS");
+		curNode = root.path(KEYWORD.PARALLEL_SHEETS.name());
 		if (curNode.isMissingNode()) {
 			// Nothing is done. Missing PARALLEL_SHEETS is not an error.
 		} else {
 			if (!curNode.isArray()) {
-				conf.configErrors.add("JSON Section \"PARALLEL_SHEETS\" is not of type array!");
+				conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.PARALLEL_SHEETS.name()));
 				return conf;
 			}
 
@@ -543,12 +545,12 @@ public class ExcelParserConfigurator {
 		}
 
 		// Handle Protocol Applications (Measurements)
-		curNode = root.path("PROTOCOL_APPLICATIONS");
+		curNode = root.path(KEYWORD.PROTOCOL_APPLICATIONS.name());
 		if (curNode.isMissingNode())
-			conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is missing!");
+			conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.PROTOCOL_APPLICATIONS.name()));
 		else {
 			if (!curNode.isArray()) {
-				conf.configErrors.add("JSON Section \"PROTOCOL_APPLICATIONS\" is not of type array!");
+				conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.PROTOCOL_APPLICATIONS.name()));
 				return conf;
 			}
 
@@ -934,70 +936,70 @@ public class ExcelParserConfigurator {
 		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
 
 		// PROTOCOL_APPLICATION_UUID
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_APPLICATION_UUID", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.PROTOCOL_APPLICATION_UUID.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.protocolApplicationUUID = loc;
 		}
 
 		// INVESTIGATION_UUID
-		loc = ExcelDataLocation.extractDataLocation(node, "INVESTIGATION_UUID", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.INVESTIGATION_UUID.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.investigationUUID = loc;
 		}
 
 		// CITATION_TITLE
-		loc = ExcelDataLocation.extractDataLocation(node, "CITATION_TITLE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CITATION_TITLE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.citationTitle = loc;
 		}
 
 		// CITATION_YEAR
-		loc = ExcelDataLocation.extractDataLocation(node, "CITATION_YEAR", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CITATION_YEAR.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.citationYear = loc;
 		}
 
 		// CITATION_OWNER
-		loc = ExcelDataLocation.extractDataLocation(node, "CITATION_OWNER", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CITATION_OWNER.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.citationOwner = loc;
 		}
 
 		// PROTOCOL_TOP_CATEGORY
-		loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_TOP_CATEGORY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.PROTOCOL_TOP_CATEGORY.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.protocolTopCategory = loc;
 		}
 
 		// PROTOCOL_CATEGORY_CODE
-		loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_CATEGORY_CODE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.PROTOCOL_CATEGORY_CODE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.protocolCategoryCode = loc;
 		}
 
 		// PROTOCOL_CATEGORY_TITLE
-		loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_CATEGORY_TITLE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.PROTOCOL_CATEGORY_TITLE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.protocolCategoryTitle = loc;
 		}
 
 		// PROTOCOL_ENDPOINT
-		loc = ExcelDataLocation.extractDataLocation(node, "PROTOCOL_ENDPOINT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.PROTOCOL_ENDPOINT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.protocolEndpoint = loc;
 		}
 
 		// PROTOCOL_GUIDELINE
-		JsonNode pglNode = node.path("PROTOCOL_GUIDELINE");
+		JsonNode pglNode = node.path(KEYWORD.PROTOCOL_GUIDELINE.name());
 		if (!pglNode.isMissingNode()) {
 			ArrayList<ExcelDataLocation> protGuidline = new ArrayList<ExcelDataLocation>();
 			HashMap<String, ExcelDataLocation> pglLocs = extractDynamicSection(pglNode, conf, null);
@@ -1011,70 +1013,70 @@ public class ExcelParserConfigurator {
 		}
 
 		// PARAMETERS
-		JsonNode parNode = node.path("PARAMETERS");
+		JsonNode parNode = node.path(KEYWORD.PARAMETERS.name());
 		if (!parNode.isMissingNode()) {
-			String otherFields[] = { "UNIT", "NAME" };
+			String otherFields[] = { KEYWORD.UNIT.name(), KEYWORD.NAME.name() };
 			padl.parameters = extractDynamicSection(parNode, conf, otherFields);
 		}
 
 		// RELIABILITY_IS_ROBUST_STUDY
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_IS_ROBUST_STUDY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_IS_ROBUST_STUDY.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_isRobustStudy = loc;
 		}
 
 		// RELIABILITY_IS_USED_FOR_CLASSIFICATION
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_IS_USED_FOR_CLASSIFICATION", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_IS_USED_FOR_CLASSIFICATION.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_isUsedforClassification = loc;
 		}
 
 		// RELIABILITY_IS_USED_FOR_MSDS
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_IS_USED_FOR_MSDS", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_IS_USED_FOR_MSDS.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_isUsedforMSDS = loc;
 		}
 
 		// RELIABILITY_PURPOSE_FLAG
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_PURPOSE_FLAG", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_PURPOSE_FLAG.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_purposeFlag = loc;
 		}
 
 		// RELIABILITY_STUDY_RESULT_TYPE
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_STUDY_RESULT_TYPE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_STUDY_RESULT_TYPE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_studyResultType = loc;
 		}
 
 		// RELIABILITY_VALUE
-		loc = ExcelDataLocation.extractDataLocation(node, "RELIABILITY_VALUE", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.RELIABILITY_VALUE.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.reliability_value = loc;
 		}
 
 		// INTERPRETATION_RESULT
-		loc = ExcelDataLocation.extractDataLocation(node, "INTERPRETATION_RESULT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.INTERPRETATION_RESULT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.interpretationResult = loc;
 		}
 
 		// INTERPRETATION_CRITERIA
-		loc = ExcelDataLocation.extractDataLocation(node, "INTERPRETATION_CRITERIA", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.INTERPRETATION_CRITERIA.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				padl.interpretationCriteria = loc;
 		}
 
 		// EFFECTS
-		JsonNode effectsNode = node.path("EFFECTS");
+		JsonNode effectsNode = node.path(KEYWORD.EFFECTS.name());
 		if (!effectsNode.isMissingNode()) {
 			if (!effectsNode.isArray()) {
 				conf.configErrors.add("EFFECTS section is not of type array!");
@@ -1090,7 +1092,7 @@ public class ExcelParserConfigurator {
 		}
 
 		// EFFECTS_BLOCK
-		JsonNode effectsBlockNode = node.path("EFFECTS_BLOCK");
+		JsonNode effectsBlockNode = node.path(KEYWORD.EFFECTS_BLOCK.name());
 		if (!effectsBlockNode.isMissingNode()) {
 			padl.effectsBlock = new ArrayList<ExcelDataBlockLocation>();
 			if (effectsBlockNode.isArray()) {
@@ -1100,7 +1102,7 @@ public class ExcelParserConfigurator {
 					padl.effectsBlock.add(block);
 				}
 			} else {
-				ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(node, "EFFECTS_BLOCK", conf);
+				ExcelDataBlockLocation block = ExcelDataBlockLocation.extractDataBlock(node, KEYWORD.EFFECTS_BLOCK.name(), conf);
 				padl.effectsBlock.add(block);
 			}
 		}
@@ -1198,18 +1200,18 @@ public class ExcelParserConfigurator {
 		}
 
 		// CONDITIONS
-		JsonNode effCondNode = node.path("CONDITIONS");
+		JsonNode effCondNode = node.path(KEYWORD.CONDITIONS.name());
 		if (!effCondNode.isMissingNode()) {
-			String otherFields[] = { "UNIT", "NAME" };
+			String otherFields[] = { KEYWORD.UNIT.name(), KEYWORD.NAME.name() };
 			efrdl.conditions = extractDynamicSection(effCondNode, conf, otherFields);
 		}
 
 		JsonUtilities jsonUtils = null;
 
 		// REFERENCE
-		if (!node.path("REFERENCE").isMissingNode()) {
+		if (!node.path(KEYWORD.REFERENCE.name()).isMissingNode()) {
 			jsonUtils = new JsonUtilities();
-			String keyword = jsonUtils.extractStringKeyword(node, "REFERENCE", false);
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.REFERENCE.name(), false);
 			if (keyword == null)
 				conf.configErrors.add("Incorrect effect REFERENCE : " + jsonUtils.getError());
 			else {
@@ -1218,7 +1220,7 @@ public class ExcelParserConfigurator {
 		}
 
 		// ADD_CONDITIONS_BY_REF
-		JsonNode addCondNode = node.path("ADD_CONDITIONS_BY_REF");
+		JsonNode addCondNode = node.path(KEYWORD.ADD_CONDITIONS_BY_REF.name());
 		if (!addCondNode.isMissingNode()) {
 			if (addCondNode.isArray()) {
 				if (jsonUtils == null)
@@ -1229,10 +1231,10 @@ public class ExcelParserConfigurator {
 					if (addCondNode.get(i).isTextual())
 						efrdl.addConditionsByRef[i] = addCondNode.get(i).asText();
 					else
-						conf.configErrors.add("Incorrect ADD_CONDITIONS_BY_REF [" + (i + 1) + "] : not textual ");
+						conf.configErrors.add(String.format("Incorrect %s [%d] : not textual ",KEYWORD.ADD_CONDITIONS_BY_REF.name(),(i + 1)));
 				}
 			} else {
-				conf.configErrors.add("ADD_CONDITIONS_BY_REF is not an array!");
+				conf.configErrors.add(String.format("%s is not an array!",KEYWORD.ADD_CONDITIONS_BY_REF.name()));
 
 			}
 		}
@@ -1246,27 +1248,28 @@ public class ExcelParserConfigurator {
 		JsonUtilities jsonUtils = new JsonUtilities();
 
 		// ITERATION
-		if (!node.path("ITERATION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "ITERATION", false);
+		if (!node.path(KEYWORD.ITERATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.ITERATION.name(), false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"ITERATION\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.ITERATION.name(),jsonUtils.getError()));
 			else {
 				eshc.iteration = IterationAccess.fromString(keyword);
 				if (eshc.iteration == IterationAccess.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-							+ " keyword \"ITERATION\" is incorrect or UNDEFINED!");
+					conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s':  is incorrect or UNDEFINED!",
+							KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.ITERATION.name()));
 				else
 					eshc.FlagIteration = true;
 			}
 		}
 
 		// SHEET_INDEX
-		if (!node.path("SHEET_INDEX").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(node, "SHEET_INDEX", false);
+		if (!node.path(KEYWORD.SHEET_INDEX.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.SHEET_INDEX.name(), false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"SHEET_INDEX\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.SHEET_INDEX.name(),jsonUtils.getError()));
+
 			else {
 				eshc.sheetIndex = intValue - 1; // 1-based --> 0-based
 				eshc.FlagSheetIndex = true;
@@ -1274,11 +1277,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// SHEET_NAME
-		if (!node.path("SHEET_NAME").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "SHEET_NAME", false);
+		if (!node.path(KEYWORD.SHEET_NAME.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.SHEET_NAME.name(), false);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"SHEET_NAME\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.SHEET_NAME.name(),jsonUtils.getError()));
 			else {
 				eshc.sheetName = keyword;
 				eshc.FlagSheetName = true;
@@ -1286,11 +1289,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// ROW_MULTI_FIXED_SIZE
-		if (!node.path("ROW_MULTI_FIXED_SIZE").isMissingNode()) {
+		if (!node.path(KEYWORD.ROW_MULTI_FIXED_SIZE.name()).isMissingNode()) {
 			Integer intValue = jsonUtils.extractIntKeyword(node, "ROW_MULTI_FIXED_SIZE", false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"ROW_MULTI_FIXED_SIZE\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.ROW_MULTI_FIXED_SIZE.name(),jsonUtils.getError()));				
 			else {
 				eshc.rowMultiFixedSize = intValue;
 				eshc.FlagRowMultiFixedSize = true;
@@ -1298,11 +1301,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// START_ROW
-		if (!node.path("START_ROW").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(node, "START_ROW", false);
+		if (!node.path(KEYWORD.START_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.START_ROW.name(), false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"START_ROW\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.START_ROW.name(),jsonUtils.getError()));				
 			else {
 				eshc.startRow = intValue - 1; // 1-based --> 0-based
 				eshc.FlagStartRow = true;
@@ -1310,11 +1313,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// END_ROW
-		if (!node.path("END_ROW").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(node, "END_ROW", false);
+		if (!node.path(KEYWORD.END_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.END_ROW.name(), false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"END_ROW\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.END_ROW.name(),jsonUtils.getError()));
 			else {
 				eshc.endRow = intValue - 1; // 1-based --> 0-based
 				eshc.FlagEndRow = true;
@@ -1322,11 +1325,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// START_HEADER_ROW
-		if (!node.path("START_HEADER_ROW").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(node, "START_HEADER_ROW", false);
+		if (!node.path(KEYWORD.START_HEADER_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.START_HEADER_ROW.name(), false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"START_HEADER_ROW\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.START_HEADER_ROW.name(),jsonUtils.getError()));
 			else {
 				eshc.startHeaderRow = intValue - 1; // 1-based --> 0-based
 				eshc.FlagStartHeaderRow = true;
@@ -1334,11 +1337,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// END_HEADER_ROW
-		if (!node.path("END_HEADER_ROW").isMissingNode()) {
-			Integer intValue = jsonUtils.extractIntKeyword(node, "END_HEADER_ROW", false);
+		if (!node.path(KEYWORD.END_HEADER_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.END_HEADER_ROW.name(), false);
 			if (intValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"END_HEADER_ROW\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.END_HEADER_ROW.name(),jsonUtils.getError()));
 			else {
 				eshc.endHeaderRow = intValue - 1; // 1-based --> 0-based
 				eshc.FlagEndHeaderRow = true;
@@ -1346,11 +1349,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// ALLOW_EMPTY
-		if (!node.path("ALLOW_EMPTY").isMissingNode()) {
-			Boolean boolValue = jsonUtils.extractBooleanKeyword(node, "ALLOW_EMPTY", false);
+		if (!node.path(KEYWORD.ALLOW_EMPTY.name()).isMissingNode()) {
+			Boolean boolValue = jsonUtils.extractBooleanKeyword(node, KEYWORD.ALLOW_EMPTY.name(), false);
 			if (boolValue == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"ALLOW_EMPTY\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.ALLOW_EMPTY.name(),jsonUtils.getError()));
 			else {
 				eshc.allowEmpty = boolValue;
 				eshc.FlagAllowEmpty = true;
@@ -1358,11 +1361,11 @@ public class ExcelParserConfigurator {
 		}
 
 		// RECOGNITION
-		if (!node.path("RECOGNITION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "RECOGNITION", true);
+		if (!node.path(KEYWORD.RECOGNITION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.RECOGNITION.name(), true);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"RECOGNITION\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.RECOGNITION.name(),jsonUtils.getError()));
 			else {
 				eshc.recognition = Recognition.fromString(keyword);
 				if (conf.recognition == Recognition.UNDEFINED)
@@ -1372,25 +1375,25 @@ public class ExcelParserConfigurator {
 		}
 
 		// DYNAMIC_ITERATION
-		if (!node.path("DYNAMIC_ITERATION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "DYNAMIC_ITERATION", true);
+		if (!node.path(KEYWORD.DYNAMIC_ITERATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.DYNAMIC_ITERATION.name(), true);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"DYNAMIC_ITERATION\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.DYNAMIC_ITERATION.name(),jsonUtils.getError()));
 			else {
 				eshc.dynamicIteration = DynamicIteration.fromString(keyword);
 				if (eshc.dynamicIteration == DynamicIteration.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-							+ " keyword \"DYNAMIC_ITERATION\" is incorrect or UNDEFINED!");
+					conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s':  is incorrect or UNDEFINED!",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.DYNAMIC_ITERATION.name()));				
 			}
 		}
 
 		// DYNAMIC_ITERATION_COLUMN_INDEX
-		if (!node.path("DYNAMIC_ITERATION_COLUMN_INDEX").isMissingNode()) {
-			int col_index = ExcelParserUtils.extractColumnIndex(node.path("DYNAMIC_ITERATION_COLUMN_INDEX"));
+		if (!node.path(KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name()).isMissingNode()) {
+			int col_index = ExcelParserUtils.extractColumnIndex(node.path((KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name())));
 			if (col_index == -1) {
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"DYNAMIC_ITERATION_COLUMN_INDEX\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.DYNAMIC_ITERATION_COLUMN_INDEX.name(),jsonUtils.getError()));
 			} else {
 				eshc.dynamicIterationColumnIndex = col_index;
 				eshc.FlagDynamicIterationColumnIndex = true;
@@ -1398,8 +1401,8 @@ public class ExcelParserConfigurator {
 		}
 
 		// DYNAMIC_ITERATION_COLUMN_NAME
-		if (!node.path("DYNAMIC_ITERATION_COLUMN_NAME").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "DYNAMIC_ITERATION_COLUMN_NAME", false);
+		if (!node.path(KEYWORD.DYNAMIC_ITERATION_COLUMN_NAME.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.DYNAMIC_ITERATION_COLUMN_NAME.name(), false);
 			if (keyword == null)
 				conf.configErrors.add(jsonUtils.getError());
 			else {
@@ -1409,42 +1412,43 @@ public class ExcelParserConfigurator {
 		}
 
 		// SYNCHRONIZATION
-		if (!node.path("SYNCHRONIZATION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "SYNCHRONIZATION", true);
+		if (!node.path(KEYWORD.SYNCHRONIZATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.SYNCHRONIZATION.name(), true);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"SYNCHRONIZATION\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+						KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.SYNCHRONIZATION.name(),jsonUtils.getError()));
 			else {
 				eshc.synchronization = SheetSynchronization.fromString(keyword);
+				
 				if (eshc.synchronization == SheetSynchronization.UNDEFINED)
-					conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-							+ " keyword \"SYNCHRONIZATION\" is incorrect or UNDEFINED!");
+					conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s':  is incorrect or UNDEFINED!",
+							KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.SYNCHRONIZATION.name()));
 			}
 		}
 
 		// VARIABLES
-		JsonNode varNode = node.path("VARIABLES");
+		JsonNode varNode = node.path(KEYWORD.VARIABLES.name());
 		if (!varNode.isMissingNode()) {
 			eshc.variableLocations = extractDynamicSection(varNode, conf, null);
 		}
 
 		// DYNAMIC_ITERATION_SPAN
-		if (!node.path("DYNAMIC_ITERATION_SPAN").isMissingNode()) {
+		if (!node.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 			DynamicIterationSpan span = DynamicIterationSpan.extractDynamicIterationSpan(
-					node.path("DYNAMIC_ITERATION_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
+					node.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
 			eshc.dynamicIterationSpan = span;
 		}
 
 		// COLUMN_SPAN
-		if (!node.path("COLUMN_SPAN").isMissingNode()) {
-			ColumnSpan span = extractColumnSpan(node.path("COLUMN_SPAN"), conf,
+		if (!node.path(KEYWORD.COLUMN_SPAN.name()).isMissingNode()) {
+			ColumnSpan span = extractColumnSpan(node.path(KEYWORD.COLUMN_SPAN.name()), conf,
 					"PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
 			eshc.columnSpan = span;
 		}
 
 		// ROW_SPAN
-		if (!node.path("ROW_SPAN").isMissingNode()) {
-			RowSpan span = extractRowSpan(node.path("ROW_SPAN"), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
+		if (!node.path(KEYWORD.ROW_SPAN.name()).isMissingNode()) {
+			RowSpan span = extractRowSpan(node.path(KEYWORD.ROW_SPAN.name()), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
 			eshc.rowSpan = span;
 		}
 
@@ -1473,79 +1477,78 @@ public class ExcelParserConfigurator {
 		JsonUtilities jsonUtils = new JsonUtilities();
 
 		// STRUCTURE_RELATION
-		if (!node.path("STRUCTURE_RELATION").isMissingNode()) {
-			String keyword = jsonUtils.extractStringKeyword(node, "STRUCTURE_RELATION", true);
+		if (!node.path(KEYWORD.STRUCTURE_RELATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.STRUCTURE_RELATION.name(), true);
 			if (keyword == null)
-				conf.configErrors.add("In JSON Section \"PARALLEL_SHEETS\", array element " + (jsonArrayIndex + 1)
-						+ " keyword \"STRUCTURE_RELATION\": " + jsonUtils.getError());
+				conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+					KEYWORD.PARALLEL_SHEETS.name(),(jsonArrayIndex + 1), KEYWORD.STRUCTURE_RELATION.name(),jsonUtils.getError()));			
 			else {
 				cdl.structureRelation = CompositionDataLocation.structureRelationFromString(keyword);
 				if (cdl.structureRelation == null)
-					conf.configErrors
-							.add("In JSON Section \"SUBSTANCE_RECORD\", subsection \"COMPOSITION\", array element "
-									+ (jsonArrayIndex + 1) + ", keyword \"STRUCTURE_RELATION\" is incorrect! --> "
-									+ keyword);
+					conf.configErrors.add(String.format("In JSON Section '%s', the array element %d keyword '%s': %s",
+							KEYWORD.SUBSTANCE_RECORD.name(),(jsonArrayIndex + 1), KEYWORD.STRUCTURE_RELATION.name(),keyword));
+				
 				else
 					cdl.FlagStructureRelation = true;
 			}
 		}
 
 		// CONTENT
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, "CONTENT", conf);
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CONTENT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.content = loc;
 		}
 
-		if (!node.path("CONTENT").isMissingNode()) {
-			if (node.path("FORMAT").isMissingNode())
-				conf.configErrors.add("In JSON Section \"SUBSTANCE_RECORD\", subsection \"COMPOSITION\", array element "
-						+ (jsonArrayIndex + 1) + ", keyword \"FORMAT\" is missing!");
+		if (!node.path(KEYWORD.CONTENT.name()).isMissingNode()) {
+			if (node.path(KEYWORD.FORMAT.name()).isMissingNode())
+				conf.configErrors.add(String.format("In JSON Section '%s', subsection '%s', in the array element %d the keyword `%s` is missing",
+						KEYWORD.SUBSTANCE_RECORD.name(),KEYWORD.COMPOSITION.name(),(jsonArrayIndex + 1), KEYWORD.FORMAT.name()));
 		}
 
 		// FORMAT
-		loc = ExcelDataLocation.extractDataLocation(node, "FORMAT", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.FORMAT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.format = loc;
 		}
 
 		// INCHI_KEY
-		loc = ExcelDataLocation.extractDataLocation(node, "INCHI_KEY", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.INCHI_KEY.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.inchiKey = loc;
 		}
 
 		// INCHI
-		loc = ExcelDataLocation.extractDataLocation(node, "INCHI", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.INCHI.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.inchi = loc;
 		}
 
 		// FORMULA
-		loc = ExcelDataLocation.extractDataLocation(node, "FORMULA", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.FORMULA.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.formula = loc;
 		}
 
 		// SMILES
-		loc = ExcelDataLocation.extractDataLocation(node, "SMILES", conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.SMILES.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.smiles = loc;
 		}
 
 		// PROPERTIES
-		JsonNode propNode = node.path("PROPERTIES");
+		JsonNode propNode = node.path(KEYWORD.PROPERTIES.name());
 		if (!propNode.isMissingNode()) {
 			cdl.properties = extractDynamicSection(propNode, conf, null);
 		}
 
 		// PROPORTION
-		JsonNode proportionNode = node.path("PROPORTION");
+		JsonNode proportionNode = node.path(KEYWORD.PROPORTION.name());
 		if (!proportionNode.isMissingNode()) {
 			cdl.proportion = ProportionDataLocation.extractProportion(proportionNode, conf);
 		}

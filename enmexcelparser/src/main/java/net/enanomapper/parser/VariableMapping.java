@@ -21,7 +21,7 @@ public class VariableMapping {
 		VariableMapping vm = new VariableMapping();
 
 		// NAME
-		if (node.path("NAME").isMissingNode()) {
+		if (node.path(KEYWORD.NAME.name()).isMissingNode()) {
 			conf.addError("In JSON Section VARIABLE_MAPPINGS[" + (mappingNum + 1) + "], keyword \"NAME\" is missing!");
 		} else {
 			String keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
@@ -32,11 +32,11 @@ public class VariableMapping {
 		}
 
 		// KEYS_VARIABLE
-		if (node.path("KEYS_VARIABLE").isMissingNode()) {
+		if (node.path(KEYWORD.KEYS_VARIABLE.name()).isMissingNode()) {
 			conf.addError("In JSON Section VARIABLE_MAPPINGS[" + (mappingNum + 1)
 					+ "], keyword \"KEYS_VARIABLE\" is missing!");
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(node, "KEYS_VARIABLE", false);
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.KEYS_VARIABLE.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else
@@ -44,11 +44,11 @@ public class VariableMapping {
 		}
 
 		// VALUES_VARIABLE
-		if (node.path("VALUES_VARIABLE").isMissingNode()) {
+		if (node.path(KEYWORD.VALUES_VARIABLE.name()).isMissingNode()) {
 			conf.addError("In JSON Section VARIABLE_MAPPINGS[" + (mappingNum + 1)
 					+ "], keyword \"VALUES_VARIABLE\" is missing!");
 		} else {
-			String keyword = jsonUtils.extractStringKeyword(node, "VALUES_VARIABLE", false);
+			String keyword = jsonUtils.extractStringKeyword(node,KEYWORD.VALUES_VARIABLE.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
 			else

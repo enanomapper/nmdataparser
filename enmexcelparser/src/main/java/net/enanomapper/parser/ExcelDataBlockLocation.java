@@ -50,10 +50,10 @@ public class ExcelDataBlockLocation {
 				return null;
 		}
 
-		if (sectionNode.path("LOCATION").isMissingNode()) {
+		if (sectionNode.path(KEYWORD.LOCATION.name()).isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"LOCATION\" is missing!");
 		} else {
-			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(sectionNode, "LOCATION", conf);
+			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(sectionNode, KEYWORD.LOCATION.name(), conf);
 			if (loc != null) {
 				if (loc.nErrors == 0)
 					edbl.location = loc;
@@ -61,7 +61,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// ROW_SUBBLOCKS
-		JsonNode nd = sectionNode.path("ROW_SUBBLOCKS");
+		JsonNode nd = sectionNode.path(KEYWORD.ROW_SUBBLOCKS.name());
 		if (nd.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"ROW_SUBBLOCKS\" is missing!");
 		} else {
@@ -82,7 +82,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// COLUMN_SUBBLOCKS
-		nd = sectionNode.path("COLUMN_SUBBLOCKS");
+		nd = sectionNode.path(KEYWORD.COLUMN_SUBBLOCKS.name());
 		if (nd.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"COLUMN_SUBBLOCKS\" is missing!");
 		} else {
@@ -103,7 +103,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// SUBBLOCK_SIZE_ROWS
-		nd = sectionNode.path("SUBBLOCK_SIZE_ROWS");
+		nd = sectionNode.path(KEYWORD.SUBBLOCK_SIZE_ROWS.name());
 		if (nd.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_ROWS\" is missing!");
 		} else {
@@ -124,7 +124,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// SUBBLOCK_SIZE_COLUMNS
-		nd = sectionNode.path("SUBBLOCK_SIZE_COLUMNS");
+		nd = sectionNode.path(KEYWORD.SUBBLOCK_SIZE_COLUMNS.name());
 		if (nd.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"SUBBLOCK_SIZE_COLUMNS\" is missing!");
 		} else {
@@ -146,7 +146,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// VALUE_GROUPS
-		JsonNode vgNode = sectionNode.path("VALUE_GROUPS");
+		JsonNode vgNode = sectionNode.path(KEYWORD.VALUE_GROUPS.name());
 		if (vgNode.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"VALUE_GROUPS\" is missing!");
 		} else {
