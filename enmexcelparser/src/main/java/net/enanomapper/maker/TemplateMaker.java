@@ -20,13 +20,16 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Header;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -99,7 +102,7 @@ public class TemplateMaker {
 			final Drawing drawing = sheet.createDrawingPatriarch();
 
 			final ClientAnchor anchor = helper.createClientAnchor();
-			anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+			anchor.setAnchorType(AnchorType.MOVE_AND_RESIZE);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(img, "png", baos);
 			baos.flush();
@@ -199,10 +202,10 @@ public class TemplateMaker {
 						cstyle.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
 						cstyle.setBottomBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
 						cstyle.setTopBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
-						cstyle.setBorderTop(CellStyle.BORDER_NONE);
-						cstyle.setBorderLeft(CellStyle.BORDER_NONE);
-						cstyle.setBorderRight(CellStyle.BORDER_NONE);
-						cstyle.setBorderBottom(CellStyle.BORDER_NONE);
+						cstyle.setBorderTop(BorderStyle.NONE);
+						cstyle.setBorderLeft(BorderStyle.NONE);
+						cstyle.setBorderRight(BorderStyle.NONE);
+						cstyle.setBorderBottom(BorderStyle.NONE);
 						if (header_results.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_sop.equals(annotation)) {
@@ -225,7 +228,7 @@ public class TemplateMaker {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else
 							cstyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-						cstyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+						cstyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 						style.put(annotation.toString(), cstyle);
 
 					}
@@ -338,32 +341,32 @@ public class TemplateMaker {
 				CellStyle cstyle = workbook.createCellStyle();
 				cstyle.cloneStyleFrom(astyle);
 
-				cstyle.setBorderLeft(CellStyle.BORDER_THIN);
-				cstyle.setBorderRight(CellStyle.BORDER_THIN);
+				cstyle.setBorderLeft(BorderStyle.THIN);
+				cstyle.setBorderRight(BorderStyle.THIN);
 				if (i == 0) {
-					cstyle.setBorderTop(CellStyle.BORDER_MEDIUM);
-					cstyle.setBorderLeft(CellStyle.BORDER_NONE);
-					cstyle.setBorderRight(CellStyle.BORDER_NONE);
+					cstyle.setBorderTop(BorderStyle.MEDIUM);
+					cstyle.setBorderLeft(BorderStyle.NONE);
+					cstyle.setBorderRight(BorderStyle.NONE);
 
 				} else if (i == 3)
-					cstyle.setBorderTop(CellStyle.BORDER_HAIR);
+					cstyle.setBorderTop(BorderStyle.HAIR);
 				else
-					cstyle.setBorderTop(CellStyle.BORDER_NONE);
+					cstyle.setBorderTop(BorderStyle.NONE);
 
 				if (i == 4 || i == 0)
-					cstyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+					cstyle.setBorderBottom(BorderStyle.MEDIUM);
 				else
-					cstyle.setBorderBottom(CellStyle.BORDER_NONE);
+					cstyle.setBorderBottom(BorderStyle.NONE);
 
 				if (c == col1) {
-					cstyle.setBorderLeft(CellStyle.BORDER_MEDIUM);
+					cstyle.setBorderLeft(BorderStyle.MEDIUM);
 				}
 				if (c == col2)
-					cstyle.setBorderRight(CellStyle.BORDER_MEDIUM);
+					cstyle.setBorderRight(BorderStyle.MEDIUM);
 
 				if (i > 4) {
 					cstyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-					cstyle.setBorderBottom(CellStyle.BORDER_HAIR);
+					cstyle.setBorderBottom(BorderStyle.HAIR);
 				}
 
 				Cell cell = row.getCell(c);
@@ -371,7 +374,7 @@ public class TemplateMaker {
 					cell = row.createCell(c);
 
 				if (i > 4) {
-					CellUtil.setAlignment(cell, ,HorizontalAlignment.LEFT);
+					CellUtil.setAlignment(cell, HorizontalAlignment.LEFT);
 					String unit = sheet.getRow(4).getCell(c).getStringCellValue();
 					if (unit != null && !"".equals(unit)) {
 
