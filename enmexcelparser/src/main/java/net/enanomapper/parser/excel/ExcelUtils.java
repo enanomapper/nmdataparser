@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -334,7 +335,7 @@ public class ExcelUtils
 			return true;
 		else
 		{	 
-			if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
+			if (cell.getCellType() == CellType.BLANK)
 				return true;
 			//TODO eventually to check some other 'strange' cases of empty cells
 			
@@ -353,11 +354,11 @@ public class ExcelUtils
 			return true;
 		else
 		{	 
-			if (cell.getCellType() == Cell.CELL_TYPE_BLANK)
+			if (cell.getCellType() == CellType.BLANK)
 				return true;
 			
 			if (FlagTrim) 
-				if ( (cell.getCellType() == Cell.CELL_TYPE_STRING))
+				if ( (cell.getCellType() == CellType.STRING))
 					if("".equals(cell.getStringCellValue().trim()))
 						return true;
 			
@@ -374,26 +375,26 @@ public class ExcelUtils
 		
 		switch (c.getCellType())
 		{
-		case Cell.CELL_TYPE_BLANK:
+		case BLANK:
 			return "";
-		case Cell.CELL_TYPE_NUMERIC:
+		case NUMERIC:
 		{	
 			if (c.getCellStyle().getDataFormatString().contains("%"))
 				return "" + (c.getNumericCellValue()*100.0) + "%";
 			else
 				return "" + c.getNumericCellValue();
 		}	
-		case Cell.CELL_TYPE_STRING:
+		case STRING:
 			return c.getStringCellValue();
-		case Cell.CELL_TYPE_FORMULA: {	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+		case FORMULA: {	
+			if (c.getCachedFormulaResultType() == CellType.NUMERIC)
 			{	
 				if (c.getCellStyle().getDataFormatString().contains("%"))
 					return "" + (c.getNumericCellValue()*100.0) + "%";
 				else
 					return "" + c.getNumericCellValue();
 			}	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+			if (c.getCachedFormulaResultType() == CellType.STRING)
 				return c.getStringCellValue();
 		}	
 			//TODO
@@ -408,10 +409,10 @@ public class ExcelUtils
 		
 		switch (c.getCellType())
 		{
-		case Cell.CELL_TYPE_BLANK:
+		case BLANK:
 			return null;
 			
-		case Cell.CELL_TYPE_NUMERIC:
+		case NUMERIC:
 		{	
 			Double v = new Double(c.getNumericCellValue());
 			if (c.getCellStyle().getDataFormatString().contains("%"))
@@ -419,23 +420,23 @@ public class ExcelUtils
 			return v;
 		}	
 			
-		case Cell.CELL_TYPE_BOOLEAN:
+		case BOOLEAN:
 			return new Boolean(c.getBooleanCellValue());	
 			
-		case Cell.CELL_TYPE_STRING:
+		case STRING:
 			return c.getStringCellValue();
 			
-		case Cell.CELL_TYPE_FORMULA: {	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+		case FORMULA: {	
+			if (c.getCachedFormulaResultType() == CellType.NUMERIC)
 			{	
 				if (c.getCellStyle().getDataFormatString().contains("%"))
 					return new Double(c.getNumericCellValue()*100.0);
 				else
 					return new Double(c.getNumericCellValue());
 			}	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_BOOLEAN)
+			if (c.getCachedFormulaResultType() == CellType.BOOLEAN)
 				return new Boolean(c.getBooleanCellValue());
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+			if (c.getCachedFormulaResultType() == CellType.STRING)
 				return c.getStringCellValue();
 			
 		}
@@ -457,22 +458,22 @@ public class ExcelUtils
 		
 		switch (c.getCellType())
 		{
-		case Cell.CELL_TYPE_BLANK:
+		case BLANK:
 		{	
 			if (FlagTreatBlankAs0)
 				return new Double(0.0);
 			else
 				return null;
 		}	
-		case Cell.CELL_TYPE_NUMERIC:
+		case NUMERIC:
 		{	
 			Double v = new Double(c.getNumericCellValue());
 			if (c.getCellStyle().getDataFormatString().contains("%"))
 				v = 100.0 * v;
 			return v;
 		}	
-		case Cell.CELL_TYPE_FORMULA: {	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+		case FORMULA: {	
+			if (c.getCachedFormulaResultType() == CellType.NUMERIC)
 			{	
 				if (c.getCellStyle().getDataFormatString().contains("%"))
 					return new Double(c.getNumericCellValue()*100.0);
@@ -492,11 +493,11 @@ public class ExcelUtils
 		
 		switch (c.getCellType())
 		{
-		case Cell.CELL_TYPE_BLANK:
+		case BLANK:
 		{	
 			return null;
 		}	
-		case Cell.CELL_TYPE_NUMERIC:
+		case NUMERIC:
 		{	
 			String format = c.getCellStyle().getDataFormatString();
 			if (format.indexOf('/') > 0 || format.indexOf('y') > 0 
@@ -504,9 +505,9 @@ public class ExcelUtils
 				return c.getDateCellValue();
 			return null;
 		}	
-		case Cell.CELL_TYPE_FORMULA: 
+		case FORMULA: 
 		{	
-			if (c.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
+			if (c.getCachedFormulaResultType() == CellType.NUMERIC)
 			{	
 				String format = c.getCellStyle().getDataFormatString();
 				if (format.indexOf('/') > 0 || format.indexOf('y') > 0 

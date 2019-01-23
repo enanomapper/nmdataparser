@@ -23,6 +23,7 @@ import org.apache.commons.jexl2.MapContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -2322,7 +2323,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 			Cell c = r.getCell(loc.columnIndex);
 			if (c != null) {
-				if (c.getCellType() != Cell.CELL_TYPE_STRING) {
+				if (c.getCellType() != CellType.STRING) {
 					String msg = String.format("[ %s ]: Cell is not of type STRING!",
 							locationStringForErrorMessage(loc));
 					throw new Exception(msg);
@@ -2528,11 +2529,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		}
 
-		if (c.getCellType() != Cell.CELL_TYPE_STRING) {
+		if (c.getCellType() != CellType.STRING) {
 
 			throw new CellException(loc.sectionName, (primarySheetNum + 1), (row.getRowNum() + 1),
 					(loc.columnIndex + 1), String.format("Found cell type %d, expected %d (CELL_TYPE_STRING)",
-							c.getCellType(), Cell.CELL_TYPE_STRING));
+							c.getCellType(), CellType.STRING));
 
 		}
 
@@ -2587,12 +2588,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		if (d != null)
 			return d;
-		if (loc.allowEmpty && (Cell.CELL_TYPE_BLANK == c.getCellType()))
+		if (loc.allowEmpty && (CellType.BLANK == c.getCellType()))
 			return null;
 		else {
 			throw new CellException(loc.sectionName, (primarySheetNum + 1), (row.getRowNum() + 1),
 					(loc.columnIndex + 1), String.format("Found cell type %d, expected %d (CELL_TYPE_NUMERIC)",
-							c.getCellType(), Cell.CELL_TYPE_NUMERIC));
+							c.getCellType(), CellType.NUMERIC));
 		}
 
 		/*

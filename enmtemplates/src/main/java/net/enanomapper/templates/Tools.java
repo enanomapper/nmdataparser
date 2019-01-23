@@ -92,7 +92,7 @@ public class Tools {
 	protected static String getValue(Cell cell, boolean clean) {
 		String value = null;
 		switch (cell.getCellType()) {
-		case Cell.CELL_TYPE_STRING: {
+		case STRING: {
 			value = new String(cell.getStringCellValue().getBytes(Charset.forName("UTF-8")));
 			// System.out.println(value);
 			value = value.toLowerCase();
@@ -100,7 +100,7 @@ public class Tools {
 				value = value.replace("\n", " ").replace("\r", "").trim();
 			break;
 		}
-		case Cell.CELL_TYPE_FORMULA: {
+		case FORMULA: {
 			// skip for now, we are only looking at terms!
 			break;
 		}

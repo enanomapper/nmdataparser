@@ -22,11 +22,13 @@ import javax.imageio.ImageIO;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Header;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.RichTextString;
@@ -80,7 +82,7 @@ public class TemplateMaker {
 		sheet.createRow(2).createCell(0).setCellValue(
 				"The templates are licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.");
 		sheet.createRow(3).createCell(0).setCellValue("https://creativecommons.org/licenses/by-sa/4.0/");
-		
+
 		sheet.createRow(5).createCell(0).setCellValue(
 				"Within eNanoMapper project the templates and fields are cleaned up. This is an eNanoMapper template derived from NANoREG template");
 		sheet.createRow(6).createCell(0).setCellValue("http://ambit.sourceforge.net/enanomapper/templates/");
@@ -135,7 +137,7 @@ public class TemplateMaker {
 		Workbook workbook = new XSSFWorkbook();
 		CreationHelper factory = workbook.getCreationHelper();
 		Sheet sheet = workbook.createSheet("instruction for data logging");
-		insertLogo(workbook,sheet);
+		insertLogo(workbook, sheet);
 		sheet = workbook.createSheet(sheetname);
 		workbook.setActiveSheet(1);
 		Header header = sheet.getHeader();
@@ -149,8 +151,11 @@ public class TemplateMaker {
 
 		for (TR record : records)
 			try {
-				if (sheetname.equals(record.get("Sheet")) && endpoint.equals(record.get("File"))) {
-
+				
+				if (sheetname.toUpperCase().equals(record.get("Sheet").toString().toUpperCase()) && (
+						endpoint.equals(record.get("File")) || endpoint.toUpperCase().equals(record.get("endpoint").toString().toUpperCase())
+								)) {
+					System.out.println(record);
 					int row = Integer.parseInt(record.get("Row").toString());
 					int col = Integer.parseInt(record.get("Column").toString());
 
@@ -160,7 +165,7 @@ public class TemplateMaker {
 					Cell cell = xrow.getCell(col);
 					if (cell == null) {
 						cell = xrow.createCell(col);
-						CellUtil.setAlignment(cell, workbook, CellStyle.ALIGN_CENTER);
+						CellUtil.setAlignment(cell, HorizontalAlignment.CENTER);
 					}
 
 					Object v = record.get("cleanedvalue");
@@ -366,13 +371,13 @@ public class TemplateMaker {
 					cell = row.createCell(c);
 
 				if (i > 4) {
-					CellUtil.setAlignment(cell, workbook, CellStyle.ALIGN_LEFT);
+					CellUtil.setAlignment(cell, ,HorizontalAlignment.LEFT);
 					String unit = sheet.getRow(4).getCell(c).getStringCellValue();
 					if (unit != null && !"".equals(unit)) {
 
 						cstyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
-						cell.setCellType(Cell.CELL_TYPE_NUMERIC);
-						CellUtil.setAlignment(cell, workbook, CellStyle.ALIGN_RIGHT);
+						cell.setCellType(CellType.NUMERIC);
+						CellUtil.setAlignment(cell,HorizontalAlignment.RIGHT);
 					}
 				}
 
@@ -380,14 +385,14 @@ public class TemplateMaker {
 			}
 			if (i == 0) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1), workbook, CellStyle.ALIGN_CENTER);
+				CellUtil.setAlignment(row.getCell(col1),HorizontalAlignment.CENTER);
 			}
 			if ("size distribution".equals(annotation) && i == 1) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1), workbook, CellStyle.ALIGN_CENTER);
+				CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
 			} else if ("cell".equals(annotation) && i == 1) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1), workbook, CellStyle.ALIGN_CENTER);
+				CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
 			}
 
 		}
@@ -486,11 +491,14 @@ public class TemplateMaker {
 		if (settings.getEndpointname() != null) {
 			Iterable<TR> records = getJSONConfig();
 			HashSet<String> assays = new HashSet<String>();
+			String assay = settings.getAssayname().toUpperCase();
+			String endpoint = settings.getEndpointname().toUpperCase();
+			String endpointfile = endpoint + ".XLSX";
 			for (TR record : records) {
-				// System.out.println(record.get("File"));
-				if (settings.getEndpointname().equals(record.get("File").toString().trim())) {
-					// System.out.println(record);
-					if (settings.getAssayname() == null || record.get("Sheet").equals(settings.getAssayname()))
+				System.out.println(record.get("endpoint").toString().toUpperCase());
+				if (endpointfile.equals(record.get("File").toString().toUpperCase().trim()) || endpoint.equals(record.get("endpoint").toString().toUpperCase().trim())) {
+					
+					if (settings.getAssayname() == null || record.get("Sheet").toString().toUpperCase().equals(assay))
 						assays.add(record.get("Sheet").toString());
 				}
 			}
@@ -509,10 +517,12 @@ public class TemplateMaker {
 							write(workbook, settings);
 							break;
 						}
-						case iom: {
-							generateIOMTemplates(records, settings, assayname);
-							break;
-						}
+						case iom:
+							try {
+								generateIOMTemplates(records, settings, assayname);
+								break;
+							} catch (Exception x) {
+							}
 						default:
 							break;
 						}

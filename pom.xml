@@ -58,6 +58,7 @@
 			<version>4.8</version>
 			<scope>test</scope>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
@@ -68,7 +69,7 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.13</version>
 		</dependency>
-
+		-->
 	</dependencies>
 	<build>
 		<resources>
