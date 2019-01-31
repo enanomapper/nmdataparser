@@ -11,6 +11,7 @@ import net.enanomapper.parser.recognition.RichValueParser;
 
 /**
  * This class is used to store the result from reading ExcelDataBlocks
+ * This is a data associated to a single effect records
  * @author nick
  *
  */
@@ -27,6 +28,7 @@ public class DataBlockElement
 	
 	public IParams params = null;
 	public String blockValueGroup = null;
+	public String endpointType = null;
 	
 	public void setValue(Object obj, RichValueParser rvParser)
 	{
@@ -96,6 +98,9 @@ public class DataBlockElement
 		//Setting the effect conditions from parameters
 		if (params != null)
 			effect.setConditions(params);
+		
+		if (endpointType != null)
+			effect.setEndpointType(endpointType);
 		
 		return effect;
 	}
