@@ -3108,6 +3108,59 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						bvgei.paramInfo.add(pi);
 				}
 			}
+		
+		if (bvg.endpointTypeString != null)		
+			bvgei.endpointTypeString = bvg.endpointTypeString;
+		else 
+		{
+			if (bvg.endpointType != null)
+			{
+				boolean FlagParamOK = true;
+				BlockParameter bp = bvg.endpointType;
+				BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
+				
+				if (bp.jsonValue != null)
+					pi.jsonValue = bp.jsonValue;
+
+				if (bp.assign == BlockParameterAssign.UNDEFINED) {
+					bvgei.errors.add("Value group, ENDPOINT_TYPE section, ASSIGN is UNDEFINED!");
+					FlagParamOK = false;
+				} else
+					pi.assign = bp.assign;
+
+				Integer intVal = getIntegerFromExpression(bp.columnPos);
+				if (intVal == null) {
+					bvgei.errors.add("Value group, ENDPOINT_TYPE section, COLUMN_POS is incorrect!");
+					FlagParamOK = false;
+				} else
+					pi.columnPos = intVal;
+
+				intVal = getIntegerFromExpression(bp.rowPos);
+				if (intVal == null) {
+					bvgei.errors.add("Value group, ENDPOINT_TYPE section, ROW_POS is incorrect!");
+					FlagParamOK = false;
+				} else
+					pi.rowPos = intVal;
+
+				pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
+				pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
+
+				if (bp.mapping != null)
+					pi.mapping = bp.mapping;
+
+				String strUnit = getStringFromExpression(bp.unit);
+				if (strUnit != null)
+					pi.unit = strUnit;
+
+				if (FlagParamOK) {
+					// TODO some additional checks for the positions if
+					// needed
+				}
+
+				if (FlagParamOK)
+					bvgei.endpointType = pi;
+			}
+		}
 
 		return bvgei;
 	}
