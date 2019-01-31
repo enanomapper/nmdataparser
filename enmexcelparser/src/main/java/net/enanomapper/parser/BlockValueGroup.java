@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import net.enanomapper.parser.BlockParameter.Usage;
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
@@ -388,6 +389,25 @@ public class BlockValueGroup {
 				BlockParameter bp = BlockParameter.extractBlockParameter(parNode.get(i), conf, jsonUtils, i);
 				bvg.parameters.add(bp);
 			}
+		}
+		
+		//ENDPOINT_TYPE
+		nd = node.path("ENDPOINT_TYPE");
+		if (!parNode.isMissingNode()) {
+			if (nd.isTextual()) {
+				//Extracting as a string
+				bvg.endpointTypeString = nd.asText();
+			}
+			else if (nd.isObject()) {
+				//Extracting as a block parameter
+				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ENDPOINT_TYPE);
+				bvg.endpointType = bp;
+				//System.out.println(bp.toJSONKeyWord(">>>>>>>>>"));
+			}
+			else 
+			{
+				conf.addError("In Value group, ENDPOINT_TYPE section is not TEXTUAL or parameter-style object!");
+			}	
 		}
 
 		return bvg;
