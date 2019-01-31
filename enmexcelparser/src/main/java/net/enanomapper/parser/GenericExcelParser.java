@@ -2714,16 +2714,19 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		// Iterating all sub-blocks
 		for (int sbRow = 0; sbRow < rowSubblocks; sbRow++)
-			for (int sbColumn = 0; sbColumn < columnSubblocks; sbColumn++) {
+			for (int sbColumn = 0; sbColumn < columnSubblocks; sbColumn++) 
+			{
 				// Upper left corner of the current sub-block
 				int row0 = sbRow * subblockSizeRows;
 				int column0 = sbColumn * subblockSizeColumns;
 
-				for (BlockValueGroupExtractedInfo bvgei : bvgExtrInfo) {
+				for (BlockValueGroupExtractedInfo bvgei : bvgExtrInfo) 
+				{
 					if (bvgei.FlagValues) {
 						// Shifted by -1 to make it 0-based indexing
 						for (int i = bvgei.startRow - 1; i <= bvgei.endRow - 1; i++)
-							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) {
+							for (int k = bvgei.startColumn - 1; k <= bvgei.endColumn - 1; k++) 
+							{
 								Object o = ExcelUtils.getObjectFromCell(cells[row0 + i][column0 + k]);
 								// Handle empty cell or incorrect values
 								if (o == null)
@@ -2800,13 +2803,82 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									if (d != null)
 										dbEl.error = d.doubleValue();
 								}
+								
+								// Handle ENDPOINT_TYPE
+								if (bvgei.endpointType != null)
+								{
+									BlockValueGroupExtractedInfo.ParamInfo pi = bvgei.endpointType;
+									
+									/*
+									if (pi.jsonValue != null) {
+										// json value takes precedence
+										// over ASSIGN
+										// This case is technically possible but instead should be
+										// used short syntax: "ENDPOINT_TYPE" : "value"
+										Object value = pi.jsonValue;
 
+										if (pi.mapping != null)
+											value = getMappingValue(pi.jsonValue, pi.mapping);
+
+										value = RichValue.recognizeRichValueFromObject(value, pi.unit,
+												rvParser);
+										dbEl.endpointType = value.toString();
+										//continue;
+									}
+									*/
+									
+									Cell c = null;
+									switch (pi.assign) {
+									case ASSIGN_TO_BLOCK:
+										// -1 for 0-based
+										c = cells[pi.rowPos - 1][pi.columnPos - 1];
+										break;
+									case ASSIGN_TO_SUBBLOCK:
+										// (rowPos,columnPos) are the
+										// sub-block position
+										// -1 for 0-based indexing
+										c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1];
+										break;
+									case ASSIGN_TO_VALUE:
+										// (pi.rowPos,pi.columnPos) are
+										// used as shifts
+										int par_row;
+										if (pi.fixRowPosToStartValue)
+											par_row = row0 + (bvgei.startRow - 1) + pi.rowPos;
+										else
+											par_row = row0 + i + pi.rowPos;
+
+										int par_col;
+										if (pi.fixColumnPosToStartValue)
+											par_col = column0 + (bvgei.startColumn - 1) + pi.columnPos;
+										else
+											par_col = column0 + k + pi.columnPos;
+
+										c = cells[par_row][par_col];
+										break;
+									case UNDEFINED:
+										// nothing is done
+										break;
+									}
+
+									if (c != null) {
+										Object value = ExcelUtils.getObjectFromCell(c);
+										dbEl.endpointType = value.toString();
+									}
+								}
+								else
+								{
+									if (bvgei.endpointTypeString != null)
+										dbEl.endpointType = bvgei.endpointTypeString;
+								}
+								
 								// Handle value group parameters (which are
 								// effect conditions)
 								if (bvgei.paramInfo != null)
 									if (!bvgei.paramInfo.isEmpty()) {
 										dbEl.params = new Params();
-										for (BlockValueGroupExtractedInfo.ParamInfo pi : bvgei.paramInfo) {
+										for (BlockValueGroupExtractedInfo.ParamInfo pi : bvgei.paramInfo) 
+										{
 											if (pi.jsonValue != null) {
 												// json value takes precedence
 												// over ASSIGN
@@ -2880,6 +2952,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return dbeList;
 	}
+	
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
