@@ -64,9 +64,12 @@ public class BlockParameter {
 		}
 
 		// NAME
-		if (node.path(KEYWORD.NAME.name()).isMissingNode()) {
-			conf.addError(errorPrefix + ", keyword \"NAME\" is missing!");
-		} else {
+		if (node.path(KEYWORD.NAME.name()).isMissingNode()) 
+		{
+			if (paramUse == Usage.PARAMETER)
+				conf.addError(errorPrefix + ", keyword \"NAME\" is missing!");
+		} 
+		else {
 			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.NAME.name(), false);
 			if (keyword == null)
 				conf.addError(jsonUtils.getError());
