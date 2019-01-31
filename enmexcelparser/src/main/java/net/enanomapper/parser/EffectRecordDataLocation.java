@@ -9,6 +9,7 @@ public class EffectRecordDataLocation
 	public String reference = null;
 	public HashMap<String, ExcelDataLocation> conditions = null;
 	public String addConditionsByRef[] = null;
+	public ExcelDataLocation endpointType = null;
 	public ExcelDataLocation unit = null;
 	public ExcelDataLocation loValue = null;
 	public ExcelDataLocation loQualifier = null;
@@ -17,7 +18,7 @@ public class EffectRecordDataLocation
 	public ExcelDataLocation textValue = null;
 	public ExcelDataLocation errValue = null;
 	public ExcelDataLocation errQualifier = null;
-	
+		
 	public ExcelDataLocation value = null; //It is read as a RichValue object and takes precedent over lo/up values and qualifiers
 	
 	
@@ -39,6 +40,14 @@ public class EffectRecordDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(endpoint.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (endpointType != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(endpointType.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		

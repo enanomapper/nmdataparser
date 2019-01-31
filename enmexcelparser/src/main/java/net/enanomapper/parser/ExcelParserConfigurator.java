@@ -1119,6 +1119,13 @@ public class ExcelParserConfigurator {
 			if (loc.nErrors == 0)
 				efrdl.endpoint = loc;
 		}
+		
+		// ENDPOINT_TYPE
+		loc = ExcelDataLocation.extractDataLocation(node, ElementField.ENDPOINT_TYPE.name(), conf);
+		if (loc != null) {
+			if (loc.nErrors == 0)
+				efrdl.endpointType = loc;
+		}
 
 		// SAMPLE_ID
 		loc = ExcelDataLocation.extractDataLocation(node, ElementField.SAMPLE_ID.name(), conf);

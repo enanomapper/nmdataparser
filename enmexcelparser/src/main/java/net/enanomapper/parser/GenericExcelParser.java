@@ -1457,7 +1457,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected EffectRecord readEffect(EffectRecordDataLocation efrdl) throws Exception {
 		logger.log(Level.FINE, "Reading effect record");
 		EffectRecord effect = new EffectRecord();
-
+		
 		if (efrdl.sampleID != null) {
 			String s = getString(efrdl.sampleID);
 			if (s != null)
@@ -1468,6 +1468,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			String s = getString(efrdl.endpoint);
 			if (s != null)
 				effect.setEndpoint(s.trim().toUpperCase());
+		}
+		
+		if (efrdl.endpointType != null) {
+			String s = getString(efrdl.endpointType);
+			if (s != null)
+				effect.setEndpointType(s.trim().toUpperCase());
 		}
 
 		if (efrdl.loQualifier != null) {

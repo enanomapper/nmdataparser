@@ -509,6 +509,16 @@ public class ParserConstants {
 					return false;
 			}
 		},
+		
+		ENDPOINT_TYPE {
+			@Override
+			public boolean isFieldOf(ObjectType type) {
+				if (type == ObjectType.EFFECT)
+					return true;
+				else
+					return false;
+			}
+		},
 
 		SAMPLE_ID {
 			@Override
