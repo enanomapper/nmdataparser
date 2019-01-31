@@ -94,6 +94,9 @@ public class BlockValueGroup {
 	public boolean FlagErrorRowShift = false;
 
 	public List<BlockParameter> parameters = null;
+	
+	public BlockParameter endpointType = null; //endpointType defined as a BlockParameter
+	public String endpointTypeString = null; //endpointType defined as a string directly from JSON
 
 	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum) {
 		BlockValueGroup bvg = new BlockValueGroup();

@@ -10,7 +10,7 @@ import net.enanomapper.parser.recognition.RichValueParser;
 
 
 /**
- * This class is used to stored the result from reading ExcelDataBlocks
+ * This class is used to store the result from reading ExcelDataBlocks
  * @author nick
  *
  */

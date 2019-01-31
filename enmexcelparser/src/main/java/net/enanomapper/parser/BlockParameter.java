@@ -7,6 +7,11 @@ import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
 
 public class BlockParameter {
+	
+	public static enum Usage {
+		PARAMETER, ENDPOINT_TYPE
+	}
+	
 	public String name = null;
 	public boolean FlagName = false;
 
@@ -37,9 +42,15 @@ public class BlockParameter {
 
 	public Object jsonValue = null;
 	public boolean FlagJsonValue = false;
+	
+	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf,
+			JsonUtilities jsonUtils, int paramNum)
+	{
+		return extractBlockParameter(node, conf, jsonUtils, paramNum, Usage.PARAMETER);
+	}
 
 	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf,
-			JsonUtilities jsonUtils, int paramNum) {
+			JsonUtilities jsonUtils, int paramNum, Usage paramUse) {
 		BlockParameter bp = new BlockParameter();
 
 		// NAME
