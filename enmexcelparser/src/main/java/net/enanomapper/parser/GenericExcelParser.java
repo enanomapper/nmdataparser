@@ -2863,7 +2863,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
-										dbEl.endpointType = value.toString();
+										if (value != null)
+											dbEl.endpointType = value.toString();
 									}
 								}
 								else
