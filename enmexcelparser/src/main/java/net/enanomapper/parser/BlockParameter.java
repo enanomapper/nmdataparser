@@ -52,10 +52,20 @@ public class BlockParameter {
 	public static BlockParameter extractBlockParameter(JsonNode node, ExcelParserConfigurator conf,
 			JsonUtilities jsonUtils, int paramNum, Usage paramUse) {
 		BlockParameter bp = new BlockParameter();
+		
+		String errorPrefix = null;
+		switch (paramUse) {
+		case ENDPOINT_TYPE:
+			errorPrefix = "In JSON Section ENDPOINT_TYPE";
+			break;
+		case PARAMETER:
+			errorPrefix = "In JSON Section PARAMETERS[" + (paramNum + 1) + "]";
+			break;
+		}
 
 		// NAME
 		if (node.path(KEYWORD.NAME.name()).isMissingNode()) {
-			conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"NAME\" is missing!");
+			conf.addError(errorPrefix + ", keyword \"NAME\" is missing!");
 		} else {
 			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.NAME.name(), false);
 			if (keyword == null)
@@ -80,7 +90,7 @@ public class BlockParameter {
 		// ASSIGN
 		if (node.path(KEYWORD.ASSIGN.name()).isMissingNode()) {
 			if (!bp.FlagJsonValue)
-				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"ASSIGN\" is missing!");
+				conf.addError(errorPrefix + ", keyword \"ASSIGN\" is missing!");
 		} else {
 			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.ASSIGN.name(), false);
 			if (keyword == null)
@@ -89,8 +99,7 @@ public class BlockParameter {
 				bp.assign = BlockParameterAssign.fromString(keyword);
 				bp.FlagAssign = true;
 				if (bp.assign == BlockParameterAssign.UNDEFINED)
-					conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1)
-							+ "], keyword \"ASSIGN\" is incorrect or UNDEFINED!");
+					conf.addError(errorPrefix + ", keyword \"ASSIGN\" is incorrect or UNDEFINED!");
 			}
 		}
 
@@ -98,17 +107,16 @@ public class BlockParameter {
 		nd = node.path(KEYWORD.COLUMN_POS.name());
 		if (nd.isMissingNode()) {
 			if (!bp.FlagJsonValue)
-				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"COLUMN_POS\" is missing!");
+				conf.addError(errorPrefix + ", keyword \"COLUMN_POS\" is missing!");
 		} else {
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null) {
-				conf.addError(
-						"In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"COLUMN_POS\" is incorrect!");
+				conf.addError(errorPrefix + ", keyword \"COLUMN_POS\" is incorrect!");
 			} else {
 				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
 				if (expr_error != null) {
-					conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1)
-							+ "], keyword \"COLUMN_POS\" is incorrect expression: " + expr_error + " --> \""
+					conf.addError(errorPrefix + 
+							", keyword \"COLUMN_POS\" is incorrect expression: " + expr_error + " --> \""
 							+ obj.toString() + "\"");
 				} else {
 					bp.columnPos = obj;
@@ -121,16 +129,16 @@ public class BlockParameter {
 		nd = node.path(KEYWORD.ROW_POS.name());
 		if (nd.isMissingNode()) {
 			if (!bp.FlagJsonValue)
-				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"ROW_POS\" is missing!");
+				conf.addError(errorPrefix + ", keyword \"ROW_POS\" is missing!");
 		} else {
 			Object obj = JsonUtilities.extractObject(nd);
 			if (obj == null) {
-				conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1) + "], keyword \"ROW_POS\" is incorrect!");
+				conf.addError(errorPrefix + ", keyword \"ROW_POS\" is incorrect!");
 			} else {
 				String expr_error = ExpressionUtils.checkExpressionAsInteger(obj);
 				if (expr_error != null) {
-					conf.addError("In JSON Section PARAMETERS[" + (paramNum + 1)
-							+ "], keyword \"ROW_POS\" is incorrect expression: " + expr_error + " --> \""
+					conf.addError(errorPrefix + 
+							", keyword \"ROW_POS\" is incorrect expression: " + expr_error + " --> \""
 							+ obj.toString() + "\"");
 				} else {
 					bp.rowPos = obj;
