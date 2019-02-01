@@ -8,6 +8,7 @@ public class ProtocolApplicationDataLocation
 {
 	public ExcelDataLocation protocolApplicationUUID = null;
 	public ExcelDataLocation investigationUUID = null;
+	public ExcelDataLocation assayUUID = null;
 	
 	public ExcelDataLocation citationTitle = null;
 	public ExcelDataLocation citationYear = null;
@@ -55,6 +56,14 @@ public class ProtocolApplicationDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			sb.append(investigationUUID.toJSONKeyWord(offset+"\t"));
+			nSections++;
+		}
+		
+		if (assayUUID != null)
+		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
+			sb.append(assayUUID.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}
 		
