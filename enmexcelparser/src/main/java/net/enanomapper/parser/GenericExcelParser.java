@@ -1112,6 +1112,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				pa.setInvestigationUUID(investUUID);
 			}
 		}
+		
+		if (padl.assayUUID != null) {
+			String s = getString(padl.assayUUID);
+			if (s != null && !"".equals(s.trim())) {
+				pa.setAssayUUID(s); //this function automatically generates valid UUID from string
+			}
+		}
 
 		if (padl.citationTitle != null) {
 			String s = getString(padl.citationTitle);

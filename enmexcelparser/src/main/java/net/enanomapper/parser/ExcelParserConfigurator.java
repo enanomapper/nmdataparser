@@ -948,6 +948,13 @@ public class ExcelParserConfigurator {
 			if (loc.nErrors == 0)
 				padl.investigationUUID = loc;
 		}
+		
+		// ASSAY_UUID
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.ASSAY_UUID.name(), conf);
+		if (loc != null) {
+			if (loc.nErrors == 0)
+				padl.assayUUID = loc;
+		}
 
 		// CITATION_TITLE
 		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CITATION_TITLE.name(), conf);
