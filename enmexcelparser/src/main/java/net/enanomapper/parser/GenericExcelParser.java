@@ -2545,7 +2545,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (c.getCellType() != CellType.STRING) {
 
 			throw new CellException(loc.sectionName, (primarySheetNum + 1), (row.getRowNum() + 1),
-					(loc.columnIndex + 1), String.format("Found cell type %d, expected %d (CELL_TYPE_STRING)",
+					(loc.columnIndex + 1), String.format("Found cell type %s, expected %s (CELL_TYPE_STRING)",
 							c.getCellType(), CellType.STRING));
 
 		}
@@ -2605,7 +2605,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 		else {
 			throw new CellException(loc.sectionName, (primarySheetNum + 1), (row.getRowNum() + 1),
-					(loc.columnIndex + 1), String.format("Found cell type %d, expected %d (CELL_TYPE_NUMERIC)",
+					(loc.columnIndex + 1), String.format("Found cell type %s, expected %s (CELL_TYPE_NUMERIC)",
 							c.getCellType(), CellType.NUMERIC));
 		}
 
