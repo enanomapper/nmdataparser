@@ -393,7 +393,8 @@ public class BlockValueGroup {
 		
 		//ENDPOINT_TYPE
 		nd = node.path("ENDPOINT_TYPE");
-		if (!parNode.isMissingNode()) {
+		if (!nd.isMissingNode()) 
+		{
 			if (nd.isTextual()) {
 				//Extracting as a string
 				bvg.endpointTypeString = nd.asText();
@@ -406,7 +407,7 @@ public class BlockValueGroup {
 			}
 			else 
 			{
-				conf.addError("In Value group, ENDPOINT_TYPE section is not TEXTUAL or parameter-style object!");
+				conf.addError("In Value group, ENDPOINT_TYPE section is not TEXTUAL or parameter-style object!");				
 			}	
 		}
 
