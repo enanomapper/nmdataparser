@@ -50,6 +50,7 @@ import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
+import net.enanomapper.parser.BlockValueGroupExtractedInfo.ParamInfo;
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
 import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
@@ -2706,7 +2707,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (exdb_loc.valueGroups == null)
 			return dbeList;
 
-		// Analyze value groups
+		// Analyze value groups: positions info is extracted from the used expressions 
 		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
 		for (BlockValueGroup bvg : exdb_loc.valueGroups) {
 			BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
@@ -3117,12 +3118,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				}
 			}
 		
+		
 		if (bvg.endpointTypeString != null)		
 			bvgei.endpointTypeString = bvg.endpointTypeString;
 		else 
 		{
 			if (bvg.endpointType != null)
 			{
+				//Following code could be replaced with function extractParamInfo()
 				boolean FlagParamOK = true;
 				BlockParameter bp = bvg.endpointType;
 				BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
@@ -3169,8 +3172,81 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					bvgei.endpointType = pi;
 			}
 		}
+		
+		
+		if (bvg.endpointQualifierString != null)		
+			bvgei.endpointQualifierString = bvg.endpointQualifierString;
+		else 
+		{
+			if (bvg.endpointQualifier != null)
+			{	
+				ParamInfo pi = extractParamInfo(bvg.endpointQualifier, bvgei.errors, "ENDPOINT_QUALIFIER");
+				if (pi != null)
+					bvgei.endpointQualifier = pi;
+			}
+		}
+		
+		if (bvg.errorQualifierString != null)		
+			bvgei.errorQualifierString = bvg.errorQualifierString;
+		else 
+		{
+			if (bvg.errorQualifier != null)
+			{	
+				ParamInfo pi = extractParamInfo(bvg.errorQualifier, bvgei.errors, "ERROR_QUALIFIER");
+				if (pi != null)
+					bvgei.errorQualifier = pi;
+			}
+		}
 
 		return bvgei;
+	}
+	
+	ParamInfo extractParamInfo(BlockParameter bp, List<String> errorOutput, String section)
+	{
+		BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
+		boolean FlagParamOK = true;
+		
+		if (bp.jsonValue != null)
+			pi.jsonValue = bp.jsonValue;
+
+		if (bp.assign == BlockParameterAssign.UNDEFINED) {
+			errorOutput.add("Value group, " + section + " section, ASSIGN is UNDEFINED!");
+			FlagParamOK = false;
+		} else
+			pi.assign = bp.assign;
+
+		Integer intVal = getIntegerFromExpression(bp.columnPos);
+		if (intVal == null) {
+			errorOutput.add("Value group, " + section + " section, COLUMN_POS is incorrect!");
+			FlagParamOK = false;
+		} else
+			pi.columnPos = intVal;
+
+		intVal = getIntegerFromExpression(bp.rowPos);
+		if (intVal == null) {
+			errorOutput.add("Value group, " + section + " section, ROW_POS is incorrect!");
+			FlagParamOK = false;
+		} else
+			pi.rowPos = intVal;
+
+		pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
+		pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
+
+		if (bp.mapping != null)
+			pi.mapping = bp.mapping;
+
+		String strUnit = getStringFromExpression(bp.unit);
+		if (strUnit != null)
+			pi.unit = strUnit;
+
+		if (FlagParamOK) {
+			// TODO some additional checks for the positions if
+			// needed
+			
+			return pi;
+		}
+		
+		return null;
 	}
 
 	protected Integer getIntegerFromExpression(Object obj) {
