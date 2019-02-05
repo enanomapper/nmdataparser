@@ -32,7 +32,7 @@ public class BlockValueGroup {
 
 	public Object endpointRowPos = new Integer(0);
 	public boolean FlagEndpointRowPos = false;
-
+	
 	public boolean fixEndpointColumnPosToStartValue = false;
 	public boolean FlagFixEndpointColumnPosToStartValue = false;
 
@@ -69,13 +69,8 @@ public class BlockValueGroup {
 
 	// The shifts are relative to the corresponding value position.
 	// 'value' by default is considered to be lo-value, rich-value or text-value
-
-	public Object qualifierColumnShift = new Integer(0);
-	public boolean FlagQualifierColumnShift = false;
-
-	public Object qualifierRowShift = new Integer(0);
-	public boolean FlagQualifierRowShift = false;
-
+		
+	/*
 	public Object upValueColumnShift = new Integer(0);
 	public boolean FlagUpValueColumnShift = false;
 
@@ -87,17 +82,25 @@ public class BlockValueGroup {
 
 	public Object upQualifierRowShift = new Integer(0);
 	public boolean FlagUpQualifierRowShift = false;
+	*/
 
 	public Object errorColumnShift = new Integer(0);
 	public boolean FlagErrorColumnShift = false;
 
 	public Object errorRowShift = new Integer(0);
 	public boolean FlagErrorRowShift = false;
-
+	
 	public List<BlockParameter> parameters = null;
 	
 	public BlockParameter endpointType = null; //endpointType defined as a BlockParameter
 	public String endpointTypeString = null; //endpointType defined as a string directly from JSON
+		
+	public BlockParameter endpointQualifier = null; //endpoint Qualifier defined as a BlockParameter
+	public String endpointQualifierString = null; //endpoint Qualifier defined as a string directly from JSON
+	
+	public BlockParameter errorQualifier = null; //error Qualifier defined as a BlockParameter
+	public String errorQualifierString = null; //error Qualifier defined as a string directly from JSON
+	
 
 	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum) {
 		BlockValueGroup bvg = new BlockValueGroup();

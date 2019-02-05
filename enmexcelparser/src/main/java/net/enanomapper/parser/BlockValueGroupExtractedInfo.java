@@ -43,8 +43,16 @@ public class BlockValueGroupExtractedInfo
 	public Integer errorRowShift = null;
 	
 	public List<ParamInfo> paramInfo = null;
+	
 	public ParamInfo endpointType = null;
 	public String endpointTypeString = null;
+	
+	public ParamInfo endpointQualifier = null;
+	public String endpointQualifierString = null;
+	
+	public ParamInfo errorQualifier = null;
+	public String errorQualifierString = null;
+	
 	
 	public List<String> getErrors()
 	{
