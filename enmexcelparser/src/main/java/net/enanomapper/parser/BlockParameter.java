@@ -9,7 +9,7 @@ import net.enanomapper.parser.recognition.ExpressionUtils;
 public class BlockParameter {
 	
 	public static enum Usage {
-		PARAMETER, ENDPOINT_TYPE
+		PARAMETER, ENDPOINT_TYPE, ENDPOINT_QUALIFIER, ERROR_QUALIFIER  
 	}
 	
 	public String name = null;
@@ -56,7 +56,9 @@ public class BlockParameter {
 		String errorPrefix = null;
 		switch (paramUse) {
 		case ENDPOINT_TYPE:
-			errorPrefix = "In JSON Section ENDPOINT_TYPE";
+		case ENDPOINT_QUALIFIER:
+		case ERROR_QUALIFIER:	
+			errorPrefix = "In JSON Section " + paramUse.name();
 			break;
 		case PARAMETER:
 			errorPrefix = "In JSON Section PARAMETERS[" + (paramNum + 1) + "]";

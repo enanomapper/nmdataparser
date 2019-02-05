@@ -377,8 +377,6 @@ public class BlockValueGroup {
 			}
 		}
 
-		// TODO handle qualifierColumnShift, qualifierRowShift, ...
-
 		// PARAMETERS
 		JsonNode parNode = node.path("PARAMETERS");
 		if (!parNode.isMissingNode()) {
@@ -406,13 +404,52 @@ public class BlockValueGroup {
 				//Extracting as a block parameter
 				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ENDPOINT_TYPE);
 				bvg.endpointType = bp;
-				//System.out.println(bp.toJSONKeyWord(">>>>>>>>>"));
 			}
 			else 
 			{
 				conf.addError("In Value group, ENDPOINT_TYPE section is not TEXTUAL or parameter-style object!");				
 			}	
 		}
+		
+		//ENDPOINT_QUALIFIER
+		nd = node.path("ENDPOINT_QUALIFIER");
+		if (!nd.isMissingNode()) 
+		{
+			if (nd.isTextual()) {
+				//Extracting as a string
+				bvg.endpointQualifierString = nd.asText();
+			}
+			else if (nd.isObject()) {
+				//Extracting as a block parameter
+				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ENDPOINT_QUALIFIER);
+				bvg.endpointQualifier = bp;
+			}
+			else 
+			{
+				conf.addError("In Value group, ENDPOINT_QUALIFIER section is not TEXTUAL or parameter-style object!");				
+			}	
+		}
+		
+		//ERROR_QUALIFIER
+		nd = node.path("ERROR_QUALIFIER");
+		if (!nd.isMissingNode()) 
+		{
+			if (nd.isTextual()) {
+				//Extracting as a string
+				bvg.errorQualifierString = nd.asText();
+			}
+			else if (nd.isObject()) {
+				//Extracting as a block parameter
+				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ERROR_QUALIFIER);
+				bvg.errorQualifier = bp;
+				//System.out.println(bp.toJSONKeyWord(">>>>>>>>>"));
+			}
+			else 
+			{
+				conf.addError("In Value group, ERROR_QUALIFIER section is not TEXTUAL or parameter-style object!");				
+			}	
+		}
+		 
 
 		return bvg;
 	}
@@ -558,6 +595,57 @@ public class BlockValueGroup {
 			sb.append(offset + "\t\"ERROR_ROW_SHIFT\" : " + JsonUtilities.objectToJsonField(errorRowShift));
 			nFields++;
 		}
+		
+		if (endpointTypeString != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ENDPOINT_TYPE\" : " + endpointTypeString);
+		}
+		else
+		{
+			if (endpointType != null)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(offset + "\t\"ENDPOINT_TYPE\" : \n" );
+				sb.append(endpointType.toJSONKeyWord(offset + "\t\t"));
+			}
+		}
+		
+		if (endpointQualifierString != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ENDPOINT_QUALIFIER\" : " + endpointQualifierString);
+		}
+		else
+		{
+			if (endpointQualifier != null)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(offset + "\t\"ENDPOINT_QUALIFIER\" : \n" );
+				sb.append(endpointQualifier.toJSONKeyWord(offset + "\t\t"));
+			}
+		}
+		
+		if (errorQualifierString != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"ERROR_QUALIFIER\" : " + errorQualifierString);
+		}
+		else
+		{
+			if (errorQualifier != null)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(offset + "\t\"ERROR_QUALIFIER\" : \n" );
+				sb.append(errorQualifier.toJSONKeyWord(offset + "\t\t"));
+			}
+		}
 
 		if (parameters != null) {
 			if (nFields > 0)
@@ -573,6 +661,7 @@ public class BlockValueGroup {
 			}
 			sb.append(offset + "\t]");
 		}
+		
 
 		if (nFields > 0)
 			sb.append("\n");
