@@ -2714,9 +2714,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			if (bvgei.getErrors().isEmpty())
 				bvgExtrInfo.add(bvgei);
 			else {
-				logger.info("------- Value Group " + bvg.name + "errors:");
+				logger.warning("------- Value Group " + bvg.name + "errors:");
 				for (String err : bvgei.getErrors())
-					logger.info("   --- " + err);
+					logger.warning("   --- " + err);
 			}
 		}
 
@@ -2800,10 +2800,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 								}
 
-								dbEl.unit = bvgei.unit; // The unit may be
-														// overriden by the
+								dbEl.unit = bvgei.unit; // The unit may be 
+														// overridden by the
 														// setValue() function
+								
+								//By default if object o is a pure number 
+								//is stored as loValue
 								dbEl.setValue(o, rvParser);
+								
 								if (bvgei.errorColumnShift != 0 || bvgei.errorRowShift != 0) {
 									Number d = (Double) ExcelUtils
 											.getNumericValue(cells[row0 + i + bvgei.errorRowShift][column0 + k
@@ -2815,6 +2819,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								// Handle ENDPOINT_TYPE
 								if (bvgei.endpointType != null)
 								{
+									//TODO optimize/shorten code by using function getCell()
 									BlockValueGroupExtractedInfo.ParamInfo pi = bvgei.endpointType;
 									
 									/*
@@ -2879,6 +2884,43 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								{
 									if (bvgei.endpointTypeString != null)
 										dbEl.endpointType = bvgei.endpointTypeString;
+								}
+								
+								// Handle ENDPOINT_QUALIFIER								
+								if (bvgei.endpointQualifier != null)
+								{
+									ParamInfo pi = bvgei.endpointQualifier;
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+
+									if (c != null) {
+										Object value = ExcelUtils.getObjectFromCell(c);
+										// by default it is stored as loQualifier
+										if (value != null)
+											dbEl.loQualifier = value.toString();
+									}
+								}
+								else
+								{
+									if (bvgei.endpointQualifierString != null)
+										dbEl.loQualifier = bvgei.endpointQualifierString;
+								}
+								
+								// Handle ERROR_QUALIFIER
+								if (bvgei.errorQualifier != null)
+								{
+									ParamInfo pi = bvgei.errorQualifier;
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+
+									if (c != null) {
+										Object value = ExcelUtils.getObjectFromCell(c);
+										if (value != null)
+											dbEl.errQualifier = value.toString();
+									}
+								}
+								else
+								{
+									if (bvgei.errorQualifierString != null)
+										dbEl.errQualifier = bvgei.errorQualifierString;
 								}
 								
 								// Handle value group parameters (which are
@@ -2960,6 +3002,51 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			} // iterating all sub-blocks
 
 		return dbeList;
+	}
+	
+	Cell getCell(ParamInfo pi, Cell cells[][], int row0, int column0, int i, int k, 
+					BlockValueGroupExtractedInfo bvgei)
+	{
+		// Upper left corner of the current sub-block (row0, column0)
+		// Current value position in the sub-block (i,j)
+		
+		Cell c = null;
+		switch (pi.assign) {
+		case ASSIGN_TO_BLOCK:
+			// (pi.rowPos,pi.columnPos) define 
+			// the block position
+			// -1 for 0-based
+			c = cells[pi.rowPos - 1][pi.columnPos - 1];
+			break;
+		case ASSIGN_TO_SUBBLOCK:
+			// (pi.rowPos,pi.columnPos) define
+			// the sub-block position
+			// -1 for 0-based indexing
+			c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1];
+			break;
+		case ASSIGN_TO_VALUE:
+			// (pi.rowPos,pi.columnPos) are
+			// used as shifts from the value position (i,k)
+			int par_row;
+			if (pi.fixRowPosToStartValue)
+				par_row = row0 + (bvgei.startRow - 1) + pi.rowPos;
+			else
+				par_row = row0 + i + pi.rowPos;
+
+			int par_col;
+			if (pi.fixColumnPosToStartValue)
+				par_col = column0 + (bvgei.startColumn - 1) + pi.columnPos;
+			else
+				par_col = column0 + k + pi.columnPos;
+
+			c = cells[par_row][par_col];
+			break;
+		case UNDEFINED:
+			// nothing is done
+			break;
+		}
+		
+		return c;	
 	}
 	
 
@@ -3125,7 +3212,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		{
 			if (bvg.endpointType != null)
 			{
-				//Following code could be replaced with function extractParamInfo()
+				//TODO Following code could be replaced with function extractParamInfo()
 				boolean FlagParamOK = true;
 				BlockParameter bp = bvg.endpointType;
 				BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
@@ -3203,7 +3290,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	
 	ParamInfo extractParamInfo(BlockParameter bp, List<String> errorOutput, String section)
 	{
-		BlockValueGroupExtractedInfo.ParamInfo pi = new BlockValueGroupExtractedInfo.ParamInfo();
+		ParamInfo pi = new ParamInfo();
 		boolean FlagParamOK = true;
 		
 		if (bp.jsonValue != null)
@@ -3278,14 +3365,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					}
 
 				} catch (Exception e) {
-					logger.info("Expression error: " + e.getMessage());
+					logger.warning("Expression error: " + e.getMessage());
 				}
 			} else {
 				try {
 					Integer res = Integer.parseInt(s);
 					return res;
 				} catch (Exception e) {
-					logger.info("Expression error: " + e.getMessage());
+					logger.warning("Expression error: " + e.getMessage());
 				}
 			}
 		}
