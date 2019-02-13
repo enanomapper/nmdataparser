@@ -95,8 +95,8 @@ public class BlockValueGroup {
 	public BlockParameter endpointType = null; //endpointType defined as a BlockParameter
 	public String endpointTypeString = null; //endpointType defined as a string directly from JSON
 		
-	public BlockParameter endpointQualifier = null; //endpoint Qualifier defined as a BlockParameter
-	public String endpointQualifierString = null; //endpoint Qualifier defined as a string directly from JSON
+	public BlockParameter valueQualifier = null; //value Qualifier defined as a BlockParameter
+	public String valueQualifierString = null; //value Qualifier defined as a string directly from JSON
 	
 	public BlockParameter errorQualifier = null; //error Qualifier defined as a BlockParameter
 	public String errorQualifierString = null; //error Qualifier defined as a string directly from JSON
@@ -411,18 +411,18 @@ public class BlockValueGroup {
 			}	
 		}
 		
-		//ENDPOINT_QUALIFIER
-		nd = node.path("ENDPOINT_QUALIFIER");
+		//VALUE_QUALIFIER
+		nd = node.path("VALUE_QUALIFIER");
 		if (!nd.isMissingNode()) 
 		{
 			if (nd.isTextual()) {
 				//Extracting as a string
-				bvg.endpointQualifierString = nd.asText();
+				bvg.valueQualifierString = nd.asText();
 			}
 			else if (nd.isObject()) {
 				//Extracting as a block parameter
 				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ENDPOINT_QUALIFIER);
-				bvg.endpointQualifier = bp;
+				bvg.valueQualifier = bp;
 			}
 			else 
 			{
@@ -613,20 +613,20 @@ public class BlockValueGroup {
 			}
 		}
 		
-		if (endpointQualifierString != null)
+		if (valueQualifierString != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"ENDPOINT_QUALIFIER\" : " + endpointQualifierString);
+			sb.append(offset + "\t\"VALUE_QUALIFIER\" : " + valueQualifierString);
 		}
 		else
 		{
-			if (endpointQualifier != null)
+			if (valueQualifier != null)
 			{
 				if (nFields > 0)
 					sb.append(",\n");
-				sb.append(offset + "\t\"ENDPOINT_QUALIFIER\" : \n" );
-				sb.append(endpointQualifier.toJSONKeyWord(offset + "\t\t"));
+				sb.append(offset + "\t\"VALUE_QUALIFIER\" : \n" );
+				sb.append(valueQualifier.toJSONKeyWord(offset + "\t\t"));
 			}
 		}
 		

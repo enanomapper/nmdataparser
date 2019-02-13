@@ -47,8 +47,8 @@ public class BlockValueGroupExtractedInfo
 	public ParamInfo endpointType = null;
 	public String endpointTypeString = null;
 	
-	public ParamInfo endpointQualifier = null;
-	public String endpointQualifierString = null;
+	public ParamInfo valueQualifier = null;
+	public String valueQualifierString = null;
 	
 	public ParamInfo errorQualifier = null;
 	public String errorQualifierString = null;

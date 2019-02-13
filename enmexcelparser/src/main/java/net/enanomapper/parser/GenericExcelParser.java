@@ -2886,10 +2886,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 										dbEl.endpointType = bvgei.endpointTypeString;
 								}
 								
-								// Handle ENDPOINT_QUALIFIER								
-								if (bvgei.endpointQualifier != null)
+								// Handle VALUE_QUALIFIER								
+								if (bvgei.valueQualifier != null)
 								{
-									ParamInfo pi = bvgei.endpointQualifier;
+									ParamInfo pi = bvgei.valueQualifier;
 									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
 
 									if (c != null) {
@@ -2901,8 +2901,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								}
 								else
 								{
-									if (bvgei.endpointQualifierString != null)
-										dbEl.loQualifier = bvgei.endpointQualifierString;
+									if (bvgei.valueQualifierString != null)
+										dbEl.loQualifier = bvgei.valueQualifierString;
 								}
 								
 								// Handle ERROR_QUALIFIER
@@ -3261,15 +3261,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 		
 		
-		if (bvg.endpointQualifierString != null)		
-			bvgei.endpointQualifierString = bvg.endpointQualifierString;
+		if (bvg.valueQualifierString != null)		
+			bvgei.valueQualifierString = bvg.valueQualifierString;
 		else 
 		{
-			if (bvg.endpointQualifier != null)
+			if (bvg.valueQualifier != null)
 			{	
-				ParamInfo pi = extractParamInfo(bvg.endpointQualifier, bvgei.errors, "ENDPOINT_QUALIFIER");
+				ParamInfo pi = extractParamInfo(bvg.valueQualifier, bvgei.errors, "ENDPOINT_QUALIFIER");
 				if (pi != null)
-					bvgei.endpointQualifier = pi;
+					bvgei.valueQualifier = pi;
 			}
 		}
 		
