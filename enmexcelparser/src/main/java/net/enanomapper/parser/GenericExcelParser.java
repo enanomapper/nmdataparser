@@ -2529,6 +2529,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		return objects1;
 	}
+	
+	protected Object[] getArray(Row row, ExcelDataLocation loc) throws Exception {
+		//TODO
+		return null;
+	}	
 
 	/**
 	 * 
@@ -2584,7 +2589,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	
 	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) 
 	{
-		//TODO
+		//TODO 
+		//getArray
 		return "xxx";
 	}
 	
