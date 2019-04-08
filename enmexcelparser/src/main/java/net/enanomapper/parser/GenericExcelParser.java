@@ -2530,9 +2530,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return objects1;
 	}
 	
-	protected Object[] getArray(Row row, ExcelDataLocation loc) throws Exception {
-		//TODO
-		return null;
+	protected Object[] getArrayFromColumnIndices(Row row, ExcelDataLocation loc) throws Exception 
+	{
+		int columns[] = loc.columnIndices;
+		Object objects[] = new Object[columns.length];
+
+		for (int k = 0; k < columns.length; k++) {
+			Cell c = row.getCell(columns[k]);
+			Object o = ExcelUtils.getObjectFromCell(c);
+			objects[k] = o;
+		}
+
+		if (loc.trimArray)
+			return trimObjects(objects, 1, columns.length);
+
+		return objects;
 	}	
 
 	/**
@@ -2589,6 +2601,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	
 	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) 
 	{
+		
 		//TODO 
 		//getArray
 		return "xxx";
