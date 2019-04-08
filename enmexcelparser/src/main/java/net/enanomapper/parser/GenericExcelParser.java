@@ -549,7 +549,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				// Treating source combination or array
 				ExcelDataLocation loc = config.variableLocations.get(var);
 				if (loc.sourceCombination) {
-					// TODO
+					// TODO source combination for variables should not be needed
 					continue;
 				} else if (loc.isArray) {
 					Object arrayObj[] = getArray(loc);
@@ -590,7 +590,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					ExcelDataLocation loc = eshc.variableLocations.get(var);
 					// Treating source combination or array
 					if (loc.sourceCombination) {
-						// TODO
+						// TODO source combination for variables should not be needed
 						continue;
 					} else if (loc.isArray) {
 						Object arrayObj[] = getArray(loc);
@@ -2586,7 +2586,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @param loc
 	 * @return
 	 */
-	protected String getString(Row row, ExcelDataLocation loc) 
+	protected String getString(Row row, ExcelDataLocation loc) throws Exception
 	{	
 		if (loc.sourceCombination)
 		{			
@@ -2599,12 +2599,30 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 	}
 	
-	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) 
+	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) throws Exception
 	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("xxx--");
+		if (loc.columnIndices == null)
+		{
+			Cell c = row.getCell(loc.columnIndex);
+			sb.append(ExcelUtils.getStringFromCell(c));
+		}
+		else
+		{	
+			Object obj[] = getArrayFromColumnIndices(row, loc);
+			if (obj != null)
+				for (int i = 0; i < obj.length; i++)
+				{	
+					if (sb.length() > 0)
+						sb.append(loc.combinationSeparator);
+					sb.append(obj[i].toString());
+				}	
+		}
+			
+		//TODO handle json, variables
 		
-		//TODO 
-		//getArray
-		return "xxx";
+		return sb.toString();
 	}
 	
 

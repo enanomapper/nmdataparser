@@ -26,7 +26,10 @@ public class ExcelDataLocation {
 
 	public boolean sourceCombination = false;
 	public boolean FlagSourceCombination = false;
-
+	
+	public String combinationSeparator = "";
+	public boolean FlagCombinationSeparator = false;
+	
 	public boolean isArray = false;
 	public boolean FlagIsArray = false;
 
