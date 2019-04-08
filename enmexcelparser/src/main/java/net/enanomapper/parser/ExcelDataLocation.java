@@ -77,14 +77,11 @@ public class ExcelDataLocation {
 	public String rowName = null;
 	public boolean FlagRowName = false;
 
-	public int columnIndices[] = null; // Used only in mode
-										// IterationAccess.COMBINATION
+	public int columnIndices[] = null; // Used only for SOURCE_COMBINATION
 
-	public int rowIndices[] = null; // Used only in mode
-									// IterationAccess.COMBINATION
+	public int rowIndices[] = null; // Used only for SOURCE_COMBINATION
 
-	public String variableKeys[] = null; // Used only in mode
-											// IterationAccess.COMBINATION
+	public String variableKeys[] = null; // Used only for SOURCE_COMBINATION
 
 	// This is a recursive approach used for other fields defined by excel data
 	// location

@@ -2015,7 +2015,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String getString(ExcelDataLocation loc) throws Exception {
+	protected String getString(ExcelDataLocation loc) throws Exception 
+	{
+		//SOURCE_COMBINATION option is used in iteration modes: 
+		//ROW_SINGLE, ROW_MULTI_FIXED and ROW_MULTI_DYNAMIC
+		//
+		//SOURCE_COMBINATION also utilizes the info 
+		//from JSON_VALUE, JSON_REPOSITORY and VARIABLE modes (if present)
+		//
+		//SOURCE_COMBINATION is handled in function getString(row, loc) 
+		
 		switch (loc.iteration) {
 		case ROW_SINGLE:
 			if (loc.isFromParallelSheet()) {
@@ -2560,10 +2569,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @param loc
 	 * @return
 	 */
-	protected String getString(Row row, ExcelDataLocation loc) {
-		Cell c = row.getCell(loc.columnIndex);
-		return ExcelUtils.getStringFromCell(c);
+	protected String getString(Row row, ExcelDataLocation loc) 
+	{	
+		if (loc.sourceCombination)
+		{			
+			return getStringAsSourceCombination(row, loc);
+		}
+		else
+		{	
+			Cell c = row.getCell(loc.columnIndex);
+			return ExcelUtils.getStringFromCell(c);
+		}
 	}
+	
+	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) 
+	{
+		//TODO
+		return "xxx";
+	}
+	
 
 	/**
 	 * 
