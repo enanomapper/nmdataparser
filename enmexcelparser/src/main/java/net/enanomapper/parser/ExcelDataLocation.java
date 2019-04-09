@@ -371,7 +371,7 @@ public class ExcelDataLocation {
 									+ "] is incorrect: " + jsonUtils.getError());
 							loc.nErrors++;
 						} else
-							loc.rowIndices[i] = row_ind;
+							loc.rowIndices[i] = row_ind - 1; // 1-based --> 0-based;
 					} else {
 						conf.addError("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES[" + (i + 1)
 								+ "] is not integer!");
@@ -651,7 +651,7 @@ public class ExcelDataLocation {
 				sb.append(",\n");
 			sb.append(offset + "\t\"ROW_INDICES\" : [");
 			for (int i = 0; i < rowIndices.length; i++) {
-				sb.append(rowIndices[i] + 1);
+				sb.append(rowIndices[i] + 1); // 0 --> 1-based
 				if (i < (rowIndices.length - 1))
 					sb.append(", ");
 			}
