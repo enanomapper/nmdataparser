@@ -2645,10 +2645,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected String getStringFromAbsoluteLocationAsSourceCombination(ExcelDataLocation loc) throws Exception
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("absloc--");
 		
-		//TODO handle absolute location ...
-		
+		//Handle array defined by absolute location 
+		Object obj[] = getArrayFromAbsoluteLocation(loc);		
+		if (obj != null)
+			JsonUtilities.addObjectToStringBuffer(obj, sb, loc.combinationSeparator);
 		
 		//Handle non-excel info directly taken from json config file
 		String jsonSource = getJsonSourceCombination(loc);

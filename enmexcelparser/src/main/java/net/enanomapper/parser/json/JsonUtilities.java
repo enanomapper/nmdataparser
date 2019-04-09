@@ -276,11 +276,12 @@ public class JsonUtilities
 		{
 			Object obj[] = (Object[]) value;
 			for (int i = 0; i < obj.length; i++)
-			{
-				if (sb.length() > 0)
-					sb.append(separator);
-				sb.append(obj[i].toString());
-			}
+				if (obj[i] != null)
+				{
+					if (sb.length() > 0)
+						sb.append(separator);
+					sb.append(obj[i].toString());
+				}
 		}
 		else
 		{	
