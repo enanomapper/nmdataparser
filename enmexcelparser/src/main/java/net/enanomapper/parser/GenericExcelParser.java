@@ -58,6 +58,7 @@ import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.exceptions.CellException;
 import net.enanomapper.parser.exceptions.ExceptionAtLocation;
+import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
@@ -2480,6 +2481,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		Object objects[] = new Object[n];
 
 		for (int i = 0; i < rows.length; i++) {
+			//!!!!! check getRow whether it uses 0-based indexing
 			Row r = sheet.getRow(rows[i]);
 			if (r == null) {
 				for (int k = 0; k < columns.length; k++)
@@ -2609,7 +2611,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected String getStringAsSourceCombination(Row row, ExcelDataLocation loc) throws Exception
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append("xxx--");
+		
 		if (loc.columnIndices == null)
 		{
 			Cell c = row.getCell(loc.columnIndex);
@@ -2627,15 +2629,79 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				}	
 		}
 			
-		//TODO handle json, variables
+		//Handle non-excel info directly taken from json config file
+		String jsonSource = getJsonSourceCombination(loc);
+		if (!jsonSource.isEmpty())
+		{
+			if (sb.length() > 0)
+				sb.append(loc.combinationSeparator);
+			sb.append(jsonSource);
+		}
 		
 		return sb.toString();
 	}
 	
 	protected String getStringFromAbsoluteLocationAsSourceCombination(ExcelDataLocation loc) throws Exception
 	{
-		//TODO
-		return null;
+		StringBuffer sb = new StringBuffer();
+		sb.append("absloc--");
+		
+		//TODO handle absolute location ...
+		
+		
+		//Handle non-excel info directly taken from json config file
+		String jsonSource = getJsonSourceCombination(loc);
+		if (!jsonSource.isEmpty())
+		{
+			if (sb.length() > 0)
+				sb.append(loc.combinationSeparator);
+			sb.append(jsonSource);
+		}
+		return sb.toString();
+	}
+	
+	protected String getJsonSourceCombination(ExcelDataLocation loc) throws Exception
+	{
+		//Handle information from JSON_VALUE, JSON_REPOSITORY,
+		//VARIABLE_KEY and VARIABLE_KEYS 
+		
+		StringBuffer sb = new StringBuffer();
+		
+		if (loc.getJsonValue() != null)
+		{
+			Object value = loc.getJsonValue();
+			JsonUtilities.addObjectToStringBuffer(value, sb, loc.combinationSeparator);
+		}
+		
+		if (loc.getJsonRepositoryKey() != null)
+		{
+			String key = loc.getJsonRepositoryKey();
+			Object value = config.jsonRepository.get(key);
+			if (value != null)
+				JsonUtilities.addObjectToStringBuffer(value, sb, loc.combinationSeparator);
+		}
+		
+		if (loc.variableKeys != null)
+		{
+			//VARIABLE_KEYS takes precedence over VARIABLE_KEY
+			for (int i = 0; i < loc.variableKeys.length; i++)
+			{
+				String key = loc.variableKeys[i];
+				Object value = curVariables.get(key);
+				if (value != null)
+					JsonUtilities.addObjectToStringBuffer(value, sb, loc.combinationSeparator);
+			}
+		}
+		else
+		{
+			//handle VARIABLE_KEY
+			String key = loc.getVariableKey();
+			Object value = curVariables.get(key);
+			if (value != null)
+				JsonUtilities.addObjectToStringBuffer(value, sb, loc.combinationSeparator);
+		}
+		
+		return sb.toString();
 	}
 	
 

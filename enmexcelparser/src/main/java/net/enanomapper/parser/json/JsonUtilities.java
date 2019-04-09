@@ -270,4 +270,25 @@ public class JsonUtilities
 		return sb.toString();
 	}
 	
+	public static void addObjectToStringBuffer(Object value, StringBuffer sb, String separator)
+	{
+		if (value instanceof Object[])
+		{
+			Object obj[] = (Object[]) value;
+			for (int i = 0; i < obj.length; i++)
+			{
+				if (sb.length() > 0)
+					sb.append(separator);
+				sb.append(obj[i].toString());
+			}
+		}
+		else
+		{	
+			if (sb.length() > 0)
+				sb.append(separator);
+			//cases: String, Integer, Double, Boolean or Number object
+			sb.append(value.toString());
+		}
+	}
+	
 }
