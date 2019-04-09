@@ -146,6 +146,19 @@ public class ExcelDataLocation {
 				loc.FlagSourceCombination = true;
 			}
 		}
+		
+		// COMBINATION_SEPARATOR
+		if (!sectionNode.path(KEYWORD.COMBINATION_SEPARATOR.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.COMBINATION_SEPARATOR.name(), false);
+			if (keyword == null) {
+				conf.addError(
+						"In JSON section \"" + jsonSection + "\", keyword \"COMBINATION_SEPARATOR\" : " + jsonUtils.getError());
+				loc.nErrors++;
+			} else {
+				loc.FlagCombinationSeparator = true;
+				loc.combinationSeparator = keyword;
+			}
+		}
 
 		// IS_ARRAY
 		if (!sectionNode.path(KEYWORD.IS_ARRAY.name()).isMissingNode()) {
@@ -508,6 +521,13 @@ public class ExcelDataLocation {
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"SOURCE_COMBINATION\" : " + sourceCombination);
+			nFields++;
+		}
+		
+		if (FlagCombinationSeparator) {
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"COMBINATION_SEPARATOR\" : \"" + combinationSeparator + "\"");
 			nFields++;
 		}
 
