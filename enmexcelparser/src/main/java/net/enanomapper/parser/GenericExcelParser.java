@@ -2457,6 +2457,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		// The array is formed from a matrix defined by rows (and columns)
 		// The rows are stored sequentially
+
+		// Columns and row numbers are 0-based indexed
 		int rows[];
 		int columns[];
 
@@ -2467,7 +2469,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			rows = new int[1];
 			rows[0] = loc.rowIndex;
 		}
-
+		
 		if (loc.columnIndices != null) {
 			// columnIndices takes precedence over columnsIndex
 			columns = loc.columnIndices;
@@ -2475,13 +2477,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			columns = new int[1];
 			columns[0] = loc.columnIndex;
 		}
-
+		
 		// Array size = the number of 'matrix' elements
 		int n = rows.length * columns.length;
 		Object objects[] = new Object[n];
 
 		for (int i = 0; i < rows.length; i++) {
-			//!!!!! check getRow whether it uses 0-based indexing
 			Row r = sheet.getRow(rows[i]);
 			if (r == null) {
 				for (int k = 0; k < columns.length; k++)
