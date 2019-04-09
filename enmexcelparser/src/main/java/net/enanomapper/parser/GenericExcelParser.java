@@ -2018,12 +2018,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected String getString(ExcelDataLocation loc) throws Exception 
 	{
 		//SOURCE_COMBINATION option is used in iteration modes: 
-		//ROW_SINGLE, ROW_MULTI_FIXED and ROW_MULTI_DYNAMIC
+		//ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC and ABSOLUTE_LOCATION
 		//
-		//SOURCE_COMBINATION also utilizes the info 
+		//However SOURCE_COMBINATION also utilizes the info 
 		//from JSON_VALUE, JSON_REPOSITORY and VARIABLE modes (if present)
 		//
-		//SOURCE_COMBINATION is handled in function getString(row, loc) 
+		//SOURCE_COMBINATION is handled in functions:
+		//getString(row, loc) and getStringFromAbsoluteLocation(loc)
 		
 		switch (loc.iteration) {
 		case ROW_SINGLE:
@@ -2362,7 +2363,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @param loc
 	 * @return
 	 */
-	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc) {
+	protected String getStringFromAbsoluteLocation(ExcelDataLocation loc) throws Exception
+	{
+		if (loc.sourceCombination)
+		{
+			return getStringFromAbsoluteLocationAsSourceCombination(loc);
+		}
+		
 		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
 		if (sheet != null) {
 			Row r = sheet.getRow(loc.rowIndex);
@@ -2623,6 +2630,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		//TODO handle json, variables
 		
 		return sb.toString();
+	}
+	
+	protected String getStringFromAbsoluteLocationAsSourceCombination(ExcelDataLocation loc) throws Exception
+	{
+		//TODO
+		return null;
 	}
 	
 
