@@ -2018,14 +2018,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 */
 	protected String getString(ExcelDataLocation loc) throws Exception 
 	{
-		//SOURCE_COMBINATION option is used in iteration modes: 
-		//ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC and ABSOLUTE_LOCATION
-		//
-		//However SOURCE_COMBINATION also utilizes the info 
-		//from JSON_VALUE, JSON_REPOSITORY and VARIABLE modes (if present)
-		//
-		//SOURCE_COMBINATION is handled in functions:
-		//getString(row, loc) and getStringFromAbsoluteLocation(loc)
+		//(1)
+		//SOURCE_COMBINATION for iteration modes: 
+		//ROW_SINGLE, ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC 
+		//is handled within function getString(row, loc)
+		
+		//(2)
+		//SOURCE_COMBINATION for iteration mode ABSOLUTE_LOCATION
+		//is handled within getStringFromAbsoluteLocation(loc)
+		
+		//(3)
+		//SOURCE_COMBINATION for iteration modes: 
+		//JSON_VALUE, JSON_REPOSITORY and VARIABLE 
+		//is handled by function getJsonSourceCombination(loc)
+		//This function is called also in the iteration modes from (1) and (2)
+		
 		
 		switch (loc.iteration) {
 		case ROW_SINGLE:
@@ -2062,7 +2069,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 		}
 
-		case JSON_VALUE: {
+		case JSON_VALUE: {			
+			if (loc.sourceCombination)
+				return getJsonSourceCombination(loc);
+			
 			Object value = loc.getJsonValue();
 			if (value != null)
 				if (value instanceof String)
@@ -2076,6 +2086,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		case JSON_REPOSITORY: {
+			if (loc.sourceCombination)
+				return getJsonSourceCombination(loc);
+			
 			String key = loc.getJsonRepositoryKey();
 			Object value = config.jsonRepository.get(key);
 			if (value != null)
@@ -2090,6 +2103,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		case VARIABLE: {
+			if (loc.sourceCombination)
+				return getJsonSourceCombination(loc);
+			
 			String key = loc.getVariableKey();
 			Object value = curVariables.get(key);
 			if (value != null)
