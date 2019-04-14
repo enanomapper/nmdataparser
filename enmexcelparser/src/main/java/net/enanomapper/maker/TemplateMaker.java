@@ -154,11 +154,15 @@ public class TemplateMaker {
 
 		for (TR record : records)
 			try {
-				
-				if (sheetname.toUpperCase().equals(record.get("Sheet").toString().toUpperCase()) && (
-						endpoint.equals(record.get("File")) || endpoint.toUpperCase().equals(record.get("endpoint").toString().toUpperCase())
-								)) {
-					System.out.println(record);
+				Object _file = record.get("File");
+				Object _endpoint = record.get("endpoint");
+				Object _sheet = record.get("Sheet");
+				if (_file == null || _endpoint == null || _sheet == null)
+					continue;
+
+				if (sheetname.toUpperCase().equals(_sheet.toString().toUpperCase()) && (endpoint.equals(_file)
+						|| endpoint.toUpperCase().equals(_endpoint.toString().toUpperCase()))) {
+					//System.out.println(record);
 					int row = Integer.parseInt(record.get("Row").toString());
 					int col = Integer.parseInt(record.get("Column").toString());
 
@@ -380,16 +384,19 @@ public class TemplateMaker {
 
 						cstyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
 						cell.setCellType(CellType.NUMERIC);
-						CellUtil.setAlignment(cell,HorizontalAlignment.RIGHT);
+						CellUtil.setAlignment(cell, HorizontalAlignment.RIGHT);
 					}
 				}
 
 				cell.setCellStyle(cstyle);
 			}
-			if (i == 0) {
-				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1),HorizontalAlignment.CENTER);
-			}
+			if (i == 0)
+				try {
+					sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
+					CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
+				} catch (Exception x) {
+					logger_cli.warning(x.getMessage());
+				}
 			if ("size distribution".equals(annotation) && i == 1) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
 				CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
@@ -497,15 +504,38 @@ public class TemplateMaker {
 			String assay = settings.getAssayname().toUpperCase();
 			String endpoint = settings.getEndpointname().toUpperCase();
 			String endpointfile = endpoint + ".XLSX";
-			for (TR record : records) {
-				System.out.println(record.get("endpoint").toString().toUpperCase());
-				if (endpointfile.equals(record.get("File").toString().toUpperCase().trim()) || endpoint.equals(record.get("endpoint").toString().toUpperCase().trim())) {
-					
-					if (settings.getAssayname() == null || record.get("Sheet").toString().toUpperCase().equals(assay))
-						assays.add(record.get("Sheet").toString());
+			for (TR record : records)
+				try {
+					// System.out.println(record);
+					Object _file = record.get("File");
+					Object _endpoint = record.get("endpoint");
+					Object _sheet = record.get("Sheet");
+					if (_file == null) {
+						System.out.println(String.format("Missing file %s", record.get("id")));
+						continue;
+					}
+					if (_endpoint == null) {
+						System.out.println(String.format("Missing endpoint %s", record.get("id")));
+						continue;
+					}
+					if (_sheet == null) {
+						System.out.println(String.format("Missing sheet %s", record.get("id")));
+						continue;
+					}
+
+					if (endpointfile.equals(_file.toString().toUpperCase().trim())
+							|| endpoint.equals(_endpoint.toString().toUpperCase().trim())) {
+
+						if (settings.getAssayname() == null || _sheet.toString().toUpperCase().equals(assay))
+							assays.add(_sheet.toString());
+					}
+				} catch (Exception x) {
+					// System.out.println(record);
+					x.printStackTrace();
 				}
-			}
 			// generate
+			if (assays.size() == 0)
+				throw new Exception(String.format("Not found"));
 			Iterator<String> i = assays.iterator();
 			while (i.hasNext())
 				try {

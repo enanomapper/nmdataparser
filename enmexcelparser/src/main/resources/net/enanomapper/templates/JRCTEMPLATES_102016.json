@@ -3081,6 +3081,7 @@
 },
 {
 	"module":	"INVITRO"
+	,"endpoint":	"epithelial barrier integrity"
 	,"s_uuid":	"NP crossing ToF-SIMS"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"sop"
@@ -3920,6 +3921,7 @@
 },
 {
 	"module":	"INVITRO"
+	,"endpoint":	"epithelial barrier integrity"
 	,"s_uuid":	"NP intracell pen(confocal micro"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"sop"
@@ -20548,6 +20550,7 @@
 },
 {
 	"cleanedvalue":	"method and instrument information"
+	,"endpoint":	"epithelial barrier integrity"
 	,"Column":	27
 	,"module":	"INVITRO"
 	,"Value":	"method and instrument information"
@@ -73734,6 +73737,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73765,6 +73769,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73796,6 +73801,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73827,6 +73833,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73858,6 +73865,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73889,6 +73897,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73920,6 +73929,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73951,6 +73961,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -73982,6 +73993,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74013,6 +74025,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74044,6 +74057,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74075,6 +74089,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74106,6 +74121,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74137,6 +74153,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74168,6 +74185,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74199,6 +74217,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -74230,6 +74249,7 @@
 },
 {
 	"module":	"PCHEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"s_uuid":	"size TEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
@@ -83186,6 +83206,7 @@
 },
 {
 	"module":	"INVITRO"
+	,"endpoint":	"epithelial barrier integrity"
 	,"s_uuid":	"Aerosol Characterisation"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"sop"
@@ -83201,6 +83222,7 @@
 },
 {
 	"module":	"INVITRO"
+	,"endpoint":	"epithelial barrier integrity"
 	,"s_uuid":	"Aspect of deposit"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"sop"
@@ -83233,6 +83255,7 @@
 {
 	"module":	"PCHEM"
 	,"s_uuid":	"size TEM"
+	,"endpoint":	"particle size distribution (granulometry)"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"results"
 	,"cleanedvalue":	"uncertainty"
@@ -83247,6 +83270,7 @@
 },
 {
 	"module":	"INVITRO"
+	,"endpoint":	"epithelial barrier integrity"
 	,"s_uuid":	"NPs crossing TEM-SEM"
 	,"Folder":	"JRCTEMPLATES_102016"
 	,"Annotation":	"sop"
