@@ -88,9 +88,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	// Primary sheet
 	protected int primarySheetNum = 0;
 	protected Sheet primarySheet = null;
-	protected int curRowNum = 1; // This is used by the iteration logic
+	protected int curRowNum = 1;  // Used for iteration
 	protected int curReadRowNum = 1; // This shows the actual read rows in
-	// multi-dynamic iteration mode
+									// multi-dynamic iteration mode
 	protected int curCellNum = 1;
 	protected int iterationLastRowNum = 1;
 	protected Row curRow = null;
@@ -828,33 +828,37 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	/**
 	 * 
 	 */
-	protected void readRowsMultiDynamic() {
+	protected void readRowsMultiDynamic() 
+	{
 		logger.info("----- Primary Sheet - Reading at row: " + (curRowNum + 1));
 
-		switch (config.dynamicIteration) {
-		case NEXT_NOT_EMPTY: {
-			if (curRowNum <= primarySheet.getLastRowNum())
-				curRows = new ArrayList<Row>();
-			else {
-				curRows = null;
-				primarySheetSynchKey = null;
-				logger.info("----- read no rows ");
-				return;
-			}
+		if (curRowNum <= primarySheet.getLastRowNum())
+			curRows = new ArrayList<Row>();
+		else {
+			curRows = null;
+			primarySheetSynchKey = null;
+			logger.info("----- read no rows ");
+			return;
+		}
+		
+		// The first row is already checked to be non empty
+		curRow = primarySheet.getRow(curRowNum);
+		Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
+		primarySheetSynchKey = ExcelUtils.getStringFromCell(c0);
+		logger.info("synch key: " + primarySheetSynchKey);
 
-			// The first row is already checked to be non empty
-			curRow = primarySheet.getRow(curRowNum);
-			Cell c0 = curRow.getCell(config.dynamicIterationColumnIndex);
-			primarySheetSynchKey = ExcelUtils.getStringFromCell(c0);
-			logger.info("synch key: " + primarySheetSynchKey);
+		curReadRowNum = curRowNum; // curRowNum is not changed here. It is
+									//updated in iterateRowMultiDynamic()
+		Row r = curRow;
+		curRows.add(r);
+		curReadRowNum++;
 
-			curReadRowNum = curRowNum; // curRowNum is not changed here. It is
-			// updated by the iteration functions
-			Row r = curRow;
-			curRows.add(r);
-			curReadRowNum++;
-
-			while (curReadRowNum <= primarySheet.getLastRowNum()) {
+		
+		switch (config.dynamicIteration) 
+		{
+		case NEXT_NOT_EMPTY: {			
+			while (curReadRowNum <= primarySheet.getLastRowNum()) 
+			{
 				r = primarySheet.getRow(curReadRowNum);
 				if (isEmpty(r)) {
 					// Empty row is skipped
@@ -866,17 +870,37 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						curRows.add(r);
 						curReadRowNum++;
 					} else {
-						logger.info("****  read " + curRows.size() + " rows /  next key: " + c.toString());
+						logger.info("****  read " + curRows.size() + " rows /  next key: " + c);
 						return; // Reached next record
 					}
 				}
 			} // end of while
-
 			logger.info(" read " + curRows.size() + " rows");
 		}
+			break;
 
 		case NEXT_DIFFERENT_VALUE: {
-			// TODO
+			while (curReadRowNum <= primarySheet.getLastRowNum()) 
+			{
+				r = primarySheet.getRow(curReadRowNum);
+				if (isEmpty(r)) {
+					// Empty row is skipped
+					curReadRowNum++;
+					continue;
+				} else {
+					Cell c = r.getCell(config.dynamicIterationColumnIndex);
+					String sval = ExcelUtils.getStringFromCell(c);					
+					if ((sval != null) && 
+							sval.equals(primarySheetSynchKey)) {
+						curRows.add(r);
+						curReadRowNum++;
+					} else {
+						logger.info("****  read " + curRows.size() + " rows /  next key: " + c);
+						return; // Reached next record
+					}
+				}
+			} // end of while
+			logger.info(" read " + curRows.size() + " rows");
 		}
 			break;
 		
