@@ -2820,8 +2820,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		case ROW_MULTI_FIXED: // Both treated the same way
 		case ROW_MULTI_DYNAMIC:
-			// TODO
-			return null;
+			List<DataBlockElement> listDBE = getDataBlockFromRowList(curRows, exdb_loc);
+			return listDBE;
 
 		case ABSOLUTE_LOCATION: {
 			Object value = exdb_loc.getAbsoluteLocationValue();
@@ -2838,6 +2838,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return null;
 
 		}
+	}
+	
+	protected List<DataBlockElement> getDataBlockFromRowList(List<Row> rowList, ExcelDataBlockLocation exdb_loc) 
+	{
+		//TODO
+		return null;
 	}
 
 	protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc) {
