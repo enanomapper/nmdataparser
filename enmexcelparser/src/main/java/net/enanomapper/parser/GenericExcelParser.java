@@ -879,6 +879,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			// TODO
 		}
 			break;
+		
+		case ROW_LIST: {
+			// TODO
+		}
+			break;
 
 		default:
 			break;
@@ -3756,51 +3761,13 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	}
 
 	/**
-	 * Planned Implementation Tasks:
-	 * 
-	 * - Recognition modes: BY_NAME, BY_INDEX_AND_NAME
-	 * 
-	 * - in ExcelDataLocation class separate 'recognitions' for the Sheet, Row
-	 * and Column
-	 * 
-	 * - Iteration modes: ROW_MULTI_FIXED, ROW_MULTI_DYNAMIC, COLUMN_* ...
-	 * 
-	 * - List of all allowed JSON keywords + optional checking
-	 * 
-	 * - Read information from variables into the class ExcelDataLocation
-	 * 
-	 * - Reading on particular sheet + linked parallel reading on several sheets
-	 * (e.g. ModNanoTox should need this (eventually more work variables of the
-	 * kind: curSheet... would be needed) + synchronization ...
-	 * 
-	 * - Definition of an 'END of reading" region i.e. after that point the
-	 * excel data is not considered. This idea can be further developed to a
-	 * substance record filtration utility - may be a special class for
-	 * filtration...
 	 * 
 	 * - dynamic (automatic) recognition of SubtsanceRecord elements from Excel:
 	 * protocol applications, effects, endpoints, conditions keyword suggestion
 	 * DYNAMIC_SPAN
 	 * 
-	 * - handle ParserConfiguration flags: by JSON + Java Method
-	 * 
-	 * - add to ExcelDataLocation keywords for UUID generation flag + possible
-	 * processing of data from that location
-	 * 
-	 * - conditions to be read as RichValue and stored as Value object
-	 * 
-	 * - String_or_Double Excel/Json utils
-	 * 
 	 * - Check the consistency of the ExcelDataLocation (loc variables) and the
 	 * global data access/parallel sheet access, ...
-	 * 
-	 * - dynamic iteration in mode NEXT_DIFFERENT_VALUE (both for primary and
-	 * parallel sheets)
-	 * 
-	 * - Move some of the "extraction" functions from class
-	 * ExcelParserConfiguration to the corresponding *DataLocation class -
-	 * analogously: Move handling of parallel sheets to the corresponding
-	 * classes + move some functionality as static to ExcelParserUtils
 	 * 
 	 * - Error messages to be logged out /option to switch off memory storage of
 	 * the error messages
