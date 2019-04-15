@@ -1,0 +1,433 @@
+[{
+	"module": "INVITRO",
+	"endpoint": "cell transformation",
+	"s_uuid": "hCTA"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "LDH"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "MTS"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "Resazurin"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "Trypan blue"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "hCTA"
+}, {
+	"module": "INVITRO",
+	"endpoint": "cytotoxicity",
+	"s_uuid": "hemolysis"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "Aerosol Characterisation"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "Aspect of deposit"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "NP crossing ICP-OES"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "NP crossing ToF-SIMS"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "NP intracell pen(confocal micro"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "NPs crossing TEM-SEM"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "TEER"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "TEM observation"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "TEM-SEM - intracell penetration"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "barrier integrity - LY"
+}, {
+	"module": "INVITRO",
+	"endpoint": "epithelial barrier integrity",
+	"s_uuid": "oral mucosa 3Dmodel penetration"
+}, {
+	"module": "INVITRO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "COMET"
+}, {
+	"module": "INVITRO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "Micronucleus"
+}, {
+	"module": "INVITRO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "TEM observation"
+}, {
+	"module": "INVITRO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "chromosomal damage in vitro"
+}, {
+	"module": "INVITRO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Apoptosis"
+}, {
+	"module": "INVITRO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "NO production"
+}, {
+	"module": "INVITRO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "cytokine secretion"
+}, {
+	"module": "INVITRO",
+	"endpoint": "nanomaterial deposition \\/ aerosol characterisation",
+	"s_uuid": "Aerosol Characterisation"
+}, {
+	"module": "INVITRO",
+	"endpoint": "nanomaterial deposition \\/ aerosol characterisation",
+	"s_uuid": "Aspect of deposit"
+}, {
+	"module": "INVITRO",
+	"endpoint": "nanomaterial deposition \\/ aerosol characterisation",
+	"s_uuid": "TEM observation"
+}, {
+	"module": "INVITRO",
+	"endpoint": "occular (eye) irritation",
+	"s_uuid": "hemolysis"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "Alamar blue"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "CFE"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "Impedence_flow cytom"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "LDH"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "MTS"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "Neutral red"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "RT- Impedence_adherence cell"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "Resazurin"
+}, {
+	"module": "INVITRO",
+	"endpoint": "viability",
+	"s_uuid": "Trypan blue"
+}, {
+	"module": "INVIVO",
+	"endpoint": "air liquid interface",
+	"s_uuid": "mass concentration"
+}, {
+	"module": "INVIVO",
+	"endpoint": "air liquid interface",
+	"s_uuid": "size distribution"
+}, {
+	"module": "INVIVO",
+	"endpoint": "biodistribution",
+	"s_uuid": "Biodistribution"
+}, {
+	"module": "INVIVO",
+	"endpoint": "broncho alveolar lavage",
+	"s_uuid": "Cellularity"
+}, {
+	"module": "INVIVO",
+	"endpoint": "broncho alveolar lavage",
+	"s_uuid": "biochem analysis inhalation"
+}, {
+	"module": "INVIVO",
+	"endpoint": "broncho alveolar lavage",
+	"s_uuid": "cell counts"
+}, {
+	"module": "INVIVO",
+	"endpoint": "ecotoxicity",
+	"s_uuid": "soil - C. Elegans"
+}, {
+	"module": "INVIVO",
+	"endpoint": "ecotoxicity",
+	"s_uuid": "water - algae - P.subcap"
+}, {
+	"module": "INVIVO",
+	"endpoint": "ecotoxicity",
+	"s_uuid": "water - fish - D Rerio"
+}, {
+	"module": "INVIVO",
+	"endpoint": "ecotoxicity",
+	"s_uuid": "water - microalgae - D. Magna"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "COMET"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "Micronucleus"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "TEM observation"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity",
+	"s_uuid": "chromosomal damage in vitro"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity - inhalation",
+	"s_uuid": "DNA-damage lung"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity - inhalation",
+	"s_uuid": "cytokines levels"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity - inhalation",
+	"s_uuid": "hystopathology"
+}, {
+	"module": "INVIVO",
+	"endpoint": "genotoxicity - inhalation",
+	"s_uuid": "mRNA expression in vivo"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Blood counts"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Cytokine secretion MPh"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "FACS analysis"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "NO production"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Polyclonal proliferation"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Serum cytokine"
+}, {
+	"module": "INVIVO",
+	"endpoint": "immunotoxicity",
+	"s_uuid": "Serum total antibodies"
+}, {
+	"module": "INVIVO",
+	"endpoint": "organ burden",
+	"s_uuid": "MW digestion + ICP-MS"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pattern distribution in organs",
+	"s_uuid": "CRM"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pattern distribution in organs",
+	"s_uuid": "IBM"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pattern distribution in organs",
+	"s_uuid": "ToF-SIMS"
+}, {
+	"module": "INVIVO",
+	"endpoint": "physiologically based pharmacokinetic modelling (pbpk)",
+	"s_uuid": "PBPK"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pulmonary deposition",
+	"s_uuid": "DNA-damage lung"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pulmonary deposition",
+	"s_uuid": "biochemical analysis"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pulmonary deposition",
+	"s_uuid": "cytokines levels"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pulmonary deposition",
+	"s_uuid": "histopathology"
+}, {
+	"module": "INVIVO",
+	"endpoint": "pulmonary deposition",
+	"s_uuid": "mRNA expression in vivo"
+}, {
+	"module": "INVIVO",
+	"endpoint": "systemic genotoxicity",
+	"s_uuid": "COMET - sistemic genotox "
+}, {
+	"module": "INVIVO",
+	"endpoint": "systemic genotoxicity",
+	"s_uuid": "Micronuclei - sistemic genotox"
+}, {
+	"module": "INVIVO",
+	"endpoint": "systemic genotoxicity",
+	"s_uuid": "PIG-A sistemic genotox"
+}, {
+	"module": "INVIVO",
+	"endpoint": "systemic genotoxicity",
+	"s_uuid": "lung genotoxicity"
+}, {
+	"module": "PCHEM",
+	"endpoint": "batch dispersion\\/stability",
+	"s_uuid": "batch dispersion"
+}, {
+	"module": "PCHEM",
+	"endpoint": "crystalline phase",
+	"s_uuid": "WAXD"
+}, {
+	"module": "PCHEM",
+	"endpoint": "crystalline phase",
+	"s_uuid": "XRD"
+}, {
+	"module": "PCHEM",
+	"endpoint": "density",
+	"s_uuid": "density"
+}, {
+	"module": "PCHEM",
+	"endpoint": "density",
+	"s_uuid": "effective density"
+}, {
+	"module": "PCHEM",
+	"endpoint": "dustiness",
+	"s_uuid": "Dustiness with Vortex Shaker"
+}, {
+	"module": "PCHEM",
+	"endpoint": "dustiness",
+	"s_uuid": "Dustiness with large drum"
+}, {
+	"module": "PCHEM",
+	"endpoint": "dustiness",
+	"s_uuid": "Dustiness with other set-up"
+}, {
+	"module": "PCHEM",
+	"endpoint": "dustiness",
+	"s_uuid": "Dustiness with small drum"
+}, {
+	"module": "PCHEM",
+	"endpoint": "elemental composition and chemical purity",
+	"s_uuid": "composition_EDX"
+}, {
+	"module": "PCHEM",
+	"endpoint": "elemental composition and chemical purity",
+	"s_uuid": "composizion_ICP-OES"
+}, {
+	"module": "PCHEM",
+	"endpoint": "elemental composition and chemical purity",
+	"s_uuid": "elemental composition_ICP-MS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "elemental composition and chemical purity",
+	"s_uuid": "elemental compostion_CHN analys"
+}, {
+	"module": "PCHEM",
+	"endpoint": "isoelectric point zeta potential",
+	"s_uuid": "isoElectric point"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size PTA"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size SAXS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size TEM"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size&PSD_sp-ICP-MS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size_DLS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size_WAXD"
+}, {
+	"module": "PCHEM",
+	"endpoint": "particle size distribution (granulometry)",
+	"s_uuid": "size_XRD"
+}, {
+	"module": "PCHEM",
+	"endpoint": "potentiometry",
+	"s_uuid": "Potentiometry_H2O sosp"
+}, {
+	"module": "PCHEM",
+	"endpoint": "solubility",
+	"s_uuid": "colorimetry"
+}, {
+	"module": "PCHEM",
+	"endpoint": "solubility",
+	"s_uuid": "filtration_ICP-MS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "solubility",
+	"s_uuid": "filtration_WDXRF"
+}, {
+	"module": "PCHEM",
+	"endpoint": "surface chemistry",
+	"s_uuid": "coating_MALDI-TOF"
+}, {
+	"module": "PCHEM",
+	"endpoint": "surface chemistry",
+	"s_uuid": "coating_STEM-EDS"
+}, {
+	"module": "PCHEM",
+	"endpoint": "surface chemistry",
+	"s_uuid": "functional groups_ATR-FTIR"
+}, {
+	"module": "PCHEM",
+	"endpoint": "surface chemistry",
+	"s_uuid": "functional groups_TGA"
+}, {
+	"module": "PCHEM",
+	"endpoint": "volume specific surface area (porosity)",
+	"s_uuid": "VSSA"
+}, {
+	"module": "PCHEM",
+	"endpoint": "zeta potential",
+	"s_uuid": "z-pot"
+}]
