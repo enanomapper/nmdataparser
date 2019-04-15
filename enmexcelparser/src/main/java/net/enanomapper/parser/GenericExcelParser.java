@@ -2843,8 +2843,58 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	
 	protected List<DataBlockElement> getDataBlockFromRowList(List<Row> rowList, ExcelDataBlockLocation exdb_loc) 
 	{
-		//TODO
-		return null;
+		Integer rowSubblocks = getIntegerFromExpression(exdb_loc.rowSubblocks);
+		Integer columnSubblocks = getIntegerFromExpression(exdb_loc.columnSubblocks);
+		Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
+		Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
+
+		logger.info("------ getDataBlockFromRowList:");
+		logger.info("   --- rowSubblocks = " + rowSubblocks);
+		logger.info("   --- columnSubblocks = " + columnSubblocks);
+		logger.info("   --- subblockSizeRows = " + sbSizeRows);
+		logger.info("   --- subblockSizeColumns = " + sbSizeColumns);
+
+		if (rowSubblocks == null || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null) {
+			return null;
+		}
+
+		if (exdb_loc.location == null)
+			return null;
+
+		// Constructing the cell matrix
+		int n = rowSubblocks * sbSizeRows;
+		int m = columnSubblocks * sbSizeColumns;
+		//startRow is assumed to be the first row from rowList
+		//exdb_loc.location.rowIndex is not used;
+		int startColumn = exdb_loc.location.columnIndex;
+
+		Cell cells[][] = new Cell[n][m];
+		//exdb_loc.location.sheetIndex is not used
+		
+		for (int i = 0; i < n; i++) 
+		{
+			if (i >= rowList.size())
+			{
+				for (int k = 0; k < m; k++)
+					cells[i][k] = null;
+				continue;
+			}
+			
+			Row row = rowList.get(i);
+			//String s = "";
+			for (int k = 0; k < m; k++)
+				try {
+					Cell c = row.getCell(startColumn + k);
+					cells[i][k] = c;
+					// s += (" " + ExcelUtils.getObjectFromCell(c));
+				} catch (Exception x) {
+					cells[i][k] = null;
+					logger.warning(x.getMessage());
+				}
+			// logger.info(">>>> " + s);
+		}
+		
+		return getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, sbSizeRows, sbSizeColumns, exdb_loc);
 	}
 
 	protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc) {
@@ -2873,12 +2923,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		int startColumn = exdb_loc.location.columnIndex;
 
 		Cell cells[][] = new Cell[n][m];
-
 		Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
 
 		for (int i = 0; i < n; i++) {
 			Row row = sheet.getRow(startRow + i);
-			String s = "";
+			//String s = "";
 			for (int k = 0; k < m; k++)
 				try {
 					Cell c = row.getCell(startColumn + k);
