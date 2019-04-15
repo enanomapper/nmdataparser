@@ -1284,14 +1284,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		// Read effects from EFFECTS_BLOCK
-		if (padl.effectsBlock != null) {
-			for (ExcelDataBlockLocation excelEffectBlock : padl.effectsBlock) {
-				List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
-				for (DataBlockElement dbe : effDataBlock) {
-					EffectRecord effect = dbe.generateEffectRecord();
-					// TODO (2) set unit
-					pa.addEffect(effect);
+		if (padl.effectsBlock != null) 
+		{
+			for (int i = 0; i < padl.effectsBlock.size(); i++) 
+			{
+				ExcelDataBlockLocation excelEffectBlock = padl.effectsBlock.get(i);
+				try
+				{
+					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
+					for (DataBlockElement dbe : effDataBlock) {
+						EffectRecord effect = dbe.generateEffectRecord();
+						pa.addEffect(effect);
+					}
 				}
+				catch (Exception x) {
+					throw new Exception("Excpetion on getting Effect Block [" + (i+1) + "]"  
+							+ " in protocol " + protocol.toString() + "  "  
+							+ x.toString()
+							+ "\nCheck EFFECT_BLOCK expressions!" );
+				}				
 			}
 		}
 
