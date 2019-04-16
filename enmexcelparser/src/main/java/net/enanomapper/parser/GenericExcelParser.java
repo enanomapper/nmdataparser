@@ -3684,7 +3684,18 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		for (String key : keys) {
 			context.set(key, curVariables.get(key));
-
+			
+		//Setting variables for the current iteration state	
+		context.set("ITERATION_CUR_ROW_NUM", new Integer(curRowNum));
+		
+		if ((config.substanceIteration == IterationAccess.ROW_MULTI_DYNAMIC) || 
+				(config.substanceIteration == IterationAccess.ROW_MULTI_FIXED))
+		{	
+			context.set("ITERATION_CUR_ROW_LIST_SIZE", new Integer(curRows.size()));	
+		}	
+		
+		//System.out.println(" ***** ITERATION_CUR_ROW_NUM = " + context.get("ITERATION_CUR_ROW_NUM"));
+		
 			/*
 			 * //Logging the variables values Object v = curVariables.get(key);
 			 * String s = ""; if (v instanceof Object[]) { Object v1[] =
