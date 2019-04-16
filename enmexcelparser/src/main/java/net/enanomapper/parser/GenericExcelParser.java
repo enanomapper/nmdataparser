@@ -1284,14 +1284,25 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		}
 
 		// Read effects from EFFECTS_BLOCK
-		if (padl.effectsBlock != null) {
-			for (ExcelDataBlockLocation excelEffectBlock : padl.effectsBlock) {
-				List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
-				for (DataBlockElement dbe : effDataBlock) {
-					EffectRecord effect = dbe.generateEffectRecord();
-					// TODO (2) set unit
-					pa.addEffect(effect);
+		if (padl.effectsBlock != null) 
+		{
+			for (int i = 0; i < padl.effectsBlock.size(); i++) 
+			{
+				ExcelDataBlockLocation excelEffectBlock = padl.effectsBlock.get(i);
+				try
+				{
+					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
+					for (DataBlockElement dbe : effDataBlock) {
+						EffectRecord effect = dbe.generateEffectRecord();
+						pa.addEffect(effect);
+					}
 				}
+				catch (Exception x) {
+					throw new Exception("Excpetion on getting Effect Block [" + (i+1) + "]"  
+							+ " in protocol " + protocol.toString() + "  "  
+							+ x.toString()
+							+ "\nCheck EFFECT_BLOCK expressions!" );
+				}				
 			}
 		}
 
@@ -2815,13 +2826,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected List<DataBlockElement> getDataBlock(ExcelDataBlockLocation exdb_loc) {
 		switch (exdb_loc.location.iteration) {
 		case ROW_SINGLE:
-			// TODO
-			return null;
-
+			List<Row> rList = new ArrayList<Row>();
+			List<DataBlockElement> listDBEl0 = getDataBlockFromRowList(rList, exdb_loc);
+			return listDBEl0;
+			
 		case ROW_MULTI_FIXED: // Both treated the same way
 		case ROW_MULTI_DYNAMIC:
-			List<DataBlockElement> listDBE = getDataBlockFromRowList(curRows, exdb_loc);
-			return listDBE;
+			List<DataBlockElement> listDBEl = getDataBlockFromRowList(curRows, exdb_loc);
+			return listDBEl;
 
 		case ABSOLUTE_LOCATION: {
 			Object value = exdb_loc.getAbsoluteLocationValue();
@@ -2842,8 +2854,58 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	
 	protected List<DataBlockElement> getDataBlockFromRowList(List<Row> rowList, ExcelDataBlockLocation exdb_loc) 
 	{
-		//TODO
-		return null;
+		Integer rowSubblocks = getIntegerFromExpression(exdb_loc.rowSubblocks);
+		Integer columnSubblocks = getIntegerFromExpression(exdb_loc.columnSubblocks);
+		Integer sbSizeRows = getIntegerFromExpression(exdb_loc.subblockSizeRows);
+		Integer sbSizeColumns = getIntegerFromExpression(exdb_loc.subblockSizeColumns);
+
+		logger.info("------ getDataBlockFromRowList:");
+		logger.info("   --- rowSubblocks = " + rowSubblocks);
+		logger.info("   --- columnSubblocks = " + columnSubblocks);
+		logger.info("   --- subblockSizeRows = " + sbSizeRows);
+		logger.info("   --- subblockSizeColumns = " + sbSizeColumns);
+
+		if (rowSubblocks == null || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null) {
+			return null;
+		}
+
+		if (exdb_loc.location == null)
+			return null;
+
+		// Constructing the cell matrix
+		int n = rowSubblocks * sbSizeRows;
+		int m = columnSubblocks * sbSizeColumns;
+		//startRow is assumed to be the first row from rowList
+		//exdb_loc.location.rowIndex is not used;
+		int startColumn = exdb_loc.location.columnIndex;
+
+		Cell cells[][] = new Cell[n][m];
+		//exdb_loc.location.sheetIndex is not used
+		
+		for (int i = 0; i < n; i++) 
+		{
+			if (i >= rowList.size())
+			{
+				for (int k = 0; k < m; k++)
+					cells[i][k] = null;
+				continue;
+			}
+			
+			Row row = rowList.get(i);
+			//String s = "";
+			for (int k = 0; k < m; k++)
+				try {
+					Cell c = row.getCell(startColumn + k);
+					cells[i][k] = c;
+					// s += (" " + ExcelUtils.getObjectFromCell(c));
+				} catch (Exception x) {
+					cells[i][k] = null;
+					logger.warning(x.getMessage());
+				}
+			// logger.info(">>>> " + s);
+		}
+		
+		return getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, sbSizeRows, sbSizeColumns, exdb_loc);
 	}
 
 	protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc) {
@@ -2872,12 +2934,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		int startColumn = exdb_loc.location.columnIndex;
 
 		Cell cells[][] = new Cell[n][m];
-
 		Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
 
 		for (int i = 0; i < n; i++) {
 			Row row = sheet.getRow(startRow + i);
-			String s = "";
+			//String s = "";
 			for (int k = 0; k < m; k++)
 				try {
 					Cell c = row.getCell(startColumn + k);
