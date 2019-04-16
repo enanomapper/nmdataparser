@@ -3003,6 +3003,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								else {
 									Cell c = null;
 									switch (bvgei.endpointAssign) {
+									case ASSIGN_TO_EXCEL_SHEET:
+										c = getCellFromSheet(exdb_loc); 
+										break;
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
 										c = cells[bvgei.endpointRowPos - 1][bvgei.endpointColumnPos - 1];
@@ -3096,6 +3099,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									
 									Cell c = null;
 									switch (pi.assign) {
+									case ASSIGN_TO_EXCEL_SHEET:
+										c = getCellFromSheet(exdb_loc); 
+										break;
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
 										c = cells[pi.rowPos - 1][pi.columnPos - 1];
@@ -3144,7 +3150,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								if (bvgei.valueQualifier != null)
 								{
 									ParamInfo pi = bvgei.valueQualifier;
-									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
@@ -3163,7 +3169,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								if (bvgei.errorQualifier != null)
 								{
 									ParamInfo pi = bvgei.errorQualifier;
-									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
@@ -3200,6 +3206,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 											Cell c = null;
 											switch (pi.assign) {
+											case ASSIGN_TO_EXCEL_SHEET:
+												c = getCellFromSheet(exdb_loc); 
+												break;
 											case ASSIGN_TO_BLOCK:
 												// -1 for 0-based
 												c = cells[pi.rowPos - 1][pi.columnPos - 1];
@@ -3259,13 +3268,16 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	}
 	
 	Cell getCell(ParamInfo pi, Cell cells[][], int row0, int column0, int i, int k, 
-					BlockValueGroupExtractedInfo bvgei)
+					BlockValueGroupExtractedInfo bvgei, ExcelDataBlockLocation exdb_loc)
 	{
 		// Upper left corner of the current sub-block (row0, column0)
 		// Current value position in the sub-block (i,j)
 		
 		Cell c = null;
 		switch (pi.assign) {
+		case ASSIGN_TO_EXCEL_SHEET:
+			c = getCellFromSheet(exdb_loc); 
+			break;
 		case ASSIGN_TO_BLOCK:
 			// (pi.rowPos,pi.columnPos) define 
 			// the block position
@@ -3303,6 +3315,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return c;	
 	}
 	
+	protected Cell getCellFromSheet(ExcelDataBlockLocation exdb_loc)
+	{
+		Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
+		Row row = sheet.getRow(exdb_loc.location.rowIndex);
+		if (row != null) 
+			return row.getCell(exdb_loc.location.columnIndex);
+		return null;
+	}	
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
