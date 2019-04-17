@@ -3004,7 +3004,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									Cell c = null;
 									switch (bvgei.endpointAssign) {
 									case ASSIGN_TO_EXCEL_SHEET:
-										c = getCellFromSheet(exdb_loc); 
+										// -1 for 0-based
+										c = getCellFromSheet(exdb_loc.location.sheetIndex,
+												bvgei.endpointRowPos - 1,bvgei.endpointColumnPos - 1); 
 										break;
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
@@ -3100,7 +3102,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									Cell c = null;
 									switch (pi.assign) {
 									case ASSIGN_TO_EXCEL_SHEET:
-										c = getCellFromSheet(exdb_loc); 
+										// -1 for 0-based
+										c = getCellFromSheet(exdb_loc.location.sheetIndex,
+												pi.rowPos-1, pi.columnPos-1); 
 										break;
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
@@ -3207,7 +3211,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											Cell c = null;
 											switch (pi.assign) {
 											case ASSIGN_TO_EXCEL_SHEET:
-												c = getCellFromSheet(exdb_loc); 
+												// -1 for 0-based
+												c = getCellFromSheet(exdb_loc.location.sheetIndex,
+														pi.rowPos-1, pi.columnPos-1); 
 												break;
 											case ASSIGN_TO_BLOCK:
 												// -1 for 0-based
@@ -3276,7 +3282,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		Cell c = null;
 		switch (pi.assign) {
 		case ASSIGN_TO_EXCEL_SHEET:
-			c = getCellFromSheet(exdb_loc); 
+			// -1 for 0-based
+			c = getCellFromSheet(exdb_loc.location.sheetIndex,
+					pi.rowPos-1, pi.columnPos-1); 
+			
 			break;
 		case ASSIGN_TO_BLOCK:
 			// (pi.rowPos,pi.columnPos) define 
@@ -3315,12 +3324,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return c;	
 	}
 	
-	protected Cell getCellFromSheet(ExcelDataBlockLocation exdb_loc)
+	protected Cell getCellFromSheet(int sheetNum, int rowNum, int columnNum)
 	{
-		Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
-		Row row = sheet.getRow(exdb_loc.location.rowIndex);
+		Sheet sheet = workbook.getSheetAt(sheetNum);
+		Row row = sheet.getRow(rowNum);
 		if (row != null) 
-			return row.getCell(exdb_loc.location.columnIndex);
+			return row.getCell(columnNum);
 		return null;
 	}	
 
