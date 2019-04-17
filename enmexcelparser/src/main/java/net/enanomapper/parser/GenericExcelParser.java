@@ -3077,10 +3077,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								
 								// Handle ENDPOINT_TYPE
 								if (bvgei.endpointType != null)
-								{
-									//TODO optimize/shorten code by using function getCell()
+								{	
 									BlockValueGroupExtractedInfo.ParamInfo pi = bvgei.endpointType;
-									
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
+																		
 									/*
 									if (pi.jsonValue != null) {
 										// json value takes precedence
@@ -3099,45 +3099,6 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									}
 									*/
 									
-									Cell c = null;
-									switch (pi.assign) {
-									case ASSIGN_TO_EXCEL_SHEET:
-										// -1 for 0-based
-										c = getCellFromSheet(exdb_loc.location.sheetIndex,
-												pi.rowPos-1, pi.columnPos-1); 
-										break;
-									case ASSIGN_TO_BLOCK:
-										// -1 for 0-based
-										c = cells[pi.rowPos - 1][pi.columnPos - 1];
-										break;
-									case ASSIGN_TO_SUBBLOCK:
-										// (rowPos,columnPos) are the
-										// sub-block position
-										// -1 for 0-based indexing
-										c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1];
-										break;
-									case ASSIGN_TO_VALUE:
-										// (pi.rowPos,pi.columnPos) are
-										// used as shifts
-										int par_row;
-										if (pi.fixRowPosToStartValue)
-											par_row = row0 + (bvgei.startRow - 1) + pi.rowPos;
-										else
-											par_row = row0 + i + pi.rowPos;
-
-										int par_col;
-										if (pi.fixColumnPosToStartValue)
-											par_col = column0 + (bvgei.startColumn - 1) + pi.columnPos;
-										else
-											par_col = column0 + k + pi.columnPos;
-
-										c = cells[par_row][par_col];
-										break;
-									case UNDEFINED:
-										// nothing is done
-										break;
-									}
-
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
 										if (value != null)
