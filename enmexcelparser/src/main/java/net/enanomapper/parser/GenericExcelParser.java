@@ -3101,6 +3101,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										if (value != null)
 											dbEl.endpointType = value.toString();
 									}
@@ -3119,6 +3121,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										// by default it is stored as loQualifier
 										if (value != null)
 											dbEl.loQualifier = value.toString();
@@ -3138,6 +3142,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										if (value != null)
 											dbEl.errQualifier = value.toString();
 									}
