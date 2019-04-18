@@ -3003,6 +3003,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								else {
 									Cell c = null;
 									switch (bvgei.endpointAssign) {
+									case ASSIGN_TO_EXCEL_SHEET:
+										// -1 for 0-based
+										c = getCellFromSheet(exdb_loc.location.sheetIndex,
+												bvgei.endpointRowPos - 1,bvgei.endpointColumnPos - 1); 
+										break;
 									case ASSIGN_TO_BLOCK:
 										// -1 for 0-based
 										c = cells[bvgei.endpointRowPos - 1][bvgei.endpointColumnPos - 1];
@@ -3072,10 +3077,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								
 								// Handle ENDPOINT_TYPE
 								if (bvgei.endpointType != null)
-								{
-									//TODO optimize/shorten code by using function getCell()
+								{	
 									BlockValueGroupExtractedInfo.ParamInfo pi = bvgei.endpointType;
-									
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
+																		
 									/*
 									if (pi.jsonValue != null) {
 										// json value takes precedence
@@ -3094,42 +3099,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 									}
 									*/
 									
-									Cell c = null;
-									switch (pi.assign) {
-									case ASSIGN_TO_BLOCK:
-										// -1 for 0-based
-										c = cells[pi.rowPos - 1][pi.columnPos - 1];
-										break;
-									case ASSIGN_TO_SUBBLOCK:
-										// (rowPos,columnPos) are the
-										// sub-block position
-										// -1 for 0-based indexing
-										c = cells[row0 + pi.rowPos - 1][column0 + pi.columnPos - 1];
-										break;
-									case ASSIGN_TO_VALUE:
-										// (pi.rowPos,pi.columnPos) are
-										// used as shifts
-										int par_row;
-										if (pi.fixRowPosToStartValue)
-											par_row = row0 + (bvgei.startRow - 1) + pi.rowPos;
-										else
-											par_row = row0 + i + pi.rowPos;
-
-										int par_col;
-										if (pi.fixColumnPosToStartValue)
-											par_col = column0 + (bvgei.startColumn - 1) + pi.columnPos;
-										else
-											par_col = column0 + k + pi.columnPos;
-
-										c = cells[par_row][par_col];
-										break;
-									case UNDEFINED:
-										// nothing is done
-										break;
-									}
-
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										if (value != null)
 											dbEl.endpointType = value.toString();
 									}
@@ -3144,10 +3117,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								if (bvgei.valueQualifier != null)
 								{
 									ParamInfo pi = bvgei.valueQualifier;
-									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										// by default it is stored as loQualifier
 										if (value != null)
 											dbEl.loQualifier = value.toString();
@@ -3163,10 +3138,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 								if (bvgei.errorQualifier != null)
 								{
 									ParamInfo pi = bvgei.errorQualifier;
-									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei);
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
 
 									if (c != null) {
 										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
 										if (value != null)
 											dbEl.errQualifier = value.toString();
 									}
@@ -3200,6 +3177,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 											Cell c = null;
 											switch (pi.assign) {
+											case ASSIGN_TO_EXCEL_SHEET:
+												// -1 for 0-based
+												c = getCellFromSheet(exdb_loc.location.sheetIndex,
+														pi.rowPos-1, pi.columnPos-1); 
+												break;
 											case ASSIGN_TO_BLOCK:
 												// -1 for 0-based
 												c = cells[pi.rowPos - 1][pi.columnPos - 1];
@@ -3259,13 +3241,19 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	}
 	
 	Cell getCell(ParamInfo pi, Cell cells[][], int row0, int column0, int i, int k, 
-					BlockValueGroupExtractedInfo bvgei)
+					BlockValueGroupExtractedInfo bvgei, ExcelDataBlockLocation exdb_loc)
 	{
 		// Upper left corner of the current sub-block (row0, column0)
 		// Current value position in the sub-block (i,j)
 		
 		Cell c = null;
 		switch (pi.assign) {
+		case ASSIGN_TO_EXCEL_SHEET:
+			// -1 for 0-based
+			c = getCellFromSheet(exdb_loc.location.sheetIndex,
+					pi.rowPos-1, pi.columnPos-1); 
+			
+			break;
 		case ASSIGN_TO_BLOCK:
 			// (pi.rowPos,pi.columnPos) define 
 			// the block position
@@ -3303,6 +3291,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		return c;	
 	}
 	
+	protected Cell getCellFromSheet(int sheetNum, int rowNum, int columnNum)
+	{
+		Sheet sheet = workbook.getSheetAt(sheetNum);
+		Row row = sheet.getRow(rowNum);
+		if (row != null) 
+			return row.getCell(columnNum);
+		return null;
+	}	
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
@@ -3684,7 +3680,18 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		for (String key : keys) {
 			context.set(key, curVariables.get(key));
-
+			
+		//Setting variables for the current iteration state	
+		context.set("ITERATION_CUR_ROW_NUM", new Integer(curRowNum));
+		
+		if ((config.substanceIteration == IterationAccess.ROW_MULTI_DYNAMIC) || 
+				(config.substanceIteration == IterationAccess.ROW_MULTI_FIXED))
+		{	
+			context.set("ITERATION_CUR_ROW_LIST_SIZE", new Integer(curRows.size()));	
+		}	
+		
+		//System.out.println(" ***** ITERATION_CUR_ROW_NUM = " + context.get("ITERATION_CUR_ROW_NUM"));
+		
 			/*
 			 * //Logging the variables values Object v = curVariables.get(key);
 			 * String s = ""; if (v instanceof Object[]) { Object v1[] =

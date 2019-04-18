@@ -862,7 +862,7 @@ public class ParserConstants {
 	};
 
 	public enum BlockParameterAssign {
-		ASSIGN_TO_BLOCK, ASSIGN_TO_SUBBLOCK, ASSIGN_TO_VALUE, UNDEFINED;
+		ASSIGN_TO_EXCEL_SHEET, ASSIGN_TO_BLOCK, ASSIGN_TO_SUBBLOCK, ASSIGN_TO_VALUE, UNDEFINED;
 
 		public static BlockParameterAssign fromString(String s) {
 			try {
