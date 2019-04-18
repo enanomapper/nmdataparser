@@ -162,7 +162,7 @@ public class TemplateMaker {
 
 				if (sheetname.toUpperCase().equals(_sheet.toString().toUpperCase()) && (endpoint.equals(_file)
 						|| endpoint.toUpperCase().equals(_endpoint.toString().toUpperCase()))) {
-					//System.out.println(record);
+					// System.out.println(record);
 					int row = Integer.parseInt(record.get("Row").toString());
 					int col = Integer.parseInt(record.get("Column").toString());
 
@@ -447,8 +447,15 @@ public class TemplateMaker {
 	}
 
 	protected Iterable<TR> getJSONConfig(String config) throws Exception {
+		try (InputStream in = TemplateMaker.class.getClassLoader().getResourceAsStream(config)) {
+			return getJSONConfig();
+		} catch (Exception x) {
+			throw x;
+		}
+	}
 
-		InputStream in = TemplateMaker.class.getClassLoader().getResourceAsStream(config);
+	protected Iterable<TR> getJSONConfig(InputStream in) throws Exception {
+
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 		List<TR> records = new ArrayList<TR>();
@@ -470,10 +477,7 @@ public class TemplateMaker {
 		} catch (Exception x) {
 			throw x;
 		} finally {
-			try {
-				in.close();
-			} catch (Exception x) {
-			}
+
 		}
 		return records;
 	}
