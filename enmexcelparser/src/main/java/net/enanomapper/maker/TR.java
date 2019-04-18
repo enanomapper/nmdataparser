@@ -1,5 +1,6 @@
 package net.enanomapper.maker;
 
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import ambit2.base.json.JSONUtils;
 
-public class TR extends HashMap<String, Object> {
+public class TR extends HashMap<String, Object> implements Serializable{
 	/**
 	 * 
 	 */
