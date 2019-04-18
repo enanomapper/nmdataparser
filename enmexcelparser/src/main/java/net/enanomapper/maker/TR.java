@@ -165,7 +165,7 @@ public class TR extends HashMap<String, Object> implements Serializable{
 			else if (!"".equals(value.toString()))
 				return JSONUtils.jsonQuote(JSONUtils.jsonEscape(value.toString()));
 		}
-		return "";
+		return null;
 
 	}
 
