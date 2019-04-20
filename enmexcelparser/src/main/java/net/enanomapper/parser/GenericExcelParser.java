@@ -2051,12 +2051,40 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	/**
 	 * Generic function (regardless of the iteration access)
+	 * string extraction and post processing of the string:
+	 * extract --> SOURCE_COMBINATION -> MAPPING
 	 * 
 	 * @param loc
 	 * @return
 	 * @throws Exception
 	 */
 	protected String getString(ExcelDataLocation loc) throws Exception 
+	{
+		String value = getString0(loc);
+		if (value == null)
+			return null;
+		
+		//Post processing of the string value
+		if (loc.mapping != null)
+		{	
+			Object obj = getMappingValue(value, loc.mapping);
+			if (obj == null)
+				return null;
+			else
+				value = obj.toString();
+		}	
+		return value;
+	}
+	
+	/**
+	 * Generic function (regardless of the iteration access)
+	 * for extracting string
+	 * 
+	 * @param loc
+	 * @return
+	 * @throws Exception
+	 */
+	protected String getString0(ExcelDataLocation loc) throws Exception 
 	{
 		//(1)
 		//SOURCE_COMBINATION for iteration modes: 

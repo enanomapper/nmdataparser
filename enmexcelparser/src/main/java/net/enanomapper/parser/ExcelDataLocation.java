@@ -30,6 +30,9 @@ public class ExcelDataLocation {
 	public String combinationSeparator = "";
 	public boolean FlagCombinationSeparator = false;
 	
+	public String mapping = null;
+	public boolean FlagMapping = false;
+	
 	public boolean isArray = false;
 	public boolean FlagIsArray = false;
 
@@ -159,7 +162,18 @@ public class ExcelDataLocation {
 				loc.combinationSeparator = keyword;
 			}
 		}
-
+		
+		// MAPPING
+		if (!sectionNode.path(KEYWORD.MAPPING.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(sectionNode, KEYWORD.MAPPING.name(), false);
+			if (keyword == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				loc.mapping = keyword;
+				loc.FlagMapping = true;
+			}
+		}
+		
 		// IS_ARRAY
 		if (!sectionNode.path(KEYWORD.IS_ARRAY.name()).isMissingNode()) {
 			Boolean b = jsonUtils.extractBooleanKeyword(sectionNode, "IS_ARRAY", false);
@@ -528,6 +542,14 @@ public class ExcelDataLocation {
 			if (nFields > 0)
 				sb.append(",\n");
 			sb.append(offset + "\t\"COMBINATION_SEPARATOR\" : \"" + combinationSeparator + "\"");
+			nFields++;
+		}
+		
+		if (FlagMapping) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"MAPPING\" : " + JsonUtilities.objectToJsonField(mapping));
 			nFields++;
 		}
 
