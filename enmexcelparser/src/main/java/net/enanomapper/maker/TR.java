@@ -11,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import ambit2.base.json.JSONUtils;
 
-public class TR extends HashMap<String, Object> implements Serializable{
+public class TR extends HashMap<String, Object> implements Serializable {
 	/**
 	 * 
 	 */
@@ -107,6 +107,42 @@ public class TR extends HashMap<String, Object> implements Serializable{
 		}
 	}
 
+	public int getColumn() throws Exception {
+		try {
+			return (int) hix.Column.get(this);
+		} catch (Exception x) {
+			throw new Exception("Unknown column");
+		}
+	}
+	public int getRow() throws Exception {
+		try {
+			return (int) hix.Row.get(this);
+		} catch (Exception x) {
+			throw new Exception("Unknown row");
+		}
+	}
+	public String getValue() throws Exception {
+		try {
+			return hix.Value.get(this).toString();
+		} catch (Exception x) {
+			return null;
+		}
+	}	
+	public void setAnnotation(String value) {
+		hix.Annotation.set(this, value);
+	}
+	public String getAnnotation() {
+		return hix.Annotation.get(this).toString();
+	}	
+	public void setJsonLevel1(String value) {
+		hix.JSON_LEVEL1.set(this, value);
+	}
+	public void setJsonLevel2(String value) {
+		hix.JSON_LEVEL2.set(this, value);
+	}	
+	public boolean isData() {
+		return "data".equals(hix.Annotation.get(this));
+	}
 	public void write(Writer writer) throws Exception {
 		for (hix h : hix.values()) {
 			Object v = get(h.name());

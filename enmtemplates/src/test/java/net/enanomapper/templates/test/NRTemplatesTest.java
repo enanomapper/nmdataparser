@@ -19,15 +19,16 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 import net.enanomapper.templates.ExtractSynonymsList;
-import net.enanomapper.templates.Term;
-import net.enanomapper.templates.Tools;
+import net.enanomapper.templates.ToolsRDF;
+import net.idea.templates.generation.Term;
+import net.idea.templates.generation.Tools;
 
 public class NRTemplatesTest extends TestWithExternalFiles {
 	protected static Properties templates;
 
 	@BeforeClass
 	public static void initTemplateNames() throws IOException {
-		templates = Tools.initJRCTemplateNames();
+		templates = ToolsRDF.initJRCTemplateNames();
 	}
 
 	@Test
@@ -59,7 +60,7 @@ public class NRTemplatesTest extends TestWithExternalFiles {
 
 		similarity(histogram, baseDir);
 		System.out.println("Estimating annotations");
-		Tools.smash(
+		ToolsRDF.smash(
 				"http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, new ExtractSynonymsList() {
 					LevensteinDistance d = new LevensteinDistance();

@@ -2,6 +2,8 @@ package net.enanomapper.parser;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +12,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +24,6 @@ import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
-import nu.xom.jaxen.function.StringFunction;
 
 /**
  * 
@@ -139,14 +141,16 @@ public class ExcelParserConfigurator {
 		return configErrors.size() > 0;
 	}
 
-	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws Exception {
+	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws FileNotFoundException, IOException, JsonProcessingException {
 		FileInputStream fin = new FileInputStream(jsonConfig);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 
 		try {
 			root = mapper.readTree(fin);
-		} catch (Exception x) {
+		} catch (JsonProcessingException x) {
+			throw x;			
+		} catch (IOException x) {
 			throw x;
 		} finally {
 			try {
