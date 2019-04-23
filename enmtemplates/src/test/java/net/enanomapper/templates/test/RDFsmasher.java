@@ -3,10 +3,6 @@ package net.enanomapper.templates.test;
 import java.io.IOException;
 import java.io.Writer;
 
-import net.enanomapper.templates.ExtractSynonymsList;
-import net.enanomapper.templates.Tools;
-import net.idea.modbcum.i.json.JSONUtils;
-
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -16,6 +12,11 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+
+import net.enanomapper.templates.ExtractSynonymsList;
+import net.enanomapper.templates.ToolsRDF;
+import net.idea.modbcum.i.json.JSONUtils;
+import net.idea.templates.generation.Tools;
 
 public class RDFsmasher extends TestWithExternalFiles {
 
@@ -33,13 +34,13 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testGO() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this);
 	}
 
 	@Test
 	public void testGO_Gene() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
 				"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C16612",
 				"RDF/XML");
@@ -47,7 +48,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testGO_GeneProduct() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
 				"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C26548",
 				"RDF/XML");
@@ -55,7 +56,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testGO_ProteinFamily() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
 				"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C20130",
 				"RDF/XML");
@@ -63,14 +64,14 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testBAO() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"BAO", false, this, "http://www.w3.org/2002/07/owl#Thing",
 				"RDF/XML");
 	}
 
 	@Test
 	public void testENM() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, this, "http://www.w3.org/2002/07/owl#Thing",
 				"RDF/XML");
 
@@ -78,7 +79,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testENM_substance() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", false, this,
 				"http://purl.obolibrary.org/obo/CHEBI_59999", "RDF/XML");
 
@@ -86,27 +87,27 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void testCHEBI() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/CHEBI/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/CHEBI/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"CHEBI", false, this);
 
 	}
 
 	@Test
 	public void testCLO() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"CLO", false, this);
 	}
 
 	@Test
 	public void test_protein() throws Exception {
-		Tools.smash("http://rdf.disgenet.org/download/v4.0.0/protein.ttl.gz",
+		ToolsRDF.smash("http://rdf.disgenet.org/download/v4.0.0/protein.ttl.gz",
 				"Protein", false, this,
 				"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C17021",
 				"TURTLE",RDF.type.getURI());
 	}
 	@Test
 	public void test_gene() throws Exception {
-		Tools.smash("http://rdf.disgenet.org/download/v4.0.0/gene.ttl.gz",
+		ToolsRDF.smash("http://rdf.disgenet.org/download/v4.0.0/gene.ttl.gz",
 				"gene", false, this,
 				"http://www.w3.org/2002/07/owl#Thing",
 				"TURTLE",RDF.type.getURI());
@@ -170,7 +171,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	@Test
 	public void extractSynonymsENM() throws Exception {
-		Tools.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
+		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, new ExtractSynonymsList(),
 				"http://www.w3.org/2002/07/owl#Thing", "RDF/XML");
 	}

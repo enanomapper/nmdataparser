@@ -53,18 +53,76 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class TemplateMaker {
 	protected Logger logger_cli;
-	protected final static String header_results = "results";
-	protected final static String header_method = "method and instrument information";
-	protected final static String header_initialexposure = "analytical parameters - initial exposure media";
-	protected final static String header_finalexposure = "analytical parameters - final exposure media";
+	public enum _header {
+		results,
+		method {
+			@Override
+			public String toString() {
+				return "method and instrument information";
+			}
+		},
+		initialexposure {
+			@Override
+			public String toString() {
+				return "analytical parameters - initial exposure media";
+			}
+		},
+		finalexposure {
+			@Override
+			public String toString() {
+				return "analytical parameters - final exposure media";
+			}
+		},
+		imageanalysis {
+			@Override
+			public String toString() {
+				return "image analysis and results";
+			}
+		},
+		sample {
+			@Override
+			public String toString() {
+				return "sample information";
+			}
+		},
+		size {
+			@Override
+			public String toString() {
+				return "size distribution";
+			}
+		},
+		cell,
+		endpoint {
+			@Override
+			public String toString() {
+				return "endpoint_assay";
+			}
+		},
+		sop,
+		resultendpoint {
+			@Override
+			public String toString() {
+				return "End-Point Outcome metric";
+			}
+		};
+		@Override
+		public String toString() {
+			return this.name().toString();
+		}
+	}
+	//for compatibility, to be refactored to use enums
+	protected final static String header_results = _header.results.toString();
+	protected final static String header_method = _header.method.toString();
+	protected final static String header_initialexposure = _header.initialexposure.toString();
+	protected final static String header_finalexposure = _header.finalexposure.toString();
 
-	protected final static String header_imageanalysis = "image analysis and results";
-	protected final static String header_sample = "sample information";
-	protected final static String header_size = "size distribution";
-	protected final static String header_cell = "cell";
-	protected final static String header_endpoint = "endpoint_assay";
-	protected final static String header_sop = "sop";
-	protected final static String header_result_endpoint = "End-Point Outcome metric";
+	protected final static String header_imageanalysis = _header.imageanalysis.toString();
+	protected final static String header_sample = _header.sample.toString();
+	protected final static String header_size = _header.size.toString();
+	protected final static String header_cell = _header.cell.toString();
+	protected final static String header_endpoint = _header.endpoint.toString();
+	protected final static String header_sop = _header.sop.toString();
+	protected final static String header_result_endpoint = _header.resultendpoint.toString();
 
 	public TemplateMaker() {
 		this(Logger.getAnonymousLogger());
@@ -129,7 +187,7 @@ public class TemplateMaker {
 
 	public Workbook generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
 		logger_cli.log(Level.INFO, String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
-		Iterable<TR> records = getJSONConfig();
+		Iterable<TR> records = getTemplateConfig();
 		String sheetname = settings.getAssayname();
 		String endpoint = settings.getEndpointname();
 		if (endpoint == null)
@@ -442,13 +500,13 @@ public class TemplateMaker {
 		}
 	}
 
-	protected Iterable<TR> getJSONConfig() throws Exception {
-		return getJSONConfig("net/enanomapper/templates/JRCTEMPLATES_102016.json");
+	protected Iterable<TR> getTemplateConfig() throws Exception {
+		return getTemplateConfig("net/enanomapper/templates/JRCTEMPLATES_102016.json");
 	}
 
-	protected Iterable<TR> getJSONConfig(String config) throws Exception {
+	protected Iterable<TR> getTemplateConfig(String config) throws Exception {
 		try (InputStream in = TemplateMaker.class.getClassLoader().getResourceAsStream(config)) {
-			return getJSONConfig();
+			return getTemplateConfig();
 		} catch (Exception x) {
 			throw x;
 		}
@@ -503,7 +561,7 @@ public class TemplateMaker {
 			break;
 		}
 		if (settings.getEndpointname() != null) {
-			Iterable<TR> records = getJSONConfig();
+			Iterable<TR> records = getTemplateConfig();
 			HashSet<String> assays = new HashSet<String>();
 			String assay = settings.getAssayname().toUpperCase();
 			String endpoint = settings.getEndpointname().toUpperCase();
@@ -546,7 +604,7 @@ public class TemplateMaker {
 					String assayname = i.next();
 					for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
 						settings.setTemplatesType(ttype);
-						records = getJSONConfig();
+						records = getTemplateConfig();
 						settings.setAssayname(assayname);
 						switch (ttype) {
 						case jrc: {
@@ -571,7 +629,7 @@ public class TemplateMaker {
 		} else if (settings.getAssayname() != null) {
 
 			for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
-				Iterable<TR> records = getJSONConfig();
+				Iterable<TR> records = getTemplateConfig();
 				settings.setTemplatesType(ttype);
 				switch (ttype) {
 				case jrc: {

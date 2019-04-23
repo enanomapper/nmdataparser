@@ -1,18 +1,12 @@
-package net.enanomapper.templates;
+package net.idea.templates.generation;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -27,29 +21,12 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFReader;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 import ambit2.base.io.DownloadTool;
 import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
 
 public class Tools {
-
-	public static Properties initJRCTemplateNames() throws IOException {
-		Properties templates = new Properties();
-		InputStream in = Tools.class.getClassLoader().getResourceAsStream("data/xlsx/nanoreg/nrtemplates.properties");
-		try {
-			templates.load(in);
-		} finally {
-			in.close();
-		}
-		return templates;
-	}
 
 	public static void readIOMtemplates(File file, Object key, String templateName, Map<String, Term> histogram,
 			XSSFSheet stats) throws InvalidFormatException, IOException {
@@ -122,9 +99,13 @@ public class Tools {
 		}
 		return;
 	}
-
 	public static int readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
 			XSSFSheet stats, IAnnotator annotator, int rownum) throws InvalidFormatException, IOException {
+		return readJRCExcelTemplate( file,  key,  templateName, histogram,
+				 stats,  annotator,  rownum, null);
+	}
+	public static int readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
+			XSSFSheet stats, IAnnotator annotator, int rownum, Integer nsh) throws InvalidFormatException, IOException {
 
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
@@ -134,10 +115,16 @@ public class Tools {
 		} else
 			throw new InvalidFormatException(file.getName());
 
-		int nsh = workbook.getNumberOfSheets();
+		int _startsheet=0;
+		int _endsheet=workbook.getNumberOfSheets();
+		if (nsh!=null) {
+			_startsheet = nsh;
+			_endsheet = nsh+1;
+		}
+		
 		TR record = new TR();
 
-		for (int i = 0; i < nsh; i++) {
+		for (int i = _startsheet; i < _endsheet; i++) {
 			Sheet sheet = workbook.getSheetAt(i);
 			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
 				continue;
@@ -146,8 +133,8 @@ public class Tools {
 			HashFunction hf = Hashing.murmur3_32();
 
 			Iterator<Row> rowIterator = sheet.rowIterator();
-
-			while (rowIterator.hasNext()) {
+			boolean _break=false;
+			while (rowIterator.hasNext() && !_break) {
 				Row row = rowIterator.next();
 				Iterator<Cell> cellIterator = row.cellIterator();
 				int columns = 0;
@@ -181,9 +168,17 @@ public class Tools {
 								TR.hix.Row.set(record, row.getRowNum());
 								TR.hix.Column.set(record, cell.getColumnIndex());
 								TR.hix.Value.set(record, value);
+								
 								if (annotator != null)
 									annotator.process(record);
-								record.write(stats, rownum);
+								
+								if (!"data".equals(TR.hix.Annotation.get(record)))
+										record.write(stats, rownum);
+								else {
+									rownum--;
+									_break = true;
+									break;
+								}	
 
 							}
 
@@ -196,6 +191,7 @@ public class Tools {
 				rows++;
 				if (columns > maxcols)
 					maxcols = columns;
+
 			}
 			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d", key.toString(), templateName, sheet.getSheetName(),
 					rows, maxcols));
@@ -205,95 +201,6 @@ public class Tools {
 		return rownum;
 	}
 
-	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor)
-			throws Exception {
-		smash(rdfurl, title, splitfirstlevel, processor, "http://www.w3.org/2002/07/owl#Thing", "RDF/XML");
-	}
-
-	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor,
-			String rootResource, String format) throws Exception {
-		Tools.smash(rdfurl, title, splitfirstlevel, processor, rootResource, format, null);
-	}
-
-	public static void smash(String rdfurl, String title, boolean splitfirstlevel, IProcessRDF processor,
-			String rootResource, String format, String propertyURI) throws Exception {
-		File baseDir = new File(System.getProperty("java.io.tmpdir"));
-		System.out.println("Downloading " + rdfurl);
-
-		String ext = ".rdf";
-		if (format.toUpperCase().equals("TURTLE"))
-			ext = ".ttl";
-		File file = getTestFile(rdfurl, title, ext, baseDir);
-		System.out.println("Download completed " + file.getAbsolutePath());
-		Model jmodel = ModelFactory.createDefaultModel();
-
-		if (propertyURI != null) {
-			processor.setHproperty(jmodel.createProperty(propertyURI));
-		}
-		InputStreamReader in = null;
-		try {
-			RDFReader reader = jmodel.getReader(format);
-
-			if (rdfurl.endsWith(".gz"))
-				in = new InputStreamReader(new GZIPInputStream(new FileInputStream(file)));
-			else
-				in = new InputStreamReader(new FileInputStream(file));
-			reader.read(jmodel, in, format);
-			System.out.println("Reading completed " + file.getAbsolutePath());
-			Resource root = jmodel.createResource(rootResource);
-
-			if (!splitfirstlevel) {
-				String outname = String.format("%s_tree_%s.%s", title, root.getLocalName(),
-						processor.getFileExtension());
-				BufferedWriter out = new BufferedWriter(new FileWriter(new File(baseDir, outname)));
-				System.out.println("Writing tree into " + outname);
-				try {
-					processor.traverse(root, jmodel, 0, out);
-				} finally {
-					try {
-						out.close();
-					} catch (Exception x) {
-					}
-				}
-
-			} else {
-				int c = 1;
-				ResIterator thingi = jmodel.listSubjectsWithProperty(RDFS.subClassOf, root);
-				while (thingi.hasNext()) {
-					Resource thing = thingi.next();
-					BufferedWriter out = null;
-
-					ResIterator entityi = jmodel.listSubjectsWithProperty(RDFS.subClassOf, thing);
-
-					while (entityi.hasNext())
-						try {
-							Resource entity = entityi.next();
-							String outname = String.format("%s_tree_%s.%s", title, entity.getLocalName(),
-									processor.getFileExtension());
-							out = new BufferedWriter(new FileWriter(new File(baseDir, outname)));
-							System.out.println("Writing tree into " + outname);
-							processor.traverse(entity, jmodel, 0, out);
-						} finally {
-							try {
-								out.close();
-							} catch (Exception x) {
-							}
-						}
-
-					c++;
-				}
-			}
-
-		} finally {
-			jmodel.close();
-			try {
-				if (in != null)
-					in.close();
-			} catch (Exception x) {
-			}
-
-		}
-	}
 
 	public static File getTestFile(String remoteurl, String localname, String extension, File baseDir)
 			throws Exception {

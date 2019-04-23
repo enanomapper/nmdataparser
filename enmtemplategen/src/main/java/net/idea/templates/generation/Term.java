@@ -1,4 +1,4 @@
-package net.enanomapper.templates;
+package net.idea.templates.generation;
 
 public class Term {
 

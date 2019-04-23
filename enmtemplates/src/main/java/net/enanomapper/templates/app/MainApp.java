@@ -22,8 +22,9 @@ import net.enanomapper.maker.TR;
 import net.enanomapper.maker.TemplateMaker;
 import net.enanomapper.maker.TemplateMakerSettings;
 import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
-import net.enanomapper.templates.Term;
-import net.enanomapper.templates.Tools;
+import net.idea.templates.generation.Term;
+import net.idea.templates.generation.Tools;
+
 
 /**
  * Tools for processing templates
