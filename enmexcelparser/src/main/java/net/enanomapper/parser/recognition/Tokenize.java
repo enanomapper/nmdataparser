@@ -1,5 +1,6 @@
 package net.enanomapper.parser.recognition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,11 +30,10 @@ public class Tokenize
 	public List<TokenRegion> regions = null;
 		
 	
-	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf) 
+	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf, JsonUtilities jsonUtils) 
 	{
 		Tokenize tok = new Tokenize();
 
-		JsonUtilities jsonUtils = new JsonUtilities();
 		String keyword;
 		
 		//NAME
@@ -44,6 +44,43 @@ public class Tokenize
 			else 
 				tok.name = keyword;
 		}
+		
+		// MODE
+		if (!node.path("MODE").isMissingNode()) {
+			keyword = jsonUtils.extractStringKeyword(node, "MODE", false);
+			if (keyword == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				tok.mode = Mode.fromString(keyword);
+				if (tok.mode == Mode.UNDEFINED)
+					conf.addError("keyword \"MODE\" is incorrect or UNDEFINED!");
+			}
+		}
+		
+		//SPLITTER
+		if (!node.path("SPLITTER").isMissingNode()) {
+			keyword = jsonUtils.extractStringKeyword(node, "SPLITTER", false);
+			if (keyword == null)
+				conf.addError(jsonUtils.getError());
+			else 
+				tok.splitter = keyword;
+		}
+		
+		// REGIONS
+		JsonNode regNode = node.path("REGIONS");
+		if (!regNode.isMissingNode()) {
+			if (!regNode.isArray()) {
+				conf.addError("REGIONS section is not of type array!");
+			}
+
+			tok.regions = new ArrayList<TokenRegion>();
+
+			for (int i = 0; i < regNode.size(); i++) {
+				TokenRegion reg = TokenRegion.extractTokenRegion(regNode.get(i), conf, jsonUtils);
+				tok.regions.add(reg);
+			}
+		}
+				
 
 		return tok;
 	}

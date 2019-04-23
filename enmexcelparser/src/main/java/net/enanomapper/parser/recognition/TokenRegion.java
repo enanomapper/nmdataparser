@@ -27,11 +27,11 @@ public class TokenRegion
 	public int beginIndex = -1;
 	public int endIndex = -1;
 	
-	public static TokenRegion extractTokenRegion(JsonNode node, ExcelParserConfigurator conf) 
+	public static TokenRegion extractTokenRegion(JsonNode node, ExcelParserConfigurator conf, 
+			JsonUtilities jsonUtils) 
 	{
 		TokenRegion reg = new TokenRegion();
-
-		JsonUtilities jsonUtils = new JsonUtilities();
+		
 		String keyword;
 		
 		return reg;
