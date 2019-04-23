@@ -18,10 +18,9 @@ public class Tokenize
 	public Mode mode = null;	
 	public String splitter = null;
 	public List<TokenRegion> regions = null;
+		
 	
-	
-	
-	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum) 
+	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf) 
 	{
 		Tokenize tok = new Tokenize();
 
