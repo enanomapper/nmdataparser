@@ -8,7 +8,18 @@ import net.enanomapper.parser.json.JsonUtilities;
 public class TokenRegion 
 {
 	public static enum Type {
-		FIXED_NUM_OF_CHARACTERS, SUBSTRING, NUMBER, ALPHABET, ALPHANUMERIC, UNDEFINED  
+		FIXED_NUM_OF_CHARACTERS, SUBSTRING, 
+		NUMBER_SEQUENCE, ALPH_SEQUENCE, ALPHANUMERIC_SEQUENCE, 
+		UNDEFINED;  
+		
+		public static Type fromString(String s) {
+			try {
+				Type type = Type.valueOf(s);
+				return (type);
+			} catch (Exception e) {
+				return Type.UNDEFINED;
+			}
+		}
 	}
 	
 	public Type regionType = null;
