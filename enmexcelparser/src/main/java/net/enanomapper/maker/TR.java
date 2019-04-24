@@ -9,6 +9,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+
 import ambit2.base.json.JSONUtils;
 
 public class TR extends HashMap<String, Object> implements Serializable {
@@ -20,7 +24,7 @@ public class TR extends HashMap<String, Object> implements Serializable {
 	public static final String[] header = header_string.split("\t");
 
 	public enum hix {
-		ID {
+		id {
 			@Override
 			public boolean isAnnotation() {
 				return false;
@@ -231,5 +235,9 @@ public class TR extends HashMap<String, Object> implements Serializable {
 		}
 		b.append("\n}");
 		return b.toString();
+	}
+	
+	public HashCode getHashCode(HashFunction hf) {
+		return hf.newHasher().putString(String.format("%s-%s-%s",TR.hix.Folder.get(this).toString().toLowerCase(),TR.hix.File.get(this).toString().toLowerCase(),TR.hix.Sheet.get(this).toString().toLowerCase()), Charsets.UTF_8).hash();
 	}
 }

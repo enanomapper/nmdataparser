@@ -104,6 +104,8 @@ public class Tools {
 		return readJRCExcelTemplate( file,  key,  templateName, histogram,
 				 stats,  annotator,  rownum, null);
 	}
+	
+	
 	public static int readJRCExcelTemplate(File file, Object key, String templateName, Map<String, Term> histogram,
 			XSSFSheet stats, IAnnotator annotator, int rownum, Integer nsh) throws InvalidFormatException, IOException {
 
@@ -169,8 +171,7 @@ public class Tools {
 								TR.hix.Column.set(record, cell.getColumnIndex());
 								TR.hix.Value.set(record, value);
 							
-								HashCode hc = hf.newHasher().putString(String.format("%s-%s-%s",key.toString().toLowerCase(),templateName.toLowerCase(),sheet.getSheetName().toLowerCase()), Charsets.UTF_8).hash();
-								TR.hix.ID.set(record, hc);
+								TR.hix.id.set(record, record.getHashCode(hf));
 								
 								if (annotator != null)
 									annotator.process(record);

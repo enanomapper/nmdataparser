@@ -19,6 +19,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 
 public class TemplateMakerSettings implements Serializable {
 	/**
@@ -69,6 +71,16 @@ public class TemplateMakerSettings implements Serializable {
 	private _TEMPLATES_TYPE templatesType = _TEMPLATES_TYPE.jrc;
 	private _TEMPLATES_CMD templatesCommand = _TEMPLATES_CMD.help;
 	protected boolean singlefile = false;
+	protected boolean generatehash = false;
+
+	public boolean isGeneratehash() {
+		return generatehash;
+	}
+
+	public void setGeneratehash(boolean generatehash) {
+		this.generatehash = generatehash;
+	}
+
 	public boolean isSinglefile() {
 		return singlefile;
 	}
@@ -201,7 +213,6 @@ public class TemplateMakerSettings implements Serializable {
 		}
 	}
 
-
 	public HashSet<String> getUniqueTemplateID(Iterable<TR> records) throws Exception {
 		HashSet<String> templateid = new HashSet<String>();
 		for (TR record : records)
@@ -216,7 +227,7 @@ public class TemplateMakerSettings implements Serializable {
 			}
 		return templateid;
 	}
-	
+
 	public boolean filterRecord(TR record) {
 		if (query == null || query.size() == 0)
 			return true;
@@ -232,7 +243,7 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public Iterable<TR> getTemplateRecords(InputStream in) throws Exception {
-
+		HashFunction hf = null;
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 		List<TR> records = new ArrayList<TR>();
@@ -246,7 +257,15 @@ public class TemplateMakerSettings implements Serializable {
 					Iterator<String> fields = node.fieldNames();
 					while (fields.hasNext()) {
 						String field = fields.next();
-						record.put(field, node.get(field).asText());
+						if (node.get(field).isInt())
+							record.put(field, node.get(field).intValue());
+						else
+							record.put(field, node.get(field).asText());
+					}
+					if (generatehash) {
+						if (hf == null)
+							hf = Hashing.murmur3_32();
+						TR.hix.id.set(record, record.getHashCode(hf));
 					}
 					if (filterRecord(record))
 						records.add(record);
@@ -261,12 +280,13 @@ public class TemplateMakerSettings implements Serializable {
 		return records;
 	}
 
-	public File getOutputFile(String templateid,_TEMPLATES_TYPE ttype) throws IOException {
-		return new File(getOutputfolder(),String.format("%s_%s.xlsx", templateid, _TEMPLATES_TYPE.jrc.equals(ttype)?"COLUMNS":"BLOCKS"));
+	public File getOutputFile(String templateid, _TEMPLATES_TYPE ttype) throws IOException {
+		return new File(getOutputfolder(),
+				String.format("%s_%s.xlsx", templateid, _TEMPLATES_TYPE.jrc.equals(ttype) ? "COLUMNS" : "BLOCKS"));
 	}
 
 	public File write(String templateid, _TEMPLATES_TYPE ttype, Workbook workbook) throws IOException {
-		File outfile = getOutputFile(templateid,ttype);
+		File outfile = getOutputFile(templateid, ttype);
 		try (FileOutputStream out = new FileOutputStream(outfile)) {
 			workbook.write(out);
 			return outfile;

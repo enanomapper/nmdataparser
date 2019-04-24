@@ -192,11 +192,11 @@ public class TemplateMaker {
 		
 		for (TR record : records)
 			try {
-				Object _id = record.get("id");
-				if (_id == null || record.get("Sheet") == null)
+				Object _id = record.get(TR.hix.id.name());
+				if (_id == null || record.get(TR.hix.Sheet.name()) == null)
 					continue;
 				if (!templateid.equals(_id)) continue;
-				String _sheet = record.get("Sheet").toString();
+				String _sheet = record.get(TR.hix.Sheet.name()).toString();
 				_sheet = String.format("%s_%s",_sheet.toString(),templateid);
 				if (_sheet.length()>30)
 					_sheet = _sheet.substring(0, 30);
@@ -217,8 +217,8 @@ public class TemplateMaker {
 				
 				if (sheet.getSheetName().equals(_sheet.toString())) {
 					// System.out.println(record);
-					int row = Integer.parseInt(record.get("Row").toString());
-					int col = Integer.parseInt(record.get("Column").toString());
+					int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
+					int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
 
 					Row xrow = sheet.getRow(row);
 					if (xrow == null)
@@ -287,7 +287,8 @@ public class TemplateMaker {
 						} else
 							cstyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
 						cstyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-						style.put(annotation.toString(), cstyle);
+						if (annotation!=null)
+							style.put(annotation.toString(), cstyle);
 
 					}
 
