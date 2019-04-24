@@ -91,21 +91,6 @@ public class TemplateMakerSettings implements Serializable {
 
 	protected Map<String, String> query = new TreeMap<String, String>();
 
-	public String getEndpointname() {
-		return getQueryEndpoint();
-	}
-
-	public void setEndpointname(String value) {
-		setQueryEndpoint(value);
-	}
-
-	public String getAssayname() {
-		return getQueryAssay();
-	}
-
-	public void setAssayname(String value) {
-		setQueryAssay(value);
-	}
 
 	public String getQueryEndpoint() {
 		return query.get("endpoint");
