@@ -96,7 +96,7 @@ public class MainApp {
 			}
 
 			try {
-				s.setAssayname(getOption(line, 's'));
+				s.setQueryAssay(getOption(line, 's'));
 			} catch (Exception x) {
 			}
 
@@ -120,14 +120,14 @@ public class MainApp {
 			}
 
 			try {
-				s.setEndpointname(getOption(line, 'e'));
-				if (!s.getEndpointname().endsWith(".xlsx"))
-					s.setEndpointname(s.getEndpointname());
+				s.setQueryEndpoint(getOption(line, 'e'));
+				if (!s.getQueryEndpoint().endsWith(".xlsx"))
+					s.setQueryEndpoint(s.getQueryEndpoint());
 			} catch (Exception x) {
 			}
 
-			if (s.getAssayname() == null)
-				s.setAssayname("COMET");
+			if (s.getQueryAssay() == null)
+				s.setQueryAssay("COMET");
 			return s;
 		} catch (Exception x) {
 
