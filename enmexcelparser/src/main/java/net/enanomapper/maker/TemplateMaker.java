@@ -2,19 +2,15 @@ package net.enanomapper.maker;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,15 +43,13 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
 
 public class TemplateMaker {
 	protected Logger logger_cli;
+
 	public enum _header {
-		results,
-		method {
+		results, method {
 			@Override
 			public String toString() {
 				return "method and instrument information";
@@ -91,15 +85,13 @@ public class TemplateMaker {
 				return "size distribution";
 			}
 		},
-		cell,
-		endpoint {
+		cell, endpoint {
 			@Override
 			public String toString() {
 				return "endpoint_assay";
 			}
 		},
-		sop,
-		resultendpoint {
+		sop, resultendpoint {
 			@Override
 			public String toString() {
 				return "End-Point Outcome metric";
@@ -110,7 +102,8 @@ public class TemplateMaker {
 			return this.name().toString();
 		}
 	}
-	//for compatibility, to be refactored to use enums
+
+	// for compatibility, to be refactored to use enums
 	protected final static String header_results = _header.results.toString();
 	protected final static String header_method = _header.method.toString();
 	protected final static String header_initialexposure = _header.initialexposure.toString();
@@ -185,41 +178,44 @@ public class TemplateMaker {
 
 	}
 
-	public Workbook generateJRCTemplates(TemplateMakerSettings settings) throws Exception {
-		logger_cli.log(Level.INFO, String.format("%s\t%s", settings.getTemplatesType(), settings.getAssayname()));
-		Iterable<TR> records = getTemplateConfig();
-		String sheetname = settings.getAssayname();
-		String endpoint = settings.getEndpointname();
-		if (endpoint == null)
-			throw new Exception("Endpoint not defined");
-		if (sheetname == null)
-			throw new Exception("Assay not defined");
-
-		Workbook workbook = new XSSFWorkbook();
+	public Workbook generateJRCTemplates(Workbook workbook, String templateid, Iterable<TR> records) throws Exception {
+		if (workbook == null) {
+			workbook = new XSSFWorkbook();
+			Sheet sheet = workbook.createSheet("instruction for data logging");
+			insertLogo(workbook, sheet);
+		}	
 		CreationHelper factory = workbook.getCreationHelper();
-		Sheet sheet = workbook.createSheet("instruction for data logging");
-		insertLogo(workbook, sheet);
-		sheet = workbook.createSheet(sheetname);
-		workbook.setActiveSheet(1);
-		Header header = sheet.getHeader();
-		header.setCenter("Center Header");
-		header.setLeft("Left Header");
-
 		Map<String, CellStyle> style = new HashMap<String, CellStyle>();
-
 		Map<String, Integer> mincol = new HashMap<String, Integer>();
 		Map<String, Integer> maxcol = new HashMap<String, Integer>();
-
+		Sheet sheet = null;
+		
 		for (TR record : records)
 			try {
-				Object _file = record.get("File");
-				Object _endpoint = record.get("endpoint");
-				Object _sheet = record.get("Sheet");
-				if (_file == null || _endpoint == null || _sheet == null)
+				Object _id = record.get("id");
+				if (_id == null || record.get("Sheet") == null)
 					continue;
-
-				if (sheetname.toUpperCase().equals(_sheet.toString().toUpperCase()) && (endpoint.equals(_file)
-						|| endpoint.toUpperCase().equals(_endpoint.toString().toUpperCase()))) {
+				if (!templateid.equals(_id)) continue;
+				String _sheet = record.get("Sheet").toString();
+				_sheet = String.format("%s_%s",_sheet.toString(),templateid);
+				if (_sheet.length()>30)
+					_sheet = _sheet.substring(0, 30);
+								
+				if (sheet==null) {
+					try {
+						sheet = workbook.createSheet(_sheet.toString());
+					} catch (Exception x) {
+						throw x;
+					}					
+					workbook.setActiveSheet(workbook.getNumberOfSheets()-1);
+					Header header = sheet.getHeader();
+					header.setCenter("Center Header");
+					header.setLeft("Left Header");
+				}
+					
+				
+				
+				if (sheet.getSheetName().equals(_sheet.toString())) {
 					// System.out.println(record);
 					int row = Integer.parseInt(record.get("Row").toString());
 					int col = Integer.parseInt(record.get("Column").toString());
@@ -324,7 +320,7 @@ public class TemplateMaker {
 								Comment comment = drawing.createCellComment(anchor);
 								RichTextString str = factory.createRichTextString(hint.toString());
 								comment.setString(str);
-								comment.setAuthor(sheetname);
+								comment.setAuthor(_sheet.toString());
 
 								// Assign the comment to the cell
 								cell.setCellComment(comment);
@@ -343,6 +339,8 @@ public class TemplateMaker {
 
 						cell.setCellValue(unit.toString());
 					}
+				} else {
+					throw new Exception(String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(),_sheet));
 				}
 
 			} catch (Exception x) {
@@ -372,16 +370,6 @@ public class TemplateMaker {
 
 	}
 
-	public void write(Workbook workbook, TemplateMakerSettings settings) throws IOException {
-		String endpoint = settings.getEndpointname();
-		try (FileOutputStream out = new FileOutputStream(
-				new File(settings.getOutputfolder(), String.format("%s_%s_COLUMNS.xlsx",
-						endpoint == null ? "" : endpoint.replaceAll(".xlsx", ""), settings.getAssayname())))) {
-			workbook.write(out);
-		} finally {
-			workbook.close();
-		}
-	}
 
 	protected void setStyle(Workbook workbook, Sheet sheet, String annotation, Map<String, Integer> mincol,
 			Map<String, Integer> maxcol, Map<String, CellStyle> cellstyle) {
@@ -453,7 +441,7 @@ public class TemplateMaker {
 					sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
 					CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
 				} catch (Exception x) {
-					logger_cli.warning(x.getMessage());
+					logger_cli.warning(String.format("%s\t%s", sheet.getSheetName(),x.getMessage()));
 				}
 			if ("size distribution".equals(annotation) && i == 1) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
@@ -500,47 +488,20 @@ public class TemplateMaker {
 		}
 	}
 
-	protected Iterable<TR> getTemplateConfig() throws Exception {
-		return getTemplateConfig("net/enanomapper/templates/JRCTEMPLATES_102016.json");
+	public Workbook generate(TemplateMakerSettings settings) throws Exception {
+		Iterable<TR> records = settings.getTemplateRecords();
+		HashSet<String> templateids = settings.getUniqueTemplateID(records);
+		if (templateids.size() == 0)
+			throw new Exception(String.format("Not found"));
+		return generate(settings,templateids);
 	}
-
-	protected Iterable<TR> getTemplateConfig(String config) throws Exception {
-		try (InputStream in = TemplateMaker.class.getClassLoader().getResourceAsStream(config)) {
-			return getTemplateConfig();
-		} catch (Exception x) {
-			throw x;
-		}
+	public Workbook generate(TemplateMakerSettings settings, String templateid) throws Exception {
+		HashSet<String> templateids = new HashSet<String>();
+		templateids.add(templateid);
+		return generate(settings,templateids);
 	}
-
-	protected Iterable<TR> getJSONConfig(InputStream in) throws Exception {
-
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = null;
-		List<TR> records = new ArrayList<TR>();
-		try {
-			root = mapper.readTree(in);
-			if (root instanceof ArrayNode) {
-				ArrayNode aNode = (ArrayNode) root;
-				for (int i = 0; i < aNode.size(); i++) {
-					TR record = new TR();
-					records.add(record);
-					JsonNode node = aNode.get(i);
-					Iterator<String> fields = node.fieldNames();
-					while (fields.hasNext()) {
-						String field = fields.next();
-						record.put(field, node.get(field).asText());
-					}
-				}
-			}
-		} catch (Exception x) {
-			throw x;
-		} finally {
-
-		}
-		return records;
-	}
-
-	public void generate(TemplateMakerSettings settings) throws Exception {
+	public Workbook generate(TemplateMakerSettings settings, HashSet<String> templateids) throws Exception {
+		Workbook workbook = null;
 		TemplateMakerSettings._TEMPLATES_TYPE[] ttypes = null;
 		// settings
 		switch (settings.getTemplatesType()) {
@@ -560,94 +521,44 @@ public class TemplateMaker {
 		default:
 			break;
 		}
-		if (settings.getEndpointname() != null) {
-			Iterable<TR> records = getTemplateConfig();
-			HashSet<String> assays = new HashSet<String>();
-			String assay = settings.getAssayname().toUpperCase();
-			String endpoint = settings.getEndpointname().toUpperCase();
-			String endpointfile = endpoint + ".XLSX";
-			for (TR record : records)
-				try {
-					// System.out.println(record);
-					Object _file = record.get("File");
-					Object _endpoint = record.get("endpoint");
-					Object _sheet = record.get("Sheet");
-					if (_file == null) {
-						System.out.println(String.format("Missing file %s", record.get("id")));
-						continue;
-					}
-					if (_endpoint == null) {
-						System.out.println(String.format("Missing endpoint %s", record.get("id")));
-						continue;
-					}
-					if (_sheet == null) {
-						System.out.println(String.format("Missing sheet %s", record.get("id")));
-						continue;
-					}
 
-					if (endpointfile.equals(_file.toString().toUpperCase().trim())
-							|| endpoint.equals(_endpoint.toString().toUpperCase().trim())) {
 
-						if (settings.getAssayname() == null || _sheet.toString().toUpperCase().equals(assay))
-							assays.add(_sheet.toString());
+		Iterator<String> i = templateids.iterator();
+		while (i.hasNext())
+			try {
+				settings.getQuery().clear();
+				String templateid = i.next();
+				settings.setQueryTemplateid(templateid);
+				Iterable<TR> records =  settings.getTemplateRecords();
+				
+				for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
+					settings.setTemplatesType(ttype);
+					settings.setQueryTemplateid(templateid);
+					switch (ttype) {
+					case jrc: {
+						workbook = generateJRCTemplates(settings.isSinglefile()?workbook:null,settings.getQueryTemplateId(),records);
+						if (!settings.isSinglefile())
+							settings.write(String.format("%s_%s",workbook.getSheetAt(1).getSheetName(),settings.getQueryTemplateId()),_TEMPLATES_TYPE.jrc,workbook);
+						break;
 					}
-				} catch (Exception x) {
-					// System.out.println(record);
-					x.printStackTrace();
-				}
-			// generate
-			if (assays.size() == 0)
-				throw new Exception(String.format("Not found"));
-			Iterator<String> i = assays.iterator();
-			while (i.hasNext())
-				try {
-					String assayname = i.next();
-					for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
-						settings.setTemplatesType(ttype);
-						records = getTemplateConfig();
-						settings.setAssayname(assayname);
-						switch (ttype) {
-						case jrc: {
-							Workbook workbook = generateJRCTemplates(settings);
-							write(workbook, settings);
+					case iom:
+						try {
+							//generateIOMTemplates((settings.getQueryTemplateId(),records);
 							break;
+						} catch (Exception x) {
 						}
-						case iom:
-							try {
-								generateIOMTemplates(records, settings, assayname);
-								break;
-							} catch (Exception x) {
-							}
-						default:
-							break;
-						}
-
+					default:
+						break;
 					}
-				} catch (Exception x) {
-					x.printStackTrace();
-				}
-		} else if (settings.getAssayname() != null) {
 
-			for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
-				Iterable<TR> records = getTemplateConfig();
-				settings.setTemplatesType(ttype);
-				switch (ttype) {
-				case jrc: {
-					generateJRCTemplates(settings);
-					break;
 				}
-				case iom: {
-					generateIOMTemplates(records, settings, settings.getAssayname());
-					break;
-				}
-				default:
-					break;
-				}
-
+			} catch (Exception x) {
+				x.printStackTrace();
 			}
-		} else {
-			throw new Exception(String.format("Assay and endpoint not defined, use option -a and -e"));
-		}
+		if (settings.isSinglefile()) {
+			settings.write("TEMPLATES",_TEMPLATES_TYPE.jrc,workbook);
+			return workbook;
+		} else return null;
 	}
 
 }

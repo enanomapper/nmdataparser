@@ -139,7 +139,20 @@ public class TR extends HashMap<String, Object> implements Serializable {
 	}
 	public void setJsonLevel2(String value) {
 		hix.JSON_LEVEL2.set(this, value);
+	}
+	public void setJsonLevel3(String value) {
+		hix.JSON_LEVEL3.set(this, value);
 	}	
+	public void setUnit(String value) {
+		hix.unit.set(this, value);
+	}
+	public void setValueClean(String value) {
+		hix.cleanedvalue.set(this, value);
+	}
+	public void setEndpoint(String value) {
+		hix.endpoint.set(this, value);
+	}
+	
 	public boolean isData() {
 		return "data".equals(hix.Annotation.get(this));
 	}

@@ -148,7 +148,7 @@ public class Tools {
 						if (value != null) {
 							gatherStats(value, histogram);
 
-							HashCode hc = hf.newHasher().putString(value, Charsets.UTF_8).hash();
+							
 							if (!"".equals(value.trim())) {
 								rownum++;
 								record.clear();
@@ -161,13 +161,16 @@ public class Tools {
 								} catch (Exception x) {
 								}
 
-								TR.hix.ID.set(record, hc);
+								
 								TR.hix.Folder.set(record, key.toString());
 								TR.hix.File.set(record, templateName);
 								TR.hix.Sheet.set(record, sheet.getSheetName());
 								TR.hix.Row.set(record, row.getRowNum());
 								TR.hix.Column.set(record, cell.getColumnIndex());
 								TR.hix.Value.set(record, value);
+							
+								HashCode hc = hf.newHasher().putString(String.format("%s-%s-%s",key.toString().toLowerCase(),templateName.toLowerCase(),sheet.getSheetName().toLowerCase()), Charsets.UTF_8).hash();
+								TR.hix.ID.set(record, hc);
 								
 								if (annotator != null)
 									annotator.process(record);
