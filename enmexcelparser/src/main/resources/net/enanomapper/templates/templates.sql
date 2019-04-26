@@ -1,6 +1,9 @@
+drop database if exists ambit_templates;
 CREATE DATABASE `ambit_templates` /*!40100 DEFAULT CHARACTER SET utf8 */;
-drop table template;
-CREATE TABLE `template` (
+use ambit_templates;
+
+drop table if exists assay_template;
+CREATE TABLE `assay_template` (
   `endpoint` varchar(64) DEFAULT NULL,
   `assay` varchar(45) DEFAULT NULL,
   `row` int(11) DEFAULT NULL,
@@ -20,12 +23,12 @@ CREATE TABLE `template` (
   `folder` varchar(32) DEFAULT NULL,
   `sheet` varchar(32) DEFAULT NULL,
   `visible` tinyint(4) DEFAULT '1',
-  KEY `primary_index` (`endpoint`,`assay`,`row`,`col`)
+  KEY `primary_index` (`idtemplate`,`row`,`col`),
+  KEY `endpointx` (`endpoint`,`assay`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 LOAD DATA INFILE 'JRCTEMPLATES_102016.csv' 
-INTO TABLE template
+INTO TABLE assay_template
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -54,8 +57,8 @@ sheet=@sheet,
 annotation=@annotation
 ;
 -- potential errors
-update template set visible=0 where sheet="Aerosol Characterisation" and idtemplate="cd616a90_sae";
-update template set visible=0 where sheet="Aspect of deposit" and endpoint="epithelial barrier integrity";
-update template set visible=0 where sheet="hCTA" and endpoint="cytotoxicity";
-update template set visible=0 where sheet="hemolysis" and endpoint="cytotoxicity";
-update template set visible=0 where sheet="hemolysis" and endpoint="epithelial barrier integrity";
+update assay_template set visible=0 where sheet="Aerosol Characterisation" and idtemplate="cd616a90_sae";
+update assay_template set visible=0 where sheet="Aspect of deposit" and endpoint="epithelial barrier integrity";
+update assay_template set visible=0 where sheet="hCTA" and endpoint="cytotoxicity";
+update assay_template set visible=0 where sheet="hemolysis" and endpoint="cytotoxicity";
+update assay_template set visible=0 where sheet="hemolysis" and endpoint="epithelial barrier integrity";
