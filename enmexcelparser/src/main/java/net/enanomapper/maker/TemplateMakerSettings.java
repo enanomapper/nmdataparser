@@ -91,7 +91,6 @@ public class TemplateMakerSettings implements Serializable {
 
 	protected Map<String, String> query = new TreeMap<String, String>();
 
-
 	public String getQueryEndpoint() {
 		return query.get("endpoint");
 	}
@@ -227,6 +226,15 @@ public class TemplateMakerSettings implements Serializable {
 		return ok;
 	}
 
+	public Iterable<TR> getTemplateRecords(Iterator<TR> iterator) {
+		return new Iterable<TR>() {
+			@Override
+			public Iterator<TR> iterator() {
+				return iterator;
+			}
+		};
+	}
+
 	public Iterable<TR> getTemplateRecords(InputStream in) throws Exception {
 		HashFunction hf = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -263,6 +271,14 @@ public class TemplateMakerSettings implements Serializable {
 
 		}
 		return records;
+	}
+
+	public String getOutputFileName()  {
+		if (getQueryTemplateId() != null)
+			return String.format("%s_%s.xlsx", getQueryTemplateId(),
+					_TEMPLATES_TYPE.jrc.equals(getTemplatesType()) ? "COLUMNS" : "BLOCKS");
+		else  return String.format("%s_%s.xlsx", "datatemplate",
+				_TEMPLATES_TYPE.jrc.equals(getTemplatesType()) ? "COLUMNS" : "BLOCKS");		
 	}
 
 	public File getOutputFile(String templateid, _TEMPLATES_TYPE ttype) throws IOException {
