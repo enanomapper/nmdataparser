@@ -1,5 +1,6 @@
 package net.enanomapper.parser.excel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -485,7 +486,7 @@ public class ExcelUtils
 		
 		return null;
 	}
-	
+
 	public static Date getDateFromCell(Cell c)
 	{
 		if (c == null)
@@ -499,23 +500,43 @@ public class ExcelUtils
 		}	
 		case NUMERIC:
 		{	
-			String format = c.getCellStyle().getDataFormatString();
+			try {
+				SimpleDateFormat format = new SimpleDateFormat(c.getCellStyle().getDataFormatString());
+				return c.getDateCellValue();
+			} catch (Exception x) {
+				return null;
+				//if format parsing fails, then it is not valid date format
+			}
+			/*
+			//this is not necessarily right, date format may be very different and not always include "/" 
+			//better use date format functions ... 
 			if (format.indexOf('/') > 0 || format.indexOf('y') > 0 
 					|| format.indexOf('m') > 0 || format.indexOf('d') > 0)
 				return c.getDateCellValue();
 			return null;
+			*/
 		}	
 		case FORMULA: 
 		{	
 			if (c.getCachedFormulaResultType() == CellType.NUMERIC)
 			{	
+				try {
+					SimpleDateFormat format = new SimpleDateFormat(c.getCellStyle().getDataFormatString());
+					return c.getDateCellValue();
+				} catch (Exception x) {
+					
+					return null;
+				}
+				/*
 				String format = c.getCellStyle().getDataFormatString();
 				if (format.indexOf('/') > 0 || format.indexOf('y') > 0 
 						|| format.indexOf('m') > 0 || format.indexOf('d') > 0)
 					return c.getDateCellValue();
+					*/
 			}	
 			return null;
 		}	
+
 		}
 		return null;
 	}
