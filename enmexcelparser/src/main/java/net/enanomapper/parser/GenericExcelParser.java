@@ -2710,7 +2710,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				{	
 					if (sb.length() > 0)
 						sb.append(loc.combinationSeparator);
-					sb.append(obj[i].toString());
+					sb.append(obj[i]==null?"":obj[i].toString());
 				}	
 		}
 			
