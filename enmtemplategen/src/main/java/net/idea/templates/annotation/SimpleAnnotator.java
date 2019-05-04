@@ -39,6 +39,7 @@ public class SimpleAnnotator implements IAnnotator {
 						TR.hix.Annotation.set(record, entry.getValue());
 				}
 				Object annotation = TR.hix.Annotation.get(record);
+				if (annotation!=null)
 				for (_header _type : _header.values()) 
 					if (_type.toString().equals(annotation.toString())) {
 					switch (_type) {
