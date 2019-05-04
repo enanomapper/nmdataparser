@@ -23,17 +23,74 @@
 			"COLUMN_INDEX": "C"
 		}
 	},
-	"PROTOCOL_APPLICATIONS": [{
-		"PROTOCOL_TOP_CATEGORY": "P-CHEM",
-		"PROTOCOL_ENDPOINT": "TBD",
-		"PROTOCOL_CATEGORY_CODE": "PC_UNKNOWN_SECTION",
-		"PROTOCOL_GUIDELINE": {
-			"guideline1": "TBD"
-		},
-		"CITATION_TITLE": "TBD",
-		"CITATION_OWNER": "TBD",
-		"CITATION_YEAR": "TBD",
-		"PARAMETERS": {},
-		"EFFECTS": []
-	}]
+	"PROTOCOL_APPLICATIONS": [
+		{
+			"INVESTIGATION_UUID": {
+				"SOURCE_COMBINATION": true,
+				"COMBINATION_SEPARATOR": "-",
+				"COLUMN_INDEX": "C",
+				"COLUMN_INDICES": [
+				]
+			},
+			"PROTOCOL_APPLICATION_UUID": {
+				"SOURCE_COMBINATION": true,
+				"COMBINATION_SEPARATOR": "-",
+				"COLUMN_INDEX": "C",
+				"COLUMN_INDICES": [
+				]
+			},
+			"ASSAY_UUID": {
+				"SOURCE_COMBINATION": true,
+				"COMBINATION_SEPARATOR": "-",
+				"COLUMN_INDEX": "C",
+				"COLUMN_INDICES": [
+				]
+			},
+			"PROTOCOL_TOP_CATEGORY": "P-CHEM",
+			"PROTOCOL_ENDPOINT": "TBD",
+			"PROTOCOL_CATEGORY_CODE": "PC_UNKNOWN_SECTION",
+			"PROTOCOL_GUIDELINE": {
+				"guideline1": "TBD"
+			},
+			"CITATION_TITLE": {
+				"COLUMN_INDEX": "?"
+			},
+			"CITATION_OWNER": {
+				"COLUMN_INDEX": "?"
+			},
+			"CITATION_YEAR": {
+				"COLUMN_INDEX": "?",
+				"DATA_INTERPRETATION": "AS_DATE"
+			},
+			"PARAMETERS": {
+			},
+			"EFFECTS": [
+				{
+					"ENDPOINT": {
+						"COLUMN_INDEX": "?"
+					},
+					"VALUE": {
+						"COLUMN_INDEX": "AO"
+					},
+					"UNIT": {
+						"COLUMN_INDEX": "?"
+					},
+					"ERR_QUALIFIER": {
+						"COLUMN_INDEX": "?"
+					},
+					"ERR_VALUE": {
+						"COLUMN_INDEX": "?"
+					},
+					"CONDITIONS": {
+						"Replicate": {
+							"COLUMN_INDEX": "?"
+						},
+						"Sample name": {
+							"COLUMN_INDEX": "?"
+						}
+					}
+				}
+			]
+		}
+	]
 }
