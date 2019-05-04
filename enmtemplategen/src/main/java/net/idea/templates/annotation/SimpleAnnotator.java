@@ -2,14 +2,21 @@ package net.idea.templates.annotation;
 
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.TreeMap;
 
 import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
-
+import net.enanomapper.maker.TemplateMaker._header;
+import net.enanomapper.parser.KEYWORD;
 
 /**
- * Relies on JRC/NANOREG templates structure, where the first row is a header with merged columns
+ * Relies on JRC/NANOREG templates structure, where the first row is a header
+ * with merged columns
+ * 
  * @author nina
  *
  */
@@ -24,10 +31,43 @@ public class SimpleAnnotator implements IAnnotator {
 		if (row == 0) {
 			header.put(col, value.toString());
 		} else {
-			for (Entry<Integer, String> entry : header.entrySet()) {
-				if (col >= entry.getKey())
-					TR.hix.Annotation.set(record, entry.getValue());
-			}
+			if (row > 4)
+				TR.hix.Annotation.set(record, "data");
+			else {
+				for (Entry<Integer, String> entry : header.entrySet()) {
+					if (col >= entry.getKey())
+						TR.hix.Annotation.set(record, entry.getValue());
+				}
+				Object annotation = TR.hix.Annotation.get(record);
+				for (_header _type : _header.values()) 
+					if (_type.toString().equals(annotation.toString())) {
+					switch (_type) {
+					case sample: {
+						TR.hix.JSON_LEVEL1.set(record, KEYWORD.SUBSTANCE_RECORD.name());
+						break;
+					}
+					case parameters:
+					case method: {
+						TR.hix.JSON_LEVEL1.set(record, KEYWORD.PARAMETERS.name());
+						break;
+						
+					}
+					case results: {
+						TR.hix.JSON_LEVEL1.set(record, KEYWORD.EFFECTS.name());
+						break;
+					}
+					case sop: {
+						TR.hix.JSON_LEVEL1.set(record, KEYWORD.PROTOCOL_APPLICATIONS.name());
+						TR.hix.JSON_LEVEL2.set(record, KEYWORD.PROTOCOL_GUIDELINE.name());
+						break;
+					}
+					case size: {
+
+					}
+
+					}
+				}				
+			}	
 		}
 
 	}
