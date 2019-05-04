@@ -111,7 +111,7 @@ public class Tools {
 
 		Workbook workbook;
 		if (templateName.endsWith(".xlsx")) {
-			workbook = new XSSFWorkbook(file);
+			workbook = new XSSFWorkbook(new FileInputStream(file));
 		} else if (templateName.endsWith(".xls")) {
 			workbook = new HSSFWorkbook(new FileInputStream(file));
 		} else
