@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +52,12 @@ public class TemplateMaker {
 			@Override
 			public String toString() {
 				return "method and instrument information";
+			}
+		},
+		parameters {
+			@Override
+			public String toString() {
+				return "experimental parameters";
 			}
 		},
 		initialexposure {
@@ -179,43 +184,44 @@ public class TemplateMaker {
 	}
 
 	public Workbook generateJRCTemplates(Workbook workbook, String templateid, Iterable<TR> records) throws Exception {
+
 		if (workbook == null) {
 			workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet("instruction for data logging");
 			insertLogo(workbook, sheet);
-		}	
+		}
 		CreationHelper factory = workbook.getCreationHelper();
 		Map<String, CellStyle> style = new HashMap<String, CellStyle>();
 		Map<String, Integer> mincol = new HashMap<String, Integer>();
 		Map<String, Integer> maxcol = new HashMap<String, Integer>();
 		Sheet sheet = null;
-		
+
 		for (TR record : records)
 			try {
 				Object _id = record.get(TR.hix.id.name());
 				if (_id == null || record.get(TR.hix.Sheet.name()) == null)
 					continue;
-				if (!templateid.equals(_id)) continue;
+				if (!templateid.equals(_id))
+					continue;
 				String _sheet = record.get(TR.hix.Sheet.name()).toString();
-				_sheet = String.format("%s_%s",_sheet.toString(),templateid);
-				if (_sheet.length()>30)
+				_sheet = String.format("%s_%s", _sheet.toString(), templateid);
+				if (_sheet.length() > 30)
 					_sheet = _sheet.substring(0, 30);
-								
-				if (sheet==null) {
+
+				if (sheet == null) {
 					try {
-						sheet = workbook.createSheet(_sheet.toString());
+						sheet = workbook.createSheet(_sheet);
 					} catch (Exception x) {
 						throw x;
-					}					
-					workbook.setActiveSheet(workbook.getNumberOfSheets()-1);
+					}
+					workbook.setActiveSheet(workbook.getNumberOfSheets() - 1);
 					Header header = sheet.getHeader();
 					header.setCenter("Center Header");
 					header.setLeft("Left Header");
+
 				}
-					
-				
-				
-				if (sheet.getSheetName().equals(_sheet.toString())) {
+
+				if (sheet.getSheetName().equals(_sheet)) {
 					// System.out.println(record);
 					int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
 					int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
@@ -287,7 +293,7 @@ public class TemplateMaker {
 						} else
 							cstyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
 						cstyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-						if (annotation!=null)
+						if (annotation != null)
 							style.put(annotation.toString(), cstyle);
 
 					}
@@ -341,7 +347,8 @@ public class TemplateMaker {
 						cell.setCellValue(unit.toString());
 					}
 				} else {
-					throw new Exception(String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(),_sheet));
+					throw new Exception(
+							String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(), _sheet));
 				}
 
 			} catch (Exception x) {
@@ -370,7 +377,6 @@ public class TemplateMaker {
 		return workbook;
 
 	}
-
 
 	protected void setStyle(Workbook workbook, Sheet sheet, String annotation, Map<String, Integer> mincol,
 			Map<String, Integer> maxcol, Map<String, CellStyle> cellstyle) {
@@ -442,7 +448,7 @@ public class TemplateMaker {
 					sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
 					CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
 				} catch (Exception x) {
-					logger_cli.warning(String.format("%s\t%s", sheet.getSheetName(),x.getMessage()));
+					logger_cli.warning(String.format("%s\t%s", sheet.getSheetName(), x.getMessage()));
 				}
 			if ("size distribution".equals(annotation) && i == 1) {
 				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
@@ -494,13 +500,15 @@ public class TemplateMaker {
 		HashSet<String> templateids = settings.getUniqueTemplateID(records);
 		if (templateids.size() == 0)
 			throw new Exception(String.format("Not found"));
-		return generate(settings,templateids);
+		return generate(settings, templateids);
 	}
+
 	public Workbook generate(TemplateMakerSettings settings, String templateid) throws Exception {
 		HashSet<String> templateids = new HashSet<String>();
 		templateids.add(templateid);
-		return generate(settings,templateids);
+		return generate(settings, templateids);
 	}
+
 	public Workbook generate(TemplateMakerSettings settings, HashSet<String> templateids) throws Exception {
 		Workbook workbook = null;
 		TemplateMakerSettings._TEMPLATES_TYPE[] ttypes = null;
@@ -523,28 +531,29 @@ public class TemplateMaker {
 			break;
 		}
 
-
 		Iterator<String> i = templateids.iterator();
 		while (i.hasNext())
 			try {
 				settings.getQuery().clear();
 				String templateid = i.next();
 				settings.setQueryTemplateid(templateid);
-				Iterable<TR> records =  settings.getTemplateRecords();
-				
+				Iterable<TR> records = settings.getTemplateRecords();
+
 				for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
 					settings.setTemplatesType(ttype);
 					settings.setQueryTemplateid(templateid);
 					switch (ttype) {
 					case jrc: {
-						workbook = generateJRCTemplates(settings.isSinglefile()?workbook:null,settings.getQueryTemplateId(),records);
+						workbook = generateJRCTemplates(settings.isSinglefile() ? workbook : null,
+								settings.getQueryTemplateId(), records);
 						if (!settings.isSinglefile())
-							settings.write(String.format("%s_%s",workbook.getSheetAt(1).getSheetName(),settings.getQueryTemplateId()),_TEMPLATES_TYPE.jrc,workbook);
+							settings.write(String.format("%s_%s", workbook.getSheetAt(1).getSheetName(),
+									settings.getQueryTemplateId()), _TEMPLATES_TYPE.jrc, workbook);
 						break;
 					}
 					case iom:
 						try {
-							//generateIOMTemplates((settings.getQueryTemplateId(),records);
+							// generateIOMTemplates((settings.getQueryTemplateId(),records);
 							break;
 						} catch (Exception x) {
 						}
@@ -557,9 +566,10 @@ public class TemplateMaker {
 				x.printStackTrace();
 			}
 		if (settings.isSinglefile()) {
-			settings.write("TEMPLATES",_TEMPLATES_TYPE.jrc,workbook);
+			settings.write("TEMPLATES", _TEMPLATES_TYPE.jrc, workbook);
 			return workbook;
-		} else return null;
+		} else
+			return null;
 	}
 
 }
