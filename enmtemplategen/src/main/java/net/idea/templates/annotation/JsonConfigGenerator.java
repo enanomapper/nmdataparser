@@ -1,7 +1,16 @@
 package net.idea.templates.annotation;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.EnumMap;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.apache.poi.hssf.util.CellReference;
 
@@ -9,17 +18,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
 import net.enanomapper.parser.KEYWORD;
 
-public class JsonConfigAnnotator implements IAnnotator {
+public class JsonConfigGenerator implements IAnnotator {
 	protected ObjectMapper mapper = new ObjectMapper();
 
 	protected ObjectNode config = mapper.createObjectNode();
 
-	public JsonConfigAnnotator() throws IOException {
+	public JsonConfigGenerator() throws IOException {
 		super();
 	}
 
@@ -79,7 +98,6 @@ public class JsonConfigAnnotator implements IAnnotator {
 		int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
 		String id = record.get(TR.hix.id.name()).toString();
 		String value = record.get(TR.hix.cleanedvalue.name()).toString();
-		ObjectNode root = getJsonConfig(id);
 		if (row == 0)
 			return;
 		if (row > 1)
@@ -163,4 +181,56 @@ public class JsonConfigAnnotator implements IAnnotator {
 
 	}
 
+	public static BufferedImage config2qrcode(JsonNode node, int size) throws Exception {
+		String codeText = node.toString();
+		System.out.println(codeText);
+
+		try {
+
+			Map<EncodeHintType, Object> hintMap = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+			hintMap.put(EncodeHintType.CHARACTER_SET, "ASCII");
+
+			hintMap.put(EncodeHintType.MARGIN, 1);
+			hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+
+			BufferedImage image = null;
+
+			QRCodeWriter qrCodeWriter = new QRCodeWriter();
+			BitMatrix byteMatrix = qrCodeWriter.encode(codeText, BarcodeFormat.QR_CODE, size, size, hintMap);
+			int w = byteMatrix.getWidth();
+			image = new BufferedImage(w, w, BufferedImage.TYPE_INT_RGB);
+			image.createGraphics();
+
+			Graphics2D graphics = (Graphics2D) image.getGraphics();
+			graphics.setColor(Color.WHITE);
+			graphics.fillRect(0, 0, w, w);
+			graphics.setColor(Color.BLACK);
+
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < w; j++) {
+					if (byteMatrix.get(i, j)) {
+						graphics.fillRect(i, j, 1, 1);
+					}
+				}
+			}
+
+			return image;
+
+		} catch (Exception e) {
+			throw e;
+		} finally {
+
+		}
+
+	}
+
+	public static String QRcode2config(File qrCodeFile) throws Exception {
+		try (FileInputStream in = new FileInputStream(qrCodeFile)) {
+			BufferedImage image = ImageIO.read(in);
+			BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(image)));
+			QRCodeReader reader = new QRCodeReader();
+			Result result = reader.decode(binaryBitmap);
+			return result.getText();
+		}
+	}	
 }
