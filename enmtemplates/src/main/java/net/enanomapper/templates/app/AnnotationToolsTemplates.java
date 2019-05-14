@@ -174,13 +174,12 @@ public class AnnotationToolsTemplates extends AnnotationToolsAbstract  {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void done() {
-		// TODO Auto-generated method stub
+	public void done(String id, int sheetindex) {
+
 		
 	}
 }
