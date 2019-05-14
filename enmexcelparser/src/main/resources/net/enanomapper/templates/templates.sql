@@ -27,7 +27,7 @@ CREATE TABLE `assay_template` (
   KEY `endpointx` (`endpoint`,`assay`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA INFILE 'JRCTEMPLATES_102016.csv' 
+LOAD DATA INFILE 'D:/src-restored/ambit3/nmdataparser/enmexcelparser/src/main/resources/net/enanomapper/templates/JRCTEMPLATES_102016.csv' 
 INTO TABLE assay_template
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'

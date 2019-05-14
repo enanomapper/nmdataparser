@@ -169,7 +169,7 @@ public class TR extends HashMap<String, Object> implements Serializable {
 		writer.write("\n");
 	}
 
-	public static void writeHeader(XSSFSheet sheet) throws Exception {
+	public static void writeHeader(XSSFSheet sheet) throws IllegalArgumentException {
 		XSSFRow row = sheet.createRow(0);
 		for (hix h : hix.values()) {
 			Cell cell = row.createCell(h.ordinal());
@@ -178,7 +178,7 @@ public class TR extends HashMap<String, Object> implements Serializable {
 
 	}
 
-	public void write(XSSFSheet sheet, int rownum) throws Exception {
+	public void write(XSSFSheet sheet, int rownum) throws IllegalArgumentException  {
 		XSSFRow row = sheet.createRow(rownum);
 		for (hix h : hix.values()) {
 			Object v = get(h.name());

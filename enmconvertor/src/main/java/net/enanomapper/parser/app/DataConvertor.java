@@ -4,13 +4,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.ConnectException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -19,13 +25,14 @@ import java.util.zip.GZIPInputStream;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
@@ -39,10 +46,19 @@ import ambit2.core.io.IRawReader;
 import ambit2.core.io.json.SubstanceStudyParser;
 import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
 import ambit2.rest.substance.SubstanceRDFReporter;
+import net.enanomapper.maker.JsonConfigAnnotator;
+import net.enanomapper.maker.TR;
+import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.InvalidCommand;
 import net.idea.loom.nm.nanowiki.ENanoMapperRDFReader;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
+import net.idea.templates.annotation.AnnotatorChain;
+import net.idea.templates.annotation.JsonConfigGenerator;
+import net.idea.templates.annotation.SimpleAnnotator;
+import net.idea.templates.extraction.AssayTemplatesParser;
+import net.idea.templates.generation.Term;
+import net.idea.templates.generation.Tools;
 
 public class DataConvertor {
 	protected Settings settings;
@@ -131,7 +147,8 @@ public class DataConvertor {
 	 */
 	protected int convertFiles() throws Exception {
 		if (settings.getInputFile().isDirectory()) {
-			logger_cli.log(Level.INFO, "MSG_IMPORT", new Object[] { "folder", settings.getInputFile().getAbsolutePath() });
+			logger_cli.log(Level.INFO, "MSG_IMPORT",
+					new Object[] { "folder", settings.getInputFile().getAbsolutePath() });
 			File[] allFiles = settings.getInputFile().listFiles();
 			long started = System.currentTimeMillis();
 			int allrecords = 0;
@@ -177,7 +194,6 @@ public class DataConvertor {
 		}
 		return 0;
 	}
-	
 
 	public int writeAsJSON(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
@@ -244,13 +260,12 @@ public class DataConvertor {
 		return records;
 	}
 
-	
 	public int writeAsReport(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 
 		Request hack = new Request();
 		hack.setRootRef(new Reference("http://localhost/ambit2"));
-		
+
 		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, MediaType.TEXT_RDF_N3);
 		Model model = ModelFactory.createDefaultModel();
 		exporter.header(model, null);
@@ -283,7 +298,6 @@ public class DataConvertor {
 		return records;
 	}
 
-	
 	public int writeAsISA(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 		SubstanceEndpointsBundle endpointBundle = null;
@@ -347,7 +361,8 @@ public class DataConvertor {
 			logger_cli.log(Level.INFO, "MSG_IMPORT",
 					new Object[] { parser.getClass().getName(), settings.getInputFile().getAbsolutePath() });
 
-			StructureRecordValidator validator = new StructureRecordValidator(settings.getInputFile().getName(), true,"XLSX") {
+			StructureRecordValidator validator = new StructureRecordValidator(settings.getInputFile().getName(), true,
+					"XLSX") {
 				@Override
 				public IStructureRecord validate(SubstanceRecord record) throws Exception {
 					if (record.getRelatedStructures() != null && !record.getRelatedStructures().isEmpty()) {
@@ -386,7 +401,16 @@ public class DataConvertor {
 		try {
 			DataConvertor object = new DataConvertor();
 			if (object.parse(args)) {
-				object.convertFiles();
+				switch (object.settings.command) {
+				case extracttemplatefields: {
+					object.spreadsheets2template();
+					break;
+				}
+				case data: {
+					object.convertFiles();
+					break;
+				}
+				}
 			} else
 				code = -1;
 
@@ -394,7 +418,9 @@ public class DataConvertor {
 			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
 			Runtime.getRuntime().runFinalization();
 			code = -1;
-
+		} catch (FileNotFoundException x) {
+			logger_cli.log(Level.SEVERE, "MSG_FILENOTFOUND", new Object[] { x.getMessage() });
+			code = -1;
 		} catch (SQLException x) {
 			logger_cli.log(Level.SEVERE, "MSG_ERR_SQL", new Object[] { x.getMessage() });
 			code = -1;
@@ -402,12 +428,89 @@ public class DataConvertor {
 			logger_cli.log(Level.SEVERE, "MSG_INVALIDCOMMAND", new Object[] { x.getMessage() });
 			code = -1;
 		} catch (Exception x) {
+			x.printStackTrace();
 			logger_cli.log(Level.SEVERE, "MSG_ERR", new Object[] { x });
 			code = -1;
 		} finally {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
 		}
+	}
+
+	protected String[] spreadsheets2template() throws Exception {
+		long now = System.currentTimeMillis();
+		if (settings.getInputFile().isDirectory() && settings.getOutputFile().isDirectory()) {
+			logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS",
+					new Object[] { settings.getInputFile(), settings.getJsonConfig(), settings.getOutputFile() });
+			try {
+				String[] results = spreadsheets2template(settings.getInputFile(), settings.getJsonConfig(),
+						settings.getOutputFile());
+				logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS_COMPLETED", new Object[] { results[0], results[1], results[2] });
+				return results;
+			} catch (Exception x) {
+				logger_cli.log(Level.INFO, "MSG_ERR", new Object[] { x.getMessage() });
+				throw x;
+			} finally {
+				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
+			}
+
+		} else
+			throw new FileNotFoundException("Folders expected");
+	}
+
+	public static String[] spreadsheets2template(File rootSpreadsheetsFolder, File propertiesFolder, File outputFolder)
+			throws FileNotFoundException, IOException, IllegalArgumentException, Exception {
+		final Map<String, Term> histogram = new HashMap<String, Term>();
+		File templates = new File(outputFolder, "templates.xlsx");
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			try (FileOutputStream out = new FileOutputStream(templates)) {
+				XSSFSheet stats = workbook.createSheet();
+				TR.writeHeader(stats);
+				AssayTemplatesParser parser = new AssayTemplatesParser() {
+					int rownum = 0;
+
+					@Override
+					protected int processFile(File spreadsheet, File json, String prefix, boolean resetdb,
+							String release) throws Exception {
+						// System.out.println(String.format("%s\t%s",spreadsheet.getName(),
+						// json.getAbsolutePath()));
+						ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);
+						JsonConfigAnnotator annotator = new JsonConfigAnnotator(config);
+
+						rownum = Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(),
+								spreadsheet.getName(), histogram, stats, annotator, rownum, config.sheetIndex);
+
+						return rownum;
+					}
+
+					@Override
+					public String getRootValue(ResourceBundle nanodataResources) {
+						return rootSpreadsheetsFolder.getAbsolutePath();
+					}
+				};
+				File[] all;
+				if (propertiesFolder.isDirectory())
+					all = propertiesFolder.listFiles();
+				else
+					all = new File[] { propertiesFolder };
+				for (File resource : all)
+					if (resource.getName().endsWith(".properties")) {
+						try (FileReader reader = new FileReader(resource)) {
+							PropertyResourceBundle nanodataResources = new PropertyResourceBundle(reader);
+							parser.parseResources(nanodataResources, "TEST", false, null);
+						}
+					}
+
+				workbook.write(out);
+
+			}
+		}
+		// System.out.println("Generating json file...");
+		File templatesjson = new File(outputFolder, "templates.json");
+		File templatessql = new File(outputFolder, "templates.sql");
+		AssayTemplatesParser.xls2json(templates, templatesjson);
+		AssayTemplatesParser.json2sql(templatesjson,templatessql);
+		return new String[] { templates.getAbsolutePath(), templatesjson.getAbsolutePath(),templatessql.getAbsolutePath() };
 	}
 
 }

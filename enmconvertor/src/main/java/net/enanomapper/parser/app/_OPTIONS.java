@@ -13,7 +13,12 @@ public enum _OPTIONS {
 
 		@Override
 		public String description() {
-			return "Input file or folder";
+			StringBuilder b = new StringBuilder();
+			for (ConvertorCommand c : ConvertorCommand.values()) {
+				if (c.input() != null)
+					b.append(String.format("[%s]: %s\n", c.name(), c.input()));
+			}
+			return b.toString();
 		}
 
 		@Override
@@ -76,14 +81,18 @@ public enum _OPTIONS {
 		}
 
 		@Override
-		public String description() {
-			return "JSON config file for input formats xls,xlsx";
-		}
-
-		@Override
 		public String command() {
 			return "x";
 		}
+		@Override
+		public String description() {
+			StringBuilder b = new StringBuilder();
+			for (ConvertorCommand c : ConvertorCommand.values()) {
+				if (c.config() != null)
+					b.append(String.format("[%s]: %s\n", c.name(), c.config()));
+			}
+			return b.toString();
+		}		
 	},
 	listformats {
 		@Override
@@ -105,10 +114,34 @@ public enum _OPTIONS {
 		public boolean hasArg() {
 			return false;
 		}
+
 		public String getOption(CommandLine line) {
-			return line.hasOption(command())?"true":null;
+			return line.hasOption(command()) ? "true" : null;
 
 		}
+	},
+	command {
+
+		@Override
+		public String argName() {
+			StringBuilder b = new StringBuilder();
+			for (ConvertorCommand cc : ConvertorCommand.values()) {
+				b.append(cc.name());
+				b.append("|");
+			}
+			return b.toString();
+		}
+
+		@Override
+		public String command() {
+			return "c";
+		}
+
+		@Override
+		public String description() {
+			return "The type of converted content";
+		}
+
 	},
 	help {
 		@Override

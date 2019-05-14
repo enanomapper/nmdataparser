@@ -28,7 +28,7 @@ public enum IO_FORMAT {
 		}
 		@Override
 		public boolean isWrite() {
-			return false;
+			return true;
 		}
 	},
 	NWrdf {

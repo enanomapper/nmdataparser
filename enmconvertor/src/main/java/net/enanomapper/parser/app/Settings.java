@@ -18,10 +18,12 @@ public class Settings {
 	protected File inputFile;
 	protected File outputFile;
 	protected IO_FORMAT outformat = IO_FORMAT.json;
-
+	protected ConvertorCommand command = ConvertorCommand.data;
+	
 	public Settings(Logger logger) {
 		this.logger_cli = logger;
 	}
+
 	public boolean isGzipped() {
 		return gzipped;
 	}
@@ -82,42 +84,74 @@ public class Settings {
 		try {
 			CommandLine line = parser.parse(options, args, false);
 
-			if (_OPTIONS.listformats.getOption(line) != null) {
-				System.out.println(IO_FORMAT.list());
-				return false;
+			if (_OPTIONS.command.getOption(line) != null)
+				try {
+					command = ConvertorCommand.valueOf(_OPTIONS.command.getOption(line));
+				} catch (Exception x) {
+					command = ConvertorCommand.data;
+				}
+			else
+				command = ConvertorCommand.data;
 
-			} else {
-
+			switch (command) {
+			case extracttemplatefields: {
 				setInputFile(getInput(line));
-
 				if (inputFile == null && !inputFile.exists())
-					throw new Exception("Missing input file");
-				jsonConfig = getJSONConfig(line);
-
-				String extension = inputFile.getName().toLowerCase();
-				IO_FORMAT informat = extension == null ? null
-						: extension.endsWith("xlsx") ? IO_FORMAT.xlsx
-								: (extension.endsWith("xls") ? IO_FORMAT.xls
-										: (extension.endsWith("rdf") ? IO_FORMAT.rdf : null));
-
-				if (informat != null)
-					switch (informat) {
-					case xlsx:
-					case xls: {
-						if (jsonConfig == null)
-							throw new Exception("Missing JSON config file, mandatory for importing XLSX! Use option -"
-									+ _OPTIONS.xconfig.command());
-						break;
-					}
-					default:
-					}
-
+					throw new FileNotFoundException("Missing input folder");
 				outputFile = getOutput(line);
-				setInformat(getInputFormat(line, informat));
-				setOutformat(getOutputFormat(line));
-
+				if (outputFile == null && !outputFile.exists())
+					throw new FileNotFoundException("Missing output folder");
+				jsonConfig = getJSONConfig(line);
+				
+				
 				return true;
 			}
+			case data: {
+
+				if (_OPTIONS.listformats.getOption(line) != null) {
+					System.out.println(IO_FORMAT.list());
+					return false;
+
+				} else {
+
+					setInputFile(getInput(line));
+
+					if (inputFile == null && !inputFile.exists())
+						throw new FileNotFoundException("Missing input file");
+					jsonConfig = getJSONConfig(line);
+
+					String extension = inputFile.getName().toLowerCase();
+					IO_FORMAT informat = extension == null ? null
+							: extension.endsWith("xlsx") ? IO_FORMAT.xlsx
+									: (extension.endsWith("xls") ? IO_FORMAT.xls
+											: (extension.endsWith("rdf") ? IO_FORMAT.rdf : null));
+
+					if (informat != null)
+						switch (informat) {
+						case xlsx:
+						case xls: {
+							if (jsonConfig == null)
+								throw new Exception(
+										"Missing JSON config file, mandatory for importing XLSX! Use option -"
+												+ _OPTIONS.xconfig.command());
+							break;
+						}
+						default:
+						}
+
+					outputFile = getOutput(line);
+					setInformat(getInputFormat(line, informat));
+					setOutformat(getOutputFormat(line));
+
+					return true;
+				}
+			}
+			default: {
+				throw new Exception(String.format("Command not implemented [%s]", command));
+			}
+			}
+		} catch (FileNotFoundException x) {
+			throw x;
 		} catch (Exception x) {
 			printHelp(options, x.getMessage());
 			throw x;
@@ -163,7 +197,7 @@ public class Settings {
 		if (fname != null) {
 			File file = new File(fname);
 			if (!file.exists())
-				throw new FileNotFoundException(file.getName());
+				throw new FileNotFoundException(file.getAbsolutePath());
 			else
 				return file;
 		} else

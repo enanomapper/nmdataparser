@@ -2,7 +2,9 @@ package net.idea.templates.extraction;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ambit2.core.io.FileState;
 import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
+import net.enanomapper.maker.TemplateMakerSettings;
 import net.idea.templates.annotation.AbstractAnnotationProcessor;
 
 public abstract class AssayTemplatesParser {
@@ -149,13 +152,60 @@ public abstract class AssayTemplatesParser {
 
 		try (Workbook workbook = new XSSFWorkbook(file)) {
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(templatejson))) {
-				xls2json(workbook,writer, a);
+				xls2json(workbook, writer, a);
 			}
 		}
 	}
 
 	public static void xls2json(File file, File templatejson) throws Exception {
 		xls2json(file, templatejson, null);
+	}
+
+	protected static String w(Object value) {
+		return w(value, null);
+	}
+
+	protected static String w(Object value, Integer limit) {
+		if (value == null)
+			return null;
+		else {
+			String v = value.toString();
+			if (limit != null) {
+
+				if (v.length() > limit) {
+					return String.format("'%s'", v.toString().substring(0, limit));
+				}
+			}
+			return String.format("'%s'", v);
+		}
+	}
+
+	public static void json2sql(File templatejson, File file_sql) throws Exception {
+		final String sql = "insert into assay_template (endpoint,assay,row,col,idtemplate,level1,level2,level3,value,value_clean,header1,hint,unit,annotation,file,folder,sheet,visible) "
+				+ "values (%s,%s,%d,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1);\n";
+		TemplateMakerSettings settings = new TemplateMakerSettings() {
+			@Override
+			public java.lang.Iterable<TR> getTemplateRecords() throws Exception {
+				try (InputStream in = new FileInputStream(templatejson)) {
+					return getTemplateRecords(in);
+				} catch (Exception x) {
+					throw x;
+				}
+			};
+		};
+		try (BufferedWriter w = new BufferedWriter(new FileWriter(file_sql))) {
+			for (TR record : settings.getTemplateRecords()) {
+
+				w.write(String.format(sql, w(TR.hix.endpoint.get(record)), w(TR.hix.Sheet.get(record)), record.getRow(),
+						record.getColumn(), w(TR.hix.id.get(record)), w(TR.hix.JSON_LEVEL1.get(record)),
+						w(TR.hix.JSON_LEVEL3.get(record)), w(TR.hix.JSON_LEVEL3.get(record)),
+						w(TR.hix.Value.get(record), 192), w(TR.hix.cleanedvalue.get(record)),
+						w(TR.hix.header1.get(record)), w(TR.hix.hint.get(record)), w(TR.hix.unit.get(record)),
+						w(TR.hix.Annotation.get(record)), w(TR.hix.File.get(record), 32), w(TR.hix.Folder.get(record)),
+						w(TR.hix.Sheet.get(record)), 1));
+
+			}
+		}
 	}
 
 	public static void xls2json(Workbook workbook, Writer writer, IAnnotator a) throws Exception {
@@ -172,7 +222,7 @@ public abstract class AssayTemplatesParser {
 		writer.write("[\n");
 		String d = "";
 		while (rowIterator.hasNext()) {
-			
+
 			Row row = rowIterator.next();
 			if (row.getRowNum() == 0)
 				continue;
