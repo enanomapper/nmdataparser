@@ -25,7 +25,7 @@ Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoM
 <dependency>
   <groupId>net.enanomapper</groupId>
   <artifactId>nmparser</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
 </dependency>
 ````
 Stable release [![DOI](https://zenodo.org/badge/2503/enanomapper/nmdataparser.svg)](https://zenodo.org/badge/latestdoi/2503/enanomapper/nmdataparser)
@@ -42,7 +42,7 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 <dependency>
   <groupId>net.enanomapper</groupId>
   <artifactId>enmexcelparser</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
 </dependency>
 ````
 ##### Examples:
