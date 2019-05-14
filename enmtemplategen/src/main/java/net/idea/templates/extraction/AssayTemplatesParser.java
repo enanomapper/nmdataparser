@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import ambit2.core.io.FileState;
@@ -27,6 +29,11 @@ import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
 import net.enanomapper.maker.TemplateMakerSettings;
 import net.idea.templates.annotation.AbstractAnnotationProcessor;
+import net.idea.templates.annotation.AnnotatorChain;
+import net.idea.templates.annotation.JsonConfigGenerator;
+import net.idea.templates.annotation.SimpleAnnotator;
+import net.idea.templates.generation.Term;
+import net.idea.templates.generation.Tools;
 
 public abstract class AssayTemplatesParser {
 
@@ -420,4 +427,31 @@ public abstract class AssayTemplatesParser {
 
 	}
 
+
+	public static String[] generate_jsonconfig(File spreadsheet, File outputfolder) throws Exception {
+		return generate_jsonconfig(spreadsheet, outputfolder, null);
+	}
+
+	public static String[] generate_jsonconfig(File spreadsheet, File outputFolder, Integer sheetNumber)
+			throws Exception {
+		final Map<String, Term> histogram = new HashMap<String, Term>();
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			XSSFSheet stats = workbook.createSheet();
+			TR.writeHeader(stats);
+			AnnotatorChain chain = new AnnotatorChain();
+			chain.add(new SimpleAnnotator());
+			JsonConfigGenerator config = new JsonConfigGenerator();
+			chain.add(config);
+
+			Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(), spreadsheet.getName(),
+					histogram, stats, chain, 0, sheetNumber);
+			File jsonfile = new File(outputFolder,
+					spreadsheet.getName().replaceAll(".xlsx", ".json").replaceAll(".xls", ".json"));
+			try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
+				w.write(config.toString());
+			}
+
+			return new String[] { jsonfile.getAbsolutePath() };
+		}
+	}	
 }

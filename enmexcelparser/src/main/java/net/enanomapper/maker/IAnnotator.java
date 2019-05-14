@@ -11,4 +11,6 @@ public interface IAnnotator {
 	enum _termtag {
 		uri,label,score,rank
 	}
+	public void init();
+	public void done();
 }

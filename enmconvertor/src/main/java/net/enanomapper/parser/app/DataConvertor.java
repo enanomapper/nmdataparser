@@ -1,5 +1,6 @@
 package net.enanomapper.parser.app;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -406,6 +407,10 @@ public class DataConvertor {
 					object.spreadsheets2template();
 					break;
 				}
+				case generatejsonconfig: {
+					object.generate_jsonconfig();
+					break;
+				}
 				case data: {
 					object.convertFiles();
 					break;
@@ -445,7 +450,8 @@ public class DataConvertor {
 			try {
 				String[] results = spreadsheets2template(settings.getInputFile(), settings.getJsonConfig(),
 						settings.getOutputFile());
-				logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS_COMPLETED", new Object[] { results[0], results[1], results[2] });
+				logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS_COMPLETED",
+						new Object[] { results[0], results[1], results[2] });
 				return results;
 			} catch (Exception x) {
 				logger_cli.log(Level.INFO, "MSG_ERR", new Object[] { x.getMessage() });
@@ -509,8 +515,20 @@ public class DataConvertor {
 		File templatesjson = new File(outputFolder, "templates.json");
 		File templatessql = new File(outputFolder, "templates.sql");
 		AssayTemplatesParser.xls2json(templates, templatesjson);
-		AssayTemplatesParser.json2sql(templatesjson,templatessql);
-		return new String[] { templates.getAbsolutePath(), templatesjson.getAbsolutePath(),templatessql.getAbsolutePath() };
+		AssayTemplatesParser.json2sql(templatesjson, templatessql);
+		return new String[] { templates.getAbsolutePath(), templatesjson.getAbsolutePath(),
+				templatessql.getAbsolutePath() };
 	}
+
+	public String[] generate_jsonconfig() throws Exception {
+		if (settings.getInputFile().isDirectory())
+			throw new FileNotFoundException(settings.getInputFile().toString());
+		if (!settings.getOutputFile().isDirectory())
+			throw new FileNotFoundException(settings.getOutputFile().toString());
+
+		return AssayTemplatesParser.generate_jsonconfig(settings.getInputFile(), settings.getOutputFile(),settings.getSheetNumber());
+	}
+
+
 
 }

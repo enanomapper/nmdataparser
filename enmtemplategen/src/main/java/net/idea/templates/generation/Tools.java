@@ -127,6 +127,7 @@ public class Tools {
 		TR record = new TR();
 
 		for (int i = _startsheet; i < _endsheet; i++) {
+			if (annotator!=null) annotator.init();
 			Sheet sheet = workbook.getSheetAt(i);
 			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
 				continue;
@@ -200,6 +201,7 @@ public class Tools {
 			System.out.println(String.format("%s\t'%s'\t%s\t%d\t%d", key.toString(), templateName, sheet.getSheetName(),
 					rows, maxcols));
 
+			if (annotator!=null) annotator.done();
 		}
 		workbook.close();
 		return rownum;

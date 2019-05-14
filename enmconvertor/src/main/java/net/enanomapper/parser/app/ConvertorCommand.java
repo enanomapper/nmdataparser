@@ -21,6 +21,16 @@ public enum ConvertorCommand {
 			return ".properties file assigning JSON to worksheets";
 		}
 	},
+	generatejsonconfig {
+		@Override
+		public String input() {
+			return  "Input spreadsheet";
+		}
+		@Override
+		public String config() {
+			return null;
+		}
+	},
 	generatetemplate {
 		@Override
 		public String input() {

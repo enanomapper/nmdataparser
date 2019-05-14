@@ -1,7 +1,10 @@
 package net.enanomapper.maker;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

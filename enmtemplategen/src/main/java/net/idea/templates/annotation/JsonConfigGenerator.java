@@ -35,7 +35,6 @@ import net.enanomapper.parser.KEYWORD;
 
 public class JsonConfigGenerator implements IAnnotator {
 	protected ObjectMapper mapper = new ObjectMapper();
-
 	protected ObjectNode config = mapper.createObjectNode();
 
 	public JsonConfigGenerator() throws IOException {
@@ -46,6 +45,12 @@ public class JsonConfigGenerator implements IAnnotator {
 		node.put(KEYWORD.COLUMN_INDEX.name(), CellReference.convertNumToColString(col));
 	}
 
+
+	@Override
+	public void init() {
+		
+	}
+	
 	protected ObjectNode getJsonConfig(String key) {
 		JsonNode _root = config.get(key);
 		if (_root == null) {
@@ -232,5 +237,10 @@ public class JsonConfigGenerator implements IAnnotator {
 			Result result = reader.decode(binaryBitmap);
 			return result.getText();
 		}
+	}
+
+	@Override
+	public void done() {
+		
 	}	
 }

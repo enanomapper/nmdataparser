@@ -19,7 +19,16 @@ public class Settings {
 	protected File outputFile;
 	protected IO_FORMAT outformat = IO_FORMAT.json;
 	protected ConvertorCommand command = ConvertorCommand.data;
+	protected Integer nsheet= null;
 	
+	public Integer getSheetNumber() {
+		return nsheet;
+	}
+
+	public void setSheetNumber(Integer nsheet) {
+		this.nsheet = nsheet;
+	}
+
 	public Settings(Logger logger) {
 		this.logger_cli = logger;
 	}
@@ -92,6 +101,17 @@ public class Settings {
 				}
 			else
 				command = ConvertorCommand.data;
+			
+
+			if (_OPTIONS.sheet.getOption(line) != null)
+				try {
+					nsheet = Integer.parseInt(_OPTIONS.command.getOption(line));
+					if (nsheet<0) nsheet=null;
+				} catch (Exception x) {
+					nsheet = null; 
+				}
+			else
+				command = ConvertorCommand.data;			
 
 			switch (command) {
 			case extracttemplatefields: {
@@ -105,6 +125,16 @@ public class Settings {
 				
 				
 				return true;
+			}
+			case generatejsonconfig: {
+				setInputFile(getInput(line));
+				if (inputFile == null && !inputFile.exists())
+					throw new FileNotFoundException("Missing input folder");
+				outputFile = getOutput(line);
+				if (outputFile == null && !outputFile.exists())
+					throw new FileNotFoundException("Missing output folder");
+
+				return true;				
 			}
 			case data: {
 

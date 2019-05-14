@@ -46,4 +46,16 @@ public class AnnotatorChain extends ArrayList<IAnnotator> implements IAnnotator 
 	public String getLabel_tag() {
 		return null;
 	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void done() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -107,4 +107,16 @@ public class SimpleAnnotator implements IAnnotator {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void done() {
+		// TODO Auto-generated method stub
+		
+	}
 }

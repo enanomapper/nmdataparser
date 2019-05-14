@@ -278,4 +278,16 @@ public class JsonConfigAnnotator implements IAnnotator {
 					endpointType, unit, section);
 		}
 	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void done() {
+		// TODO Auto-generated method stub
+		
+	}
 }

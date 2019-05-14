@@ -153,4 +153,16 @@ public class CuratedAnnotation implements IAnnotator {
 	public String getLabel_tag() {
 		return "label";
 	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void done() {
+		// TODO Auto-generated method stub
+		
+	}
 }
