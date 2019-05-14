@@ -7,12 +7,15 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -427,7 +430,6 @@ public abstract class AssayTemplatesParser {
 
 	}
 
-
 	public static String[] generate_jsonconfig(File spreadsheet, File outputfolder) throws Exception {
 		return generate_jsonconfig(spreadsheet, outputfolder, null);
 	}
@@ -435,23 +437,49 @@ public abstract class AssayTemplatesParser {
 	public static String[] generate_jsonconfig(File spreadsheet, File outputFolder, Integer sheetNumber)
 			throws Exception {
 		final Map<String, Term> histogram = new HashMap<String, Term>();
+		
+		Properties properties = new Properties();
+		//release="2018-07-01 0:0:0"
+		properties.put(_root, spreadsheet.getParentFile().getAbsolutePath());
+		properties.put(_release, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		properties.put(_singledb,"true");
+				
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 			XSSFSheet stats = workbook.createSheet();
 			TR.writeHeader(stats);
 			AnnotatorChain chain = new AnnotatorChain();
 			chain.add(new SimpleAnnotator());
-			JsonConfigGenerator config = new JsonConfigGenerator();
+			JsonConfigGenerator config = new JsonConfigGenerator() {
+
+				@Override
+				public void done(String id, int sheetindex) {
+					setTemplateName(id, spreadsheet.getName());
+					setSheetIndex(id, sheetindex);
+
+					String ext = String.format("_sheet%d.json", sheetindex);
+					File jsonfile = new File(outputFolder,
+							spreadsheet.getName().replaceAll(".xlsx", ext).replaceAll(".xls", ext));
+					properties.put(String.format("%s#%d",spreadsheet.getAbsolutePath(), sheetindex), jsonfile.getAbsolutePath());
+					try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
+						w.write(getJsonConfig(id).toString());
+					} catch (Exception x) {
+						logger.log(Level.SEVERE, x.getMessage());
+					}
+				}
+			};
 			chain.add(config);
 
 			Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(), spreadsheet.getName(),
 					histogram, stats, chain, 0, sheetNumber);
+			String ext = sheetNumber == null ? ".properties" : String.format("_sheet%d.properties", sheetNumber);
 			File jsonfile = new File(outputFolder,
-					spreadsheet.getName().replaceAll(".xlsx", ".json").replaceAll(".xls", ".json"));
+					spreadsheet.getName().replaceAll(".xlsx", ext).replaceAll(".xls", ext));
+			
 			try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
-				w.write(config.toString());
+				properties.store(w,spreadsheet.getAbsolutePath());
 			}
 
 			return new String[] { jsonfile.getAbsolutePath() };
 		}
-	}	
+	}
 }

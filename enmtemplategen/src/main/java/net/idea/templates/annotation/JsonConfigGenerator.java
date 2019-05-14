@@ -45,12 +45,11 @@ public class JsonConfigGenerator implements IAnnotator {
 		node.put(KEYWORD.COLUMN_INDEX.name(), CellReference.convertNumToColString(col));
 	}
 
-
 	@Override
 	public void init() {
-		
+
 	}
-	
+
 	protected ObjectNode getJsonConfig(String key) {
 		JsonNode _root = config.get(key);
 		if (_root == null) {
@@ -97,6 +96,15 @@ public class JsonConfigGenerator implements IAnnotator {
 		return (ObjectNode) papp.get(0);
 	}
 
+	protected void setTemplateName(String id, String value) {
+		ObjectNode root = getJsonConfig(id);
+		((ObjectNode) (root.get(KEYWORD.TEMPLATE_INFO.name()))).put(KEYWORD.NAME.name(), value);
+	}
+
+	protected void setSheetIndex(String id, int value) {
+		ObjectNode root = getJsonConfig(id);
+		((ObjectNode) (root.get(KEYWORD.DATA_ACCESS.name()))).put(KEYWORD.SHEET_INDEX.name(), value);
+	}
 	@Override
 	public void process(TR record) {
 		int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
@@ -240,7 +248,7 @@ public class JsonConfigGenerator implements IAnnotator {
 	}
 
 	@Override
-	public void done() {
-		
-	}	
+	public void done(String id, int sheetindex) {
+
+	}
 }

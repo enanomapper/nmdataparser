@@ -12,5 +12,5 @@ public interface IAnnotator {
 		uri,label,score,rank
 	}
 	public void init();
-	public void done();
+	public void done(String id, int sheetindex);
 }

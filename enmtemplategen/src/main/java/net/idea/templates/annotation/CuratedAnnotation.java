@@ -159,9 +159,8 @@ public class CuratedAnnotation implements IAnnotator {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
-	public void done() {
+	public void done(String id, int sheetindex) {
 		// TODO Auto-generated method stub
 		
 	}

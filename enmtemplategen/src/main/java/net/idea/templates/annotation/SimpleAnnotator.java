@@ -115,7 +115,7 @@ public class SimpleAnnotator implements IAnnotator {
 	}
 
 	@Override
-	public void done() {
+	public void done(String id, int sheetindex) {
 		// TODO Auto-generated method stub
 		
 	}

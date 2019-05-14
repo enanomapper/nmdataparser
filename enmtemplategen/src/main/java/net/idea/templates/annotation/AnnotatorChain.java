@@ -14,7 +14,7 @@ public class AnnotatorChain extends ArrayList<IAnnotator> implements IAnnotator 
 
 	@Override
 	public void process(TR record) {
-		for (IAnnotator a : this) 
+		for (IAnnotator a : this)
 			a.process(record);
 	}
 
@@ -37,11 +37,13 @@ public class AnnotatorChain extends ArrayList<IAnnotator> implements IAnnotator 
 	public void setQueryField(String queryField) {
 		this.queryField = queryField;
 	}
+
 	@Override
 	public void process(TR record, String queryField, String query, int maxhits, String label) {
-		for (IAnnotator a : this) 
-			a.process(record,queryField,query,maxhits,a.getLabel_tag());
+		for (IAnnotator a : this)
+			a.process(record, queryField, query, maxhits, a.getLabel_tag());
 	}
+
 	@Override
 	public String getLabel_tag() {
 		return null;
@@ -49,13 +51,14 @@ public class AnnotatorChain extends ArrayList<IAnnotator> implements IAnnotator 
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
+		for (IAnnotator a : this)
+			a.init();
 
+	}
 	@Override
-	public void done() {
-		// TODO Auto-generated method stub
-		
+	public void done(String id, int sheetindex) {
+		for (IAnnotator a : this)
+			a.done(id,sheetindex);
+
 	}
 }

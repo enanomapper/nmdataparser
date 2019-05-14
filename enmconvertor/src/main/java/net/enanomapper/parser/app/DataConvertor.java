@@ -521,12 +521,18 @@ public class DataConvertor {
 	}
 
 	public String[] generate_jsonconfig() throws Exception {
+
 		if (settings.getInputFile().isDirectory())
 			throw new FileNotFoundException(settings.getInputFile().toString());
 		if (!settings.getOutputFile().isDirectory())
 			throw new FileNotFoundException(settings.getOutputFile().toString());
-
-		return AssayTemplatesParser.generate_jsonconfig(settings.getInputFile(), settings.getOutputFile(),settings.getSheetNumber());
+		logger_cli.log(Level.INFO, "MSG_GENERATEJSON",
+				new Object[] { settings.getInputFile(), settings.getOutputFile() });
+		
+		String[] results = AssayTemplatesParser.generate_jsonconfig(settings.getInputFile(), settings.getOutputFile(),settings.getSheetNumber());
+		logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS_COMPLETED",
+				new Object[] {settings.getInputFile().toString(), results[0]});
+		return results;
 	}
 
 

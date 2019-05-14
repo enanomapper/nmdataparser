@@ -105,13 +105,13 @@ public class Settings {
 
 			if (_OPTIONS.sheet.getOption(line) != null)
 				try {
-					nsheet = Integer.parseInt(_OPTIONS.command.getOption(line));
+					nsheet = Integer.parseInt(_OPTIONS.sheet.getOption(line));
 					if (nsheet<0) nsheet=null;
 				} catch (Exception x) {
 					nsheet = null; 
 				}
 			else
-				command = ConvertorCommand.data;			
+				nsheet = null;			
 
 			switch (command) {
 			case extracttemplatefields: {
