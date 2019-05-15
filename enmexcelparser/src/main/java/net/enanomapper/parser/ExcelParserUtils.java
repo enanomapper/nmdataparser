@@ -65,4 +65,69 @@ public class ExcelParserUtils
 		//TODO 
 		return "";
 	}
+	
+	public static int[] extractIndicesFromString(String str, boolean column)
+	{
+		String tok[] = str.split("-");
+		if (tok.length != 2)
+			return null;
+		
+		int ind0 = -1;
+		int ind1 = -1;
+		
+		String s0 = tok[0].trim();
+		if (s0.isEmpty())
+			return null;
+		if (Character.isDigit(s0.charAt(0)))
+		{		
+			try {
+				ind0 = Integer.parseInt(s0);
+				ind0--; //1 --> 0
+			}
+			catch (Exception x) {
+				return null;
+			}
+		}
+		else
+		{	
+			if (column)
+				ind0 = CellReference.convertColStringToIndex(s0);
+			else
+				return null;
+		}	
+		
+		String s1 = tok[1].trim();
+		if (s1.isEmpty())
+			return null;
+		if (Character.isDigit(s1.charAt(0)))
+		{		
+			try {
+				ind1 = Integer.parseInt(s1);
+				ind1--; //1 --> 0
+			}
+			catch (Exception x) {
+				return null;
+			}
+		}
+		else
+		{	
+			if (column)
+				ind1 = CellReference.convertColStringToIndex(s1);
+			else
+				return null;
+		}
+		
+		if (ind0 <= ind1)
+		{	
+			int n = ind1 - ind0 + 1;
+			int indices[] = new int[n];
+			for (int i = 0; i < n; i++)
+				indices[i] = ind0 + i;
+			
+			return indices;
+		}
+		return null;
+	}
+	
+	
 }

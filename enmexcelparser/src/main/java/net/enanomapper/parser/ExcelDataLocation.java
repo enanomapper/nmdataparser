@@ -83,10 +83,12 @@ public class ExcelDataLocation {
 	public String rowName = null;
 	public boolean FlagRowName = false;
 
-	public int columnIndices[] = null; // Used only for SOURCE_COMBINATION
+	public int columnIndices[] = null; // Used only for SOURCE_COMBINATION or ARRAY variables
+	public String columnIndicesString = null; 
 
-	public int rowIndices[] = null; // Used only for SOURCE_COMBINATION
-
+	public int rowIndices[] = null; // Used only for SOURCE_COMBINATION or ARRAY variables
+	public String rowIndicesString = null;
+	
 	public String variableKeys[] = null; // Used only for SOURCE_COMBINATION
 
 	// This is a recursive approach used for other fields defined by excel data
@@ -318,7 +320,24 @@ public class ExcelDataLocation {
 						loc.columnIndices[i] = col_index;
 				}
 			} else {
-				conf.addError("In JSON section \"" + jsonSection + "\", keyword COLUMN_INDICES  is not an array!");
+				if (colIndices.isTextual())
+				{
+					int cind[] = ExcelParserUtils.extractIndicesFromString(colIndices.asText(), true);
+					if (cind == null) {
+						conf.addError("In JSON section \"" + jsonSection + "\", keyword COLUMN_INDICES "
+								+ "is not a correct string in the form A-B");
+						loc.nErrors++;
+					}
+					else
+					{	
+						loc.columnIndices = cind;
+						loc.columnIndicesString = colIndices.asText();
+					}	
+						
+				}
+				else
+					conf.addError("In JSON section \"" + jsonSection + 
+							"\", keyword COLUMN_INDICES  is not an array or text in the form A-B!");
 			}
 		}
 
@@ -641,13 +660,21 @@ public class ExcelDataLocation {
 		if (columnIndices != null) {
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"COLUMN_INDICES\" : [");
-			for (int i = 0; i < columnIndices.length; i++) {
-				sb.append(columnIndices[i] + 1);
-				if (i < (columnIndices.length - 1))
-					sb.append(", ");
+			if (columnIndicesString != null)
+			{
+				sb.append(offset + "\t\"COLUMN_INDICES\" : \"" 
+						+ columnIndicesString + "\"");
 			}
-			sb.append("]");
+			else
+			{	
+				sb.append(offset + "\t\"COLUMN_INDICES\" : [");
+				for (int i = 0; i < columnIndices.length; i++) {
+					sb.append(columnIndices[i] + 1);
+					if (i < (columnIndices.length - 1))
+						sb.append(", ");
+				}
+				sb.append("]");
+			}
 			nFields++;
 		}
 
