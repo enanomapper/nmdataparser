@@ -3423,6 +3423,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 					pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
 					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
+					
+					pi.fixColumnPosToExcelSheetStartValue = bp.fixColumnPosToExcelSheetStartValue;
+					pi.fixRowPosToExcelSheetStartValue = bp.fixRowPosToExcelSheetStartValue;
+					
 
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;

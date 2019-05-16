@@ -15,6 +15,8 @@ public class BlockValueGroupExtractedInfo
 		public Integer rowPos = null;
 		public boolean fixColumnPosToStartValue = false;
 		public boolean fixRowPosToStartValue = false;
+		public boolean fixColumnPosToExcelSheetStartValue = true;
+		public boolean fixRowPosToExcelSheetStartValue = true;
 		public String mapping = null;
 		public String unit = null;
 		public Object jsonValue = null;
