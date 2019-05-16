@@ -33,6 +33,12 @@ public class BlockParameter {
 
 	public boolean fixRowPosToStartValue = false;
 	public boolean FlagFixRowPosToStartValue = false;
+	
+	public boolean fixColumnPosToExcelSheetStartValue = true;
+	public boolean FlagFixColumnPosToExcelSheetStartValue = false;
+	
+	public boolean fixRowPosToExcelSheetStartValue = true;
+	public boolean FlagFixRowPosToExcelSheetStartValue = false;
 
 	public String mapping = null;
 	public boolean FlagMapping = false;
@@ -184,7 +190,31 @@ public class BlockParameter {
 				bp.FlagFixRowPosToStartValue = true;
 			}
 		}
+		
+		// FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE
+		if (!node.path("FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE").isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE", false);
+			if (b == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				bp.fixColumnPosToExcelSheetStartValue = b;
+				bp.FlagFixColumnPosToExcelSheetStartValue = true;
+			}
+		}
 
+		// FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE
+		if (!node.path("FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE").isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE", false);
+			if (b == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				bp.fixRowPosToExcelSheetStartValue = b;
+				bp.FlagFixRowPosToExcelSheetStartValue = true;
+			}
+		}
+
+		
+		
 		// UNIT
 		if (!node.path(KEYWORD.UNIT.name()).isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.UNIT.name(), false);
@@ -252,6 +282,23 @@ public class BlockParameter {
 			sb.append(offset + "\t\"FIX_ROW_POS_TO_START_VALUE\" : " + fixRowPosToStartValue);
 			nFields++;
 		}
+		
+		if (FlagFixColumnPosToExcelSheetStartValue) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE\" : " + fixColumnPosToExcelSheetStartValue);
+			nFields++;
+		}
+		
+		if (FlagFixRowPosToExcelSheetStartValue) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE\" : " + fixRowPosToExcelSheetStartValue);
+			nFields++;
+		}
+
 
 		if (FlagMapping) {
 			if (nFields > 0)
