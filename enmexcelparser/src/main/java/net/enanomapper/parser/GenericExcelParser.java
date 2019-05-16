@@ -3167,9 +3167,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											Cell c = null;
 											switch (pi.assign) {
 											case ASSIGN_TO_EXCEL_SHEET:
-												// -1 for 0-based
-												c = getCellFromSheet(exdb_loc.location.sheetIndex, pi.rowPos - 1,
-														pi.columnPos - 1);
+												int rowShift = 0;
+												int colShift = 0;
+												if (!pi.fixRowPosToExcelSheetStartValue)
+													rowShift = i - (bvgei.startRow - 1);
+												if (!pi.fixColumnPosToExcelSheetStartValue)
+													colShift = k - (bvgei.startColumn - 1);
+												// -1 for 0-based												
+												c = getCellFromSheet(exdb_loc.location.sheetIndex, pi.rowPos - 1 + rowShift,
+														pi.columnPos - 1 + colShift);
 												break;
 											case ASSIGN_TO_BLOCK:
 												// -1 for 0-based
@@ -3232,14 +3238,20 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	Cell getCell(ParamInfo pi, Cell cells[][], int row0, int column0, int i, int k, BlockValueGroupExtractedInfo bvgei,
 			ExcelDataBlockLocation exdb_loc) {
 		// Upper left corner of the current sub-block (row0, column0)
-		// Current value position in the sub-block (i,j)
+		// Current value position in the sub-block (i,k)
 
 		Cell c = null;
 		switch (pi.assign) {
 		case ASSIGN_TO_EXCEL_SHEET:
+			int rowShift = 0;
+			int colShift = 0;			
+			if (!pi.fixRowPosToExcelSheetStartValue)
+				rowShift = i - (bvgei.startRow - 1);
+			if (!pi.fixColumnPosToExcelSheetStartValue)
+				colShift = k - (bvgei.startColumn - 1);
 			// -1 for 0-based
-			c = getCellFromSheet(exdb_loc.location.sheetIndex, pi.rowPos - 1, pi.columnPos - 1);
-
+			c = getCellFromSheet(exdb_loc.location.sheetIndex, 
+					pi.rowPos - 1 + rowShift, pi.columnPos - 1 + colShift);
 			break;
 		case ASSIGN_TO_BLOCK:
 			// (pi.rowPos,pi.columnPos) define
@@ -3422,12 +3434,11 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 						pi.rowPos = intVal;
 
 					pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
-					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
+					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;					
 					
 					pi.fixColumnPosToExcelSheetStartValue = bp.fixColumnPosToExcelSheetStartValue;
 					pi.fixRowPosToExcelSheetStartValue = bp.fixRowPosToExcelSheetStartValue;
 					
-
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;
 
@@ -3550,7 +3561,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
 		pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
-
+		
+		pi.fixColumnPosToExcelSheetStartValue = bp.fixColumnPosToExcelSheetStartValue;
+		pi.fixRowPosToExcelSheetStartValue = bp.fixRowPosToExcelSheetStartValue;
+		
 		if (bp.mapping != null)
 			pi.mapping = bp.mapping;
 
