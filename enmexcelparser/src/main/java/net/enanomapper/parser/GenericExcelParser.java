@@ -3169,9 +3169,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 											case ASSIGN_TO_EXCEL_SHEET:
 												int rowShift = 0;
 												int colShift = 0;
-												if (!pi.fixRowPosToExcelSheetStartValue)
+												if (pi.syncExcelSheetRowWithValuePos)
 													rowShift = i - (bvgei.startRow - 1);
-												if (!pi.fixColumnPosToExcelSheetStartValue)
+												if (pi.syncExcelSheetColumnWithValuePos)
 													colShift = k - (bvgei.startColumn - 1);
 												// -1 for 0-based												
 												c = getCellFromSheet(exdb_loc.location.sheetIndex, pi.rowPos - 1 + rowShift,
@@ -3245,9 +3245,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		case ASSIGN_TO_EXCEL_SHEET:
 			int rowShift = 0;
 			int colShift = 0;			
-			if (!pi.fixRowPosToExcelSheetStartValue)
+			if (pi.syncExcelSheetRowWithValuePos)
 				rowShift = i - (bvgei.startRow - 1);
-			if (!pi.fixColumnPosToExcelSheetStartValue)
+			if (pi.syncExcelSheetColumnWithValuePos)
 				colShift = k - (bvgei.startColumn - 1);
 			// -1 for 0-based
 			c = getCellFromSheet(exdb_loc.location.sheetIndex, 
@@ -3436,8 +3436,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
 					pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;					
 					
-					pi.fixColumnPosToExcelSheetStartValue = bp.fixColumnPosToExcelSheetStartValue;
-					pi.fixRowPosToExcelSheetStartValue = bp.fixRowPosToExcelSheetStartValue;
+					pi.syncExcelSheetColumnWithValuePos = bp.syncExcelSheetColumnWithValuePos;
+					pi.syncExcelSheetRowWithValuePos = bp.syncExcelSheetRowWithValuePos;
 					
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;
@@ -3562,8 +3562,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		pi.fixColumnPosToStartValue = bp.fixColumnPosToStartValue;
 		pi.fixRowPosToStartValue = bp.fixRowPosToStartValue;
 		
-		pi.fixColumnPosToExcelSheetStartValue = bp.fixColumnPosToExcelSheetStartValue;
-		pi.fixRowPosToExcelSheetStartValue = bp.fixRowPosToExcelSheetStartValue;
+		pi.syncExcelSheetColumnWithValuePos = bp.syncExcelSheetColumnWithValuePos;
+		pi.syncExcelSheetRowWithValuePos = bp.syncExcelSheetRowWithValuePos;
 		
 		if (bp.mapping != null)
 			pi.mapping = bp.mapping;

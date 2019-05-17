@@ -18,7 +18,8 @@ public class BlockParameter {
 	public BlockParameterAssign assign = BlockParameterAssign.ASSIGN_TO_BLOCK;
 	public boolean FlagAssign = false;
 
-	// The positions are relative to the beginning of
+	// The positions are relative to the beginning of 
+	// excel sheet (A1 cell)
 	// block (1,1) position, sub-block (x,y) position
 	// or 'value' position - in this case negative values make sense as well
 
@@ -34,11 +35,11 @@ public class BlockParameter {
 	public boolean fixRowPosToStartValue = false;
 	public boolean FlagFixRowPosToStartValue = false;
 	
-	public boolean fixColumnPosToExcelSheetStartValue = true;
-	public boolean FlagFixColumnPosToExcelSheetStartValue = false;
+	public boolean syncExcelSheetColumnWithValuePos = false;
+	public boolean FlagSyncExcelSheetColumnWithValuePos = false;
 	
-	public boolean fixRowPosToExcelSheetStartValue = true;
-	public boolean FlagFixRowPosToExcelSheetStartValue = false;
+	public boolean syncExcelSheetRowWithValuePos = false;
+	public boolean FlagSyncExcelSheetRowWithValuePos = false;
 
 	public String mapping = null;
 	public boolean FlagMapping = false;
@@ -191,25 +192,25 @@ public class BlockParameter {
 			}
 		}
 		
-		// FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE
-		if (!node.path("FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE").isMissingNode()) {
-			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE", false);
+		// SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS
+		if (!node.path("SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS").isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, "SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS", false);
 			if (b == null)
 				conf.addError(jsonUtils.getError());
 			else {
-				bp.fixColumnPosToExcelSheetStartValue = b;
-				bp.FlagFixColumnPosToExcelSheetStartValue = true;
+				bp.syncExcelSheetColumnWithValuePos = b;
+				bp.FlagSyncExcelSheetColumnWithValuePos = true;
 			}
 		}
 
-		// FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE
-		if (!node.path("FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE").isMissingNode()) {
-			Boolean b = jsonUtils.extractBooleanKeyword(node, "FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE", false);
+		// SYNC_EXCEL_SHEET_ROW_WITH_VALUE_POS
+		if (!node.path("SYNC_EXCEL_SHEET_ROW_WITH_VALUE_POS").isMissingNode()) {
+			Boolean b = jsonUtils.extractBooleanKeyword(node, "SYNC_EXCEL_SHEET_ROW_WITH_VALUE_POS", false);
 			if (b == null)
 				conf.addError(jsonUtils.getError());
 			else {
-				bp.fixRowPosToExcelSheetStartValue = b;
-				bp.FlagFixRowPosToExcelSheetStartValue = true;
+				bp.syncExcelSheetRowWithValuePos = b;
+				bp.FlagSyncExcelSheetRowWithValuePos = true;
 			}
 		}
 
@@ -283,19 +284,19 @@ public class BlockParameter {
 			nFields++;
 		}
 		
-		if (FlagFixColumnPosToExcelSheetStartValue) {
+		if (FlagSyncExcelSheetColumnWithValuePos) {
 			if (nFields > 0)
 				sb.append(",\n");
 
-			sb.append(offset + "\t\"FIX_COLUMN_POS_TO_EXCEL_SHEET_START_VALUE\" : " + fixColumnPosToExcelSheetStartValue);
+			sb.append(offset + "\t\"SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS\" : " + syncExcelSheetColumnWithValuePos);
 			nFields++;
 		}
 		
-		if (FlagFixRowPosToExcelSheetStartValue) {
+		if (FlagSyncExcelSheetRowWithValuePos) {
 			if (nFields > 0)
 				sb.append(",\n");
 
-			sb.append(offset + "\t\"FIX_ROW_POS_TO_EXCEL_SHEET_START_VALUE\" : " + fixRowPosToExcelSheetStartValue);
+			sb.append(offset + "\t\"SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS\" : " + syncExcelSheetRowWithValuePos);
 			nFields++;
 		}
 
