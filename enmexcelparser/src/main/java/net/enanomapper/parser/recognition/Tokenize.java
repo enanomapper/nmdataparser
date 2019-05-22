@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import net.enanomapper.parser.ExcelDataLocation;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.json.JsonUtilities;
 
@@ -99,6 +100,37 @@ public class Tokenize
 			nFields++;
 		}
 		
+		if (mode != null) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"MODE\" : " + "\"" + mode + "\"");
+			nFields++;
+		}
+		
+		if (splitter != null) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"SPLITTER\" : " + JsonUtilities.objectToJsonField(splitter));
+			nFields++;
+		}
+		
+		if (regions != null) {
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\"REGIONS\" : [");
+			
+			for (TokenRegion reg : regions) {
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(reg.toJSONKeyWord(offset + "\t"));
+				nFields++;
+			}
+			sb.append("]");
+			nFields++;
+		}
+				
 		if (nFields > 0)
 			sb.append("\n");
 

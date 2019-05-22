@@ -99,7 +99,7 @@ public class TokenRegion
 			if (nFields > 0)
 				sb.append(",\n");
 
-			sb.append(offset + "\t\"REGION_TYPE\" : " + JsonUtilities.objectToJsonField(regionType));
+			sb.append(offset + "\t\"REGION_TYPE\" : " + "\"" + regionType + "\"");
 			nFields++;
 		}
 		
