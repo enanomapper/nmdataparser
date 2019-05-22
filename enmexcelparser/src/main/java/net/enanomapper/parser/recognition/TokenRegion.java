@@ -40,6 +40,52 @@ public class TokenRegion
 		
 		String keyword;
 		
+		// REGION_TYPE
+		if (!node.path("REGION_TYPE").isMissingNode()) {
+			keyword = jsonUtils.extractStringKeyword(node, "REGION_TYPE", false);
+			if (keyword == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				reg.regionType = Type.fromString(keyword);
+				if (reg.regionType == Type.UNDEFINED)
+					conf.addError("keyword \"REGION_TYPE\" is incorrect or UNDEFINED!");
+			}
+		}
+		
+		// NUM_OF_CHARS
+		if (!node.path("NUM_OF_CHARS").isMissingNode()) {
+			Integer iObj = jsonUtils.extractIntKeyword(node, "NUM_OF_CHARS", false);
+			if (iObj == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				reg.FlagNumOfChars = true;
+				reg.numOfChars = iObj;
+			}
+		}
+
+		
+		// BEGIN_INDEX
+		if (!node.path("BEGIN_INDEX").isMissingNode()) {
+			Integer iObj = jsonUtils.extractIntKeyword(node, "BEGIN_INDEX", false);
+			if (iObj == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				reg.FlagBeginIndex = true;
+				reg.beginIndex = iObj;
+			}
+		}
+		
+		// END_INDEX
+		if (!node.path("END_INDEX").isMissingNode()) {
+			Integer iObj = jsonUtils.extractIntKeyword(node, "END_INDEX", false);
+			if (iObj == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				reg.FlagEndIndex = true;
+				reg.endIndex = iObj;
+			}
+		}
+
 		return reg;
 	}
 	
