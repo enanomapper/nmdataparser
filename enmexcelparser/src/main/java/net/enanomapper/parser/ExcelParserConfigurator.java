@@ -24,6 +24,7 @@ import net.enanomapper.parser.ParserConstants.SheetSynchronization;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
+import net.enanomapper.parser.recognition.Tokenize;
 
 /**
  * 
@@ -114,6 +115,7 @@ public class ExcelParserConfigurator {
 	// Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	public ArrayList<VariableMapping> variableMappings = null;
+	public HashMap<String, Tokenize> tokenizers = null;
 
 	// Handling locations dynamically
 	public boolean FlagDynamicSpan = false;
@@ -398,6 +400,23 @@ public class ExcelParserConfigurator {
 					}
 				}
 			}
+			
+			// TOKENIZERS
+			JsonNode tokenizeNode = curNode.path("TOKENIZERS");
+			if (!tokenizeNode.isMissingNode()) {
+				if (!tokenizeNode.isArray())
+					conf.configErrors.add(
+							String.format("In JSON Section '%s', the keyword 'TOKENIZERS' is not of type array!"
+									,KEYWORD.DATA_ACCESS.name()));
+				else {
+					conf.tokenizers = new HashMap<String, Tokenize>();
+					for (int i = 0; i < tokenizeNode.size(); i++) {
+						Tokenize tknz = Tokenize.extractTokenizer(tokenizeNode.get(i), conf, jsonUtils,i);
+						conf.tokenizers.put(tknz.name, tknz);	
+					}
+				}
+			}
+			
 
 			// DYNAMIC_ITERATION_SPAN
 			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {

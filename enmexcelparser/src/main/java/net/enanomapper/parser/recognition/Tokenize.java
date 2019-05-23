@@ -31,7 +31,7 @@ public class Tokenize
 	public List<TokenRegion> regions = null;
 		
 	
-	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf, JsonUtilities jsonUtils) 
+	public static Tokenize extractTokenizer(JsonNode node, ExcelParserConfigurator conf, JsonUtilities jsonUtils, int tokNum) 
 	{
 		Tokenize tok = new Tokenize();
 
@@ -41,7 +41,7 @@ public class Tokenize
 		if (!node.path("NAME").isMissingNode()) {
 			keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
 			if (keyword == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "]: " + jsonUtils.getError());
 			else 
 				tok.name = keyword;
 		}
@@ -50,11 +50,11 @@ public class Tokenize
 		if (!node.path("MODE").isMissingNode()) {
 			keyword = jsonUtils.extractStringKeyword(node, "MODE", false);
 			if (keyword == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "]: " + jsonUtils.getError());
 			else {
 				tok.mode = Mode.fromString(keyword);
 				if (tok.mode == Mode.UNDEFINED)
-					conf.addError("keyword \"MODE\" is incorrect or UNDEFINED!");
+					conf.addError("In TOKENIZERS[" + (tokNum+1) + "]: " + "keyword \"MODE\" is incorrect or UNDEFINED!");
 			}
 		}
 		
@@ -62,7 +62,7 @@ public class Tokenize
 		if (!node.path("SPLITTER").isMissingNode()) {
 			keyword = jsonUtils.extractStringKeyword(node, "SPLITTER", false);
 			if (keyword == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "]: " + jsonUtils.getError());
 			else 
 				tok.splitter = keyword;
 		}
@@ -71,13 +71,13 @@ public class Tokenize
 		JsonNode regNode = node.path("REGIONS");
 		if (!regNode.isMissingNode()) {
 			if (!regNode.isArray()) {
-				conf.addError("REGIONS section is not of type array!");
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "]: " + "REGIONS section is not of type array!");
 			}
 
 			tok.regions = new ArrayList<TokenRegion>();
 
 			for (int i = 0; i < regNode.size(); i++) {
-				TokenRegion reg = TokenRegion.extractTokenRegion(regNode.get(i), conf, jsonUtils);
+				TokenRegion reg = TokenRegion.extractTokenRegion(regNode.get(i), conf, jsonUtils, tokNum, i);
 				tok.regions.add(reg);
 			}
 		}

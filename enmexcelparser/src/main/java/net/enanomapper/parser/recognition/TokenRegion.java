@@ -34,7 +34,7 @@ public class TokenRegion
 	public boolean FlagEndIndex = false;
 	
 	public static TokenRegion extractTokenRegion(JsonNode node, ExcelParserConfigurator conf, 
-			JsonUtilities jsonUtils) 
+			JsonUtilities jsonUtils, int tokNum, int regNum) 
 	{
 		TokenRegion reg = new TokenRegion();
 		
@@ -44,11 +44,13 @@ public class TokenRegion
 		if (!node.path("REGION_TYPE").isMissingNode()) {
 			keyword = jsonUtils.extractStringKeyword(node, "REGION_TYPE", false);
 			if (keyword == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "], REGIONS[" + (regNum+1) + "]: " +  
+						jsonUtils.getError());
 			else {
 				reg.regionType = Type.fromString(keyword);
 				if (reg.regionType == Type.UNDEFINED)
-					conf.addError("keyword \"REGION_TYPE\" is incorrect or UNDEFINED!");
+					conf.addError("In TOKENIZERS[" + (tokNum+1) + "], REGIONS[" + (regNum+1) + "]: " +
+							"keyword \"REGION_TYPE\" is incorrect or UNDEFINED!");
 			}
 		}
 		
@@ -56,7 +58,8 @@ public class TokenRegion
 		if (!node.path("NUM_OF_CHARS").isMissingNode()) {
 			Integer iObj = jsonUtils.extractIntKeyword(node, "NUM_OF_CHARS", false);
 			if (iObj == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "], REGIONS[" + (regNum+1) + "]: " 
+						+ jsonUtils.getError());
 			else {
 				reg.FlagNumOfChars = true;
 				reg.numOfChars = iObj;
@@ -68,7 +71,8 @@ public class TokenRegion
 		if (!node.path("BEGIN_INDEX").isMissingNode()) {
 			Integer iObj = jsonUtils.extractIntKeyword(node, "BEGIN_INDEX", false);
 			if (iObj == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "], REGIONS[" + (regNum+1) + "]: " +
+						jsonUtils.getError());
 			else {
 				reg.FlagBeginIndex = true;
 				reg.beginIndex = iObj;
@@ -79,7 +83,8 @@ public class TokenRegion
 		if (!node.path("END_INDEX").isMissingNode()) {
 			Integer iObj = jsonUtils.extractIntKeyword(node, "END_INDEX", false);
 			if (iObj == null)
-				conf.addError(jsonUtils.getError());
+				conf.addError("In TOKENIZERS[" + (tokNum+1) + "], REGIONS[" + (regNum+1) + "]: " +
+						jsonUtils.getError());
 			else {
 				reg.FlagEndIndex = true;
 				reg.endIndex = iObj;
