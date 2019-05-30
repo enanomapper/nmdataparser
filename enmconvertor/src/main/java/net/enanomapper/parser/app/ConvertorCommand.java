@@ -34,11 +34,11 @@ public enum ConvertorCommand {
 	generatetemplate {
 		@Override
 		public String input() {
-			return  "Input file or folder";
+			return  null;
 		}
 		@Override
 		public String config() {
-			return null;
+			return "JSON file with template definitions";
 		}
 	};
 	public abstract String input();

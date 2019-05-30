@@ -1,6 +1,5 @@
 package net.enanomapper.parser.app;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +13,7 @@ import java.io.Writer;
 import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
@@ -26,6 +26,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.restlet.Request;
@@ -49,14 +50,15 @@ import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
 import ambit2.rest.substance.SubstanceRDFReporter;
 import net.enanomapper.maker.JsonConfigAnnotator;
 import net.enanomapper.maker.TR;
+import net.enanomapper.maker.TemplateMaker;
+import net.enanomapper.maker.TemplateMakerSettings;
+import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_CMD;
+import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.InvalidCommand;
 import net.idea.loom.nm.nanowiki.ENanoMapperRDFReader;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
-import net.idea.templates.annotation.AnnotatorChain;
-import net.idea.templates.annotation.JsonConfigGenerator;
-import net.idea.templates.annotation.SimpleAnnotator;
 import net.idea.templates.extraction.AssayTemplatesParser;
 import net.idea.templates.generation.Term;
 import net.idea.templates.generation.Tools;
@@ -139,6 +141,32 @@ public class DataConvertor {
 
 	public boolean parse(String[] args) throws Exception {
 		return settings.parse(args);
+	}
+
+	protected void makeTemplate() throws Exception {
+		long now = System.currentTimeMillis();
+		if (settings.getJsonConfig()==null) throw new Exception("Template definitions not found");
+		TemplateMakerSettings tsettings = new TemplateMakerSettings() {
+			
+			public java.lang.Iterable<TR> getTemplateRecords() throws Exception {
+				try (InputStream in = new FileInputStream(settings.getJsonConfig())) {
+					return getTemplateRecords(in);
+				}
+			};
+		};
+		tsettings.setSinglefile(true);
+		tsettings.setTemplatesCommand(_TEMPLATES_CMD.generate);
+		tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);
+		tsettings.getQuery().clear();
+		//tsettings.setQueryEndpoint(endpoint);
+		HashSet<String> templateids = new HashSet<String>();
+		templateids.add(settings.getTemplateid());
+		TemplateMaker maker = new TemplateMaker();
+		tsettings.setInputfolder(settings.getJsonConfig());
+		tsettings.setOutputfolder(settings.getOutputFile());
+		Workbook workbook = maker.generate(tsettings,templateids);
+		
+		logger_cli.log(Level.INFO, "MSG_GENERATETEMPLATE_COMPLETE", new Object[]{settings.templateid, settings.getOutputFile().getAbsolutePath(), settings.getJsonConfig().getAbsolutePath(), (System.currentTimeMillis() - now)});
 	}
 
 	/**
@@ -415,6 +443,10 @@ public class DataConvertor {
 					object.convertFiles();
 					break;
 				}
+				case generatetemplate: {
+					object.makeTemplate();
+					break;
+				}
 				}
 			} else
 				code = -1;
@@ -528,13 +560,12 @@ public class DataConvertor {
 			throw new FileNotFoundException(settings.getOutputFile().toString());
 		logger_cli.log(Level.INFO, "MSG_GENERATEJSON",
 				new Object[] { settings.getInputFile(), settings.getOutputFile() });
-		
-		String[] results = AssayTemplatesParser.generate_jsonconfig(settings.getInputFile(), settings.getOutputFile(),settings.getSheetNumber());
+
+		String[] results = AssayTemplatesParser.generate_jsonconfig(settings.getInputFile(), settings.getOutputFile(),
+				settings.getSheetNumber());
 		logger_cli.log(Level.INFO, "MSG_EXTRACTFIELDS_COMPLETED",
-				new Object[] {settings.getInputFile().toString(), results[0]});
+				new Object[] { settings.getInputFile().toString(), results[0] });
 		return results;
 	}
-
-
 
 }

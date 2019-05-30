@@ -19,8 +19,17 @@ public class Settings {
 	protected File outputFile;
 	protected IO_FORMAT outformat = IO_FORMAT.json;
 	protected ConvertorCommand command = ConvertorCommand.data;
-	protected Integer nsheet= null;
-	
+	protected Integer nsheet = null;
+	protected String templateid = null;
+
+	public String getTemplateid() {
+		return templateid;
+	}
+
+	public void setTemplateid(String templateid) {
+		this.templateid = templateid;
+	}
+
 	public Integer getSheetNumber() {
 		return nsheet;
 	}
@@ -101,17 +110,17 @@ public class Settings {
 				}
 			else
 				command = ConvertorCommand.data;
-			
 
 			if (_OPTIONS.sheet.getOption(line) != null)
 				try {
 					nsheet = Integer.parseInt(_OPTIONS.sheet.getOption(line));
-					if (nsheet<0) nsheet=null;
+					if (nsheet < 0)
+						nsheet = null;
 				} catch (Exception x) {
-					nsheet = null; 
+					nsheet = null;
 				}
 			else
-				nsheet = null;			
+				nsheet = null;
 
 			switch (command) {
 			case extracttemplatefields: {
@@ -122,8 +131,7 @@ public class Settings {
 				if (outputFile == null && !outputFile.exists())
 					throw new FileNotFoundException("Missing output folder");
 				jsonConfig = getJSONConfig(line);
-				
-				
+
 				return true;
 			}
 			case generatejsonconfig: {
@@ -134,7 +142,22 @@ public class Settings {
 				if (outputFile == null && !outputFile.exists())
 					throw new FileNotFoundException("Missing output folder");
 
-				return true;				
+				return true;
+			}
+			case generatetemplate: {
+				jsonConfig = getJSONConfig(line);
+				if (jsonConfig == null && !jsonConfig.exists())
+					throw new FileNotFoundException("Missing template config file");
+				outputFile = getOutput(line);
+				if (outputFile == null && !outputFile.exists())
+					throw new FileNotFoundException("Missing output file");
+
+				String templateid = _OPTIONS.templateid.getOption(line);
+				if (templateid == null)
+					throw new Exception("Template id not found");
+				setTemplateid(templateid);
+
+				return true;
 			}
 			case data: {
 

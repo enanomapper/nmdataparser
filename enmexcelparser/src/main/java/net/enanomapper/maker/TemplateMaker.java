@@ -54,6 +54,18 @@ public class TemplateMaker {
 				return "method and instrument information";
 			}
 		},
+		experimental_parameters {
+			@Override
+			public String toString() {
+				return "experimental parameters";
+			}
+		},
+		sample_preparation {
+			@Override
+			public String toString() {
+				return "sample preparation";
+			}
+		},
 		parameters {
 			@Override
 			public String toString() {
@@ -111,6 +123,8 @@ public class TemplateMaker {
 	// for compatibility, to be refactored to use enums
 	protected final static String header_results = _header.results.toString();
 	protected final static String header_method = _header.method.toString();
+	protected final static String header_experimentalparameters = _header.experimental_parameters.toString();
+	protected final static String header_sample_preparation = _header.sample_preparation.toString();
 	protected final static String header_initialexposure = _header.initialexposure.toString();
 	protected final static String header_finalexposure = _header.finalexposure.toString();
 
@@ -276,8 +290,12 @@ public class TemplateMaker {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (header_method.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (header_experimentalparameters.equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());							
 						} else if (header_sample.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
+						} else if (header_sample_preparation.equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());							
 						} else if (header_size.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 						} else if (header_cell.equals(annotation)) {
@@ -357,9 +375,11 @@ public class TemplateMaker {
 
 		setStyle(workbook, sheet, header_results, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_method, mincol, maxcol, style);
+		setStyle(workbook, sheet, header_experimentalparameters, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_endpoint, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_size, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_sample, mincol, maxcol, style);
+		setStyle(workbook, sheet, header_sample_preparation, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_sop, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_imageanalysis, mincol, maxcol, style);
 
@@ -554,7 +574,7 @@ public class TemplateMaker {
 	protected Workbook createWorkbook(Workbook workbook, String idtemplate, TemplateMakerSettings settings,
 			TemplateMakerSettings._TEMPLATES_TYPE[] ttypes) throws Exception {
 		settings.getQuery().clear();
-		settings.setQueryTemplateid(idtemplate);
+			settings.setQueryTemplateid(idtemplate);
 		Iterable<TR> records = settings.getTemplateRecords();
 		for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
 			settings.setTemplatesType(ttype);

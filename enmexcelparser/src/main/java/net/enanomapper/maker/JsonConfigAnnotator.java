@@ -49,7 +49,7 @@ public class JsonConfigAnnotator implements IAnnotator {
 	public void process(TR record) {
 		process(record, getQueryField(), null, 1, null);
 	}
-
+	//make sure references to sop field has 'sop' as annotation
 	@Override
 	public void process(TR record, String queryField, String query, int maxhits, String label) {
 		try {

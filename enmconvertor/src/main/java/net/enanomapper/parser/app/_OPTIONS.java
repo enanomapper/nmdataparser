@@ -135,6 +135,21 @@ public enum _OPTIONS {
 			return "Sheet number to be processed. All sheets if missing";
 		}		
 	},	
+	templateid {
+		@Override
+		public String argName() {
+			return "templateid";
+		}
+
+		@Override
+		public String command() {
+			return "t";
+		}
+		@Override
+		public String description() {
+			return "Template identifier";
+		}		
+	},		
 	command {
 
 		@Override
