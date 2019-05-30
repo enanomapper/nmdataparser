@@ -1,10 +1,7 @@
 package net.enanomapper.maker;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -534,45 +531,55 @@ public class TemplateMaker {
 			break;
 		}
 
-		Iterator<String> i = templateids.iterator();
-		while (i.hasNext())
-			try {
-				settings.getQuery().clear();
-				String templateid = i.next();
-				settings.setQueryTemplateid(templateid);
-				Iterable<TR> records = settings.getTemplateRecords();
-
-				for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
-					settings.setTemplatesType(ttype);
-					settings.setQueryTemplateid(templateid);
-					switch (ttype) {
-					case jrc: {
-						workbook = generateJRCTemplates(settings.isSinglefile() ? workbook : null,
-								settings.getQueryTemplateId(), records);
-						if (!settings.isSinglefile())
-							settings.write(String.format("%s_%s", workbook.getSheetAt(1).getSheetName(),
-									settings.getQueryTemplateId()), _TEMPLATES_TYPE.jrc, workbook);
-						break;
-					}
-					case iom:
-						try {
-							// generateIOMTemplates((settings.getQueryTemplateId(),records);
-							break;
-						} catch (Exception x) {
-						}
-					default:
-						break;
-					}
-
+		if (templateids == null || templateids.size() == 0) {
+			workbook = createWorkbook(workbook, null, settings, ttypes);
+		} else {
+			Iterator<String> i = templateids.iterator();
+			while (i.hasNext())
+				try {
+					workbook = createWorkbook(workbook, i.next(), settings, ttypes);
+				} catch (Exception x) {
+					x.printStackTrace();
 				}
-			} catch (Exception x) {
-				x.printStackTrace();
-			}
-		if (settings.isSinglefile()) {
+		}
+		if (settings.isSinglefile())
+
+		{
 			settings.write("TEMPLATES", _TEMPLATES_TYPE.jrc, workbook);
 			return workbook;
 		} else
 			return null;
+	}
+
+	protected Workbook createWorkbook(Workbook workbook, String idtemplate, TemplateMakerSettings settings,
+			TemplateMakerSettings._TEMPLATES_TYPE[] ttypes) throws Exception {
+		settings.getQuery().clear();
+		settings.setQueryTemplateid(idtemplate);
+		Iterable<TR> records = settings.getTemplateRecords();
+		for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
+			settings.setTemplatesType(ttype);
+			settings.setQueryTemplateid(idtemplate);
+			switch (ttype) {
+			case jrc: {
+				workbook = generateJRCTemplates(settings.isSinglefile() ? workbook : null,
+						settings.getQueryTemplateId(), records);
+				if (!settings.isSinglefile())
+					settings.write(String.format("%s_%s", workbook.getSheetAt(1).getSheetName(),
+							settings.getQueryTemplateId()), _TEMPLATES_TYPE.jrc, workbook);
+				break;
+			}
+			case iom:
+				try {
+					// generateIOMTemplates((settings.getQueryTemplateId(),records);
+					break;
+				} catch (Exception x) {
+				}
+			default:
+				break;
+			}
+
+		}
+		return workbook;
 	}
 
 }
