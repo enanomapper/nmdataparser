@@ -62,3 +62,7 @@ update assay_template set visible=0 where sheet="Aspect of deposit" and endpoint
 update assay_template set visible=0 where sheet="hCTA" and endpoint="cytotoxicity";
 update assay_template set visible=0 where sheet="hemolysis" and endpoint="cytotoxicity";
 update assay_template set visible=0 where sheet="hemolysis" and endpoint="epithelial barrier integrity";
+update assay_template set annotation = "sop" where value = "references to sops";
+update gracious_templates.assay_template set value_clean="method and instrument information" where value_clean="method and instrument information / ";
+update gracious_templates.assay_template set annotation="method and instrument information" where annotation="method and instrument information /  sample filtration process";
+update gracious_templates.assay_template set value_clean=replace(value_clean,"Sample preparation. ","") where value_clean regexp "^Sample preparation. ";
