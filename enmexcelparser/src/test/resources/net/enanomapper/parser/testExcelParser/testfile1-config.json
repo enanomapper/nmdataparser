@@ -1,256 +1,209 @@
 {
-	"TEMPLATE_INFO" : 
-	{
-		"NAME" : "Test1",		
-		"VERSION" : "version 1",
-		"TYPE" : 1,
-		"ALLOW_QUALIFIER_IN_VALUE_CELL" : 1
+	"TEMPLATE_INFO": {
+		"NAME": "Test1",
+		"VERSION": "version 1",
+		"TYPE": 1,
+		"ALLOW_QUALIFIER_IN_VALUE_CELL": 1
 	},
-	
-	"DATA_ACCESS" : 
-	{
-		"ITERATION" : "ROW_SINGLE",
-		"SHEET_INDEX" : 1,
-		"START_ROW" : 2,
-		"END_ROW" : 2,
-		
-		"START_HEADER_ROW" : 1,
-		"END_HEADER_ROW" : 1,
-		"ALLOW_EMPTY" : true,
-		"RECOGNITION" : "BY_INDEX",
-		
-		
-		"VARIABLES":
-		{
-			"var1" :
-			{
-				"COLUMN_INDEX" : "A"
+
+	"DATA_ACCESS": {
+		"ITERATION": "ROW_SINGLE",
+		"SHEET_INDEX": 1,
+		"START_ROW": 2,
+		"END_ROW": 2,
+
+		"START_HEADER_ROW": 1,
+		"END_HEADER_ROW": 1,
+		"ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX",
+
+
+		"VARIABLES": {
+			"var1": {
+				"COLUMN_INDEX": "A"
 			}
 		}
-		
+
 	},
-	
-	"PARALLEL_SHEETS" :
-	[
-		{
-			"ITERATION" : "ROW_SINGLE",
-			"SHEET_INDEX" : 2,
-			"START_ROW" : 2,
-			"START_HEADER_ROW" : 1,
-			"END_HEADER_ROW" : 1,
-			"ALLOW_EMPTY" : true,
-			"RECOGNITION" : "BY_INDEX"
+
+	"PARALLEL_SHEETS": [{
+			"ITERATION": "ROW_SINGLE",
+			"SHEET_INDEX": 2,
+			"START_ROW": 2,
+			"START_HEADER_ROW": 1,
+			"END_HEADER_ROW": 1,
+			"ALLOW_EMPTY": true,
+			"RECOGNITION": "BY_INDEX"
 		},
-		
+
 		{
-			"SHEET_INDEX" : 3
+			"SHEET_INDEX": 3
 		}
 	],
-		
-	"SUBSTANCE_RECORD":
-	{
-		"REFERENCE_SUBSTANCE_UUID" : 
-		{
-			"COLUMN_INDEX" : "AA"
-		},
-		
-		
-		"SUBSTANCE_NAME" : 
-		{
-			"COLUMN_INDEX" : 3
-			
-		},
-		
-		"OWNER_NAME" : 
-		{
-			"SOURCE_COMBINATION" : true,
-			"COLUMN_INDEX" : 4,			
-			"COLUMN_INDICES" : [4, "B", "F"],
-			"ROW_INDICES" : [4, 5, 6],
-			"VARIABLE_KEYS" : ["key1", "key2", "v3"]
-		},
-		
-		"SUBSTANCE_TYPE" : 
-		{
-			"COLUMN_INDEX" : "B",
-		},
-		
-		"OWNER_UUID" : 
-		{
-			"COLUMN_INDEX" : 5
-		},
-		
-		
-		"SUBSTANCE_UUID" :		
-		{
-			"COLUMN_INDEX" : 5
-		},
-		
-		"PUBLIC_NAME" : 
-		{
-			"ITERATION" : "VARIABLE",
-			"VARIABLE_KEY" : "var1"
-		},
-		
-		"ID_SUBSTANCE" : 
-		{
-			"COLUMN_INDEX" : 9
-		},
-		
-		"EXTERNAL_IDENTIFIERS" :
-		[
-			
-			
-		],
-		
-		"COMPOSITION" :
-		[
-			
-		]
-		
-	},
-	
-	"PROTOCOL_APPLICATIONS": 
-	[
-		{
-			"CITATION_TITLE" : 
-			{
-				"SHEET_INDEX" : 1,
-				"SHEET_NAME" : "tt",
-				"COLUMN_INDEX" : "C",
-				"COLUMN_NAME" : "tt"
-			},
-			
-			"CITATION_YEAR" : 
-			{
-				"COLUMN_INDEX" : 6
-			},
-			
-			"CITATION_OWNER" : 
-			{
-				"COLUMN_INDEX" : 7
-			},
-			
-			
-			"INTERPRETATION_RESULT" : 
-			{
-				"COLUMN_INDEX" : 6
-			},
-			
-			"INTERPRETATION_CRITERIA" : 
-			{
-				"COLUMN_INDEX" : 6
-			},
-						
-			
-			"PROTOCOL_GUIDELINE" : 
-			{
-				"guideline1" :
-				{
-					"COLUMN_INDEX" : 7
-				},
-				
-				"guideline2" :
-				{
-					"COLUMN_INDEX" : 8
-				}
-			},
-			
-			"PARAMETERS" : 
-			{
-				"par1" :
-				{
-					"COLUMN_INDEX" : "K"
-				},
-				
-				"par2" :
-				{
-					"COLUMN_INDEX" : "L"
-				}
-			},
-						
-			
-			"EFFECTS":
-			[
-				{
-					"SAMPLE_ID" : 
-					{
-						"COLUMN_INDEX" : 5
-					},
-					
-					"ENDPOINT" : 
-					{
-						"COLUMN_INDEX" : 6
-					},
-							
-					"LO_VALUE1" : 
-					{
-						"COLUMN_INDEX" : "M"
-					},
-					
-					"ERR_QUALIFIER" : 
-					{
-						"COLUMN_INDEX" : 8
-					},
-					
-					"UP_VALUE1" : 
-					{
-						"COLUMN_INDEX" : "M",
-						"ITERATION1" : "JSON_REPOSITORY",
-						"JSON_REPOSITORY_KEY1" : "key2"
-					},
-					
-					"ERR_VALUE" : 
-					{
-						"COLUMN_INDEX" : "L",
-						"ITERATION1" : "ABSOLUTE_LOCATION",
-						"COLUMN_INDEX1" : "H",
-						"ROW_INDEX1" : 4
-					},
-					
-					"TEXT_VALUE" : 
-					{
-						"ITERATION" : "ABSOLUTE_LOCATION",
-						"RECOGNITION" : "BY_INDEX_AND_NAME", 
-						"COLUMN_INDEX" : 10,
-						"ROW_INDEX" : 2
-						
-					},
-			
-					"UNIT" : 
-					{	
-						"ITERATION" : "ABSOLUTE_LOCATION",
-						"COLUMN_INDEX" : "J",
-						"ROW_INDEX" : 1
-					},
-					
-					"VALUE" : 
-					{
-						"COLUMN_INDEX" : "M"
-					},
-					
-					"CONDITIONS" : 
-					{
-						"metabolic activation" :
-						{
-							"ITERATION" : "JSON_REPOSITORY",
-							"JSON_REPOSITORY_KEY" : "key1",
-							
-							"COLUMN_INDEX" : 5
-							
-						},
-				
-						"Species" :
-						{
-							"COLUMN_INDEX" : "C",
-							"SHEET_INDEX" : 2
-						}
-					}
-				}
-			]	
-			
-		}
-	]
-	
-}
 
+	"SUBSTANCE_RECORD": {
+		"REFERENCE_SUBSTANCE_UUID": {
+			"COLUMN_INDEX": "AA"
+		},
+
+
+		"SUBSTANCE_NAME": {
+			"COLUMN_INDEX": 3
+
+		},
+
+		"OWNER_NAME": {
+			"SOURCE_COMBINATION": true,
+			"COLUMN_INDEX": 4,
+			"COLUMN_INDICES": [4, "B", "F"],
+			"ROW_INDICES": [4, 5, 6],
+			"VARIABLE_KEYS": ["key1", "key2", "v3"]
+		},
+
+		"SUBSTANCE_TYPE": {
+			"COLUMN_INDEX": "B"
+		},
+
+		"OWNER_UUID": {
+			"COLUMN_INDEX": 5
+		},
+
+
+		"SUBSTANCE_UUID": {
+			"COLUMN_INDEX": 5
+		},
+
+		"PUBLIC_NAME": {
+			"ITERATION": "VARIABLE",
+			"VARIABLE_KEY": "var1"
+		},
+
+		"ID_SUBSTANCE": {
+			"COLUMN_INDEX": 9
+		},
+
+		"EXTERNAL_IDENTIFIERS": [
+
+
+		],
+
+		"COMPOSITION": [
+
+		]
+
+	},
+
+	"PROTOCOL_APPLICATIONS": [{
+		"CITATION_TITLE": {
+			"SHEET_INDEX": 1,
+			"SHEET_NAME": "tt",
+			"COLUMN_INDEX": "C",
+			"COLUMN_NAME": "tt"
+		},
+
+		"CITATION_YEAR": {
+			"COLUMN_INDEX": 6
+		},
+
+		"CITATION_OWNER": {
+			"COLUMN_INDEX": 7
+		},
+
+
+		"INTERPRETATION_RESULT": {
+			"COLUMN_INDEX": 6
+		},
+
+		"INTERPRETATION_CRITERIA": {
+			"COLUMN_INDEX": 6
+		},
+
+
+		"PROTOCOL_GUIDELINE": {
+			"guideline1": {
+				"COLUMN_INDEX": 7
+			},
+
+			"guideline2": {
+				"COLUMN_INDEX": 8
+			}
+		},
+
+		"PARAMETERS": {
+			"par1": {
+				"COLUMN_INDEX": "K"
+			},
+
+			"par2": {
+				"COLUMN_INDEX": "L"
+			}
+		},
+
+
+		"EFFECTS": [{
+			"SAMPLE_ID": {
+				"COLUMN_INDEX": 5
+			},
+
+			"ENDPOINT": {
+				"COLUMN_INDEX": 6
+			},
+
+			"LO_VALUE1": {
+				"COLUMN_INDEX": "M"
+			},
+
+			"ERR_QUALIFIER": {
+				"COLUMN_INDEX": 8
+			},
+
+			"UP_VALUE1": {
+				"COLUMN_INDEX": "M",
+				"ITERATION1": "JSON_REPOSITORY",
+				"JSON_REPOSITORY_KEY1": "key2"
+			},
+
+			"ERR_VALUE": {
+				"COLUMN_INDEX": "L",
+				"ITERATION1": "ABSOLUTE_LOCATION",
+				"COLUMN_INDEX1": "H",
+				"ROW_INDEX1": 4
+			},
+
+			"TEXT_VALUE": {
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"RECOGNITION": "BY_INDEX_AND_NAME",
+				"COLUMN_INDEX": 10,
+				"ROW_INDEX": 2
+
+			},
+
+			"UNIT": {
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"COLUMN_INDEX": "J",
+				"ROW_INDEX": 1
+			},
+
+			"VALUE": {
+				"COLUMN_INDEX": "M"
+			},
+
+			"CONDITIONS": {
+				"metabolic activation": {
+					"ITERATION": "JSON_REPOSITORY",
+					"JSON_REPOSITORY_KEY": "key1",
+
+					"COLUMN_INDEX": 5
+
+				},
+
+				"Species": {
+					"COLUMN_INDEX": "C",
+					"SHEET_INDEX": 2
+				}
+			}
+		}]
+
+	}]
+
+}
