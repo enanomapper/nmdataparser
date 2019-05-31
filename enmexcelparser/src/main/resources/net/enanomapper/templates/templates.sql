@@ -67,3 +67,4 @@ update assay_template set value_clean="method and instrument information" where 
 update assay_template set annotation="method and instrument information" where annotation="method and instrument information /  sample filtration process";
 update assay_template set value_clean=replace(value_clean,"Sample preparation. ","") where value_clean regexp "^Sample preparation. ";
 update assay_template set annotation="module" where value regexp "^assay" or value regexp "^module" or value regexp "^endpoint";
+update assay_template set level2="ERR_VALUE" where value="sd";
