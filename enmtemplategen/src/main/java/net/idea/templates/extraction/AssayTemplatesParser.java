@@ -208,7 +208,7 @@ public abstract class AssayTemplatesParser {
 
 				w.write(String.format(sql, w(TR.hix.endpoint.get(record)), w(TR.hix.Sheet.get(record)), record.getRow(),
 						record.getColumn(), w(TR.hix.id.get(record)), w(TR.hix.JSON_LEVEL1.get(record)),
-						w(TR.hix.JSON_LEVEL3.get(record)), w(TR.hix.JSON_LEVEL3.get(record)),
+						w(TR.hix.JSON_LEVEL2.get(record)), w(TR.hix.JSON_LEVEL3.get(record)),
 						w(TR.hix.Value.get(record), 192), w(TR.hix.cleanedvalue.get(record)),
 						w(TR.hix.header1.get(record)), w(TR.hix.hint.get(record)), w(TR.hix.unit.get(record)),
 						w(TR.hix.Annotation.get(record)), w(TR.hix.File.get(record), 32), w(TR.hix.Folder.get(record)),
