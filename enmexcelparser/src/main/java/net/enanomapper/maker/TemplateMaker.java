@@ -269,6 +269,7 @@ public class TemplateMaker {
 
 					Object level1 = TR.hix.JSON_LEVEL1.get(record);
 					Object level2 = TR.hix.JSON_LEVEL2.get(record);
+					Object level3 = TR.hix.JSON_LEVEL3.get(record);
 
 					if (ElementField.ERR_VALUE.name().equals(level2)) {
 						value = String.format("Uncertainty (%s)", value);
@@ -281,7 +282,7 @@ public class TemplateMaker {
 					}
 
 					Object unit = record.get("unit");
-					;
+					
 
 					stats(annotation == null ? null : annotation.toString(), col, mincol, true);
 					stats(annotation == null ? null : annotation.toString(), col, maxcol, false);
@@ -319,7 +320,7 @@ public class TemplateMaker {
 						} else if (header_endpoint.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_imageanalysis.equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_initialexposure.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_finalexposure.equals(annotation)) {
@@ -371,7 +372,6 @@ public class TemplateMaker {
 					}
 
 					if (unit != null && !"".equals(unit)) {
-
 						xrow = sheet.getRow(4);
 						if (xrow == null)
 							xrow = sheet.createRow(4);
@@ -381,6 +381,16 @@ public class TemplateMaker {
 
 						cell.setCellValue(unit.toString());
 					}
+					if (level3 != null && !"".equals(level3.toString())) {
+						xrow = sheet.getRow(3);
+						if (xrow == null)
+							xrow = sheet.createRow(3);
+						cell = xrow.getCell(col);
+						if (cell == null)
+							cell = xrow.createCell(col);
+
+						cell.setCellValue(level3.toString());
+					}					
 				} else {
 					throw new Exception(
 							String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(), _sheet));
