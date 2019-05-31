@@ -43,6 +43,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
+import net.enanomapper.parser.ParserConstants.ElementField;
 
 public class TemplateMaker {
 	protected Logger logger_cli;
@@ -242,7 +243,7 @@ public class TemplateMaker {
 				}
 
 				if (sheet.getSheetName().equals(_sheet)) {
-					//System.out.println(String.format("%s\t%s\t%s",record.getRow(),record.getColumn(),record.get("unit")));
+					// System.out.println(String.format("%s\t%s\t%s",record.getRow(),record.getColumn(),record.get("unit")));
 					int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
 					int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
 
@@ -262,9 +263,16 @@ public class TemplateMaker {
 						validation_materialstate(workbook, sheet, col);
 					}
 
-					Object annotation = record.get("Annotation");
-					Object header1 = record.get("header1");
-					Object hint = record.get("hint");
+					Object annotation = TR.hix.Annotation.get(record);
+					Object header1 = TR.hix.header1.get(record);
+					Object hint = TR.hix.hint.get(record);
+
+					Object level1 = TR.hix.JSON_LEVEL1.get(record);
+					Object level2 = TR.hix.JSON_LEVEL2.get(record);
+
+					if (ElementField.ERR_VALUE.name().equals(level2)) {
+						value = String.format("Uncertainty (%s)", value);
+					}
 
 					logger_cli.log(Level.FINE, String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
 
@@ -295,15 +303,15 @@ public class TemplateMaker {
 						} else if (header_sop.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (_header.module.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (header_method.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_experimentalparameters.equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_sample.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
 						} else if (header_sample_preparation.equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
 						} else if (header_size.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 						} else if (header_cell.equals(annotation)) {
@@ -584,7 +592,7 @@ public class TemplateMaker {
 	protected Workbook createWorkbook(Workbook workbook, String idtemplate, TemplateMakerSettings settings,
 			TemplateMakerSettings._TEMPLATES_TYPE[] ttypes) throws Exception {
 		settings.getQuery().clear();
-			settings.setQueryTemplateid(idtemplate);
+		settings.setQueryTemplateid(idtemplate);
 		Iterable<TR> records = settings.getTemplateRecords();
 		for (TemplateMakerSettings._TEMPLATES_TYPE ttype : ttypes) {
 			settings.setTemplatesType(ttype);
