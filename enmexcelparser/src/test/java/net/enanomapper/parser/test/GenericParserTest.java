@@ -23,6 +23,7 @@ public class GenericParserTest {
 	public void testValidQualifier() throws Exception {
 		Assert.assertTrue(ExcelParserConfigurator.isValidQualifier(null));
 		for (String q : RecognitionUtils.qualifiers) {
+			if (" ".equals(q)) continue;
 			Assert.assertTrue(q,ExcelParserConfigurator.isValidQualifier(q.toUpperCase()));
 		}
 	}
