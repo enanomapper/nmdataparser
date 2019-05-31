@@ -48,6 +48,12 @@ public class TemplateMaker {
 	protected Logger logger_cli;
 
 	public enum _header {
+		module {
+			@Override
+			public String toString() {
+				return "module";
+			}
+		},
 		results, method {
 			@Override
 			public String toString() {
@@ -236,7 +242,7 @@ public class TemplateMaker {
 				}
 
 				if (sheet.getSheetName().equals(_sheet)) {
-					// System.out.println(record);
+					//System.out.println(String.format("%s\t%s\t%s",record.getRow(),record.getColumn(),record.get("unit")));
 					int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
 					int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
 
@@ -288,6 +294,8 @@ public class TemplateMaker {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_sop.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
+						} else if (_header.module.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());							
 						} else if (header_method.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_experimentalparameters.equals(annotation)) {
@@ -355,6 +363,7 @@ public class TemplateMaker {
 					}
 
 					if (unit != null && !"".equals(unit)) {
+
 						xrow = sheet.getRow(4);
 						if (xrow == null)
 							xrow = sheet.createRow(4);
@@ -382,6 +391,7 @@ public class TemplateMaker {
 		setStyle(workbook, sheet, header_sample_preparation, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_sop, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_imageanalysis, mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.module.toString(), mincol, maxcol, style);
 
 		Iterator<Row> rowIterator = sheet.rowIterator();
 		while (rowIterator.hasNext()) {
