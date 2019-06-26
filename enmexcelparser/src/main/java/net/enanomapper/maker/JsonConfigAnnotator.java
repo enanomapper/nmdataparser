@@ -49,7 +49,8 @@ public class JsonConfigAnnotator implements IAnnotator {
 	public void process(TR record) {
 		process(record, getQueryField(), null, 1, null);
 	}
-	//make sure references to sop field has 'sop' as annotation
+
+	// make sure references to sop field has 'sop' as annotation
 	@Override
 	public void process(TR record, String queryField, String query, int maxhits, String label) {
 		try {
@@ -84,6 +85,7 @@ public class JsonConfigAnnotator implements IAnnotator {
 		}
 	}
 
+	// more heuristics for sop and module needed
 	protected void setAnnotation(TR record) {
 		record.setAnnotation("header1");
 		Iterator<Integer> icol = header_lookup.keySet().iterator();
@@ -140,7 +142,7 @@ public class JsonConfigAnnotator implements IAnnotator {
 		while (keys.hasNext()) {
 			String key = keys.next();
 			processDataLocation(config.substanceLocations.get(key), KEYWORD.SUBSTANCE_RECORD.name(), key, null, null,
-					null,null);
+					null, null);
 		}
 
 		for (ProtocolApplicationDataLocation papp : config.protocolAppLocations) {
@@ -152,23 +154,24 @@ public class JsonConfigAnnotator implements IAnnotator {
 					KEYWORD.PROTOCOL_CATEGORY_CODE, section);
 			processDataLocation(papp.protocolCategoryTitle, KEYWORD.PROTOCOL_APPLICATIONS,
 					KEYWORD.PROTOCOL_CATEGORY_TITLE, section);
-			processDataLocation(papp.protocolEndpoint, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.PROTOCOL_ENDPOINT, 
+			processDataLocation(papp.protocolEndpoint, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.PROTOCOL_ENDPOINT,
 					section);
 
 			processDataLocation(papp.assayUUID, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.ASSAY_UUID, section);
-			processDataLocation(papp.citationOwner, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.CITATION_OWNER,section);
+			processDataLocation(papp.citationOwner, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.CITATION_OWNER, section);
 			processDataLocation(papp.citationTitle, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.CITATION_TITLE, section);
 			processDataLocation(papp.citationYear, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.CITATION_YEAR, section);
 			processDataLocation(papp.interpretationCriteria, KEYWORD.PROTOCOL_APPLICATIONS,
 					KEYWORD.INTERPRETATION_CRITERIA, section);
 			processDataLocation(papp.interpretationResult, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.INTERPRETATION_RESULT,
 					section);
-			processDataLocation(papp.investigationUUID, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.INVESTIGATION_UUID, section);
+			processDataLocation(papp.investigationUUID, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.INVESTIGATION_UUID,
+					section);
 			processDataLocation(papp.protocolApplicationUUID, KEYWORD.PROTOCOL_APPLICATIONS,
 					KEYWORD.PROTOCOL_APPLICATION_UUID, section);
 
 			for (ExcelDataLocation loc : papp.protocolGuideline)
-				processDataLocation(loc, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.PROTOCOL_GUIDELINE,section);
+				processDataLocation(loc, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.PROTOCOL_GUIDELINE, section);
 			processDataLocation(papp.reliability_isRobustStudy, KEYWORD.PROTOCOL_APPLICATIONS,
 					KEYWORD.RELIABILITY_IS_ROBUST_STUDY, section);
 			processDataLocation(papp.reliability_isUsedforClassification, KEYWORD.PROTOCOL_APPLICATIONS,
@@ -179,22 +182,23 @@ public class JsonConfigAnnotator implements IAnnotator {
 					KEYWORD.RELIABILITY_PURPOSE_FLAG, section);
 			processDataLocation(papp.reliability_studyResultType, KEYWORD.PROTOCOL_APPLICATIONS,
 					KEYWORD.RELIABILITY_STUDY_RESULT_TYPE, section);
-			processDataLocation(papp.reliability_value, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.RELIABILITY_VALUE, 
+			processDataLocation(papp.reliability_value, KEYWORD.PROTOCOL_APPLICATIONS, KEYWORD.RELIABILITY_VALUE,
 					section);
+			if (papp.parameters!=null && papp.parameters.size() > 0) {
+				keys = papp.parameters.keySet().iterator();
+				while (keys.hasNext()) {
+					String key = keys.next();
+					ExcelDataLocation prm = papp.parameters.get(key);
+					String unit = null;
+					if (prm.otherLocationFields != null)
+						try {
+							unit = prm.otherLocationFields.get("UNIT").getJsonValue().toString();
+						} catch (Exception x) {
 
-			keys = papp.parameters.keySet().iterator();
-			while (keys.hasNext()) {
-				String key = keys.next();
-				ExcelDataLocation prm = papp.parameters.get(key);
-				String unit = null;
-				if (prm.otherLocationFields != null)
-					try {
-						unit = prm.otherLocationFields.get("UNIT").getJsonValue().toString();
-					} catch (Exception x) {
+						}
+					processDataLocation(prm, KEYWORD.PARAMETERS, (ElementField) null, key, null, unit, section);
 
-					}
-				processDataLocation(prm, KEYWORD.PARAMETERS, (ElementField) null, key, null, unit,section);
-
+				}
 			}
 			for (EffectRecordDataLocation loc : papp.effects) {
 				Object endpoint = null;
@@ -207,23 +211,27 @@ public class JsonConfigAnnotator implements IAnnotator {
 				if (loc.unit != null && loc.unit.getJsonValue() != null)
 					unit = loc.unit.getJsonValue();
 				processDataLocation(loc.endpointType, KEYWORD.EFFECTS, ElementField.ENDPOINT_TYPE, endpoint,
-						endpointType, unit,section);
+						endpointType, unit, section);
 				processDataLocation(loc.errQualifier, KEYWORD.EFFECTS, ElementField.ERR_QUALIFIER, endpoint,
-						endpointType, unit,section);
-				processDataLocation(loc.errValue, KEYWORD.EFFECTS, ElementField.ERR_VALUE, endpoint, endpointType,
-						unit,section);
+						endpointType, unit, section);
+				processDataLocation(loc.errValue, KEYWORD.EFFECTS, ElementField.ERR_VALUE, endpoint, endpointType, unit,
+						section);
 				processDataLocation(loc.loQualifier, KEYWORD.EFFECTS, ElementField.LO_QUALIFIER, endpoint, endpointType,
-						unit,section);
-				processDataLocation(loc.loValue, KEYWORD.EFFECTS, ElementField.LO_VALUE, endpoint, endpointType, unit,section);
-				processDataLocation(loc.sampleID, KEYWORD.EFFECTS, ElementField.SAMPLE_ID, endpoint, endpointType,
-						unit,section);
+						unit, section);
+				processDataLocation(loc.loValue, KEYWORD.EFFECTS, ElementField.LO_VALUE, endpoint, endpointType, unit,
+						section);
+				processDataLocation(loc.sampleID, KEYWORD.EFFECTS, ElementField.SAMPLE_ID, endpoint, endpointType, unit,
+						section);
 				processDataLocation(loc.textValue, KEYWORD.EFFECTS, ElementField.TEXT_VALUE, endpoint, endpointType,
-						unit,section);
-				processDataLocation(loc.unit, KEYWORD.EFFECTS, ElementField.UNIT, endpoint, endpointType, unit,section);
+						unit, section);
+				processDataLocation(loc.unit, KEYWORD.EFFECTS, ElementField.UNIT, endpoint, endpointType, unit,
+						section);
 				processDataLocation(loc.upQualifier, KEYWORD.EFFECTS, ElementField.UP_QUALIFIER, endpoint, endpointType,
-						unit,section);
-				processDataLocation(loc.value, KEYWORD.EFFECTS, ElementField.VALUE, endpoint, endpointType, unit,section);
-				processDataLocation(loc.upValue, KEYWORD.EFFECTS, ElementField.UP_VALUE, endpoint, endpointType, unit,section);
+						unit, section);
+				processDataLocation(loc.value, KEYWORD.EFFECTS, ElementField.VALUE, endpoint, endpointType, unit,
+						section);
+				processDataLocation(loc.upValue, KEYWORD.EFFECTS, ElementField.UP_VALUE, endpoint, endpointType, unit,
+						section);
 				if (loc.conditions != null) {
 					keys = loc.conditions.keySet().iterator();
 					while (keys.hasNext()) {
@@ -236,7 +244,8 @@ public class JsonConfigAnnotator implements IAnnotator {
 							} catch (Exception x) {
 
 							}
-						processDataLocation(condition, KEYWORD.EFFECTS, ElementField.CONDITION, key, null, unit, section);
+						processDataLocation(condition, KEYWORD.EFFECTS, ElementField.CONDITION, key, null, unit,
+								section);
 					}
 				}
 
@@ -246,21 +255,20 @@ public class JsonConfigAnnotator implements IAnnotator {
 
 	}
 
-	protected void processDataLocation(ExcelDataLocation loc, KEYWORD type_parent, String type, Object section
-			) {
-		processDataLocation(loc, type_parent == null ? null : type_parent.name(), type, null,null,null,section);
+	protected void processDataLocation(ExcelDataLocation loc, KEYWORD type_parent, String type, Object section) {
+		processDataLocation(loc, type_parent == null ? null : type_parent.name(), type, null, null, null, section);
 	}
 
 	protected void processDataLocation(ExcelDataLocation loc, KEYWORD type_parent, ElementField type, Object endpoint,
-			Object endpointType, Object unit,Object section) {
+			Object endpointType, Object unit, Object section) {
 		processDataLocation(loc, type_parent == null ? null : type_parent.name(), type == null ? null : type.name(),
-				endpoint,endpointType,unit,section);
+				endpoint, endpointType, unit, section);
 	}
 
 	protected void processDataLocation(ExcelDataLocation loc, KEYWORD type_parent, KEYWORD type, Object section) {
 		// Object value = loc==null?null:loc.getJsonValue();
 		processDataLocation(loc, type_parent == null ? null : type_parent.name(), type == null ? null : type.name(),
-				null,null,null,section);
+				null, null, null, section);
 	}
 
 	protected void processDataLocation(ExcelDataLocation loc, String type_parent, String type, Object endpoint,
@@ -269,8 +277,10 @@ public class JsonConfigAnnotator implements IAnnotator {
 			return;
 		if (loc.getAbsoluteLocationValue() == null) {
 
-			lookup.put(loc.columnIndex, new String[] { type_parent, type, endpoint == null ? null : endpoint.toString(),
-					endpointType == null ? null : endpointType.toString(), unit == null ? null : unit.toString(), section==null?null:section.toString() });
+			lookup.put(loc.columnIndex,
+					new String[] { type_parent, type, endpoint == null ? null : endpoint.toString(),
+							endpointType == null ? null : endpointType.toString(),
+							unit == null ? null : unit.toString(), section == null ? null : section.toString() });
 
 		} else {
 
@@ -282,12 +292,12 @@ public class JsonConfigAnnotator implements IAnnotator {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void done(String id, int sheetindex) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
