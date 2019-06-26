@@ -118,12 +118,124 @@ public class TemplateMaker {
 		sop, resultendpoint {
 			@Override
 			public String toString() {
-				return "End-Point Outcome metric";
+				return "end-point outcome metric";
 			}
-		};
+		},
+		exposure_echa_use_descriptors {
+			@Override
+			public String toString() {
+				return "echa use descriptors";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "ECHA.";
+			}
+		},
+		exposure_contributing_scenario {
+			@Override
+			public String toString() {
+				return "contributing exposure scenario/activity";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "EXPOSURE_CONTRIBUTING_SCENARIO.";
+			}
+		},
+		exposure_nm_physchem {
+			@Override
+			public String toString() {
+				return "nf phys-chem characteristics";
+			}
+		},
+		exposure_matrix {
+			@Override
+			public String toString() {
+				return "matrix characteristics";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "MATRIX_CHARACTERISTICS.";
+			}
+		},
+		exposure_control_measures {
+			@Override
+			public String toString() {
+				return "exposure control measures";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "EXPOSURE_CONTROL_MEASURES.";
+			}
+		},
+		exposure_factors {
+			@Override
+			public String toString() {
+				return "exposure factors";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "EXPOSURE_FACTORS.";
+			}
+		},
+		exposure_premises {
+			@Override
+			public String toString() {
+				return "premises";
+			}
+
+			@Override
+			public String getPrefix() {
+				return "PREMISES.";
+			}
+		},
+		exposure_summary_exposure_results {
+			@Override
+			public String getPrefix() {
+				return "SUMMARY_EXPOSURE_RESULTS.";
+			}
+			@Override
+			public String toString() {
+				return "summary exposure results";
+			}
+		},
+		exposure_measurements_instruments {
+			@Override
+			public String toString() {
+				return "measurements & instrument characteristics";
+			}
+		},
+		exposure_measurement_results {
+			@Override
+			public String toString() {
+				return "measurement results";
+			}
+		},
+		exposure_reference {
+			@Override
+			public String toString() {
+				return "reference";
+			}
+		},
+		exposure_quality_scenario {
+			@Override
+			public String toString() {
+				return "quality scenario";
+			}
+		}
+
+		;
 		@Override
 		public String toString() {
 			return this.name().toString();
+		}
+
+		public String getPrefix() {
+			return null;
 		}
 	}
 
@@ -264,6 +376,16 @@ public class TemplateMaker {
 					}
 
 					Object annotation = TR.hix.Annotation.get(record);
+					try {
+						for (_header h : _header.values())
+							if (annotation.toString().equals(h.toString()))
+								if (h.getPrefix() != null) {
+									value = value.replaceAll(h.getPrefix(), "");
+									break;
+								}
+					} catch (Exception x) {
+
+					}
 					Object header1 = TR.hix.header1.get(record);
 					Object hint = TR.hix.hint.get(record);
 
@@ -282,7 +404,6 @@ public class TemplateMaker {
 					}
 
 					Object unit = record.get("unit");
-					
 
 					stats(annotation == null ? null : annotation.toString(), col, mincol, true);
 					stats(annotation == null ? null : annotation.toString(), col, maxcol, false);
@@ -301,22 +422,42 @@ public class TemplateMaker {
 						cstyle.setBorderBottom(BorderStyle.NONE);
 						if (header_results.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
+						} else if (_header.exposure_measurement_results.toString().equals(annotation)) {
+								cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
+						} else if (_header.exposure_summary_exposure_results.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());								
 						} else if (header_sop.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (_header.module.toString().equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
+						} else if (_header.exposure_echa_use_descriptors.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());							
 						} else if (header_method.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_contributing_scenario.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());							
 						} else if (header_experimentalparameters.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_measurements_instruments.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());							
 						} else if (header_sample.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
 						} else if (header_sample_preparation.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
 						} else if (header_size.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+						} else if (_header.exposure_nm_physchem.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());							
 						} else if (header_cell.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_control_measures.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_factors.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_matrix.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+						} else if (_header.exposure_premises.toString().equals(annotation)) {
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());														
 						} else if (header_endpoint.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_imageanalysis.equals(annotation)) {
@@ -390,7 +531,7 @@ public class TemplateMaker {
 							cell = xrow.createCell(col);
 
 						cell.setCellValue(level3.toString());
-					}					
+					}
 				} else {
 					throw new Exception(
 							String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(), _sheet));
@@ -409,7 +550,20 @@ public class TemplateMaker {
 		setStyle(workbook, sheet, header_sample_preparation, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_sop, mincol, maxcol, style);
 		setStyle(workbook, sheet, header_imageanalysis, mincol, maxcol, style);
+
 		setStyle(workbook, sheet, _header.module.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_echa_use_descriptors.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_contributing_scenario.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_control_measures.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_factors.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_matrix.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_nm_physchem.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_premises.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_summary_exposure_results.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_measurements_instruments.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_measurement_results.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_reference.toString(), mincol, maxcol, style);
+		setStyle(workbook, sheet, _header.exposure_quality_scenario.toString(), mincol, maxcol, style);
 
 		Iterator<Row> rowIterator = sheet.rowIterator();
 		while (rowIterator.hasNext()) {
