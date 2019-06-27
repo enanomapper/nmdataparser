@@ -372,9 +372,12 @@ public class TemplateMaker {
 					Object v = record.get("cleanedvalue");
 					String value = v == null ? "?????" : v.toString();
 
-					if ("material state".equals(value) || value.indexOf("physical state")>=0) {
+					//through hint options
+					/*
+					if ("material state".equals(value) || value.indexOf("physical state") >= 0) {
 						validation_materialstate(workbook, sheet, col);
 					}
+					*/
 
 					Object annotation = TR.hix.Annotation.get(record);
 					try {
@@ -399,9 +402,12 @@ public class TemplateMaker {
 					}
 
 					logger_cli.log(Level.FINE, String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
-
-					if (hint != null && hint.toString().indexOf("yes/no") >= 0) {
-						validation_common(workbook, sheet, col, new String[] { "yes", "no" });
+					String hint_enum_prefix = "ENUM:";
+					if (hint != null &&  hint.toString().startsWith(hint_enum_prefix)) {
+						String[] options = hint.toString().replaceAll(hint_enum_prefix, "").split(",");
+						if (options.length > 1)
+							validation_common(workbook, sheet, col, options);
+						hint = "See dropdown options";
 					}
 
 					Object unit = record.get("unit");
@@ -684,7 +690,8 @@ public class TemplateMaker {
 	}
 
 	protected void validation_materialstate(Workbook workbook, Sheet sheet, Integer col) {
-		validation_common(workbook, sheet, col, new String[] { "liquid", "fluid", "fluid dispersion", "powder" });
+		validation_common(workbook, sheet, col, new String[] { "liquid", "fluid", "fluid dispersion", "powder",
+				"liquid suspension", "paste", "embedded matrix" });
 	}
 
 	protected void stats(String annotation, int col, Map<String, Integer> bucket, boolean min) {
