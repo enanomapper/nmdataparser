@@ -198,6 +198,7 @@ public class TemplateMaker {
 			public String getPrefix() {
 				return "SUMMARY_EXPOSURE_RESULTS.";
 			}
+
 			@Override
 			public String toString() {
 				return "summary exposure results";
@@ -371,7 +372,7 @@ public class TemplateMaker {
 					Object v = record.get("cleanedvalue");
 					String value = v == null ? "?????" : v.toString();
 
-					if ("material state".equals(value)) {
+					if ("material state".equals(value) || value.indexOf("physical state")>=0) {
 						validation_materialstate(workbook, sheet, col);
 					}
 
@@ -423,23 +424,23 @@ public class TemplateMaker {
 						if (header_results.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (_header.exposure_measurement_results.toString().equals(annotation)) {
-								cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (_header.exposure_summary_exposure_results.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());								
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_sop.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (_header.module.toString().equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (_header.exposure_echa_use_descriptors.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.BRIGHT_GREEN.getIndex());
 						} else if (header_method.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (_header.exposure_contributing_scenario.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_experimentalparameters.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (_header.exposure_measurements_instruments.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_sample.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
 						} else if (header_sample_preparation.equals(annotation)) {
@@ -447,7 +448,7 @@ public class TemplateMaker {
 						} else if (header_size.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 						} else if (_header.exposure_nm_physchem.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());							
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 						} else if (header_cell.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (_header.exposure_control_measures.toString().equals(annotation)) {
@@ -457,7 +458,7 @@ public class TemplateMaker {
 						} else if (_header.exposure_matrix.toString().equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (_header.exposure_premises.toString().equals(annotation)) {
-							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());														
+							cstyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
 						} else if (header_endpoint.equals(annotation)) {
 							cstyle.setFillForegroundColor(IndexedColors.SKY_BLUE.getIndex());
 						} else if (header_imageanalysis.equals(annotation)) {
@@ -522,16 +523,17 @@ public class TemplateMaker {
 
 						cell.setCellValue(unit.toString());
 					}
-					if (level3 != null && !"".equals(level3.toString())) {
-						xrow = sheet.getRow(3);
-						if (xrow == null)
-							xrow = sheet.createRow(3);
-						cell = xrow.getCell(col);
-						if (cell == null)
-							cell = xrow.createCell(col);
+					if (!ElementField.ERR_VALUE.name().equals(level2) && !ElementField.UNIT.name().equals(level2))
+						if (level3 != null && !"".equals(level3.toString())) {
+							xrow = sheet.getRow(3);
+							if (xrow == null)
+								xrow = sheet.createRow(3);
+							cell = xrow.getCell(col);
+							if (cell == null)
+								cell = xrow.createCell(col);
 
-						cell.setCellValue(level3.toString());
-					}
+							cell.setCellValue(level3.toString());
+						}
 				} else {
 					throw new Exception(
 							String.format("Expected sheet name' %s' but found '%s'", sheet.getSheetName(), _sheet));
@@ -677,7 +679,8 @@ public class TemplateMaker {
 	protected void validation_endpoint(Workbook workbook, Sheet sheet, Integer col) {
 		if (col == null)
 			return;
-		validation_common(workbook, sheet, col, new String[] { "phys-chem", "in vitro tox", "in vivo tox", "eco tox" });
+		validation_common(workbook, sheet, col,
+				new String[] { "phys-chem", "in vitro tox", "in vivo tox", "eco tox", "exposure" });
 	}
 
 	protected void validation_materialstate(Workbook workbook, Sheet sheet, Integer col) {
