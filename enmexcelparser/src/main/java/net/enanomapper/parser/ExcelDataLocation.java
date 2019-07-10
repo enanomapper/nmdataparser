@@ -412,7 +412,25 @@ public class ExcelDataLocation {
 					}
 				}
 			} else {
-				conf.addError("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES  is not an array!");
+				if (rowIndices.isTextual())
+				{
+					int rind[] = ExcelParserUtils.extractIndicesFromString(rowIndices.asText(), true);
+					if (rind == null) {
+						conf.addError("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES "
+								+ "is not a correct string in the form A-B");
+						loc.nErrors++;
+					}
+					else
+					{	
+						loc.rowIndices = rind;
+						loc.rowIndicesString = rowIndices.asText();
+					}	
+				}
+				else
+					conf.addError("In JSON section \"" + jsonSection + 
+							"\", keyword ROW_INDICES  is not an array or text in the form A-B!");
+				
+				//conf.addError("In JSON section \"" + jsonSection + "\", keyword ROW_INDICES  is not an array!");
 			}
 		}
 
