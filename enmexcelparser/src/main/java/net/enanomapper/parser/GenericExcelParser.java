@@ -2576,6 +2576,21 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			}
 		}
 
+	
+		if (loc.dataInterpretation == DataInterpretation.AS_TEXT)
+		{
+			//Convert all objects to String
+			Object textObjects[] = new Object[objects.length];
+			for (int i = 0; i < objects.length; i++)
+			{
+				if (objects[i] == null)
+					textObjects[i] = null;
+				else
+					textObjects[i] = objects[i].toString();
+			}
+			objects = textObjects;
+		}
+		
 		if (loc.trimArray)
 			return trimObjects(objects, rows.length, columns.length);
 
@@ -3713,7 +3728,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		HashMap<Object, Object> map = curVariableMappings.get(mapping);
 		if (map == null)
 			return null;
-		// Original read value is used as a key to obtain the result value;
+		// Original read value is used as a key to obtain the result value;		
 		return map.get(originalValue);
 	}
 
