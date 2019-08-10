@@ -183,7 +183,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	}
 
 	protected void initBasicWorkSheet() {
-		primarySheetNum = config.sheetIndex;
+		if (config.FlagSheetName)
+		{
+			//Sheet index is determined from the sheet name
+			primarySheetNum = workbook.getSheetIndex(config.sheetName);
+		}
+		else
+			primarySheetNum = config.sheetIndex;
+		
 		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = config.startRow;
 
