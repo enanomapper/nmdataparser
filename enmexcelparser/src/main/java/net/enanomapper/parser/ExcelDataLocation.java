@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Workbook;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import net.enanomapper.parser.ParserConstants.DataInterpretation;
@@ -834,6 +836,18 @@ public class ExcelDataLocation {
 
 	public boolean isFromParallelSheet() {
 		return (parallelSheetIndex >= 0);
+	}
+	
+	public int getSheetIndex(Workbook workbook)
+	{
+		if (FlagSheetName)
+		{
+			//Sheet index is determined from the sheet name
+			int ind = workbook.getSheetIndex(sheetName);
+			return ind;
+		}
+		
+		return sheetIndex;
 	}
 
 	@Override
