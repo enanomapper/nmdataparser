@@ -182,14 +182,26 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	}
 
-	protected void initBasicWorkSheet() {
-		if (config.FlagSheetName)
-		{
-			//Sheet index is determined from the sheet name
-			primarySheetNum = workbook.getSheetIndex(config.sheetName);
-		}
-		else
+	protected void initBasicWorkSheet() throws Exception 
+	{
+		if (config.FlagSheetIndex)
 			primarySheetNum = config.sheetIndex;
+		else
+			if (config.FlagSheetName)
+			{
+				//Sheet index is determined from the sheet name
+				primarySheetNum = workbook.getSheetIndex(config.sheetName);
+				if (primarySheetNum < 0)
+				{
+					throw new Exception("Primary excel sheet is not specified correctly via SHEET_NAME keyword. "
+							+ "Sheet \"" + config.sheetName + "\" does not exist.");
+				}	
+			}
+			else
+			{	
+				throw new Exception("Primary excel sheet is not specified. "
+						+ "SHEET_INDEX or SHEET_NAME keyword is required in section DATA_ACCESS");
+			}
 		
 		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = config.startRow;
