@@ -2440,7 +2440,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @throws Exception
 	 */
 	protected String getStringValueFromAbsoluteLocation(ExcelDataLocation loc) throws Exception {
-		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 		if (sheet != null) {
 			Row r = sheet.getRow(loc.rowIndex);
 			if (r == null)
@@ -2469,7 +2470,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			return getStringFromAbsoluteLocationAsSourceCombination(loc);
 		}
 
-		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 		if (sheet != null) {
 			Row r = sheet.getRow(loc.rowIndex);
 			if (r == null)
@@ -2488,7 +2490,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @throws Exception
 	 */
 	protected Number getNumericFromAbsoluteLocation(ExcelDataLocation loc) throws Exception {
-		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 		if (sheet != null) {
 			Row r = sheet.getRow(loc.rowIndex);
 			if (r == null)
@@ -2523,7 +2526,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @throws Exception
 	 */
 	protected Date getDateFromAbsoluteLocation(ExcelDataLocation loc) throws Exception {
-		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 		if (sheet != null) {
 			Row r = sheet.getRow(loc.rowIndex);
 			if (r == null)
@@ -2550,8 +2554,9 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	 * @param loc
 	 * @return
 	 */
-	protected Object[] getArrayFromAbsoluteLocation(ExcelDataLocation loc) {
-		Sheet sheet = workbook.getSheetAt(loc.sheetIndex);
+	protected Object[] getArrayFromAbsoluteLocation(ExcelDataLocation loc) throws Exception {
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 
 		// The array is formed from a matrix defined by rows (and columns)
 		// The rows are stored sequentially
@@ -2967,7 +2972,12 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		int startColumn = exdb_loc.location.columnIndex;
 
 		Cell cells[][] = new Cell[n][m];
-		Sheet sheet = workbook.getSheetAt(exdb_loc.location.sheetIndex);
+		
+		int sheetIndex = exdb_loc.location.sheetIndex;
+		//try {
+		//	sheetIndex = exdb_loc.location.getSheetIndex(workbook, primarySheetNum);
+		//} catch (Exception x) {}
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
 
 		for (int i = 0; i < n; i++) {
 			Row row = sheet.getRow(startRow + i);
