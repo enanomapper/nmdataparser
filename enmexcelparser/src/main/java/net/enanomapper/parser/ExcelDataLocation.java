@@ -838,16 +838,28 @@ public class ExcelDataLocation {
 		return (parallelSheetIndex >= 0);
 	}
 	
-	public int getSheetIndex(Workbook workbook)
+	public int getSheetIndex(Workbook workbook, int primarySheetNum) throws Exception
 	{
-		if (FlagSheetName)
-		{
-			//Sheet index is determined from the sheet name
-			int ind = workbook.getSheetIndex(sheetName);
-			return ind;
-		}
+		if (FlagSheetIndex)
+			return sheetIndex;
+		else
+			if (FlagSheetName)
+			{
+				//Sheet index is determined from the sheet name
+				int shInd = workbook.getSheetIndex(sheetName);
+				if (shInd < 0)
+				{
+					throw new Exception(sectionName + " Primary excel sheet is not specified correctly via SHEET_NAME keyword. "
+							+ "Sheet \"" + sheetName + "\" does not exist.");
+				}
+				return shInd;
+			}
+			else
+			{	
+				//Excel data location uses the default primary sheet index from DATA_ACCESS section
+				return primarySheetNum;
+			}
 		
-		return sheetIndex;
 	}
 
 	@Override
