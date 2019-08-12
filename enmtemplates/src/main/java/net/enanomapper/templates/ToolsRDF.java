@@ -80,9 +80,9 @@ public class ToolsRDF {
 			RDFReader reader = jmodel.getReader(format);
 
 			if (rdfurl.endsWith(".gz"))
-				in = new InputStreamReader(new GZIPInputStream(new FileInputStream(file)));
+				in = new InputStreamReader(new GZIPInputStream(new FileInputStream(file)),"UTF-8");
 			else
-				in = new InputStreamReader(new FileInputStream(file));
+				in = new InputStreamReader(new FileInputStream(file),"UTF-8");
 			reader.read(jmodel, in, format);
 			System.out.println("Reading completed " + file.getAbsolutePath());
 			Resource root = jmodel.createResource(rootResource);

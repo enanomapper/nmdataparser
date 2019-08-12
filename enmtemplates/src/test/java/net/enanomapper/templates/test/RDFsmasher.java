@@ -32,13 +32,13 @@ public class RDFsmasher extends TestWithExternalFiles {
 		this.maxlevel = maxlevel;
 	}
 
-	@Test
+	
 	public void testGO() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this);
 	}
 
-	@Test
+	
 	public void testGO_Gene() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
@@ -46,7 +46,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 				"RDF/XML");
 	}
 
-	@Test
+	
 	public void testGO_GeneProduct() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
@@ -54,7 +54,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 				"RDF/XML");
 	}
 
-	@Test
+	
 	public void testGO_ProteinFamily() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/NCIT/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"GO", false, this,
@@ -62,14 +62,14 @@ public class RDFsmasher extends TestWithExternalFiles {
 				"RDF/XML");
 	}
 
-	@Test
+	
 	public void testBAO() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/BAO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"BAO", false, this, "http://www.w3.org/2002/07/owl#Thing",
 				"RDF/XML");
 	}
 
-	@Test
+	
 	public void testENM() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, this, "http://www.w3.org/2002/07/owl#Thing",
@@ -77,7 +77,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	}
 
-	@Test
+	
 	public void testENM_substance() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", false, this,
@@ -85,27 +85,27 @@ public class RDFsmasher extends TestWithExternalFiles {
 
 	}
 
-	@Test
+	
 	public void testCHEBI() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/CHEBI/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"CHEBI", false, this);
 
 	}
 
-	@Test
+	
 	public void testCLO() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/CLO/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"CLO", false, this);
 	}
 
-	@Test
+	
 	public void test_protein() throws Exception {
 		ToolsRDF.smash("http://rdf.disgenet.org/download/v4.0.0/protein.ttl.gz",
 				"Protein", false, this,
 				"http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C17021",
 				"TURTLE",RDF.type.getURI());
 	}
-	@Test
+	
 	public void test_gene() throws Exception {
 		ToolsRDF.smash("http://rdf.disgenet.org/download/v4.0.0/gene.ttl.gz",
 				"gene", false, this,
@@ -169,7 +169,7 @@ public class RDFsmasher extends TestWithExternalFiles {
 		return size + 1;
 	}
 
-	@Test
+	
 	public void extractSynonymsENM() throws Exception {
 		ToolsRDF.smash("http://data.bioontology.org/ontologies/ENM/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb&download_format=rdf",
 				"ENM", true, new ExtractSynonymsList(),

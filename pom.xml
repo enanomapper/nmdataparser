@@ -81,6 +81,23 @@
 
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<nonFilteredFileExtensions>
+							<nonFilteredFileExtension />
+							<nonFilteredFileExtension>xls</nonFilteredFileExtension>
+							<nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+							<nonFilteredFileExtension>gz</nonFilteredFileExtension>
+							<nonFilteredFileExtension>rdf</nonFilteredFileExtension>
+							<nonFilteredFileExtension>csv</nonFilteredFileExtension>
+							<nonFilteredFileExtension>txt</nonFilteredFileExtension>
+						</nonFilteredFileExtensions>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
