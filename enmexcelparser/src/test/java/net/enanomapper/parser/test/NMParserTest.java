@@ -6,19 +6,21 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Test;
+
 
 import ambit2.base.data.SubstanceRecord;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.enanomapper.parser.GenericExcelParser;
 
-public class NMParserTest {
-	@Test
-	public void test_empty() throws Exception {
-		
+public class NMParserTest extends TestCase 
+{
+
+	public static Test suite() {
+		return new TestSuite(NMParserTest.class);
 	}
-	// @Test
-	//Disabled - the xlsx file does not have sheet 3, which is refered by the json. 
-	
+		
 	public void test() throws Exception {
 		// this will close the inputstream automatically
 		try (InputStream fin = getClass().getClassLoader()
@@ -35,7 +37,15 @@ public class NMParserTest {
 				while (parser.hasNext()) {
 					SubstanceRecord r = parser.nextRecord();
 					n++;
-					System.out.println("Record #" + n);
+					System.out.println("Record #" + n);	
+					
+					switch (n)
+					{
+					case 1:
+						checkRecord01(r);
+						break;
+					}
+					
 					/*
 					 * System.out.println(r.toJSON(null));
 					 * List<ProtocolApplication> paList = r.getMeasurements();
@@ -66,6 +76,12 @@ public class NMParserTest {
 			Logger.getAnonymousLogger().log(Level.SEVERE,x1.getMessage());
 			throw x1;
 		}
+	}
+	
+	void checkRecord01(SubstanceRecord r)
+	{
+		String prefix = "Substance 1 ";
+		assertEquals(prefix + " getPublicName()", "NM-001", r.getPublicName());
 	}
 
 }
