@@ -3,12 +3,14 @@ package net.enanomapper.parser.test;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -45,6 +47,14 @@ public class NMParserTest extends TestCase
 						checkRecord01(r);
 						break;
 					}
+					
+					System.out.println(r.toJSON(null));
+					List<ProtocolApplication> paList = r.getMeasurements();
+					 
+					if (paList != null) for (ProtocolApplication pa : paList)
+						System.out.println( "***Protocol application:\n" +
+					  pa.toString());
+					  
 					
 					/*
 					 * System.out.println(r.toJSON(null));

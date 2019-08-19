@@ -17,10 +17,15 @@
 		"ALLOW_EMPTY": true,
 		"RECOGNITION": "BY_INDEX",
 
-
 		"VARIABLES": {
 			"var1": {
-				"COLUMN_INDEX": "A"
+				"ITERATION" : "ABSOLUTE_LOCATION",
+				"COLUMN_INDEX" : "C",
+				"ROW_INDEX" : 10
+			},
+			
+			"var2": {
+				"COLUMN_INDEX" : "B"
 			}
 		}
 
@@ -34,56 +39,32 @@
 			"END_HEADER_ROW": 1,
 			"ALLOW_EMPTY": true,
 			"RECOGNITION": "BY_INDEX"
-		},
-
-		{
-			"SHEET_INDEX": 2
 		}
 	],
 
-	"SUBSTANCE_RECORD": {
-		"REFERENCE_SUBSTANCE_UUID": {
-			"COLUMN_INDEX": "AA"
-		},
-
-
+	"SUBSTANCE_RECORD": 
+	{
 		"SUBSTANCE_NAME": {
-			"COLUMN_INDEX": 3
-
+			"COLUMN_INDEX": "D"
 		},
-
-		"OWNER_NAME": {
-			"SOURCE_COMBINATION": true,
-			"COLUMN_INDEX": 4,
-			"COLUMN_INDICES": [4, "B", "F"],
-			"ROW_INDICES": [4, 5, 6],
-			"VARIABLE_KEYS": ["key1", "key2", "v3"]
-		},
-
-		"SUBSTANCE_TYPE": {
-			"COLUMN_INDEX": "B"
-		},
+		
+		"SUBSTANCE_TYPE": "NPO_1317",
 
 		"OWNER_UUID": {
-			"COLUMN_INDEX": 5
+			"COLUMN_INDEX": "C"
 		},
 
 
 		"SUBSTANCE_UUID": {
-			"COLUMN_INDEX": 5
+			"COLUMN_INDEX": "D"
 		},
 
 		"PUBLIC_NAME": {
-			"ITERATION": "VARIABLE",
-			"VARIABLE_KEY": "var1"
+			"COLUMN_INDEX": "A"
 		},
 
-		"ID_SUBSTANCE": {
-			"COLUMN_INDEX": 9
-		},
-
+		
 		"EXTERNAL_IDENTIFIERS": [
-
 
 		],
 
@@ -93,39 +74,37 @@
 
 	},
 
-	"PROTOCOL_APPLICATIONS": [{
+	"PROTOCOL_APPLICATIONS": [
+	{
 		"CITATION_TITLE": {
-			"SHEET_INDEX": 1,
-			"SHEET_NAME": "tt",
-			"COLUMN_INDEX": "C",
-			"COLUMN_NAME": "tt"
+			"COLUMN_INDEX": "I"
 		},
 
 		"CITATION_YEAR": {
-			"COLUMN_INDEX": 6
+			"COLUMN_INDEX": "J"
 		},
 
 		"CITATION_OWNER": {
-			"COLUMN_INDEX": 7
+			"COLUMN_INDEX": "K"
 		},
 
 
 		"INTERPRETATION_RESULT": {
-			"COLUMN_INDEX": 6
+			"COLUMN_INDEX": "L"
 		},
 
 		"INTERPRETATION_CRITERIA": {
-			"COLUMN_INDEX": 6
+			"COLUMN_INDEX": "M"
 		},
 
 
 		"PROTOCOL_GUIDELINE": {
 			"guideline1": {
-				"COLUMN_INDEX": 7
+				"COLUMN_INDEX": "N"
 			},
 
 			"guideline2": {
-				"COLUMN_INDEX": 8
+				"COLUMN_INDEX": "O"
 			}
 		},
 
@@ -140,70 +119,22 @@
 		},
 
 
-		"EFFECTS": [{
-			"SAMPLE_ID": {
-				"COLUMN_INDEX": 5
-			},
-
-			"ENDPOINT": {
-				"COLUMN_INDEX": 6
-			},
-
-			"LO_VALUE1": {
-				"COLUMN_INDEX": "M"
-			},
-
-			"ERR_QUALIFIER": {
-				"COLUMN_INDEX": 8
-			},
-
-			"UP_VALUE1": {
-				"COLUMN_INDEX": "M",
-				"ITERATION1": "JSON_REPOSITORY",
-				"JSON_REPOSITORY_KEY1": "key2"
-			},
-
-			"ERR_VALUE": {
-				"COLUMN_INDEX": "L",
-				"ITERATION1": "ABSOLUTE_LOCATION",
-				"COLUMN_INDEX1": "H",
-				"ROW_INDEX1": 4
-			},
-
-			"TEXT_VALUE": {
-				"ITERATION": "ABSOLUTE_LOCATION",
-				"RECOGNITION": "BY_INDEX_AND_NAME",
-				"COLUMN_INDEX": 10,
-				"ROW_INDEX": 2
-
-			},
-
-			"UNIT": {
-				"ITERATION": "ABSOLUTE_LOCATION",
-				"COLUMN_INDEX": "J",
-				"ROW_INDEX": 1
-			},
-
-			"VALUE": {
-				"COLUMN_INDEX": "M"
-			},
-
-			"CONDITIONS": {
-				"metabolic activation": {
-					"ITERATION": "JSON_REPOSITORY",
-					"JSON_REPOSITORY_KEY": "key1",
-
-					"COLUMN_INDEX": 5
-
+		"EFFECTS": 
+		[
+			{
+				"ENDPOINT": "Size",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "R"
 				},
 
-				"Species": {
-					"COLUMN_INDEX": "C",
-					"SHEET_INDEX": 2
+				"CONDITIONS": {
+					"cond1": "cond1-val"
 				}
 			}
-		}]
+		]
 
-	}]
+	}
+	]
 
 }
