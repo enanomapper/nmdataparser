@@ -41,42 +41,9 @@ public class NMParserTest extends TestCase
 					n++;
 					System.out.println("Record #" + n);	
 					
-					switch (n)
-					{
-					case 1:
-						checkRecord01(r);
-						break;
-					}
+					checkRecord01(r, n);
 					
-					System.out.println(r.toJSON(null));
-					List<ProtocolApplication> paList = r.getMeasurements();
-					 
-					if (paList != null) for (ProtocolApplication pa : paList)
-						System.out.println( "***Protocol application:\n" +
-					  pa.toString());
-					  
 					
-					/*
-					 * System.out.println(r.toJSON(null));
-					 * List<ProtocolApplication> paList = r.getMeasurements();
-					 * 
-					 * if (paList != null) for (ProtocolApplication pa : paList)
-					 * System.out.println( "***Protocol application:\n" +
-					 * pa.toString());
-					 * 
-					 * List<CompositionRelation> composition = r
-					 * .getRelatedStructures(); if (composition != null) for
-					 * (CompositionRelation relation : composition) { //
-					 * System.out.println(" ### Composition " + //
-					 * structureRecordToString(relation.getSecondStructure()));
-					 * System.out.println( " ### Composition \n" +
-					 * NMParserTestUtils.compositionRelationStructureToString(
-					 * relation)); // both give // the same result
-					 * System.out.println( " ### Properties: " +
-					 * NMParserTestUtils.structureRecordProperties(relation
-					 * .getSecondStructure())); }
-					 * 
-					 */
 				}
 			} catch (Exception x) {
 				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
@@ -88,10 +55,44 @@ public class NMParserTest extends TestCase
 		}
 	}
 	
-	void checkRecord01(SubstanceRecord r)
+	void checkRecord01(SubstanceRecord subRec, int substNum)
 	{
-		String prefix = "Substance 1 ";
-		assertEquals(prefix + " getPublicName()", "NM-001", r.getPublicName());
+		String prefix = "Substance " + substNum;
+		assertEquals(prefix + " subRec.getPublicName()", "NM-00" + substNum, subRec.getPublicName());
+		assertEquals(prefix + " subRec.getSubstanceName()", "name-" + substNum, subRec.getSubstanceName());
+		assertEquals(prefix + " subRec.getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
+		assertEquals(prefix + " subRec.getOwnerUUID()", "NPO_1317", subRec.getSubstancetype());
+		
+		
+		//System.out.println(r.toJSON(null));
+		//List<ProtocolApplication> paList = r.getMeasurements();
+		 
+		//if (paList != null) for (ProtocolApplication pa : paList)
+		//	System.out.println( "***Protocol application:\n" +
+		//  pa.toString());
+		  
+		
+		/*
+		 * System.out.println(r.toJSON(null));
+		 * List<ProtocolApplication> paList = r.getMeasurements();
+		 * 
+		 * if (paList != null) for (ProtocolApplication pa : paList)
+		 * System.out.println( "***Protocol application:\n" +
+		 * pa.toString());
+		 * 
+		 * List<CompositionRelation> composition = r
+		 * .getRelatedStructures(); if (composition != null) for
+		 * (CompositionRelation relation : composition) { //
+		 * System.out.println(" ### Composition " + //
+		 * structureRecordToString(relation.getSecondStructure()));
+		 * System.out.println( " ### Composition \n" +
+		 * NMParserTestUtils.compositionRelationStructureToString(
+		 * relation)); // both give // the same result
+		 * System.out.println( " ### Properties: " +
+		 * NMParserTestUtils.structureRecordProperties(relation
+		 * .getSecondStructure())); }
+		 * 
+		 */		
 	}
 
 }
