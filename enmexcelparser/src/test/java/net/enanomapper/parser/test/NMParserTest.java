@@ -14,6 +14,7 @@ import ambit2.base.data.study.ProtocolApplication;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
 
 public class NMParserTest extends TestCase 
@@ -23,7 +24,7 @@ public class NMParserTest extends TestCase
 		return new TestSuite(NMParserTest.class);
 	}
 		
-	public void test() throws Exception {
+	public void test01() throws Exception {
 		// this will close the inputstream automatically
 		try (InputStream fin = getClass().getClassLoader()
 				.getResourceAsStream("net/enanomapper/parser/testExcelParser/testfile1.xlsx")) {
@@ -35,15 +36,14 @@ public class NMParserTest extends TestCase
 				// System.out.println(parser.getExcelParserConfigurator().toJSONString()
 				// + "\n");
 				
+				checkParserConfiguration01(parser);
+				
 				int n = 0;
 				while (parser.hasNext()) {
 					SubstanceRecord r = parser.nextRecord();
 					n++;
-					System.out.println("Record #" + n);	
-					
+					System.out.println("Record #" + n);
 					checkRecord01(r, n);
-					
-					
 				}
 			} catch (Exception x) {
 				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
@@ -57,11 +57,11 @@ public class NMParserTest extends TestCase
 	
 	void checkRecord01(SubstanceRecord subRec, int substNum)
 	{
-		String prefix = "Substance " + substNum;
-		assertEquals(prefix + " subRec.getPublicName()", "NM-00" + substNum, subRec.getPublicName());
-		assertEquals(prefix + " subRec.getSubstanceName()", "name-" + substNum, subRec.getSubstanceName());
-		assertEquals(prefix + " subRec.getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
-		assertEquals(prefix + " subRec.getOwnerUUID()", "NPO_1317", subRec.getSubstancetype());
+		String prefix = "Substance " + substNum + ": ";
+		assertEquals(prefix + "getPublicName()", "NM-00" + substNum, subRec.getPublicName());
+		assertEquals(prefix + "getSubstanceName()", "name-" + substNum, subRec.getSubstanceName());
+		assertEquals(prefix + "getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
+		assertEquals(prefix + "getSubstancetype()", "NPO_1317", subRec.getSubstancetype());
 		
 		
 		//System.out.println(r.toJSON(null));
@@ -93,6 +93,13 @@ public class NMParserTest extends TestCase
 		 * .getSecondStructure())); }
 		 * 
 		 */		
+	}
+	
+	void checkParserConfiguration01 (GenericExcelParser parser)
+	{
+		String prefix = "Config 1: ";
+		ExcelParserConfigurator conf = parser.getExcelParserConfigurator();
+		assertEquals(prefix + "sheetIndex", 1, conf.sheetIndex + 1); //0-based --> 1-based
 	}
 
 }
