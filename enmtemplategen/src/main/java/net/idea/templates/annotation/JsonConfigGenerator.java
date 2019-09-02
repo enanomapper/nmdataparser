@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.hssf.util.CellReference;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -110,7 +111,9 @@ public class JsonConfigGenerator implements IAnnotator {
 		int row = Integer.parseInt(record.get(TR.hix.Row.name()).toString());
 		int col = Integer.parseInt(record.get(TR.hix.Column.name()).toString());
 		String id = record.get(TR.hix.id.name()).toString();
-		String value = record.get(TR.hix.cleanedvalue.name()).toString();
+		String value = record.get(TR.hix.cleanedvalue.name()).toString().trim();
+		value = StringEscapeUtils.escapeJson(value);
+
 		if (row == 0)
 			return;
 		if (row > 1)

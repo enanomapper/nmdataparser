@@ -145,9 +145,10 @@ public class DataConvertor {
 
 	protected void makeTemplate() throws Exception {
 		long now = System.currentTimeMillis();
-		if (settings.getJsonConfig()==null) throw new Exception("Template definitions not found");
+		if (settings.getJsonConfig() == null)
+			throw new Exception("Template definitions not found");
 		TemplateMakerSettings tsettings = new TemplateMakerSettings() {
-			
+
 			public java.lang.Iterable<TR> getTemplateRecords() throws Exception {
 				try (InputStream in = new FileInputStream(settings.getJsonConfig())) {
 					return getTemplateRecords(in);
@@ -158,15 +159,17 @@ public class DataConvertor {
 		tsettings.setTemplatesCommand(_TEMPLATES_CMD.generate);
 		tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);
 		tsettings.getQuery().clear();
-		//tsettings.setQueryEndpoint(endpoint);
+		// tsettings.setQueryEndpoint(endpoint);
 		HashSet<String> templateids = new HashSet<String>();
 		templateids.add(settings.getTemplateid());
 		TemplateMaker maker = new TemplateMaker();
 		tsettings.setInputfolder(settings.getJsonConfig());
 		tsettings.setOutputfolder(settings.getOutputFile());
-		Workbook workbook = maker.generate(tsettings,templateids);
-		
-		logger_cli.log(Level.INFO, "MSG_GENERATETEMPLATE_COMPLETE", new Object[]{settings.templateid, settings.getOutputFile().getAbsolutePath(), settings.getJsonConfig().getAbsolutePath(), (System.currentTimeMillis() - now)});
+		Workbook workbook = maker.generate(tsettings, templateids);
+
+		logger_cli.log(Level.INFO, "MSG_GENERATETEMPLATE_COMPLETE",
+				new Object[] { settings.templateid, settings.getOutputFile().getAbsolutePath(),
+						settings.getJsonConfig().getAbsolutePath(), (System.currentTimeMillis() - now) });
 	}
 
 	/**
@@ -510,15 +513,21 @@ public class DataConvertor {
 					@Override
 					protected int processFile(File spreadsheet, File json, String prefix, boolean resetdb,
 							String release) throws Exception {
-						// System.out.println(String.format("%s\t%s",spreadsheet.getName(),
-						// json.getAbsolutePath()));
-						ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);
-						JsonConfigAnnotator annotator = new JsonConfigAnnotator(config);
 
-						rownum = Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(),
-								spreadsheet.getName(), histogram, stats, annotator, rownum, config.sheetIndex);
+						try {
+							ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);
+							JsonConfigAnnotator annotator = new JsonConfigAnnotator(config);
+							
+							rownum = Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(),
+									spreadsheet.getName(), histogram, stats, annotator, rownum, config.sheetIndex);
+							return rownum;
+						} catch (Exception x) {
+							System.out.println(String.format("%s\t%s",spreadsheet.getName(),json.getAbsolutePath()));
+							x.printStackTrace();
+							return 0;
+						}
 
-						return rownum;
+						
 					}
 
 					@Override
