@@ -262,7 +262,7 @@ public class Settings {
 		if (fname != null) {
 			File file = new File(fname);
 			if (!file.exists())
-				throw new FileNotFoundException(file.getName());
+				throw new FileNotFoundException(file.getAbsolutePath());
 			else
 				return file;
 		} else

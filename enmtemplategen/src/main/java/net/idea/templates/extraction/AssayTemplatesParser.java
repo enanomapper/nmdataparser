@@ -459,7 +459,7 @@ public abstract class AssayTemplatesParser {
 					String ext = String.format("_sheet%d.json", sheetindex);
 					File jsonfile = new File(outputFolder,
 							spreadsheet.getName().replaceAll(".xlsx", ext).replaceAll(".xls", ext));
-					properties.put(String.format("%s#%d",spreadsheet.getAbsolutePath(), sheetindex), jsonfile.getAbsolutePath());
+					properties.put(String.format("%s#%d",spreadsheet.getName(), sheetindex), jsonfile.getName());
 					try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
 						w.write(getJsonConfig(id).toString());
 					} catch (Exception x) {
