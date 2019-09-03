@@ -64,8 +64,8 @@ import net.idea.templates.generation.Term;
 import net.idea.templates.generation.Tools;
 
 public class DataConvertor {
-	protected Settings settings;
-	protected static Logger logger_cli = Logger.getLogger(DataConvertor.class.getName());
+	protected transient Settings settings;
+	protected static transient Logger logger_cli = Logger.getLogger(DataConvertor.class.getName());
 	static final String loggingProperties = "net/enanomapper/logging.properties";
 	static final String log4jProperties = "net/enanomapper/log4j.properties";
 	static {
@@ -102,6 +102,10 @@ public class DataConvertor {
 			}
 		}
 
+	}
+
+	public DataConvertor(Settings settings) {
+		this.settings = settings;
 	}
 
 	public DataConvertor() {
@@ -427,33 +431,15 @@ public class DataConvertor {
 	}
 
 	public static void main(String[] args) {
+		DataConvertor object = new DataConvertor();
 		logger_cli.log(Level.INFO, "MSG_INFO_VERSION");
 		long now = System.currentTimeMillis();
-		int code = 0;
+		int code = -1;
 		try {
-			DataConvertor object = new DataConvertor();
-			if (object.parse(args)) {
-				switch (object.settings.command) {
-				case extracttemplatefields: {
-					object.spreadsheets2template();
-					break;
-				}
-				case generatejsonconfig: {
-					object.generate_jsonconfig();
-					break;
-				}
-				case data: {
-					object.convertFiles();
-					break;
-				}
-				case generatetemplate: {
-					object.makeTemplate();
-					break;
-				}
-				}
-			} else
+			if (object.parse(args))
+				code = object.go(args);
+			else
 				code = -1;
-
 		} catch (ConnectException x) {
 			logger_cli.log(Level.SEVERE, "MSG_CONNECTION_REFUSED", new Object[] { x.getMessage() });
 			Runtime.getRuntime().runFinalization();
@@ -475,6 +461,32 @@ public class DataConvertor {
 			if (code >= 0)
 				logger_cli.log(Level.INFO, "MSG_INFO_COMPLETED", (System.currentTimeMillis() - now));
 		}
+	}
+
+	public int go(String[] args) throws Exception {
+
+		switch (settings.command) {
+		case extracttemplatefields: {
+			spreadsheets2template();
+			break;
+		}
+		case generatejsonconfig: {
+			generate_jsonconfig();
+			break;
+		}
+		case data: {
+			convertFiles();
+			break;
+		}
+		case generatetemplate: {
+			makeTemplate();
+			break;
+		}
+		default:
+			return -1;
+		}
+		return 0;
+
 	}
 
 	protected String[] spreadsheets2template() throws Exception {
@@ -517,17 +529,16 @@ public class DataConvertor {
 						try {
 							ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);
 							JsonConfigAnnotator annotator = new JsonConfigAnnotator(config);
-							
+
 							rownum = Tools.readJRCExcelTemplate(spreadsheet, spreadsheet.getParentFile().getName(),
 									spreadsheet.getName(), histogram, stats, annotator, rownum, config.sheetIndex);
 							return rownum;
 						} catch (Exception x) {
-							System.out.println(String.format("%s\t%s",spreadsheet.getName(),json.getAbsolutePath()));
+							System.out.println(String.format("%s\t%s", spreadsheet.getName(), json.getAbsolutePath()));
 							x.printStackTrace();
 							return 0;
 						}
 
-						
 					}
 
 					@Override
