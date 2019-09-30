@@ -125,12 +125,13 @@ public class Tools {
 		}
 		
 		TR record = new TR();
-
+		
 		for (int i = _startsheet; i < _endsheet; i++) {
 			
 			if (annotator!=null) annotator.init();
 			Sheet sheet = workbook.getSheetAt(i);
-			if ("instruction for data logging".equals(sheet.getSheetName().toLowerCase()))
+			String sheet_tag = sheet.getSheetName().toLowerCase();
+			if (sheet_tag.equals("instruction for data logging") || sheet_tag.equals("instructions for data logging"))
 				continue;
 			int rows = 0;
 			int maxcols = 0;
