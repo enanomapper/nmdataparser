@@ -437,7 +437,7 @@ public class DataConvertor {
 		int code = -1;
 		try {
 			if (object.parse(args))
-				code = object.go(args);
+				code = object.go();
 			else
 				code = -1;
 		} catch (ConnectException x) {
@@ -463,7 +463,7 @@ public class DataConvertor {
 		}
 	}
 
-	public int go(String[] args) throws Exception {
+	public int go() throws Exception {
 
 		switch (settings.command) {
 		case extracttemplatefields: {
@@ -483,7 +483,7 @@ public class DataConvertor {
 			break;
 		}
 		default:
-			return -1;
+			throw new Exception("Unknown command");
 		}
 		return 0;
 
