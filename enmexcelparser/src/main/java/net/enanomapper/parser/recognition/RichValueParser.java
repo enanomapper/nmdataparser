@@ -251,8 +251,8 @@ public class RichValueParser {
 							+ (curTokenNum + 1)
 							+ " "
 							+ token
-							+ " Incorrect digit symbol after the interval definition: '"
-							+ token.charAt(curChar) + "'");
+							+ " Incorrect digit symbol after the interval definition: char #'"
+							+ curChar + " in " + token + "'");
 					return null;
 				}
 				continue;
