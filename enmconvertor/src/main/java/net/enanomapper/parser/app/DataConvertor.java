@@ -524,7 +524,7 @@ public class DataConvertor {
 
 					@Override
 					protected int processFile(File spreadsheet, File json, String prefix, boolean resetdb,
-							String release) throws Exception {
+							String release,  String expandconfig) throws Exception {
 
 						try {
 							ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);

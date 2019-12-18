@@ -48,6 +48,7 @@ public abstract class AssayTemplatesParser {
 
 	private static final String _singledb = "singledb";
 	private static final String _release = "release";
+	private static final String _expandconfig = "expandconfig";
 
 	protected static Logger logger = Logger.getLogger(AssayTemplatesParser.class.getName());
 
@@ -63,6 +64,9 @@ public abstract class AssayTemplatesParser {
 			throws Exception {
 		final String root = getRootValue(nanodataResources);
 		boolean singledb = Boolean.parseBoolean(nanodataResources.getString(_singledb));
+		String expandconfig = nanodataResources.getString(_expandconfig);
+		if (expandconfig!=null)
+			expandconfig = root + expandconfig;
 		String release = nanodataResources.getString(_release);
 		Enumeration<String> enumeration = nanodataResources.getKeys();
 
@@ -77,6 +81,8 @@ public abstract class AssayTemplatesParser {
 				continue;
 			if (_release.equals(key))
 				continue;
+			if (_expandconfig.equals(key))
+				continue;			
 			// hack to have one file with multiple json configs - the keys
 			// should be unique, but files the same
 			int ix = key.indexOf("#");
@@ -101,7 +107,7 @@ public abstract class AssayTemplatesParser {
 								try {
 									substance += processFile(data, json == null
 											? getJsonDataName(data, nanodataResources.getString(key)) : json, prefix,
-											!singledb, release);
+											!singledb, release,expandconfig);
 								} catch (Exception x) {
 									logger.log(Level.WARNING, x.getMessage(), x);
 								}
@@ -116,7 +122,7 @@ public abstract class AssayTemplatesParser {
 							if (dryRun)
 								processpair.process(prefix, root, file, json);
 							else
-								substance += processFile(file, json, prefix, !singledb, release);
+								substance += processFile(file, json, prefix, !singledb, release, expandconfig);
 						}
 					}
 				}
@@ -151,7 +157,7 @@ public abstract class AssayTemplatesParser {
 		return null;
 	}
 
-	protected abstract int processFile(File spreadsheet, File json, String prefix, boolean resetdb, String release)
+	protected abstract int processFile(File spreadsheet, File json, String prefix, boolean resetdb, String release, String expandconfig)
 			throws Exception;
 
 	protected int verifyFiles(int count) throws Exception {
