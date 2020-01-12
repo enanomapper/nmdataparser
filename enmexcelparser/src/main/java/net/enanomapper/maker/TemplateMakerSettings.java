@@ -38,7 +38,7 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	public enum _TEMPLATES_TYPE {
-		jrc, iom, all, undefuned
+		jrc, multisheet, all, undefuned
 	}
 
 	public enum _TEMPLATES_CMD {

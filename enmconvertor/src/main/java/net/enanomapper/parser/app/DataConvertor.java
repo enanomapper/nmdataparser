@@ -50,7 +50,7 @@ import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
 import ambit2.rest.substance.SubstanceRDFReporter;
 import net.enanomapper.maker.JsonConfigAnnotator;
 import net.enanomapper.maker.TR;
-import net.enanomapper.maker.TemplateMaker;
+import net.enanomapper.maker.TemplateMakerExtended;
 import net.enanomapper.maker.TemplateMakerSettings;
 import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_CMD;
 import net.enanomapper.maker.TemplateMakerSettings._TEMPLATES_TYPE;
@@ -160,13 +160,23 @@ public class DataConvertor {
 			};
 		};
 		tsettings.setSinglefile(true);
+		
+		switch (settings.getOutformat()) {
+		case xlsx_multisheet: {
+			tsettings.setTemplatesType(_TEMPLATES_TYPE.multisheet);
+			break;
+		}
+		default: {
+			tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);	
+		}
+		}
 		tsettings.setTemplatesCommand(_TEMPLATES_CMD.generate);
-		tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);
+
 		tsettings.getQuery().clear();
 		// tsettings.setQueryEndpoint(endpoint);
 		HashSet<String> templateids = new HashSet<String>();
 		templateids.add(settings.getTemplateid());
-		TemplateMaker maker = new TemplateMaker();
+		TemplateMakerExtended maker = new TemplateMakerExtended();
 		tsettings.setInputfolder(settings.getJsonConfig());
 		tsettings.setOutputfolder(settings.getOutputFile());
 		Workbook workbook = maker.generate(tsettings, templateids);
@@ -524,7 +534,7 @@ public class DataConvertor {
 
 					@Override
 					protected int processFile(File spreadsheet, File json, String prefix, boolean resetdb,
-							String release,  String expandconfig) throws Exception {
+							String release, String expandconfig) throws Exception {
 
 						try {
 							ExcelParserConfigurator config = ExcelParserConfigurator.loadFromJSON(json);

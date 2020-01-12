@@ -231,7 +231,7 @@ public class MainApp {
 				new File(settings.getOutputfolder(), settings.getInputfolder().getName() + ".xlsx"));
 		XSSFSheet stats = workbook.createSheet();
 		switch (settings.getTemplatesType()) {
-		case iom: {
+		case multisheet: {
 			// stats.write("Folder,File,Sheet,Row,Column1,Column2,Value1,Value2\n");
 			// todo
 			break;
@@ -247,7 +247,7 @@ public class MainApp {
 			for (File file : files) {
 				try {
 					switch (settings.getTemplatesType()) {
-					case iom: {
+					case multisheet: {
 						Tools.readIOMtemplates(file, settings.getInputfolder().getName(), file.getName(), histogram,
 								stats);
 						break;

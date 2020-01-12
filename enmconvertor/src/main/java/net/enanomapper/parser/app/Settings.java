@@ -21,6 +21,7 @@ public class Settings {
 	protected ConvertorCommand command = ConvertorCommand.data;
 	protected Integer nsheet = null;
 	protected String templateid = null;
+	
 
 	public String getTemplateid() {
 		return templateid;
@@ -145,6 +146,7 @@ public class Settings {
 				return true;
 			}
 			case generatetemplate: {
+				setOutformat(getOutputFormat(line));
 				jsonConfig = getJSONConfig(line);
 				if (jsonConfig == null && !jsonConfig.exists())
 					throw new FileNotFoundException("Missing template config file");

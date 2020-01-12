@@ -230,6 +230,7 @@ public class TemplateMaker {
 		}
 
 		;
+
 		@Override
 		public String toString() {
 			return this.name().toString();
@@ -264,8 +265,9 @@ public class TemplateMaker {
 		this.logger_cli = logger;
 	}
 
-	protected void generateIOMTemplates(Iterable<TR> records, TemplateMakerSettings settings, String sheetname)
+	public Workbook generateMultisheetTemplates(Workbook workbook, String templateid, Iterable<TR> records)
 			throws Exception {
+
 		throw new Exception("Unsupported");
 	}
 
@@ -317,6 +319,22 @@ public class TemplateMaker {
 
 	}
 
+	protected boolean skip(TR record, String templateid) {
+		Object _id = record.get(TR.hix.id.name());
+		if (_id == null || record.get(TR.hix.Sheet.name()) == null)
+			return true;
+		if (!templateid.equals(_id))
+			return true;
+		else
+			return false;
+	}
+
+	protected String getSheetName(TR record, String templateid) {
+		String _sheet = record.get(TR.hix.Sheet.name()).toString();
+		return String.format("%s_%s", _sheet.toString(), templateid);
+
+	}
+
 	public Workbook generateJRCTemplates(Workbook workbook, String templateid, Iterable<TR> records) throws Exception {
 
 		if (workbook == null) {
@@ -332,16 +350,11 @@ public class TemplateMaker {
 
 		for (TR record : records)
 			try {
-				Object _id = record.get(TR.hix.id.name());
-				if (_id == null || record.get(TR.hix.Sheet.name()) == null)
+				if (skip(record, templateid))
 					continue;
-				if (!templateid.equals(_id))
-					continue;
-				String _sheet = record.get(TR.hix.Sheet.name()).toString();
-				_sheet = String.format("%s_%s", _sheet.toString(), templateid);
+				String _sheet = getSheetName(record, templateid);
 				if (_sheet.length() > 30)
 					_sheet = _sheet.substring(0, 30);
-
 				if (sheet == null) {
 					try {
 						sheet = workbook.createSheet(_sheet);
@@ -372,12 +385,11 @@ public class TemplateMaker {
 					Object v = record.get("cleanedvalue");
 					String value = v == null ? "?????" : v.toString();
 
-					//through hint options
+					// through hint options
 					/*
-					if ("material state".equals(value) || value.indexOf("physical state") >= 0) {
-						validation_materialstate(workbook, sheet, col);
-					}
-					*/
+					 * if ("material state".equals(value) || value.indexOf("physical state") >= 0) {
+					 * validation_materialstate(workbook, sheet, col); }
+					 */
 
 					Object annotation = TR.hix.Annotation.get(record);
 					try {
@@ -403,7 +415,7 @@ public class TemplateMaker {
 
 					logger_cli.log(Level.FINE, String.format("%s\t%s\t%s\t%s", row, col, value, annotation));
 					String hint_enum_prefix = "ENUM:";
-					if (hint != null &&  hint.toString().startsWith(hint_enum_prefix)) {
+					if (hint != null && hint.toString().startsWith(hint_enum_prefix)) {
 						String[] options = hint.toString().replaceAll(hint_enum_prefix, "").split(",");
 						if (options.length > 1)
 							validation_common(workbook, sheet, col, options);
@@ -730,13 +742,13 @@ public class TemplateMaker {
 			ttypes = new TemplateMakerSettings._TEMPLATES_TYPE[] { settings.getTemplatesType() };
 			break;
 		}
-		case iom: {
+		case multisheet: {
 			ttypes = new TemplateMakerSettings._TEMPLATES_TYPE[] { settings.getTemplatesType() };
 			break;
 		}
 		case all: {
 			ttypes = new TemplateMakerSettings._TEMPLATES_TYPE[] { TemplateMakerSettings._TEMPLATES_TYPE.jrc,
-					TemplateMakerSettings._TEMPLATES_TYPE.iom };
+					TemplateMakerSettings._TEMPLATES_TYPE.multisheet };
 			break;
 		}
 		default:
@@ -754,10 +766,8 @@ public class TemplateMaker {
 					x.printStackTrace();
 				}
 		}
-		if (settings.isSinglefile())
-
-		{
-			settings.write("TEMPLATES", _TEMPLATES_TYPE.jrc, workbook);
+		if (settings.isSinglefile()) {
+			settings.write("TEMPLATES", settings.getTemplatesType(), workbook);
 			return workbook;
 		} else
 			return null;
@@ -780,11 +790,13 @@ public class TemplateMaker {
 							settings.getQueryTemplateId()), _TEMPLATES_TYPE.jrc, workbook);
 				break;
 			}
-			case iom:
+			case multisheet:
 				try {
-					// generateIOMTemplates((settings.getQueryTemplateId(),records);
+					workbook = generateMultisheetTemplates(workbook, settings.getQueryTemplateId(), records);
+
 					break;
 				} catch (Exception x) {
+					x.printStackTrace();
 				}
 			default:
 				break;
