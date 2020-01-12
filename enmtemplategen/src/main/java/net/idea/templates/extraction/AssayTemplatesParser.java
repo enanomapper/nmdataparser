@@ -64,9 +64,14 @@ public abstract class AssayTemplatesParser {
 			throws Exception {
 		final String root = getRootValue(nanodataResources);
 		boolean singledb = Boolean.parseBoolean(nanodataResources.getString(_singledb));
-		String expandconfig = nanodataResources.getString(_expandconfig);
-		if (expandconfig!=null)
-			expandconfig = root + expandconfig;
+		String expandconfig = null;
+		try {
+			expandconfig = nanodataResources.getString(_expandconfig);
+			if (expandconfig != null)
+				expandconfig = root + expandconfig;
+		} catch (Exception x) {
+			expandconfig = null;
+		}
 		String release = nanodataResources.getString(_release);
 		Enumeration<String> enumeration = nanodataResources.getKeys();
 
@@ -82,7 +87,7 @@ public abstract class AssayTemplatesParser {
 			if (_release.equals(key))
 				continue;
 			if (_expandconfig.equals(key))
-				continue;			
+				continue;
 			// hack to have one file with multiple json configs - the keys
 			// should be unique, but files the same
 			int ix = key.indexOf("#");
@@ -105,9 +110,10 @@ public abstract class AssayTemplatesParser {
 										json == null ? getJsonDataName(data, nanodataResources.getString(key)) : json);
 							else
 								try {
-									substance += processFile(data, json == null
-											? getJsonDataName(data, nanodataResources.getString(key)) : json, prefix,
-											!singledb, release,expandconfig);
+									substance += processFile(data,
+											json == null ? getJsonDataName(data, nanodataResources.getString(key))
+													: json,
+											prefix, !singledb, release, expandconfig);
 								} catch (Exception x) {
 									logger.log(Level.WARNING, x.getMessage(), x);
 								}
@@ -157,8 +163,8 @@ public abstract class AssayTemplatesParser {
 		return null;
 	}
 
-	protected abstract int processFile(File spreadsheet, File json, String prefix, boolean resetdb, String release, String expandconfig)
-			throws Exception;
+	protected abstract int processFile(File spreadsheet, File json, String prefix, boolean resetdb, String release,
+			String expandconfig) throws Exception;
 
 	protected int verifyFiles(int count) throws Exception {
 		return count;
@@ -443,13 +449,13 @@ public abstract class AssayTemplatesParser {
 	public static String[] generate_jsonconfig(File spreadsheet, File outputFolder, Integer sheetNumber)
 			throws Exception {
 		final Map<String, Term> histogram = new HashMap<String, Term>();
-		
+
 		Properties properties = new Properties();
-		//release="2018-07-01 0:0:0"
+		// release="2018-07-01 0:0:0"
 		properties.put(_root, spreadsheet.getParentFile().getAbsolutePath());
 		properties.put(_release, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-		properties.put(_singledb,"true");
-				
+		properties.put(_singledb, "true");
+
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 			XSSFSheet stats = workbook.createSheet();
 			TR.writeHeader(stats);
@@ -465,7 +471,7 @@ public abstract class AssayTemplatesParser {
 					String ext = String.format("_sheet%d.json", sheetindex);
 					File jsonfile = new File(outputFolder,
 							spreadsheet.getName().replaceAll(".xlsx", ext).replaceAll(".xls", ext));
-					properties.put(String.format("%s#%d",spreadsheet.getName(), sheetindex), jsonfile.getName());
+					properties.put(String.format("%s#%d", spreadsheet.getName(), sheetindex), jsonfile.getName());
 					try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
 						w.write(getJsonConfig(id).toString());
 					} catch (Exception x) {
@@ -480,9 +486,9 @@ public abstract class AssayTemplatesParser {
 			String ext = sheetNumber == null ? ".properties" : String.format("_sheet%d.properties", sheetNumber);
 			File jsonfile = new File(outputFolder,
 					spreadsheet.getName().replaceAll(".xlsx", ext).replaceAll(".xls", ext));
-			
+
 			try (BufferedWriter w = new BufferedWriter(new FileWriter(jsonfile))) {
-				properties.store(w,spreadsheet.getAbsolutePath());
+				properties.store(w, spreadsheet.getAbsolutePath());
 			}
 
 			return new String[] { jsonfile.getAbsolutePath() };
