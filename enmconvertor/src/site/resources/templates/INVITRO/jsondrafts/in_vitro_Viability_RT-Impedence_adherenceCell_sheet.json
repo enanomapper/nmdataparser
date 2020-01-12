@@ -169,62 +169,62 @@
 				
 				"Control concentration": {
 					"COLUMN_INDEX": "AM",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
 				"Tested concentration 1": {
 					"COLUMN_INDEX": "AN",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
-				"Tested concentration 1": {
+				"Tested concentration 1_": {
 					"COLUMN_INDEX": "AO",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
-				"Tested concentration 1": {
+				"Tested concentration 1__": {
 					"COLUMN_INDEX": "AP",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
-				"Tested concentration 1": {
+				"Tested concentration 1___": {
 					"COLUMN_INDEX": "AQ",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
-				"Tested concentration 1": {
+				"Tested concentration 1____": {
 					"COLUMN_INDEX": "AR",
-					"UNIT": "µg/mL"
+					"UNIT": "ug/mL"
 				},
 				
-				"Control concentration": {
+				"Control concentration_": {
 					"COLUMN_INDEX": "AS",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
-				"Tested concentration 1": {
+				"Tested concentration 1______": {
 					"COLUMN_INDEX": "AT",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
 				"Tested concentration 2": {
 					"COLUMN_INDEX": "AU",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
 				"Tested concentration 3": {
 					"COLUMN_INDEX": "AV",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
 				"Tested concentration 4": {
 					"COLUMN_INDEX": "AW",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
 				"Tested concentration 5": {
 					"COLUMN_INDEX": "AX",
-					"UNIT": "µg/cm2"
+					"UNIT": "ug/cm2"
 				},
 				
 				"Reference concentration used for normalization": {

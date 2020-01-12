@@ -226,7 +226,7 @@
 					"UNIT": "kV"
 				},
 				
-				"WDXRF: Tube": {
+				"WDXRF: Tube_": {
 					"COLUMN_INDEX": "AO",
 					"UNIT": "mA"
 				},

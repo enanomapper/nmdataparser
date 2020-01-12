@@ -136,7 +136,7 @@
 				
 				"Particle concentration": {
 					"COLUMN_INDEX": "AB",
-					"UNIT": "µg/mouse"
+					"UNIT": "ug/mouse"
 				},
 				
 				"Exposure time": {
@@ -144,9 +144,9 @@
 					"UNIT": "hours"
 				},
 				
-				"Exposure time": {
+				"Exposure time_": {
 					"COLUMN_INDEX": "AD",
-					"UNIT": "days"
+					"UNIT": "d"
 				}
 				
             },
