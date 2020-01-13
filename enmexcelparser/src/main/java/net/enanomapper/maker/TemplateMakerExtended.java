@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -77,10 +76,12 @@ public class TemplateMakerExtended extends TemplateMaker {
 
 		return sheet;
 	}
+	
 
 	@Override
-	public Workbook generateMultisheetTemplates(Workbook workbook, String templateid, Iterable<TR> records)
+	public Workbook generateMultisheetTemplates(Workbook workbook, TemplateMakerSettings settings, Iterable<TR> records)
 			throws Exception {
+		String templateid = settings.getQueryTemplateId();
 		if (workbook == null) {
 			workbook = new XSSFWorkbook();
 		}		
@@ -169,8 +170,8 @@ public class TemplateMakerExtended extends TemplateMaker {
 		rowindex = writeSection(workbook, sheet, header_finalexposure, rowindex, items.get(header_initialexposure),
 				kstyle, vstyle, hintstyle);
 		// This is a test, not linked to fields [TODO]!
-		rowindex = writeRepeatSection(workbook, sheet, "Timeline", rowindex, null, "T", 8, kstyle, vstyle, hintstyle);
-		rowindex = writeRepeatSection(workbook, sheet, "TREATMENT CONCENTRATION", rowindex, null, "C", 6, kstyle,
+		rowindex = writeRepeatSection(workbook, sheet, "Timeline", rowindex, null, "T", settings.getNumber_of_timepoints(), kstyle, vstyle, hintstyle);
+		rowindex = writeRepeatSection(workbook, sheet, "TREATMENT CONCENTRATION", rowindex, null, "C", settings.getNumber_of_concentration(), kstyle,
 				vstyle, hintstyle);
 		rowindex = hilightrow(workbook, sheet, rowindex, IndexedColors.GREY_25_PERCENT.getIndex(), "", kstyle);
 		/**

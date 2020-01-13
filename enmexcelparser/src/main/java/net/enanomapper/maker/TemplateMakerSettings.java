@@ -28,6 +28,9 @@ public class TemplateMakerSettings implements Serializable {
 	 */
 	private static final long serialVersionUID = -7761828667318892718L;
 	transient protected IAnnotator annotator;
+	protected int number_of_replicates = 1;
+	protected int number_of_timepoints = 3;
+	protected int number_of_concentration = 6;
 
 	public IAnnotator getAnnotator() {
 		return annotator;
@@ -90,6 +93,30 @@ public class TemplateMakerSettings implements Serializable {
 	}
 
 	protected Map<String, String> query = new TreeMap<String, String>();
+
+	public int getNumber_of_replicates() {
+		return number_of_replicates;
+	}
+
+	public void setNumber_of_replicates(int number_of_replicates) {
+		this.number_of_replicates = number_of_replicates;
+	}
+
+	public int getNumber_of_timepoints() {
+		return number_of_timepoints;
+	}
+
+	public void setNumber_of_timepoints(int number_of_timepoints) {
+		this.number_of_timepoints = number_of_timepoints;
+	}
+
+	public int getNumber_of_concentration() {
+		return number_of_concentration;
+	}
+
+	public void setNumber_of_concentration(int number_of_concentration) {
+		this.number_of_concentration = number_of_concentration;
+	}
 
 	public String getQueryEndpoint() {
 		return query.get("endpoint");

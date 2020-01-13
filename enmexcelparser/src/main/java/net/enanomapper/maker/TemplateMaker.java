@@ -265,7 +265,8 @@ public class TemplateMaker {
 		this.logger_cli = logger;
 	}
 
-	public Workbook generateMultisheetTemplates(Workbook workbook, String templateid, Iterable<TR> records)
+	
+	public Workbook generateMultisheetTemplates(Workbook workbook, TemplateMakerSettings settings, Iterable<TR> records)
 			throws Exception {
 
 		throw new Exception("Unsupported");
@@ -792,7 +793,7 @@ public class TemplateMaker {
 			}
 			case multisheet:
 				try {
-					workbook = generateMultisheetTemplates(workbook, settings.getQueryTemplateId(), records);
+					workbook = generateMultisheetTemplates(workbook, settings, records);
 
 					break;
 				} catch (Exception x) {
