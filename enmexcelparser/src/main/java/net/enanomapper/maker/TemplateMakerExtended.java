@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -16,24 +17,136 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.AreaReference;
+import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFTable;
+import org.apache.poi.xssf.usermodel.XSSFTableStyleInfo;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class TemplateMakerExtended extends TemplateMaker {
 	final String fontfamily = "Arial";
 
-	protected Sheet prepareWorkbook(Workbook workbook) {
+	protected Sheet prepareSheet(Workbook workbook, String title, XSSFColor color) {
 
-		Sheet sheet = workbook.createSheet("Test conditions");
-		((XSSFSheet) sheet).setTabColor(new XSSFColor(java.awt.Color.ORANGE, null));
-		((XSSFSheet) workbook.createSheet("Raw data")).setTabColor(new XSSFColor(java.awt.Color.GREEN, null));
-		((XSSFSheet) workbook.createSheet("Test results")).setTabColor(new XSSFColor(java.awt.Color.MAGENTA, null));
-		((XSSFSheet) workbook.createSheet("Test summary")).setTabColor(new XSSFColor(java.awt.Color.CYAN, null));
+		Sheet sheet = workbook.createSheet(title);
+		((XSSFSheet) sheet).setTabColor(color);
+		workbook.setActiveSheet(workbook.getSheetIndex(title));
+		return sheet;
+	}
 
-		workbook.setActiveSheet(0);
+	protected Sheet prepareSheet_RawData(Workbook workbook, TemplateMakerSettings settings) {
+		Sheet sheet = prepareSheet(workbook, "Raw data", new XSSFColor(java.awt.Color.GREEN, null));
+		CellStyle kstyle = workbook.createCellStyle();
+		Font font = workbook.createFont();
+		font.setFontName(fontfamily);
+		font.setFontHeightInPoints((short) 10);
+		font.setBold(true);
+		kstyle.setFont(font);
+		kstyle.setLocked(true);
+
+		int startrow = 3;
+		int startcol = 1;
+		int row = startrow;
+		Row row1 = sheet.createRow(row);
+		Cell cellm = row1.createCell(0 + startcol);
+		cellm.setCellValue("Material");
+		cellm.setCellStyle(kstyle);
+		Cell cellr = row1.createCell(1 + startcol);
+		cellr.setCellValue("Replicate");
+		cellr.setCellStyle(kstyle);
+		Cell cellt = row1.createCell(2 + startcol);
+		cellt.setCellValue("Time");
+		cellt.setCellStyle(kstyle);
+		Cell cellc = row1.createCell(3 + startcol);
+		cellc.setCellValue("Concentration");
+		cellc.setCellStyle(kstyle);
+		// use param for technical replicates
+		int n_technical_replicates = 3;
+		for (int i = 0; i < n_technical_replicates; i++) {
+			Cell cell = row1.createCell(4 + i + startcol);
+			cell.setCellValue(String.format("Test%d", i + 1));
+			cell.setCellStyle(kstyle);
+		}
+		Cell cella = row1.createCell(3 + n_technical_replicates + 1 + startcol);
+		cella.setCellValue("Average");
+		cella.setCellStyle(kstyle);
+		row++;
+		for (int r = 0; r < settings.getNumber_of_replicates(); r++) {
+			for (int t = 0; t < settings.getNumber_of_timepoints(); t++) {
+				for (int c = 0; c < settings.getNumber_of_concentration(); c++) {
+					row1 = sheet.createRow(row);
+					
+					cellm = row1.createCell(0 + startcol);
+					cellr = row1.createCell(1 + startcol);
+					cellr.setCellValue(String.format("R%d", r + 1));
+					cellt = row1.createCell(2 + startcol);
+					cellt.setCellValue(String.format("T%d", t + 1));
+					cellc = row1.createCell(3 + startcol);
+					cellc.setCellValue(String.format("C%d", c + 1));
+
+					CellAddress c1 = null;
+					CellAddress c2 = null;
+					for (int i = 0; i < n_technical_replicates; i++) {
+						Cell cell = row1.createCell(4 + i + startcol);
+						cell.setCellValue(0);
+						if (i==0) c1 = cell.getAddress();
+						else c2 = cell.getAddress();
+
+					}
+					
+					Cell cell = row1.createCell(4 + n_technical_replicates + startcol);
+					cell.setCellType(CellType.FORMULA);
+					cell.setCellFormula(String.format("AVERAGE(%s:%s)",c1.formatAsString(),c2.formatAsString()));
+
+					row++;
+				}
+			}
+		}
+		
+		try {
+			AreaReference reference = workbook.getCreationHelper().createAreaReference(
+					new CellReference(startrow, startcol),
+					new CellReference(row - 1, 3 + n_technical_replicates + 1 + startcol));
+
+			// Create
+			XSSFTable table = ((XSSFSheet) sheet).createTable(reference);
+			
+			for (int i = 0; i < table.getCTTable().getTableColumns().getCount(); i++) {
+				table.getCTTable().getTableColumns().getTableColumnArray(i).setId(i+1);
+			}
+			
+
+			table.setName("Test");
+			table.setDisplayName("Test_Table");
+			// For now, create the initial style in a low-level way
+			table.getCTTable().addNewTableStyleInfo();
+			table.getCTTable().getTableStyleInfo().setName("TableStyleMedium2");
+			
+			XSSFTableStyleInfo style = (XSSFTableStyleInfo) table.getStyle();
+			style.setName("TableStyleMedium2");
+			style.setShowColumnStripes(true);
+			//style.setShowRowStripes(true);
+			//style.setFirstColumn(false);
+			//style.setLastColumn(false);
+			//
+			
+
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
+	
+		return sheet;
+
+	}
+
+	protected Sheet prepareSheet_TestConditions(Workbook workbook) {
+
+		Sheet sheet = prepareSheet(workbook, "Test conditions", new XSSFColor(java.awt.Color.ORANGE, null));
 
 		Font font14 = workbook.createFont();
 		font14.setFontName(fontfamily);
@@ -76,7 +189,6 @@ public class TemplateMakerExtended extends TemplateMaker {
 
 		return sheet;
 	}
-	
 
 	@Override
 	public Workbook generateMultisheetTemplates(Workbook workbook, TemplateMakerSettings settings, Iterable<TR> records)
@@ -84,8 +196,8 @@ public class TemplateMakerExtended extends TemplateMaker {
 		String templateid = settings.getQueryTemplateId();
 		if (workbook == null) {
 			workbook = new XSSFWorkbook();
-		}		
-		Sheet sheet = prepareWorkbook(workbook);
+		}
+		Sheet sheet = prepareSheet_TestConditions(workbook);
 		CellStyle kstyle = workbook.createCellStyle();
 		Font font = workbook.createFont();
 		font.setFontName(fontfamily);
@@ -105,7 +217,6 @@ public class TemplateMakerExtended extends TemplateMaker {
 		hintstyle.setLocked(true);
 		int rowindex = hilightrow(workbook, sheet, 4, IndexedColors.SKY_BLUE.getIndex(), "", kstyle);
 
-		
 		sheet.getRow(0).getCell(0).setCellValue("TEST CONDITIONS");
 		sheet.getRow(0).getCell(1)
 				.setCellValue("Please complete the details below as far as possible for each set of assay results");
@@ -118,11 +229,11 @@ public class TemplateMakerExtended extends TemplateMaker {
 				continue;
 
 			if (sheetname == null) {
-				sheetname =  getSheetName(record,templateid);
+				sheetname = getSheetName(record, templateid);
 				sheet.getRow(1).getCell(0).setCellValue(sheetname + " template");
 			}
 			String annotation = TR.hix.Annotation.get(record).toString();
-			
+
 			List<TR> item = items.get(annotation);
 			if (item == null) {
 				item = new ArrayList<TR>();
@@ -130,7 +241,7 @@ public class TemplateMakerExtended extends TemplateMaker {
 			}
 			item.add(record);
 			Object level2 = TR.hix.JSON_LEVEL2.get(record);
-			
+
 			if ("results".equals(annotation) && "ENDPOINT".equals(level2)) {
 				item = items.get(header_result_endpoint);
 				if (item == null) {
@@ -170,9 +281,10 @@ public class TemplateMakerExtended extends TemplateMaker {
 		rowindex = writeSection(workbook, sheet, header_finalexposure, rowindex, items.get(header_initialexposure),
 				kstyle, vstyle, hintstyle);
 		// This is a test, not linked to fields [TODO]!
-		rowindex = writeRepeatSection(workbook, sheet, "Timeline", rowindex, null, "T", settings.getNumber_of_timepoints(), kstyle, vstyle, hintstyle);
-		rowindex = writeRepeatSection(workbook, sheet, "TREATMENT CONCENTRATION", rowindex, null, "C", settings.getNumber_of_concentration(), kstyle,
-				vstyle, hintstyle);
+		rowindex = writeRepeatSection(workbook, sheet, "Timeline", rowindex, null, "T",
+				settings.getNumber_of_timepoints(), kstyle, vstyle, hintstyle);
+		rowindex = writeRepeatSection(workbook, sheet, "TREATMENT CONCENTRATION", rowindex, null, "C",
+				settings.getNumber_of_concentration(), kstyle, vstyle, hintstyle);
 		rowindex = hilightrow(workbook, sheet, rowindex, IndexedColors.GREY_25_PERCENT.getIndex(), "", kstyle);
 		/**
 		 * size
@@ -188,6 +300,11 @@ public class TemplateMakerExtended extends TemplateMaker {
 		sheet.setColumnWidth(1, 5000);
 		sheet.setColumnHidden(26, true);
 		sheet.setColumnHidden(27, true);
+
+		sheet = prepareSheet_RawData(workbook, settings);
+		sheet = prepareSheet(workbook, "Test result", new XSSFColor(java.awt.Color.MAGENTA, null));
+		sheet = prepareSheet(workbook, "Test summary", new XSSFColor(java.awt.Color.CYAN, null));
+		workbook.setActiveSheet(0);
 		return workbook;
 
 	}
