@@ -3483,6 +3483,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 					pi.syncExcelSheetColumnWithValuePos = bp.syncExcelSheetColumnWithValuePos;
 					pi.syncExcelSheetRowWithValuePos = bp.syncExcelSheetRowWithValuePos;
 					
+					pi.dataInterpretation = bp.dataInterpretation;
+					
 					if (bp.mapping != null)
 						pi.mapping = bp.mapping;
 

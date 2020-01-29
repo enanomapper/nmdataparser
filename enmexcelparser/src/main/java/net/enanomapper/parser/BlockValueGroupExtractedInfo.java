@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
+import net.enanomapper.parser.ParserConstants.DataInterpretation;
 
 public class BlockValueGroupExtractedInfo 
 {
@@ -17,6 +18,7 @@ public class BlockValueGroupExtractedInfo
 		public boolean fixRowPosToStartValue = false;
 		public boolean syncExcelSheetColumnWithValuePos = false;
 		public boolean syncExcelSheetRowWithValuePos = false;
+		public DataInterpretation dataInterpretation = DataInterpretation.DEFAULT;
 		public String mapping = null;
 		public String unit = null;
 		public Object jsonValue = null;

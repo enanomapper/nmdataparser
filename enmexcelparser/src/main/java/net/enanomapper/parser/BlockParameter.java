@@ -3,6 +3,7 @@ package net.enanomapper.parser;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import net.enanomapper.parser.ParserConstants.BlockParameterAssign;
+import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
 
@@ -40,6 +41,9 @@ public class BlockParameter {
 	
 	public boolean syncExcelSheetRowWithValuePos = false;
 	public boolean FlagSyncExcelSheetRowWithValuePos = false;
+	
+	public DataInterpretation dataInterpretation = DataInterpretation.DEFAULT;
+	public boolean FlagDataInterpretation = false;
 
 	public String mapping = null;
 	public boolean FlagMapping = false;
@@ -155,6 +159,23 @@ public class BlockParameter {
 				} else {
 					bp.rowPos = obj;
 					bp.FlagRowPos = true;
+				}
+			}
+		}
+		
+		// DATA_INTERPRETATION
+		if (!node.path(KEYWORD.DATA_INTERPRETATION.name()).isMissingNode()) {
+			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.DATA_INTERPRETATION.name(), false);
+			if (keyword == null) {
+				conf.addError(errorPrefix + "\", keyword \"DATA_INTERPRETATION\" : "
+						+ jsonUtils.getError());
+				
+			} else {
+				bp.FlagDataInterpretation = true;
+				bp.dataInterpretation = DataInterpretation.fromString(keyword);
+				if (bp.dataInterpretation == DataInterpretation.UNDEFINED) {
+					conf.addError(errorPrefix +
+							"\", keyword \"DATA_INTERPRETATION\" is incorrect or UNDEFINED!");
 				}
 			}
 		}
@@ -297,6 +318,13 @@ public class BlockParameter {
 				sb.append(",\n");
 
 			sb.append(offset + "\t\"SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS\" : " + syncExcelSheetRowWithValuePos);
+			nFields++;
+		}
+		
+		if (FlagDataInterpretation) {
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"DATA_INTERPRETATION\" : \"" + dataInterpretation.toString() + "\"");
 			nFields++;
 		}
 
