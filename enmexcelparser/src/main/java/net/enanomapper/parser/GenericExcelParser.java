@@ -3202,8 +3202,14 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 												if (pi.mapping != null)
 													value = getMappingValue(pi.jsonValue, pi.mapping);
 
-												value = RichValue.recognizeRichValueFromObject(value, pi.unit,
+												if (pi.dataInterpretation == DataInterpretation.AS_TEXT)
+												{
+													//Do nothing; take value as it is
+												}
+												else
+													value = RichValue.recognizeRichValueFromObject(value, pi.unit,
 														rvParser);
+												
 												dbEl.params.put(pi.name, value);
 												continue;
 											}
@@ -3259,9 +3265,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 												if (value != null) {
 													if (pi.mapping != null)
 														value = getMappingValue(value, pi.mapping);
-
-													value = RichValue.recognizeRichValueFromObject(value, pi.unit,
+													
+													if (pi.dataInterpretation == DataInterpretation.AS_TEXT)
+													{
+														//Do nothing; take value as it is
+													}
+													else
+														value = RichValue.recognizeRichValueFromObject(value, pi.unit,
 															rvParser);
+													
 													dbEl.params.put(pi.name, value);
 												}
 											}
