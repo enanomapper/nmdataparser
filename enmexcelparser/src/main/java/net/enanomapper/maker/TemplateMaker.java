@@ -265,7 +265,6 @@ public class TemplateMaker {
 		this.logger_cli = logger;
 	}
 
-	
 	public Workbook generateMultisheetTemplates(Workbook workbook, TemplateMakerSettings settings, Iterable<TR> records)
 			throws Exception {
 
@@ -603,84 +602,87 @@ public class TemplateMaker {
 
 	protected void setStyle(Workbook workbook, Sheet sheet, String annotation, Map<String, Integer> mincol,
 			Map<String, Integer> maxcol, Map<String, CellStyle> cellstyle) {
+		try {
+			Integer col1 = mincol == null ? null : mincol.get(annotation);
+			Integer col2 = maxcol == null ? null : maxcol.get(annotation);
+			if (col1 == null || col2 == null)
+				return;
 
-		Integer col1 = mincol == null ? null : mincol.get(annotation);
-		Integer col2 = maxcol == null ? null : maxcol.get(annotation);
-		if (col1 == null || col2 == null)
-			return;
+			CellStyle astyle = cellstyle.get(annotation);
+			for (int i = 0; i < 20; i++) {
+				Row row = sheet.getRow(i);
+				if (i == 0)
+					row.setHeight((short) 1000);
+				if (row == null)
+					row = sheet.createRow(i);
 
-		CellStyle astyle = cellstyle.get(annotation);
-		for (int i = 0; i < 20; i++) {
-			Row row = sheet.getRow(i);
-			if (i == 0)
-				row.setHeight((short) 1000);
-			if (row == null)
-				row = sheet.createRow(i);
+				for (int c = col1; c <= col2; c++) {
+					CellStyle cstyle = workbook.createCellStyle();
+					cstyle.cloneStyleFrom(astyle);
 
-			for (int c = col1; c <= col2; c++) {
-				CellStyle cstyle = workbook.createCellStyle();
-				cstyle.cloneStyleFrom(astyle);
+					cstyle.setBorderLeft(BorderStyle.THIN);
+					cstyle.setBorderRight(BorderStyle.THIN);
+					if (i == 0) {
+						cstyle.setBorderTop(BorderStyle.MEDIUM);
+						cstyle.setBorderLeft(BorderStyle.NONE);
+						cstyle.setBorderRight(BorderStyle.NONE);
 
-				cstyle.setBorderLeft(BorderStyle.THIN);
-				cstyle.setBorderRight(BorderStyle.THIN);
-				if (i == 0) {
-					cstyle.setBorderTop(BorderStyle.MEDIUM);
-					cstyle.setBorderLeft(BorderStyle.NONE);
-					cstyle.setBorderRight(BorderStyle.NONE);
+					} else if (i == 3)
+						cstyle.setBorderTop(BorderStyle.HAIR);
+					else
+						cstyle.setBorderTop(BorderStyle.NONE);
 
-				} else if (i == 3)
-					cstyle.setBorderTop(BorderStyle.HAIR);
-				else
-					cstyle.setBorderTop(BorderStyle.NONE);
+					if (i == 4 || i == 0)
+						cstyle.setBorderBottom(BorderStyle.MEDIUM);
+					else
+						cstyle.setBorderBottom(BorderStyle.NONE);
 
-				if (i == 4 || i == 0)
-					cstyle.setBorderBottom(BorderStyle.MEDIUM);
-				else
-					cstyle.setBorderBottom(BorderStyle.NONE);
-
-				if (c == col1) {
-					cstyle.setBorderLeft(BorderStyle.MEDIUM);
-				}
-				if (c == col2)
-					cstyle.setBorderRight(BorderStyle.MEDIUM);
-
-				if (i > 4) {
-					cstyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-					cstyle.setBorderBottom(BorderStyle.HAIR);
-				}
-
-				Cell cell = row.getCell(c);
-				if (cell == null)
-					cell = row.createCell(c);
-
-				if (i > 4) {
-					CellUtil.setAlignment(cell, HorizontalAlignment.LEFT);
-					String unit = sheet.getRow(4).getCell(c).getStringCellValue();
-					if (unit != null && !"".equals(unit)) {
-
-						cstyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
-						cell.setCellType(CellType.NUMERIC);
-						CellUtil.setAlignment(cell, HorizontalAlignment.RIGHT);
+					if (c == col1) {
+						cstyle.setBorderLeft(BorderStyle.MEDIUM);
 					}
-				}
+					if (c == col2)
+						cstyle.setBorderRight(BorderStyle.MEDIUM);
 
-				cell.setCellStyle(cstyle);
-			}
-			if (i == 0)
-				try {
+					if (i > 4) {
+						cstyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+						cstyle.setBorderBottom(BorderStyle.HAIR);
+					}
+
+					Cell cell = row.getCell(c);
+					if (cell == null)
+						cell = row.createCell(c);
+
+					if (i > 4) {
+						CellUtil.setAlignment(cell, HorizontalAlignment.LEFT);
+						String unit = sheet.getRow(4).getCell(c).getStringCellValue();
+						if (unit != null && !"".equals(unit)) {
+
+							cstyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.getIndex());
+							cell.setCellType(CellType.NUMERIC);
+							CellUtil.setAlignment(cell, HorizontalAlignment.RIGHT);
+						}
+					}
+
+					cell.setCellStyle(cstyle);
+				}
+				if (i == 0)
+					try {
+						sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
+						CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
+					} catch (Exception x) {
+						logger_cli.warning(String.format("%s\t%s", sheet.getSheetName(), x.getMessage()));
+					}
+				if ("size distribution".equals(annotation) && i == 1) {
 					sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
 					CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
-				} catch (Exception x) {
-					logger_cli.warning(String.format("%s\t%s", sheet.getSheetName(), x.getMessage()));
+				} else if ("cell".equals(annotation) && i == 1) {
+					sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
+					CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
 				}
-			if ("size distribution".equals(annotation) && i == 1) {
-				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
-			} else if ("cell".equals(annotation) && i == 1) {
-				sheet.addMergedRegion(new CellRangeAddress(i, i, col1, col2));
-				CellUtil.setAlignment(row.getCell(col1), HorizontalAlignment.CENTER);
-			}
 
+			}
+		} catch (Exception x) {
+			Logger.getGlobal().log(Level.WARNING,x.getMessage());
 		}
 
 	}
