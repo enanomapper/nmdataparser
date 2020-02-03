@@ -3204,7 +3204,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 												if (pi.dataInterpretation == DataInterpretation.AS_TEXT)
 												{
-													//Do nothing; take value as it is
+													//Take value as a string
+													value = value.toString();
 												}
 												else
 													value = RichValue.recognizeRichValueFromObject(value, pi.unit,
@@ -3268,7 +3269,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 													
 													if (pi.dataInterpretation == DataInterpretation.AS_TEXT)
 													{
-														//Do nothing; take value as it is
+														//Take value as it is
+														value = value.toString();
 													}
 													else
 														value = RichValue.recognizeRichValueFromObject(value, pi.unit,
