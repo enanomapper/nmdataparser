@@ -361,12 +361,12 @@ public class TemplateMaker {
 					} catch (Exception x) {
 						throw x;
 					}
-					workbook.setActiveSheet(workbook.getNumberOfSheets() - 1);
+					workbook.setActiveSheet(workbook.getSheetIndex(_sheet));
 					Header header = sheet.getHeader();
 					header.setCenter("Center Header");
 					header.setLeft("Left Header");
 
-				}
+				} else workbook.setActiveSheet(workbook.getSheetIndex(_sheet));
 
 				if (sheet.getSheetName().equals(_sheet)) {
 					// System.out.println(String.format("%s\t%s\t%s",record.getRow(),record.getColumn(),record.get("unit")));
@@ -560,42 +560,44 @@ public class TemplateMaker {
 			} catch (Exception x) {
 				x.printStackTrace();
 			}
+		if (sheet != null) {
+			setStyle(workbook, sheet, header_results, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_method, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_experimentalparameters, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_endpoint, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_size, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_sample, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_sample_preparation, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_sop, mincol, maxcol, style);
+			setStyle(workbook, sheet, header_imageanalysis, mincol, maxcol, style);
 
-		setStyle(workbook, sheet, header_results, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_method, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_experimentalparameters, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_endpoint, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_size, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_sample, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_sample_preparation, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_sop, mincol, maxcol, style);
-		setStyle(workbook, sheet, header_imageanalysis, mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.module.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_echa_use_descriptors.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_contributing_scenario.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_control_measures.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_factors.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_matrix.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_nm_physchem.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_premises.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_summary_exposure_results.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_measurements_instruments.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_measurement_results.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_reference.toString(), mincol, maxcol, style);
+			setStyle(workbook, sheet, _header.exposure_quality_scenario.toString(), mincol, maxcol, style);
 
-		setStyle(workbook, sheet, _header.module.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_echa_use_descriptors.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_contributing_scenario.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_control_measures.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_factors.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_matrix.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_nm_physchem.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_premises.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_summary_exposure_results.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_measurements_instruments.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_measurement_results.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_reference.toString(), mincol, maxcol, style);
-		setStyle(workbook, sheet, _header.exposure_quality_scenario.toString(), mincol, maxcol, style);
-
-		Iterator<Row> rowIterator = sheet.rowIterator();
-		while (rowIterator.hasNext()) {
-			Row row = rowIterator.next();
-			Iterator<Cell> cellIterator = row.cellIterator();
-			while (cellIterator.hasNext()) {
-				Cell cell = cellIterator.next();
-				sheet.autoSizeColumn(cell.getColumnIndex());
+			Iterator<Row> rowIterator = sheet.rowIterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					sheet.autoSizeColumn(cell.getColumnIndex());
+				}
 			}
+
+			validation_endpoint(workbook, sheet, mincol.get(header_endpoint));
 		}
 
-		validation_endpoint(workbook, sheet, mincol.get(header_endpoint));
 		return workbook;
 
 	}
@@ -682,7 +684,7 @@ public class TemplateMaker {
 
 			}
 		} catch (Exception x) {
-			Logger.getGlobal().log(Level.WARNING,x.getMessage());
+			Logger.getGlobal().log(Level.WARNING, x.getMessage());
 		}
 
 	}
