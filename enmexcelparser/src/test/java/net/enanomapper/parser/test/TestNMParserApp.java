@@ -21,6 +21,12 @@ public class TestNMParserApp {
 	
 	public static void testExcelTemplate(String excelFile, File jsonFile, boolean printJSONConfig)
 			throws Exception {
+		testExcelTemplate(excelFile, jsonFile, printJSONConfig, true);
+	}
+	
+	public static void testExcelTemplate(String excelFile, File jsonFile, 
+			boolean printJSONConfig, boolean flagLogVariableMapping) throws Exception 
+	{
 		FileInputStream fin = new FileInputStream(excelFile);
 		try {
 			boolean isXLSX = excelFile.endsWith("xlsx");
@@ -29,6 +35,9 @@ public class TestNMParserApp {
 			System.out.println("\"isXLSX\" : " + isXLSX + ",\n");
 			GenericExcelParser parser = new GenericExcelParser(fin, jsonFile,
 					isXLSX);
+			
+			parser.setFlagVariableMappingLogging(flagLogVariableMapping);
+			
 			if (printJSONConfig)
 				System.out.println(parser.getExcelParserConfigurator()
 						.toJSONString() + "\n");

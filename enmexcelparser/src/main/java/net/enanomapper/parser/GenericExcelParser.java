@@ -117,7 +117,8 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 	protected int nextRecordIndex = -1;
 
 	protected ArrayList<SubstanceRecord> loadedRecordsBuffer = new ArrayList<SubstanceRecord>();
-
+	
+	protected boolean FlagVariableMappingLogging = true;
 	// protected boolean FlagAddParserStringError = true; // This is used to
 	// switch
 
@@ -160,6 +161,15 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 	public ExcelParserConfigurator getExcelParserConfigurator() {
 		return config;
+	}
+	
+	
+	public boolean isFlagVariableMappingLogging() {
+		return FlagVariableMappingLogging;
+	}
+
+	public void setFlagVariableMappingLogging(boolean flagVariableMappingLogging) {
+		FlagVariableMappingLogging = flagVariableMappingLogging;
 	}
 
 	protected void init() throws Exception {
@@ -694,14 +704,18 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 		if (values == null)
 			return null;
 
-		logger.info("---- Variable mapping: " + varMapping.name);
+		if (FlagVariableMappingLogging)
+			logger.info("---- Variable mapping: " + varMapping.name);
+		
 		// Make mapping
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		for (int i = 0; i < keys.length; i++) {
 			if (i >= values.length) // Reached the end of values array
 				break;
 			map.put(keys[i], values[i]);
-			logger.info("---- " + keys[i] + " --> " + values[i]);
+			
+			if (FlagVariableMappingLogging)
+				logger.info("---- " + keys[i] + " --> " + values[i]);
 		}
 
 		return map;
