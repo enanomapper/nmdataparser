@@ -66,13 +66,13 @@ public class TemplateMakerExtended extends TemplateMaker {
 		cellc.setCellValue("Concentration");
 		cellc.setCellStyle(kstyle);
 		// use param for technical replicates
-		int n_technical_replicates = 3;
-		for (int i = 0; i < n_technical_replicates; i++) {
+		
+		for (int i = 0; i <  settings.getNumber_of_experiments(); i++) {
 			Cell cell = row1.createCell(4 + i + startcol);
-			cell.setCellValue(String.format("Test%d", i + 1));
+			cell.setCellValue(String.format("EXP%d", i + 1));
 			cell.setCellStyle(kstyle);
 		}
-		Cell cella = row1.createCell(3 + n_technical_replicates + 1 + startcol);
+		Cell cella = row1.createCell(3 + settings.getNumber_of_experiments() + 1 + startcol);
 		cella.setCellValue("Average");
 		cella.setCellStyle(kstyle);
 		row++;
@@ -91,7 +91,7 @@ public class TemplateMakerExtended extends TemplateMaker {
 
 					CellAddress c1 = null;
 					CellAddress c2 = null;
-					for (int i = 0; i < n_technical_replicates; i++) {
+					for (int i = 0; i < settings.getNumber_of_experiments(); i++) {
 						Cell cell = row1.createCell(4 + i + startcol);
 						cell.setCellValue(0);
 						if (i==0) c1 = cell.getAddress();
@@ -99,7 +99,7 @@ public class TemplateMakerExtended extends TemplateMaker {
 
 					}
 					
-					Cell cell = row1.createCell(4 + n_technical_replicates + startcol);
+					Cell cell = row1.createCell(4 + settings.getNumber_of_experiments() + startcol);
 					cell.setCellType(CellType.FORMULA);
 					cell.setCellFormula(String.format("AVERAGE(%s:%s)",c1.formatAsString(),c2.formatAsString()));
 
@@ -111,7 +111,7 @@ public class TemplateMakerExtended extends TemplateMaker {
 		try {
 			AreaReference reference = workbook.getCreationHelper().createAreaReference(
 					new CellReference(startrow, startcol),
-					new CellReference(row - 1, 3 + n_technical_replicates + 1 + startcol));
+					new CellReference(row - 1, 3 + settings.getNumber_of_experiments() + 1 + startcol));
 
 			// Create
 			XSSFTable table = ((XSSFSheet) sheet).createTable(reference);

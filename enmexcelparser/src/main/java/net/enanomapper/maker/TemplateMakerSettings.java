@@ -28,8 +28,17 @@ public class TemplateMakerSettings implements Serializable {
 	 */
 	private static final long serialVersionUID = -7761828667318892718L;
 	transient protected IAnnotator annotator;
-	protected int number_of_replicates = 1;
-	protected int number_of_timepoints = 3;
+	protected int number_of_experiments = 3;
+	public int getNumber_of_experiments() {
+		return number_of_experiments;
+	}
+
+	public void setNumber_of_experiments(int number_of_experiments) {
+		this.number_of_experiments = number_of_experiments;
+	}
+
+	protected int number_of_replicates = 2;
+	protected int number_of_timepoints = 1;
 	protected int number_of_concentration = 6;
 
 	public IAnnotator getAnnotator() {
