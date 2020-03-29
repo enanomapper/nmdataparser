@@ -21,6 +21,7 @@ import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow.CellIterator;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -39,6 +40,47 @@ public class TemplateMakerExtended extends TemplateMaker {
 		return sheet;
 	}
 
+	protected int get_number_x_axis(TemplateMakerSettings settings) {
+		return settings.getNumber_of_experiments();
+	}
+
+	protected int get_number_y_axis(TemplateMakerSettings settings) {
+		return settings.getNumber_of_replicates();
+	}
+
+	protected int prepareSheet_RawData_header(Workbook workbook, Sheet sheet, TemplateMakerSettings settings,
+			CellStyle kstyle, int startrow, int startcol, int y_number, int t_number) {
+		int row = startrow;
+		Row row1 = sheet.getRow(row);
+		if (row1 == null)
+			row1 = sheet.createRow(row);
+		Cell cellm = row1.createCell(0 + startcol);
+		cellm.setCellValue("Material");
+		cellm.setCellStyle(kstyle);
+		Cell cellr = row1.createCell(1 + startcol);
+		cellr.setCellValue(String.format("%s %d", settings.getLayout_raw_data().get_label_y_axis(), y_number + 1));
+		// cellr.setCellValue( settings.getLayout_raw_data().get_label_y_axis());
+		cellr.setCellStyle(kstyle);
+		Cell cellt = row1.createCell(2 + startcol);
+		cellt.setCellValue(String.format("T%d", t_number + 1));
+		// cellt.setCellValue("Time");
+		cellt.setCellStyle(kstyle);
+		Cell cellc = row1.createCell(3 + startcol);
+		cellc.setCellValue("Concentration");
+		cellc.setCellStyle(kstyle);
+
+		for (int i = 0; i < settings.get_number_x_axis(); i++) {
+			Cell cell = row1.createCell(4 + i + startcol);
+			cell.setCellValue(String.format("%s %d", settings.getLayout_raw_data().get_label_x_axis(), i + 1));
+			cell.setCellStyle(kstyle);
+		}
+		Cell cella = row1.createCell(3 + settings.get_number_x_axis() + 1 + startcol);
+		cella.setCellValue("Average");
+		cella.setCellStyle(kstyle);
+		row++;
+		return row;
+	}
+
 	protected Sheet prepareSheet_RawData(Workbook workbook, TemplateMakerSettings settings) {
 		Sheet sheet = prepareSheet(workbook, "Raw data", new XSSFColor(java.awt.Color.GREEN, null));
 		CellStyle kstyle = workbook.createCellStyle();
@@ -49,97 +91,98 @@ public class TemplateMakerExtended extends TemplateMaker {
 		kstyle.setFont(font);
 		kstyle.setLocked(true);
 
-		int startrow = 3;
 		int startcol = 1;
-		int row = startrow;
-		Row row1 = sheet.createRow(row);
-		Cell cellm = row1.createCell(0 + startcol);
-		cellm.setCellValue("Material");
-		cellm.setCellStyle(kstyle);
-		Cell cellr = row1.createCell(1 + startcol);
-		cellr.setCellValue("Replicate");
-		cellr.setCellStyle(kstyle);
-		Cell cellt = row1.createCell(2 + startcol);
-		cellt.setCellValue("Time");
-		cellt.setCellStyle(kstyle);
-		Cell cellc = row1.createCell(3 + startcol);
-		cellc.setCellValue("Concentration");
-		cellc.setCellStyle(kstyle);
-		// use param for technical replicates
-		
-		for (int i = 0; i <  settings.getNumber_of_experiments(); i++) {
-			Cell cell = row1.createCell(4 + i + startcol);
-			cell.setCellValue(String.format("EXP%d", i + 1));
-			cell.setCellStyle(kstyle);
-		}
-		Cell cella = row1.createCell(3 + settings.getNumber_of_experiments() + 1 + startcol);
-		cella.setCellValue("Average");
-		cella.setCellStyle(kstyle);
-		row++;
-		for (int r = 0; r < settings.getNumber_of_replicates(); r++) {
-			for (int t = 0; t < settings.getNumber_of_timepoints(); t++) {
-				for (int c = 0; c < settings.getNumber_of_concentration(); c++) {
-					row1 = sheet.createRow(row);
-					
-					cellm = row1.createCell(0 + startcol);
-					cellr = row1.createCell(1 + startcol);
-					cellr.setCellValue(String.format("R%d", r + 1));
-					cellt = row1.createCell(2 + startcol);
-					cellt.setCellValue(String.format("T%d", t + 1));
-					cellc = row1.createCell(3 + startcol);
-					cellc.setCellValue(String.format("C%d", c + 1));
 
-					CellAddress c1 = null;
-					CellAddress c2 = null;
-					for (int i = 0; i < settings.getNumber_of_experiments(); i++) {
-						Cell cell = row1.createCell(4 + i + startcol);
-						cell.setCellValue(0);
-						if (i==0) c1 = cell.getAddress();
-						else c2 = cell.getAddress();
+		for (int e = 0; e < settings.getNumber_of_endpoints(); e++) {
+			int startrow = 3;
+			int row = startrow;
 
+			Row row_ep = sheet.getRow(row - 1);
+			if (row_ep == null)
+				row_ep = sheet.createRow(row - 1);
+			Cell cell_ep = row_ep.createCell(1 + startcol);
+			cell_ep.setCellValue(String.format("EP %d", e + 1));
+			cell_ep.setCellStyle(kstyle);
+
+			for (int r = 0; r < settings.get_number_y_axis(); r++) {
+
+				for (int t = 0; t < settings.getNumber_of_timepoints(); t++) {
+					startrow = row;
+					row = prepareSheet_RawData_header(workbook, sheet, settings, kstyle, startrow, startcol, r, t);
+					for (int c = 0; c < settings.getNumber_of_concentration(); c++) {
+						Row row1 = sheet.getRow(row);
+						if (row1 == null)
+							row1 = sheet.createRow(row);
+
+						Cell cellm = row1.createCell(0 + startcol);
+						Cell cellr = row1.createCell(1 + startcol);
+						// cellr.setCellValue(String.format("%s %d",
+						// settings.getLayout_raw_data().get_label_y_axis(),r + 1));
+						Cell cellt = row1.createCell(2 + startcol);
+						// cellt.setCellValue(String.format("T%d", t + 1));
+						Cell cellc = row1.createCell(3 + startcol);
+						cellc.setCellValue(String.format("C%d", c + 1));
+
+						CellAddress c1 = null;
+						CellAddress c2 = null;
+						for (int i = 0; i < settings.get_number_x_axis(); i++) {
+							Cell cell = row1.createCell(4 + i + startcol);
+							cell.setCellValue(0);
+							if (i == 0)
+								c1 = cell.getAddress();
+							else
+								c2 = cell.getAddress();
+
+						}
+
+						Cell cell = row1.createCell(4 + settings.get_number_x_axis() + startcol);
+						cell.setCellType(CellType.FORMULA);
+						cell.setCellFormula(String.format("AVERAGE(%s:%s)", c1.formatAsString(), c2.formatAsString()));
+
+						row++;
 					}
-					
-					Cell cell = row1.createCell(4 + settings.getNumber_of_experiments() + startcol);
-					cell.setCellType(CellType.FORMULA);
-					cell.setCellFormula(String.format("AVERAGE(%s:%s)",c1.formatAsString(),c2.formatAsString()));
 
+					try {
+						AreaReference reference = workbook.getCreationHelper().createAreaReference(
+								new CellReference(startrow, startcol),
+								new CellReference(row - 1, 3 + settings.get_number_x_axis() + 1 + startcol));
+						// System.out.println(String.format("%d %d %d %d", startrow, startcol, row - 1,
+						// 3 + settings.get_number_x_axis() + 1 + startcol));
+						// Create
+						XSSFTable table = ((XSSFSheet) sheet).createTable(reference);
+
+						for (int i = 0; i < table.getCTTable().getTableColumns().getCount(); i++) {
+							table.getCTTable().getTableColumns().getTableColumnArray(i).setId(i + 1);
+						}
+
+						table.setName(String.format("%s_%d_T%d_E%d", settings.getLayout_raw_data().get_label_y_axis(),
+								r + 1, t + 1, e + 1));
+						table.setDisplayName(String.format("Table_%s_%d_T%d_E%d",
+								settings.getLayout_raw_data().get_label_y_axis(), r + 1, t + 1, e + 1));
+						// For now, create the initial style in a low-level way
+						table.getCTTable().addNewTableStyleInfo();
+						table.getCTTable().getTableStyleInfo().setName("TableStyleMedium2");
+
+						XSSFTableStyleInfo style = (XSSFTableStyleInfo) table.getStyle();
+						style.setName("TableStyleMedium2");
+						style.setShowColumnStripes(true);
+						// style.setShowRowStripes(true);
+						// style.setFirstColumn(false);
+						// style.setLastColumn(false);
+						//
+
+					} catch (Exception x) {
+						x.printStackTrace();
+					}
 					row++;
 				}
+
+				row += settings.getLayout_raw_data().get_y_space();
 			}
+
+			startcol = 3 + settings.get_number_x_axis() + 1 + startcol + settings.getLayout_raw_data().get_x_space();
 		}
-		
-		try {
-			AreaReference reference = workbook.getCreationHelper().createAreaReference(
-					new CellReference(startrow, startcol),
-					new CellReference(row - 1, 3 + settings.getNumber_of_experiments() + 1 + startcol));
 
-			// Create
-			XSSFTable table = ((XSSFSheet) sheet).createTable(reference);
-			
-			for (int i = 0; i < table.getCTTable().getTableColumns().getCount(); i++) {
-				table.getCTTable().getTableColumns().getTableColumnArray(i).setId(i+1);
-			}
-			
-
-			table.setName("Test");
-			table.setDisplayName("Test_Table");
-			// For now, create the initial style in a low-level way
-			table.getCTTable().addNewTableStyleInfo();
-			table.getCTTable().getTableStyleInfo().setName("TableStyleMedium2");
-			
-			XSSFTableStyleInfo style = (XSSFTableStyleInfo) table.getStyle();
-			style.setName("TableStyleMedium2");
-			style.setShowColumnStripes(true);
-			//style.setShowRowStripes(true);
-			//style.setFirstColumn(false);
-			//style.setLastColumn(false);
-			//
-			
-
-		} catch (Exception x) {
-			x.printStackTrace();
-		}
-	
 		return sheet;
 
 	}
@@ -281,6 +324,9 @@ public class TemplateMakerExtended extends TemplateMaker {
 		rowindex = writeSection(workbook, sheet, header_finalexposure, rowindex, items.get(header_initialexposure),
 				kstyle, vstyle, hintstyle);
 		// This is a test, not linked to fields [TODO]!
+		rowindex = writeRepeatSection(workbook, sheet, "Endpoints", rowindex, null, "EP",
+				settings.getNumber_of_endpoints(), kstyle, vstyle, hintstyle);
+
 		rowindex = writeRepeatSection(workbook, sheet, "Timeline", rowindex, null, "T",
 				settings.getNumber_of_timepoints(), kstyle, vstyle, hintstyle);
 		rowindex = writeRepeatSection(workbook, sheet, "TREATMENT CONCENTRATION", rowindex, null, "C",
@@ -290,23 +336,38 @@ public class TemplateMakerExtended extends TemplateMaker {
 		 * size
 		 * 
 		 */
-		Iterator<Row> rowIterator = sheet.rowIterator();
-		while (rowIterator.hasNext()) {
-			Row row = rowIterator.next();
-			Cell cell = row.getCell(0);
-			if (cell != null)
-				sheet.autoSizeColumn(cell.getColumnIndex());
-		}
+
+		autosize(sheet, 0);
 		sheet.setColumnWidth(1, 5000);
 		sheet.setColumnHidden(26, true);
 		sheet.setColumnHidden(27, true);
 
 		sheet = prepareSheet_RawData(workbook, settings);
+		autosize(sheet, -1);
 		sheet = prepareSheet(workbook, "Test result", new XSSFColor(java.awt.Color.MAGENTA, null));
 		sheet = prepareSheet(workbook, "Test summary", new XSSFColor(java.awt.Color.CYAN, null));
 		workbook.setActiveSheet(0);
 		return workbook;
 
+	}
+
+	protected void autosize(Sheet sheet, int col) {
+		Iterator<Row> rowIterator = sheet.rowIterator();
+		while (rowIterator.hasNext()) {
+			Row row = rowIterator.next();
+			if (col >= 0) {
+				Cell cell = row.getCell(col);
+				if (cell != null)
+					sheet.autoSizeColumn(cell.getColumnIndex());
+			} else {
+				Iterator<Cell> colIterator = row.cellIterator();
+				while (colIterator.hasNext()) {
+					Cell cell = colIterator.next();
+					if (cell != null)
+						sheet.autoSizeColumn(cell.getColumnIndex());
+				}
+			}
+		}
 	}
 
 	protected int hilightrow(Workbook workbook, Sheet sheet, int row, short color, String value, CellStyle kstyle) {

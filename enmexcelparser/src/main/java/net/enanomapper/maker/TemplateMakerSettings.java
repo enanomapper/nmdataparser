@@ -27,8 +27,70 @@ public class TemplateMakerSettings implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -7761828667318892718L;
+
+	public enum _LAYOUT_RAW_DATA {
+		x_replicate_y_experiment {
+			public int get_number_y_axis(TemplateMakerSettings settings) {
+				return settings.getNumber_of_experiments();
+			}
+
+			public int get_number_x_axis(TemplateMakerSettings settings) {
+				return settings.getNumber_of_replicates();
+			}
+			public String get_label_x_axis() {
+				return "Test";
+			}
+			public String get_label_y_axis() {
+				return "Replicate";
+			}			
+
+		},
+		x_experiment_y_replicate;
+
+		public int get_number_x_axis(TemplateMakerSettings settings) {
+			return settings.getNumber_of_experiments();
+		}
+
+		public int get_number_y_axis(TemplateMakerSettings settings) {
+			return settings.getNumber_of_replicates();
+		}
+		
+		public String get_label_x_axis() {
+			return "Replicate";
+		}
+		public String get_label_y_axis() {
+			return "Experiment";
+		}
+		public int get_x_space() {
+			return 2;
+		}
+		public int get_y_space() {
+			return 2;
+		}		
+	}
+
+	//protected _LAYOUT_RAW_DATA layout_raw_data = _LAYOUT_RAW_DATA.x_replicate_y_experiment;
+	protected _LAYOUT_RAW_DATA layout_raw_data = _LAYOUT_RAW_DATA.x_experiment_y_replicate;
+	public _LAYOUT_RAW_DATA getLayout_raw_data() {
+		return layout_raw_data;
+	}
+
+	public void setLayout_raw_data(_LAYOUT_RAW_DATA layout_raw_data) {
+		this.layout_raw_data = layout_raw_data;
+	}
+
 	transient protected IAnnotator annotator;
-	protected int number_of_experiments = 3;
+	protected int number_of_experiments = 4;
+	protected int number_of_endpoints = 1;
+
+	public int getNumber_of_endpoints() {
+		return number_of_endpoints;
+	}
+
+	public void setNumber_of_endpoints(int number_of_endpoints) {
+		this.number_of_endpoints = number_of_endpoints;
+	}
+
 	public int getNumber_of_experiments() {
 		return number_of_experiments;
 	}
@@ -37,9 +99,9 @@ public class TemplateMakerSettings implements Serializable {
 		this.number_of_experiments = number_of_experiments;
 	}
 
-	protected int number_of_replicates = 2;
+	protected int number_of_replicates = 6;
 	protected int number_of_timepoints = 1;
-	protected int number_of_concentration = 6;
+	protected int number_of_concentration = 11;
 
 	public IAnnotator getAnnotator() {
 		return annotator;
@@ -71,6 +133,7 @@ public class TemplateMakerSettings implements Serializable {
 				return false;
 			}
 		};
+
 		public boolean requiresInputFile() {
 			return true;
 		}
@@ -309,12 +372,13 @@ public class TemplateMakerSettings implements Serializable {
 		return records;
 	}
 
-	public String getOutputFileName()  {
+	public String getOutputFileName() {
 		if (getQueryTemplateId() != null)
 			return String.format("%s_%s.xlsx", getQueryTemplateId(),
 					_TEMPLATES_TYPE.jrc.equals(getTemplatesType()) ? "COLUMNS" : "BLOCKS");
-		else  return String.format("%s_%s.xlsx", "datatemplate",
-				_TEMPLATES_TYPE.jrc.equals(getTemplatesType()) ? "COLUMNS" : "BLOCKS");		
+		else
+			return String.format("%s_%s.xlsx", "datatemplate",
+					_TEMPLATES_TYPE.jrc.equals(getTemplatesType()) ? "COLUMNS" : "BLOCKS");
 	}
 
 	public File getOutputFile(String templateid, _TEMPLATES_TYPE ttype) throws IOException {
@@ -330,5 +394,12 @@ public class TemplateMakerSettings implements Serializable {
 		} finally {
 			workbook.close();
 		}
+	}
+	public int get_number_y_axis() {
+		return getLayout_raw_data().get_number_x_axis(this);
+	}
+
+	public int get_number_x_axis() {
+		return getLayout_raw_data().get_number_y_axis(this);
 	}
 }
