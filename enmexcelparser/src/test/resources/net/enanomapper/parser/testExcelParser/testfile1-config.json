@@ -65,7 +65,18 @@
 
 		
 		"EXTERNAL_IDENTIFIERS": [
-
+			{
+				"TYPE": "ID1",
+				"ID":{
+					"COLUMN_INDEX": "F"
+				}
+			},
+			{
+				"TYPE": "ID2",
+				"ID":{
+					"COLUMN_INDEX": "G"
+				}
+			}
 		],
 
 		"COMPOSITION": [

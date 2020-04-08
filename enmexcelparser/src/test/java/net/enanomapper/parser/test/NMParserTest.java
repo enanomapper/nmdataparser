@@ -64,6 +64,7 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getSubstancetype()", "NPO_1317", subRec.getSubstancetype());
 		
 		
+		
 		//System.out.println(r.toJSON(null));
 		//List<ProtocolApplication> paList = r.getMeasurements();
 		 
