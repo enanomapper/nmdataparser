@@ -43,7 +43,7 @@ public class NMParserTest extends TestCase
 					SubstanceRecord r = parser.nextRecord();
 					n++;
 					System.out.println("Record #" + n);
-					checkRecord01(r, n);
+					checkRecord(r, n);
 				}
 			} catch (Exception x) {
 				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
@@ -55,7 +55,7 @@ public class NMParserTest extends TestCase
 		}
 	}
 	
-	void checkRecord01(SubstanceRecord subRec, int substNum)
+	void checkRecord(SubstanceRecord subRec, int substNum)
 	{
 		String prefix = "Substance " + substNum + ": ";
 		assertEquals(prefix + "getPublicName()", "NM-00" + substNum, subRec.getPublicName());
