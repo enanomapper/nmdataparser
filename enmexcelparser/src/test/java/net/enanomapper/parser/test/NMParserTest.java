@@ -63,6 +63,14 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
 		assertEquals(prefix + "getSubstancetype()", "NPO_1317", subRec.getSubstancetype());
 		
+		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "ID1", 
+				subRec.getExternalids().get(0).getSystemDesignator());
+		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "id1-" + substNum, 
+				subRec.getExternalids().get(0).getSystemIdentifier());
+		assertEquals(prefix + "getExternalids().get(1).getSystemDesignator()", "ID2", 
+				subRec.getExternalids().get(1).getSystemDesignator());
+		assertEquals(prefix + "getExternalids().get(1).getSystemDesignator()", "id2-" + substNum, 
+				subRec.getExternalids().get(1).getSystemIdentifier());
 		
 		
 		//System.out.println(r.toJSON(null));
