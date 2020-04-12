@@ -48,15 +48,27 @@
 			"COLUMN_INDEX": "D"
 		},
 		
+		"__SUBSTANCE_UUID__": {
+			"COLUMN_INDEX": "D"
+		},
+		
 		"SUBSTANCE_TYPE": "NPO_1317",
 
 		"OWNER_UUID": {
 			"COLUMN_INDEX": "C"
 		},
+		
+		"OWNER_NAME" : "test-owner-name",
 
 
 		"SUBSTANCE_UUID": {
 			"COLUMN_INDEX": "D"
+		},
+		
+		"REFERENCE_SUBSTANCE_UUID": {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "D",
+			"ROW_INDEX" : 10
 		},
 
 		"PUBLIC_NAME": {

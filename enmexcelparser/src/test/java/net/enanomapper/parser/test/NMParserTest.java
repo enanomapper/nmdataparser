@@ -60,7 +60,16 @@ public class NMParserTest extends TestCase
 		String prefix = "Substance " + substNum + ": ";
 		assertEquals(prefix + "getPublicName()", "NM-00" + substNum, subRec.getPublicName());
 		assertEquals(prefix + "getSubstanceName()", "name-" + substNum, subRec.getSubstanceName());
+		
+		//getSubstanceUUID() works both from JSON keyword SUBSTANCE_UUID or by default taken from SUBSTANCE_NAME 
+		String substUUID = ExcelParserConfigurator.generateUUID("XLSX", "name-" + substNum);
+		assertEquals(prefix + "getSubstanceUUID()", substUUID, subRec.getSubstanceUUID());
+		
+		String rsUUID = ExcelParserConfigurator.generateUUID("XLSX", "my-ref-subst");
+		assertEquals(prefix + "getReferenceSubstanceUUID()", rsUUID, subRec.getReferenceSubstanceUUID());
+		
 		assertEquals(prefix + "getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
+		assertEquals(prefix + "getOwnerName()", "test-owner-name", subRec.getOwnerName());
 		assertEquals(prefix + "getSubstancetype()", "NPO_1317", subRec.getSubstancetype());
 		
 		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "ID1", 
