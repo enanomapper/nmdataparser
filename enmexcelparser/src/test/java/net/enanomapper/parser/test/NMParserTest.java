@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
+import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
+import ambit2.base.interfaces.IStructureRecord;
+import ambit2.base.relation.composition.CompositionRelation;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -81,6 +82,11 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getExternalids().get(1).getSystemDesignator()", "id2-" + substNum, 
 				subRec.getExternalids().get(1).getSystemIdentifier());
 		
+		List<CompositionRelation> composition = subRec.getRelatedStructures();
+		testCompositionRelation(substNum, 1, composition.get(0));
+		testCompositionRelation(substNum, 2, composition.get(1));
+		
+		
 		
 		//System.out.println(r.toJSON(null));
 		//List<ProtocolApplication> paList = r.getMeasurements();
@@ -113,11 +119,51 @@ public class NMParserTest extends TestCase
 		 */		
 	}
 	
+	void testCompositionRelation(int substNum, int constituentIndex, CompositionRelation compRel)
+	{
+		String prefix = "Substance " + substNum + ", constituent " + constituentIndex + " : ";
+		
+		switch (constituentIndex)
+		{
+		case 1:
+			assertEquals(prefix + "getFormat()", "test-format", compRel.getFormat());
+			assertEquals(prefix + "getContent()", "test-content", compRel.getContent());
+			assertEquals(prefix + "getFormula()", "test-formula", compRel.getFormula());			
+			break;
+		case 2:
+			assertEquals(prefix + "getFormat()", "format-" + substNum, compRel.getFormat());
+			assertEquals(prefix + "getContent()", "content-" + substNum, compRel.getContent());
+			assertEquals(prefix + "getFormula()", "formula-" + substNum, compRel.getFormula());
+			assertEquals(prefix + "getSmiles()", "CCC-" + substNum, compRel.getSmiles());
+			assertEquals(prefix + "getInchi()", "inchi-" + substNum, compRel.getInchi());
+			assertEquals(prefix + "getInchiKey()", "inchi-key-" + substNum, compRel.getInchiKey());
+			
+			IStructureRecord str = compRel.getSecondStructure();
+			for (Property p : str.getRecordProperties()) 
+			{
+				if (p.getName().equals("PROP1"))
+					assertEquals(prefix + "property PROP1", "prop1-" + substNum, str.getRecordProperty(p));
+				
+				if (p.getName().equals("PROP2"))
+					assertEquals(prefix + "property PROP2", 5.0 + 0.1*substNum, str.getRecordProperty(p));
+				
+				if (p.getName().equals("PROP3"))
+				{	
+					//assertEquals(prefix + "property PROP3", (new Double(200 + 0.1 * substNum)).toString(), str.getRecordProperty(p));
+					assertEquals(prefix + "property PROP3", "200." + substNum, str.getRecordProperty(p));
+				}
+			}
+			
+		}
+	}
+	
 	void checkParserConfiguration01 (GenericExcelParser parser)
 	{
 		String prefix = "Config 1: ";
 		ExcelParserConfigurator conf = parser.getExcelParserConfigurator();
 		assertEquals(prefix + "sheetIndex", 1, conf.sheetIndex + 1); //0-based --> 1-based
 	}
+	
+	
 
 }

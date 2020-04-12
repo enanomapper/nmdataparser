@@ -92,7 +92,57 @@
 		],
 
 		"COMPOSITION": [
-
+			{
+				"FORMAT" : "test-format",
+				"CONTENT" : "test-content",
+				"FORMULA" : "test-formula"
+			},
+			
+			{
+				"CONTENT": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"FORMAT" : {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"FORMULA" : {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"SMILES" : {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"INCHI" : {
+					"COLUMN_INDEX": "X"
+				},
+				
+				"INCHI_KEY" : {
+					"COLUMN_INDEX": "Y"
+				},
+				
+				"PROPERTIES" :
+				{
+					"PROP1" :
+					{
+						"COLUMN_INDEX" : "Z"
+					},
+					
+					"PROP2" :
+					{
+						"COLUMN_INDEX" : "AA"
+					},
+					
+					
+					"PROP3" :
+					{
+						"COLUMN_INDEX" : "AB",
+						"DATA_INTERPRETATION" : "AS_TEXT"
+					}
+				}
+			}
 		]
 
 	},
