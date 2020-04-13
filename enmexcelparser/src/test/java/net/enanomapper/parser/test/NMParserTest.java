@@ -12,6 +12,7 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
+import ambit2.base.relation.composition.Proportion;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -128,7 +129,19 @@ public class NMParserTest extends TestCase
 		case 1:
 			assertEquals(prefix + "getFormat()", "test-format", compRel.getFormat());
 			assertEquals(prefix + "getContent()", "test-content", compRel.getContent());
-			assertEquals(prefix + "getFormula()", "test-formula", compRel.getFormula());			
+			assertEquals(prefix + "getFormula()", "test-formula", compRel.getFormula());
+			
+			Proportion prop = compRel.getRelation();
+			assertEquals(prefix + " proporion getFunction()", "test-function", prop.getFunction());
+			assertEquals(prefix + " proporion getTypical()", "test-typical-precision", prop.getTypical());
+			assertEquals(prefix + " proporion getTypical_value()", 0.33, prop.getTypical_value());
+			assertEquals(prefix + " proporion getTypical_unit()", "test-typical-unit", prop.getTypical_unit());			
+			assertEquals(prefix + " proporion getReal_lower()", "test-real-lower-precision", prop.getReal_lower());
+			assertEquals(prefix + " proporion getReal_lowervalue()", 0.20, prop.getReal_lowervalue());
+			assertEquals(prefix + " proporion getReal_upper()", "test-real-upper-precision", prop.getReal_upper());
+			assertEquals(prefix + " proporion getReal_uppervalue()", 0.50, prop.getReal_uppervalue());
+			assertEquals(prefix + " proporion getReal_unit()", "test-real-unit", prop.getReal_unit());
+			
 			break;
 		case 2:
 			assertEquals(prefix + "getFormat()", "format-" + substNum, compRel.getFormat());
@@ -149,6 +162,7 @@ public class NMParserTest extends TestCase
 				
 				if (p.getName().equals("PROP3"))
 				{	
+					//Ptroperty PROP3 is set with: "DATA_INTERPRETATION" : "AS_TEXT"
 					//assertEquals(prefix + "property PROP3", (new Double(200 + 0.1 * substNum)).toString(), str.getRecordProperty(p));
 					assertEquals(prefix + "property PROP3", "200." + substNum, str.getRecordProperty(p));
 				}

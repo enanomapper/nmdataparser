@@ -95,7 +95,22 @@
 			{
 				"FORMAT" : "test-format",
 				"CONTENT" : "test-content",
-				"FORMULA" : "test-formula"
+				"FORMULA" : "test-formula",
+				
+				"PROPORTION" :
+				{
+					"FUNCTION" : "test-function",
+					"TYPICAL_PRECISION" : "test-typical-precision",
+					"TYPICAL_VALUE" : 0.33,
+					"TYPICAL_UNIT" : "test-typical-unit",
+					"REAL_VALUE__" : 0.40,
+					"REAL_LOWER_PRECISION" : "test-real-lower-precision",
+					"REAL_LOWER_VALUE" : 0.20,
+					"REAL_UPPER_PRECISION" : "test-real-upper-precision",
+					"REAL_UPPER_VALUE" : 0.50,
+					"REAL_UNIT" : "test-real-unit"
+				}	
+				
 			},
 			
 			{
