@@ -74,6 +74,8 @@
 		"PUBLIC_NAME": {
 			"COLUMN_INDEX": "A"
 		},
+		
+		"ID_SUBSTANCE": 123456,
 
 		
 		"EXTERNAL_IDENTIFIERS": [

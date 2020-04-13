@@ -73,6 +73,8 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getOwnerUUID()", "owner-" + substNum, subRec.getOwnerUUID());
 		assertEquals(prefix + "getOwnerName()", "test-owner-name", subRec.getOwnerName());
 		assertEquals(prefix + "getSubstancetype()", "NPO_1317", subRec.getSubstancetype());
+		assertEquals(prefix + "getIdsubstance()", 123456, subRec.getIdsubstance());
+		
 		
 		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "ID1", 
 				subRec.getExternalids().get(0).getSystemDesignator());
@@ -105,17 +107,6 @@ public class NMParserTest extends TestCase
 		 * System.out.println( "***Protocol application:\n" +
 		 * pa.toString());
 		 * 
-		 * List<CompositionRelation> composition = r
-		 * .getRelatedStructures(); if (composition != null) for
-		 * (CompositionRelation relation : composition) { //
-		 * System.out.println(" ### Composition " + //
-		 * structureRecordToString(relation.getSecondStructure()));
-		 * System.out.println( " ### Composition \n" +
-		 * NMParserTestUtils.compositionRelationStructureToString(
-		 * relation)); // both give // the same result
-		 * System.out.println( " ### Properties: " +
-		 * NMParserTestUtils.structureRecordProperties(relation
-		 * .getSecondStructure())); }
 		 * 
 		 */		
 	}
