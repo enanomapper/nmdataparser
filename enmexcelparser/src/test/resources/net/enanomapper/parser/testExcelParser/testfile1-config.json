@@ -17,7 +17,8 @@
 		"ALLOW_EMPTY": true,
 		"RECOGNITION": "BY_INDEX",
 
-		"VARIABLES": {
+		"VARIABLES": 
+		{
 			"var1": {
 				"ITERATION" : "ABSOLUTE_LOCATION",
 				"COLUMN_INDEX" : "C",
@@ -26,6 +27,12 @@
 			
 			"var2": {
 				"COLUMN_INDEX" : "B"
+			},
+			
+			"topCategory": {
+				"ITERATION" : "ABSOLUTE_LOCATION",				
+				"COLUMN_INDEX" : "E" ,
+				"ROW_INDEX" : 10
 			}
 		}
 
@@ -166,6 +173,23 @@
 
 	"PROTOCOL_APPLICATIONS": [
 	{
+		"PROTOCOL_APPLICATION_UUID" : {
+			"COLUMN_INDEX": "I"
+		},
+		
+		"INVESTIGATION_UUID" : "test-investigation-uuid",
+		
+		"ASSAY_UUID" : "test-assay-uuid",
+		
+		"PROTOCOL_ENDPOINT" : "test-protocol-endpoint",
+		
+		"PROTOCOL_TOP_CATEGORY" : {
+			"ITERATION" : "VARIABLE",
+			"VARIABLE_KEY" : "topCategory"
+		},
+		
+		"PROTOCOL_CATEGORY_CODE" : "test-category-code",
+		
 		"CITATION_TITLE": {
 			"COLUMN_INDEX": "I"
 		},

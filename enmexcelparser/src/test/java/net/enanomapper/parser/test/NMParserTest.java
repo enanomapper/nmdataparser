@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
@@ -89,26 +90,16 @@ public class NMParserTest extends TestCase
 		testCompositionRelation(substNum, 1, composition.get(0));
 		testCompositionRelation(substNum, 2, composition.get(1));
 		
-		
+		List<ProtocolApplication> paList = subRec.getMeasurements();
+		for (int i = 0; i < paList.size(); i++)
+		{	
+			ProtocolApplication pa = paList.get(i);
+			testProtocolApplication(substNum, i, pa );
+			//System.out.println( "***Protocol application:\n" + pa.toString());
+		}
 		
 		//System.out.println(r.toJSON(null));
-		//List<ProtocolApplication> paList = r.getMeasurements();
-		 
-		//if (paList != null) for (ProtocolApplication pa : paList)
-		//	System.out.println( "***Protocol application:\n" +
-		//  pa.toString());
-		  
-		
-		/*
-		 * System.out.println(r.toJSON(null));
-		 * List<ProtocolApplication> paList = r.getMeasurements();
-		 * 
-		 * if (paList != null) for (ProtocolApplication pa : paList)
-		 * System.out.println( "***Protocol application:\n" +
-		 * pa.toString());
-		 * 
-		 * 
-		 */		
+				
 	}
 	
 	void testCompositionRelation(int substNum, int constituentIndex, CompositionRelation compRel)
@@ -161,6 +152,19 @@ public class NMParserTest extends TestCase
 			
 		}
 	}
+	
+	void testProtocolApplication(int substNum, int paIndex, ProtocolApplication pa)
+	{
+		String prefix = "Substance " + substNum + ", ProtocolApplication " + paIndex + " : ";
+		Protocol p = (Protocol) pa.getProtocol();
+		assertEquals(prefix + "getProtocol()", "test-protocol-endpoint", p.getEndpoint());
+		assertEquals(prefix + "getTopCategory()", "test-top-cat", p.getTopCategory());
+		assertEquals(prefix + "getCategory()", "test-category-code", p.getCategory());		
+		List<String> guidesLines = p.getGuideline();
+		assertEquals(prefix + "guidesLines 1", "guide1-0" + substNum, guidesLines.get(0));
+		assertEquals(prefix + "guidesLines 2", "guide2-0" + substNum, guidesLines.get(1));
+	}
+	
 	
 	void checkParserConfiguration01 (GenericExcelParser parser)
 	{
