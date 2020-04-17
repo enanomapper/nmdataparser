@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -163,6 +164,26 @@ public class NMParserTest extends TestCase
 		List<String> guidesLines = p.getGuideline();
 		assertEquals(prefix + "guidesLines 1", "guide1-0" + substNum, guidesLines.get(0));
 		assertEquals(prefix + "guidesLines 2", "guide2-0" + substNum, guidesLines.get(1));
+		
+		String paUUID = ExcelParserConfigurator.generateUUID("XLSX", "pr-endpoint-" + substNum);
+		assertEquals(prefix + "getDocumentUUID()", paUUID, pa.getDocumentUUID());
+		
+		String invUUID = ExcelParserConfigurator.generateUUID("XLSX", "test-investigation-uuid");		
+		assertEquals(prefix + "getInvestigationUUID()", UUID.nameUUIDFromBytes(invUUID.getBytes()), 
+						pa.getInvestigationUUID());		
+		//problem with ordinary text. invUUID should be the exoected value but 
+		//function setInvestigationUUID() generates redundantly UUID from invUUID
+		//
+		//The test below would work
+		//assertEquals(prefix + "getInvestigationUUID()", UUID.fromString("8a9becb6-c841-3717-953c-9f05cda7b54a"), 
+		//		pa.getInvestigationUUID());
+		
+		assertEquals(prefix + "getAssayUUID()", UUID.nameUUIDFromBytes("test-assay-uuid".getBytes()), 
+				pa.getAssayUUID());
+		
+		
+		
+		
 	}
 	
 	

@@ -174,10 +174,11 @@
 	"PROTOCOL_APPLICATIONS": [
 	{
 		"PROTOCOL_APPLICATION_UUID" : {
-			"COLUMN_INDEX": "I"
+			"COLUMN_INDEX": "H"
 		},
 		
 		"INVESTIGATION_UUID" : "test-investigation-uuid",
+		"INVESTIGATION_UUID__" : "8a9becb6-c841-3717-953c-9f05cda7b54a",	
 		
 		"ASSAY_UUID" : "test-assay-uuid",
 		
