@@ -222,7 +222,28 @@
 				"COLUMN_INDEX": "O"
 			}
 		},
-
+		
+		"RELIABILITY_IS_ROBUST_STUDY" : {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "G",
+			"ROW_INDEX" : 10
+		},
+		
+		"RELIABILITY_IS_USED_FOR_CLASSIFICATION" : {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "H",
+			"ROW_INDEX" : 10
+		},
+		
+		"RELIABILITY_IS_USED_FOR_MSDS" : "msds",
+		
+		"RELIABILITY_PURPOSE_FLAG" : "purpose-flag",
+		
+		"RELIABILITY_STUDY_RESULT_TYPE" : "result-type",
+		
+		"RELIABILITY_VALUE" : "reliability-value",
+		
+		
 		"PARAMETERS": {
 			"par1": {
 				"COLUMN_INDEX": "K"

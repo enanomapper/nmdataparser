@@ -174,7 +174,7 @@ public class NMParserTest extends TestCase
 		//problem with ordinary text. invUUID should be the exoected value but 
 		//function setInvestigationUUID() generates redundantly UUID from invUUID
 		//
-		//The test below would work
+		//The commented test below currently would work
 		//assertEquals(prefix + "getInvestigationUUID()", UUID.fromString("8a9becb6-c841-3717-953c-9f05cda7b54a"), 
 		//		pa.getInvestigationUUID());
 		
@@ -189,6 +189,13 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getInterpretationCriteria()", "interp-crit-" + substNum, pa.getInterpretationCriteria());
 		assertEquals(prefix + "getInterpretationResult()", "interp-res-" + substNum, pa.getInterpretationResult());
 		
+		//Reliability
+		assertEquals(prefix + "getReliability().getValue()", "reliability-value", pa.getReliability().getValue());
+		assertEquals(prefix + "getReliability().getIsRobustStudy()", "robust", pa.getReliability().getIsRobustStudy());
+		assertEquals(prefix + "getReliability().getIsUsedforClassification()", "classification", pa.getReliability().getIsUsedforClassification());
+		assertEquals(prefix + "getReliability().getIsUsedforMSDS()", "msds", pa.getReliability().getIsUsedforMSDS());
+		assertEquals(prefix + "getReliability().getPurposeFlag())", "purpose-flag", pa.getReliability().getPurposeFlag());
+		assertEquals(prefix + "getReliability().getStudyResultType())", "result-type", pa.getReliability().getStudyResultType());
 		
 	}
 	
