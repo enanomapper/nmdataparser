@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.IValue;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
@@ -196,6 +198,14 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getReliability().getIsUsedforMSDS()", "msds", pa.getReliability().getIsUsedforMSDS());
 		assertEquals(prefix + "getReliability().getPurposeFlag())", "purpose-flag", pa.getReliability().getPurposeFlag());
 		assertEquals(prefix + "getReliability().getStudyResultType())", "result-type", pa.getReliability().getStudyResultType());
+		
+		//Parameters
+		IParams params = (IParams) pa.getParameters();
+		IValue v = (IValue) params.get("par1");
+		assertEquals(prefix + "parameters par1 value", 1.0 * substNum, v.getLoValue());
+		assertEquals(prefix + "parameters par1 unit", "K", v.getUnits());
+		String par2_str = (String) params.get("par2");
+		assertEquals(prefix + "parameters par1 value", "par2-0" + substNum, par2_str);
 		
 	}
 	

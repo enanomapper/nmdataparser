@@ -246,11 +246,11 @@
 		
 		"PARAMETERS": {
 			"par1": {
-				"COLUMN_INDEX": "K"
+				"COLUMN_INDEX": "P"
 			},
 
 			"par2": {
-				"COLUMN_INDEX": "L"
+				"COLUMN_INDEX": "Q"
 			}
 		},
 
