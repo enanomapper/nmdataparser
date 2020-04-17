@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.IValue;
 import ambit2.base.data.study.Protocol;
@@ -207,6 +208,17 @@ public class NMParserTest extends TestCase
 		String par2_str = (String) params.get("par2");
 		assertEquals(prefix + "parameters par1 value", "par2-0" + substNum, par2_str);
 		
+		List<EffectRecord> effRecList = pa.getEffects();
+		for (int i = 0; i < effRecList.size(); i++)
+			testEffectRecord(substNum, paIndex, i, effRecList.get(i));
+	}
+	
+	void testEffectRecord(int substNum, int paIndex, int effRecIndex, EffectRecord effRec)
+	{
+		String prefix = "Substance " + substNum + ", ProtocolApplication " + paIndex + 
+				" Effect Rec. " + effRecIndex + " : ";
+		
+		//TODO
 	}
 	
 	
