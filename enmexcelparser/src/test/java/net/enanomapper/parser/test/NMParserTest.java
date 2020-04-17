@@ -181,7 +181,13 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + "getAssayUUID()", UUID.nameUUIDFromBytes("test-assay-uuid".getBytes()), 
 				pa.getAssayUUID());
 		
+		//JSON CITATION_* sections defiens reference info
+		assertEquals(prefix + "getReference()", "title-" + substNum, pa.getReference());
+		assertEquals(prefix + "getReferenceOwner()", "cit-own-" + substNum, pa.getReferenceOwner());
+		assertEquals(prefix + "getReferenceYear()", "year" + (2010 + substNum), pa.getReferenceYear());
 		
+		assertEquals(prefix + "getInterpretationCriteria()", "interp-crit-" + substNum, pa.getInterpretationCriteria());
+		assertEquals(prefix + "getInterpretationResult()", "interp-res-" + substNum, pa.getInterpretationResult());
 		
 		
 	}
