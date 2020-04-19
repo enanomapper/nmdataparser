@@ -108,7 +108,7 @@ public class NMParserTest extends TestCase
 	
 	void testCompositionRelation(int substNum, int constituentIndex, CompositionRelation compRel)
 	{
-		String prefix = "Substance " + substNum + ", constituent " + constituentIndex + " : ";
+		String prefix = "Substance " + substNum + ", constituent " + (constituentIndex + 1) + " : ";
 		
 		switch (constituentIndex)
 		{
@@ -159,7 +159,7 @@ public class NMParserTest extends TestCase
 	
 	void testProtocolApplication(int substNum, int paIndex, ProtocolApplication pa)
 	{
-		String prefix = "Substance " + substNum + ", ProtocolApplication " + paIndex + " : ";
+		String prefix = "Substance " + substNum + ", ProtocolApplication " + (paIndex+1) + " : ";
 		Protocol p = (Protocol) pa.getProtocol();
 		assertEquals(prefix + "getProtocol()", "test-protocol-endpoint", p.getEndpoint());
 		assertEquals(prefix + "getTopCategory()", "test-top-cat", p.getTopCategory());
@@ -215,11 +215,32 @@ public class NMParserTest extends TestCase
 	
 	void testEffectRecord(int substNum, int paIndex, int effRecIndex, EffectRecord effRec)
 	{
-		String prefix = "Substance " + substNum + ", ProtocolApplication " + paIndex + 
-				" Effect Rec. " + effRecIndex + " : ";
+		String prefix = "Substance " + substNum + ", ProtocolApplication " + (paIndex+1) + 
+				" Effect Rec. " + (effRecIndex + 1) + " : ";
+		
+		IParams conds;
+				
+		switch (effRecIndex)
+		{
+		case 0:
+			assertEquals(prefix + "getEndpoint()", "Size".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getLoValue()", 300.0 + substNum, effRec.getLoValue());
+			assertEquals(prefix + "getUnit()", "nm", effRec.getUnit());
+			//Conditions
+			conds = (IParams) effRec.getConditions();
+			String c1_str = (String) conds.get("cond1");
+			assertEquals(prefix + "conditipons cond1 value", "cond1-val", c1_str);			
+			break;
+		case 1:
+			//IValue v = (IValue) conds.get("cond1");
+			break;
+		}
+		
 		
 		//TODO
 	}
+	
+	
 	
 	
 	void checkParserConfiguration01 (GenericExcelParser parser)
