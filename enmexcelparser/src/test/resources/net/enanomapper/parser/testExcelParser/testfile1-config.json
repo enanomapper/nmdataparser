@@ -259,6 +259,8 @@
 		[
 			{
 				"ENDPOINT": "Size",
+				
+				"ENDPOINT_TYPE": "Average",
 			
 				"VALUE": {
 					"COLUMN_INDEX": "R"
@@ -266,6 +268,26 @@
 
 				"CONDITIONS": {
 					"cond1": "cond1-val"
+				}
+			},
+			{
+				"ENDPOINT": "Eff1",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+				},
+
+				"CONDITIONS": {
+					"cond11": {
+						"COLUMN_INDEX": "AF"
+					},
+					"cond12": {
+						"COLUMN_INDEX": "AG"
+					}
 				}
 			}
 		]

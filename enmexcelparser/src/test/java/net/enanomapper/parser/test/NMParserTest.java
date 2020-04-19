@@ -224,21 +224,44 @@ public class NMParserTest extends TestCase
 		{
 		case 0:
 			assertEquals(prefix + "getEndpoint()", "Size".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getEndpointType()", "Average".toUpperCase(), effRec.getEndpointType());
 			assertEquals(prefix + "getLoValue()", 300.0 + substNum, effRec.getLoValue());
 			assertEquals(prefix + "getUnit()", "nm", effRec.getUnit());
 			//Conditions
 			conds = (IParams) effRec.getConditions();
-			String c1_str = (String) conds.get("cond1");
-			assertEquals(prefix + "conditipons cond1 value", "cond1-val", c1_str);			
+			String c0_str = (String) conds.get("cond1");
+			assertEquals(prefix + "conditipons cond1 value", "cond1-val", c0_str);			
 			break;
+			
 		case 1:
-			//IValue v = (IValue) conds.get("cond1");
+			assertEquals(prefix + "getEndpoint()", "Eff1".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getLoValue()", 100.0 * (substNum+1), effRec.getLoValue());
+			assertEquals(prefix + "getErrorValue()", 80.0 + substNum, effRec.getErrorValue());
+			assertEquals(prefix + "getUnit()", "K", effRec.getUnit());
+			switch (substNum) {
+			case 1:
+				assertEquals(prefix + "getLoQualifier())", ">", effRec.getLoQualifier());
+				break;
+			case 2:
+				assertEquals(prefix + "getLoQualifier())", "ca.", effRec.getLoQualifier());
+				break;
+			case 3:
+				assertEquals(prefix + "getLoQualifier())", "~", effRec.getLoQualifier());
+				break;	
+			}
+			//Conditions
+			conds = (IParams) effRec.getConditions();
+			String c11_str = (String) conds.get("cond11");
+			assertEquals(prefix + "conditipons cond11 value", "cond1-" + substNum, c11_str);			
+			IValue v = (IValue) conds.get("cond12");
+			assertEquals(prefix + "conditipons cond12 value", 100.0 + substNum, v.getLoValue());
+			assertEquals(prefix + "conditipons cond12 unit", "m", v.getUnits());
 			break;
 		}
 		
-		
 		//TODO
 	}
+	
 	
 	
 	
