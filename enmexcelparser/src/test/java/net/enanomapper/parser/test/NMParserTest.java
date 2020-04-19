@@ -219,7 +219,9 @@ public class NMParserTest extends TestCase
 				" Effect Rec. " + (effRecIndex + 1) + " : ";
 		
 		IParams conds;
-				
+		IValue v;
+		String s;
+		
 		switch (effRecIndex)
 		{
 		case 0:
@@ -229,8 +231,8 @@ public class NMParserTest extends TestCase
 			assertEquals(prefix + "getUnit()", "nm", effRec.getUnit());
 			//Conditions
 			conds = (IParams) effRec.getConditions();
-			String c0_str = (String) conds.get("cond1");
-			assertEquals(prefix + "conditipons cond1 value", "cond1-val", c0_str);			
+			s = (String) conds.get("cond1");
+			assertEquals(prefix + "conditipons cond1 value", "cond1-val", s);			
 			break;
 			
 		case 1:
@@ -251,12 +253,43 @@ public class NMParserTest extends TestCase
 			}
 			//Conditions
 			conds = (IParams) effRec.getConditions();
-			String c11_str = (String) conds.get("cond11");
-			assertEquals(prefix + "conditipons cond11 value", "cond1-" + substNum, c11_str);			
-			IValue v = (IValue) conds.get("cond12");
+			s = (String) conds.get("cond11");
+			assertEquals(prefix + "conditipons cond11 value", "cond1-" + substNum, s);			
+			v = (IValue) conds.get("cond12");
 			assertEquals(prefix + "conditipons cond12 value", 100.0 + substNum, v.getLoValue());
 			assertEquals(prefix + "conditipons cond12 unit", "m", v.getUnits());
 			break;
+		case 2:
+			assertEquals(prefix + "getEndpoint()", "Eff2".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getUpValue()", 50.0 + substNum, effRec.getUpValue());
+			assertEquals(prefix + "getUnit()", "A", effRec.getUnit());
+			//Conditions
+			conds = (IParams) effRec.getConditions();
+			v = (IValue) conds.get("cond21");
+			assertEquals(prefix + "conditipons cond21 value", 0.0 + substNum, v.getLoValue());
+			assertEquals(prefix + "conditipons cond21 LoQualifier", ">", v.getLoQualifier());
+			break;
+		case 3:
+			assertEquals(prefix + "getEndpoint()", "Eff3".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getLoValue()", 0.0 + substNum, effRec.getLoValue());
+			assertEquals(prefix + "getUpValue()", 56.0, effRec.getUpValue());
+			assertEquals(prefix + "getLoQualifier())", ">=", effRec.getLoQualifier());
+			assertEquals(prefix + "getUpQualifier())", "<=", effRec.getUpQualifier());
+			assertEquals(prefix + "getUnit()", "Pa", effRec.getUnit());
+			break;
+		case 4:
+			assertEquals(prefix + "getEndpoint()", "Eff4".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getLoValue()", 10.0 + substNum, effRec.getLoValue());
+			assertEquals(prefix + "getUpValue()", 20.0 + substNum, effRec.getUpValue());
+			assertEquals(prefix + "getLoQualifier())", ">=", effRec.getLoQualifier());
+			assertEquals(prefix + "getUpQualifier())", "~", effRec.getUpQualifier());
+			assertEquals(prefix + "getUnit()", "nm", effRec.getUnit());
+			break;
+		case 5:
+			assertEquals(prefix + "getEndpoint()", "Eff5".toUpperCase(), effRec.getEndpoint().toString());
+			assertEquals(prefix + "getTextValue()", "text-" + substNum, effRec.getTextValue());
+			assertEquals(prefix + "getSampleID()", "sample-id-value", effRec.getSampleID());			
+			break;	
 		}
 		
 		//TODO

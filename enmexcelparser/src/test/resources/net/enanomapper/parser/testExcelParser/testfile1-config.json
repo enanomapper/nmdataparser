@@ -289,6 +289,60 @@
 						"COLUMN_INDEX": "AG"
 					}
 				}
+			},
+			{
+				"ENDPOINT": "Eff2",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+				},
+
+				"CONDITIONS": {
+					"cond21": {
+						"COLUMN_INDEX": "AI"
+					}
+				}
+			},
+			{
+				"ENDPOINT": "Eff3",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AJ"
+				}
+			},
+			{
+				"ENDPOINT": "Eff4",
+			
+				"LO_VALUE": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"UP_VALUE": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"UNIT": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"LO_QUALIFIER": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"UP_QUALIFIER": "~"
+			},			
+			{
+				"ENDPOINT": "Eff5",
+				
+				"SAMPLE_ID" : "sample-id-value",
+			
+				"TEXT_VALUE": {
+					"COLUMN_INDEX": "AO"
+				}
 			}
 		]
 
