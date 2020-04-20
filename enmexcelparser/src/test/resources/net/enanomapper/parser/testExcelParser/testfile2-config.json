@@ -1,0 +1,58 @@
+{
+	"TEMPLATE_INFO": {
+		"NAME": "Test2",
+		"VERSION": "version 1",
+		"TYPE": 1,
+		"ALLOW_QUALIFIER_IN_VALUE_CELL": 1
+	},
+
+	"DATA_ACCESS": {
+		"ITERATION": "ROW_SINGLE",
+		"SHEET_INDEX": 1,
+		"START_ROW": 2,
+		"END_ROW": 4,
+
+		"START_HEADER_ROW": 1,
+		"END_HEADER_ROW": 1,
+		"ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX",
+
+		"VARIABLES": 
+		{
+			"var1": {
+				"ITERATION" : "ABSOLUTE_LOCATION",
+				"COLUMN_INDEX" : "C",
+				"ROW_INDEX" : 10
+			},
+			
+			"var2": {
+				"COLUMN_INDEX" : "B"
+			},
+			
+			"topCategory": {
+				"ITERATION" : "ABSOLUTE_LOCATION",				
+				"COLUMN_INDEX" : "E" ,
+				"ROW_INDEX" : 10
+			}
+		}
+
+	},
+
+	
+	"SUBSTANCE_RECORD": 
+	{
+		"SUBSTANCE_NAME": "TiO2"
+	}	
+	
+	"PROTOCOL_APPLICATIONS": [
+	{	
+		"PROTOCOL_ENDPOINT" : "test-protocol-endpoint",
+		
+		"EFFECTS_BLOCK": [
+			{
+			}
+		]
+	}
+	]
+
+}
