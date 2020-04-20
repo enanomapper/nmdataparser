@@ -30,6 +30,10 @@ public class NMParserTest extends TestCase
 	public static Test suite() {
 		return new TestSuite(NMParserTest.class);
 	}
+	
+	public static double concentrations[] = {0,	1,	5,	10,	25};
+	public static double timePoints[] = {6,	24};
+	
 		
 	public void test01() throws Exception {
 		// this will close the inputstream automatically
@@ -322,7 +326,67 @@ public class NMParserTest extends TestCase
 	{
 		String prefix = "testing ";
 		assertEquals(prefix + "getPublicName()", "TiO2", r.getPublicName());
-		//TODO
+		
+		ProtocolApplication pa = r.getMeasurements().get(0);
+		
+		List<EffectRecord> effRecList = pa.getEffects();
+		for (int i = 0; i < effRecList.size(); i++)
+			testEffectRecord02(effRecList.get(i));
+		
+		//System.out.println(r.toJSON(null));
+		//System.out.println(r.getMeasurements().get(0).toString());
+		
+	}
+	
+	void testEffectRecord02(EffectRecord effRec)
+	{
+		String effEndpoint = effRec.getEndpoint().toString();
+		IParams conds;
+		IValue v;
+		String s;
+		
+		if (effEndpoint.equalsIgnoreCase("Cell viability"))
+		{
+			conds = (IParams)effRec.getConditions();			
+			v = (IValue) conds.get("Time point");			
+			int timeIndex = timePointIndex((Double)v.getLoValue());
+			s = (String) conds.get("Replicate");			
+			int rep = replicateToNum(s);
+			v = (IValue) conds.get("Concentration");
+			int concIndex = concentrationIndex((Double)v.getLoValue());
+			
+			double expEffValue = 0.3 + (double)concIndex*0.1 + rep*0.01 + (double)timeIndex * 0.002;
+			assertEquals("Cell viability " + s + " concInd " + concIndex + " timeIndex " + timeIndex +  
+					" getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
+			
+		}
+	}
+	
+	int replicateToNum (String rep)
+	{
+		if (rep.equals("Replicate 1"))
+			return 1;
+		if (rep.equals("Replicate 2"))
+			return 2;
+		if (rep.equals("Replicate 3"))
+			return 3;
+		return 0;
+	}
+	
+	int concentrationIndex (double c)
+	{
+		for (int i = 0; i < concentrations.length; i++)
+			if (c == concentrations[i])
+				return i;
+		return -1;
+	}
+	
+	int timePointIndex (double t)
+	{
+		for (int i = 0; i < timePoints.length; i++)
+			if (t == timePoints[i])
+				return i;
+		return -1;
 	}
 	
 	

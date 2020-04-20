@@ -19,6 +19,9 @@
 
 		"VARIABLES": 
 		{
+			"Assay_endpoint": "Cell viability",			 
+			"Outcome_metric": "ng/ml",
+			
 			"Replicates" : 3,
 			
 			"C": {
@@ -70,10 +73,60 @@
 	
 	"PROTOCOL_APPLICATIONS": [
 	{	
-		"PROTOCOL_ENDPOINT" : "test-protocol-endpoint",
+		"PROTOCOL_ENDPOINT" : "Cell viability",
 		
 		"EFFECTS_BLOCK": [
+		{
+			"LOCATION": {
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"SHEET_INDEX": 2,
+				"COLUMN_INDEX": "C",
+				"ROW_INDEX": 3
+			},
 			
+			"ROW_SUBBLOCKS": "= TimePoints.size()",
+			"COLUMN_SUBBLOCKS": "= Replicates",
+			"SUBBLOCK_SIZE_ROWS": "= C.size() + 4",
+			"SUBBLOCK_SIZE_COLUMNS": 5,
+			
+			"VALUE_GROUPS": [
+				{
+					"NAME": "=Assay_endpoint",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 3,
+					"END_COLUMN": 3,
+					"START_ROW": 3,
+					"END_ROW": "=3 + C.size() - 1",
+					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						},
+						{
+							"NAME": "Concentration",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": -1,
+							"ROW_POS": 0,
+							"UNIT" : "µg/ml"
+						}
+					]	
+				}
+			]
+			
+		}	
 		]
 	}
 	]
