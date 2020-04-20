@@ -62,6 +62,30 @@ public class NMParserTest extends TestCase
 		}
 	}
 	
+	public void test02() throws Exception {
+		// this will close the inputstream automatically
+		try (InputStream fin = getClass().getClassLoader()
+				.getResourceAsStream("net/enanomapper/parser/testExcelParser/testfile2.xlsx")) {
+			boolean isXLSX = true;
+			URL url = getClass().getClassLoader()
+					.getResource("net/enanomapper/parser/testExcelParser/testfile2-config.json");
+			try (GenericExcelParser parser = new GenericExcelParser(fin, new File(url.getFile()), isXLSX)) {
+
+				// System.out.println(parser.getExcelParserConfigurator().toJSONString()
+				// + "\n");
+				SubstanceRecord r = parser.nextRecord();
+				testEffectBlocks02(r);
+				
+			} catch (Exception x) {
+				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
+				throw x;
+			}
+		} catch (Exception x1) {
+			Logger.getAnonymousLogger().log(Level.SEVERE,x1.getMessage());
+			throw x1;
+		}
+	}
+	
 	void checkRecord(SubstanceRecord subRec, int substNum)
 	{
 		String prefix = "Substance " + substNum + ": ";
@@ -291,10 +315,15 @@ public class NMParserTest extends TestCase
 			assertEquals(prefix + "getSampleID()", "sample-id-value", effRec.getSampleID());			
 			break;	
 		}
-		
-		//TODO
 	}
 	
+	
+	void testEffectBlocks02(SubstanceRecord r)
+	{
+		String prefix = "testing ";
+		assertEquals(prefix + "getPublicName()", "TiO2", r.getPublicName());
+		//TODO
+	}
 	
 	
 	

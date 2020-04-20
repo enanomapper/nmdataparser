@@ -1,6 +1,6 @@
 {
 	"TEMPLATE_INFO": {
-		"NAME": "Test2",
+		"NAME": "Test2-IOM",
 		"VERSION": "version 1",
 		"TYPE": 1,
 		"ALLOW_QUALIFIER_IN_VALUE_CELL": 1
@@ -10,7 +10,7 @@
 		"ITERATION": "ROW_SINGLE",
 		"SHEET_INDEX": 1,
 		"START_ROW": 2,
-		"END_ROW": 4,
+		"END_ROW": 2,
 
 		"START_HEADER_ROW": 1,
 		"END_HEADER_ROW": 1,
@@ -19,38 +19,61 @@
 
 		"VARIABLES": 
 		{
-			"var1": {
-				"ITERATION" : "ABSOLUTE_LOCATION",
-				"COLUMN_INDEX" : "C",
-				"ROW_INDEX" : 10
-			},
+			"Replicates" : 3,
 			
-			"var2": {
-				"COLUMN_INDEX" : "B"
-			},
-			
-			"topCategory": {
-				"ITERATION" : "ABSOLUTE_LOCATION",				
-				"COLUMN_INDEX" : "E" ,
-				"ROW_INDEX" : 10
+			"C": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 6,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            },
+            
+            "TimeDesignations": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 8,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            },
+            
+            "TimePoints": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 9,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            }   
+		},
+		
+		"VARIABLE_MAPPINGS": [
+			{
+				"NAME": "Time",
+				"KEYS_VARIABLE": "TimeDesignations",
+				"VALUES_VARIABLE": "TimePoints"
 			}
-		}
+		]
 
 	},
 
 	
 	"SUBSTANCE_RECORD": 
 	{
-		"SUBSTANCE_NAME": "TiO2"
-	}	
+		"PUBLIC_NAME": "TiO2"
+	},	
 	
 	"PROTOCOL_APPLICATIONS": [
 	{	
 		"PROTOCOL_ENDPOINT" : "test-protocol-endpoint",
 		
 		"EFFECTS_BLOCK": [
-			{
-			}
+			
 		]
 	}
 	]
