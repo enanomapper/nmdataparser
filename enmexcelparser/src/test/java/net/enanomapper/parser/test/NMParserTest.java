@@ -33,6 +33,9 @@ public class NMParserTest extends TestCase
 	
 	public static double concentrations[] = {0,	1,	5,	10,	25};
 	public static double timePoints[] = {6,	24};
+	public static String errQualifiers[] = {"<", "<", "<", "<=", "<="};
+	public static String effQualifiers[] = {"<", "<=", "~"};
+	
 	
 		
 	public void test01() throws Exception {
@@ -327,15 +330,15 @@ public class NMParserTest extends TestCase
 		String prefix = "testing ";
 		assertEquals(prefix + "getPublicName()", "TiO2", r.getPublicName());
 		
-		ProtocolApplication pa = r.getMeasurements().get(0);
-		
-		List<EffectRecord> effRecList = pa.getEffects();
-		for (int i = 0; i < effRecList.size(); i++)
-			testEffectRecord02(effRecList.get(i));
+		for (ProtocolApplication pa : r.getMeasurements())
+		{	
+			List<EffectRecord> effRecList = pa.getEffects();
+			for (int i = 0; i < effRecList.size(); i++)
+				testEffectRecord02(effRecList.get(i));
+		}
 		
 		//System.out.println(r.toJSON(null));
-		System.out.println(r.getMeasurements().get(0).toString());
-		
+		//System.out.println(r.getMeasurements().get(1).toString());
 	}
 	
 	void testEffectRecord02(EffectRecord effRec)
@@ -347,27 +350,24 @@ public class NMParserTest extends TestCase
 		String s;
 		
 		if (effEndpoint.equalsIgnoreCase("Cell viability"))
-		{
-				
-				conds = (IParams)effRec.getConditions();			
-				v = (IValue) conds.get("Time point");			
-				int timeIndex = timePointIndex((Double)v.getLoValue());
-				s = (String) conds.get("Replicate");			
-				int rep = replicateToNum(s);
-				v = (IValue) conds.get("Concentration");
-				int concIndex = concentrationIndex((Double)v.getLoValue());
-				
-				double expEffValue;
-				if (effEndPointType.equals("average raw data"))
-					expEffValue = 0.3 + (double)concIndex*0.1 + rep*0.01 + (double)timeIndex * 0.002;
-				else
-					expEffValue = 100.0 - concIndex * (rep + timeIndex*3);
-				
-				String prefix = "Cell viability " + s + " concIndex " + concIndex + " timeIndex " + timeIndex;
-				assertEquals(prefix + " getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
-				assertEquals(prefix + " getUnit()", "ng/ml", effRec.getUnit());
-				
-			
+		{		
+			conds = (IParams)effRec.getConditions();			
+			v = (IValue) conds.get("Time point");			
+			int timeIndex = timePointIndex((Double)v.getLoValue());
+			s = (String) conds.get("Replicate");			
+			int rep = replicateToNum(s);
+			v = (IValue) conds.get("Concentration");
+			int concIndex = concentrationIndex((Double)v.getLoValue());
+
+			double expEffValue;
+			if (effEndPointType.equals("average raw data"))
+				expEffValue = 0.3 + (double)concIndex*0.1 + rep*0.01 + (double)timeIndex * 0.002;
+			else
+				expEffValue = 100.0 - concIndex * (rep + timeIndex*3);
+
+			String prefix = "Cell viability " + s + " concIndex " + concIndex + " timeIndex " + timeIndex;
+			assertEquals(prefix + " getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
+			assertEquals(prefix + " getUnit()", "ng/ml", effRec.getUnit());
 		}
 		
 		if (effEndpoint.equalsIgnoreCase("Intracellular LDH Control"))
@@ -381,6 +381,40 @@ public class NMParserTest extends TestCase
 			assertEquals("Intracellular LDH Control " + s + " timeIndex " + timeIndex +  
 					" getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
 		}
+		
+		if (effEndpoint.equalsIgnoreCase("Eff1") ||
+				effEndpoint.equalsIgnoreCase("Eff2") ||
+				effEndpoint.equalsIgnoreCase("Eff3"))
+		{
+			conds = (IParams)effRec.getConditions();
+			IValue conc = (IValue) conds.get("Concentration");
+			int concIndex = concentrationIndex((Double)conc.getLoValue());
+			Double indexVal = (Double) conds.get("Index");
+			int index = indexVal.intValue(); 
+			String replicate = (String) conds.get("Replicate");
+			IValue p1 = (IValue) conds.get("p1");
+			
+			double expEffValue = 500 + 0.1*concIndex + 0.01*index;
+			double expErrValue = expEffValue / 20.0;			
+			String prefix = "Eff" + index + "  concIndex " + concIndex;
+			
+			//Check endpoint
+			assertEquals(prefix + " getEndpoint() ", "Eff" + index, effRec.getEndpoint().toString() );
+			assertEquals(prefix + " getLoValue() ", expEffValue, effRec.getLoValue() );
+			assertEquals(prefix + " getLoQualifier() ", effQualifiers[index-1], effRec.getLoQualifier());
+			assertEquals(prefix + " getErrorValue() ", expErrValue, effRec.getErrorValue() );
+			assertEquals(prefix + " getErrQualifier() ", errQualifiers[concIndex], effRec.getErrQualifier());
+			assertEquals(prefix + " getUnit ", "nm", effRec.getUnit());
+				
+			//Check conditions
+			assertEquals(prefix + " condition Concentration ", "ug/ml" , conc.getUnits());
+			
+			assertEquals(prefix + " condition Replicate ", "Replicate 1", replicate);
+			assertEquals(prefix + " condition p1.getUpValue() ", 3.0, p1.getUpValue());
+			assertEquals(prefix + " condition p1.getUnits() ", "Pa", p1.getUnits());
+			assertEquals(prefix + " condition p1.getUpQualifier() ", "<", p1.getUpQualifier());
+		}
+		
 	}
 	
 	int replicateToNum (String rep)

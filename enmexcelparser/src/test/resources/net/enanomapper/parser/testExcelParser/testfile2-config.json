@@ -121,7 +121,7 @@
 							"ASSIGN": "ASSIGN_TO_VALUE",
 							"COLUMN_POS": -1,
 							"ROW_POS": 0,
-							"UNIT" : "µg/ml"
+							"UNIT" : "ug/ml"
 						}
 					]	
 				},
@@ -180,7 +180,7 @@
 							"ASSIGN": "ASSIGN_TO_VALUE",
 							"COLUMN_POS": -2,
 							"ROW_POS": 0,
-							"UNIT" : "µg/ml"
+							"UNIT" : "ug/ml"
 						}
 					]	
 				}
@@ -188,7 +188,93 @@
 			
 		}	
 		]
+	},
+	
+	{	
+		"PROTOCOL_ENDPOINT" : "Test protocol",		
+		
+		"EFFECTS_BLOCK": 
+		{
+			"LOCATION": {
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"SHEET_INDEX": 3,
+				"COLUMN_INDEX": "B",
+				"ROW_INDEX": 1
+			},
+			
+			"ROW_SUBBLOCKS": 1,
+			"COLUMN_SUBBLOCKS": 1,
+			"SUBBLOCK_SIZE_ROWS": "= C.size() + 4",
+			"SUBBLOCK_SIZE_COLUMNS": 9,
+			
+			"VALUE_GROUPS": [
+				{
+					"NAME": "Test",
+					
+					"ENDPOINT_TYPE" : "data",
+					"ENDPOINT_ASSIGN" : "ASSIGN_TO_VALUE",
+					"ENDPOINT_ROW_POS" : -1,
+					"ENDPOINT_COLUMN_POS" : 0,
+					"FIX_ENDPOINT_ROW_POS_TO_START_VALUE" : true,
+										
+					"UNIT": "nm",
+					"START_COLUMN": 2,
+					"END_COLUMN": 4,
+					"START_ROW": 5,
+					"END_ROW": "=4 + C.size()",
+					
+					"ERROR_COLUMN_SHIFT" : 4,
+					"ERROR_ROW_SHIFT" : 0,
+					
+					"ERROR_QUALIFIER" : {
+						"ASSIGN": "ASSIGN_TO_VALUE",
+						"COLUMN_POS": 7,						
+						"ROW_POS": 0,
+						"FIX_COLUMN_POS_TO_START_VALUE" : true
+					},
+										
+					"VALUE_QUALIFIER" : {
+						"ASSIGN": "ASSIGN_TO_VALUE",
+						"COLUMN_POS": 0,						
+						"ROW_POS": -3,
+						"FIX_ROW_POS_TO_START_VALUE" : true
+					},
+					
+					"PARAMETERS": [
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 6,
+							"ROW_POS": 2
+						},
+						{
+							"NAME": "Concentration",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": -1,
+							"FIX_COLUMN_POS_TO_START_VALUE" : true,
+							"ROW_POS": 0,
+							"UNIT" : "ug/ml"
+						},
+						{
+							"NAME": "Index",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": 0,							
+							"ROW_POS": -4,
+							"FIX_ROW_POS_TO_START_VALUE" : true
+						},
+						{
+							"NAME": "p1",
+							"JSON_VALUE" : "<3 Pa" 
+						}
+					]	
+				}
+			]	
+		}
+		
 	}
+		
 	]
 
 }
