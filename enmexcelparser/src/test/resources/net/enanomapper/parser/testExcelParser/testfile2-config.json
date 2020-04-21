@@ -94,6 +94,7 @@
 			"VALUE_GROUPS": [
 				{
 					"NAME": "=Assay_endpoint",
+					"ENDPOINT_TYPE" : "average raw data",
 					"UNIT": "=Outcome_metric",
 					"START_COLUMN": 3,
 					"END_COLUMN": 3,
@@ -119,6 +120,65 @@
 							"NAME": "Concentration",
 							"ASSIGN": "ASSIGN_TO_VALUE",
 							"COLUMN_POS": -1,
+							"ROW_POS": 0,
+							"UNIT" : "µg/ml"
+						}
+					]	
+				},
+				{
+					"NAME": "Intracellular LDH Control",
+					"ENDPOINT_TYPE" : "control",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 3,
+					"END_COLUMN": 3,
+					"START_ROW": "=3 + C.size()",
+					"END_ROW": "=3 + C.size()",
+					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						}
+					]	
+				},
+				{
+					"NAME": "=Assay_endpoint",
+					"ENDPOINT_TYPE" : "test",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 4,
+					"END_COLUMN": 4,
+					"START_ROW": 3,
+					"END_ROW": "=3 + C.size() - 1",
+					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						},
+						{
+							"NAME": "Concentration",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": -2,
 							"ROW_POS": 0,
 							"UNIT" : "µg/ml"
 						}

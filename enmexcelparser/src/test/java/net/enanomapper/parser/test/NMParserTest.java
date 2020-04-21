@@ -334,31 +334,52 @@ public class NMParserTest extends TestCase
 			testEffectRecord02(effRecList.get(i));
 		
 		//System.out.println(r.toJSON(null));
-		//System.out.println(r.getMeasurements().get(0).toString());
+		System.out.println(r.getMeasurements().get(0).toString());
 		
 	}
 	
 	void testEffectRecord02(EffectRecord effRec)
 	{
 		String effEndpoint = effRec.getEndpoint().toString();
+		String effEndPointType =  effRec.getEndpointType();
 		IParams conds;
 		IValue v;
 		String s;
 		
 		if (effEndpoint.equalsIgnoreCase("Cell viability"))
 		{
+				
+				conds = (IParams)effRec.getConditions();			
+				v = (IValue) conds.get("Time point");			
+				int timeIndex = timePointIndex((Double)v.getLoValue());
+				s = (String) conds.get("Replicate");			
+				int rep = replicateToNum(s);
+				v = (IValue) conds.get("Concentration");
+				int concIndex = concentrationIndex((Double)v.getLoValue());
+				
+				double expEffValue;
+				if (effEndPointType.equals("average raw data"))
+					expEffValue = 0.3 + (double)concIndex*0.1 + rep*0.01 + (double)timeIndex * 0.002;
+				else
+					expEffValue = 100.0 - concIndex * (rep + timeIndex*3);
+				
+				String prefix = "Cell viability " + s + " concIndex " + concIndex + " timeIndex " + timeIndex;
+				assertEquals(prefix + " getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
+				assertEquals(prefix + " getUnit()", "ng/ml", effRec.getUnit());
+				
+			
+		}
+		
+		if (effEndpoint.equalsIgnoreCase("Intracellular LDH Control"))
+		{			
 			conds = (IParams)effRec.getConditions();			
 			v = (IValue) conds.get("Time point");			
 			int timeIndex = timePointIndex((Double)v.getLoValue());
 			s = (String) conds.get("Replicate");			
 			int rep = replicateToNum(s);
-			v = (IValue) conds.get("Concentration");
-			int concIndex = concentrationIndex((Double)v.getLoValue());
-			
-			double expEffValue = 0.3 + (double)concIndex*0.1 + rep*0.01 + (double)timeIndex * 0.002;
-			assertEquals("Cell viability " + s + " concInd " + concIndex + " timeIndex " + timeIndex +  
+			double expEffValue = 0.9 + rep*0.01 + (double)timeIndex * 0.002;
+			assertEquals("Intracellular LDH Control " + s + " timeIndex " + timeIndex +  
 					" getLoValue()", expEffValue, effRec.getLoValue(), 0.00000001);
-			
 		}
 	}
 	
