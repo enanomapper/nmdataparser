@@ -41,7 +41,7 @@
 				"ROW_INDEX": 3,
 				"ROW_INDICES": [2,3,4],
 				"COLUMN_INDEX": "B"
-			},
+			}
    
 		},
 		
@@ -88,7 +88,7 @@
 		"PARAMETERS" : {
 			"Par1": {
 				"COLUMN_INDEX": "L"
-			}"
+			}
 		}, 
 		
 		"EFFECTS_BLOCK": [
@@ -119,7 +119,7 @@
 								"ROW_POS": 3
 							},
 							{
-								"NAME": "concentration",
+								"NAME": "Concentration",
 								"ASSIGN": "ASSIGN_TO_VALUE",
 								"FIX_COLUMN_POS_TO_START_VALUE": true,
 								"COLUMN_POS": -1,

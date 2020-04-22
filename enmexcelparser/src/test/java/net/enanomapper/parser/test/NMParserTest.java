@@ -35,6 +35,7 @@ public class NMParserTest extends TestCase
 	public static double timePoints[] = {6,	24};
 	public static String errQualifiers[] = {"<", "<", "<", "<=", "<="};
 	public static String effQualifiers[] = {"<", "<=", "~"};
+	public static String htsParams[] = {"A1 6wo", "A2 6wo", "A3 6wo", "A4 6wo"};
 	
 	
 		
@@ -56,7 +57,7 @@ public class NMParserTest extends TestCase
 				while (parser.hasNext()) {
 					SubstanceRecord r = parser.nextRecord();
 					n++;
-					System.out.println("Record #" + n);
+					System.out.println("Test01/Record #" + n);
 					checkRecord(r, n);
 				}
 			} catch (Exception x) {
@@ -82,6 +83,36 @@ public class NMParserTest extends TestCase
 				// + "\n");
 				SubstanceRecord r = parser.nextRecord();
 				testEffectBlocks02(r);
+				
+			} catch (Exception x) {
+				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
+				throw x;
+			}
+		} catch (Exception x1) {
+			Logger.getAnonymousLogger().log(Level.SEVERE,x1.getMessage());
+			throw x1;
+		}
+	}
+	
+	public void test03() throws Exception {
+		// this will close the inputstream automatically
+		try (InputStream fin = getClass().getClassLoader()
+				.getResourceAsStream("net/enanomapper/parser/testExcelParser/testfile3.xlsx")) {
+			boolean isXLSX = true;
+			URL url = getClass().getClassLoader()
+					.getResource("net/enanomapper/parser/testExcelParser/testfile3-config.json");
+			try (GenericExcelParser parser = new GenericExcelParser(fin, new File(url.getFile()), isXLSX)) {
+
+				// System.out.println(parser.getExcelParserConfigurator().toJSONString()
+				// + "\n");
+				
+				int n = 0;
+				while (parser.hasNext()) {
+					SubstanceRecord r = parser.nextRecord();
+					n++;
+					System.out.println("Test03/Record #" + n);
+					testEffectBlocks03(r,n);
+				}
 				
 			} catch (Exception x) {
 				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
@@ -417,6 +448,51 @@ public class NMParserTest extends TestCase
 		
 	}
 	
+	void testEffectBlocks03(SubstanceRecord r, int substNum)
+	{
+		String prefix = "Test03/substance #" + substNum;
+		assertEquals(prefix + "getPublicName()", "Material" + substNum, r.getPublicName());
+		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "Sample name", 
+				r.getExternalids().get(0).getSystemDesignator());
+		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "C" + substNum, 
+				r.getExternalids().get(0).getSystemIdentifier());
+		
+		
+		for (ProtocolApplication pa : r.getMeasurements())
+		{	
+			//TODO check protocol
+			
+			List<EffectRecord> effRecList = pa.getEffects();
+			for (int i = 0; i < effRecList.size(); i++)
+				testEffectRecord03(effRecList.get(i), substNum);
+		}
+		
+		//System.out.println(r.toJSON(null));
+		//System.out.println(r.getMeasurements().get(0).toString());
+	}
+	
+	void testEffectRecord03(EffectRecord effRec, int substNum)
+	{
+		String effEndpoint = effRec.getEndpoint().toString();
+		String effEndPointType =  effRec.getEndpointType();
+		
+		IParams conds = (IParams)effRec.getConditions();			
+		String well = (String) conds.get("Well");
+		String s = (String) conds.get("CONDITIONS_HTS");			
+		int htsParNum = htsParamToNum(s);
+		IValue conc = (IValue) conds.get("Concentration");
+		int concIndex = concentrationIndex((Double)conc.getLoValue());
+		
+		String prefix = " HTS " + s + " concIndex " + concIndex;
+		assertEquals(prefix + " condition Well", getWellLetter(substNum) + (concIndex+1), well);
+		
+		double expEffValue = 100000*substNum + 1000*htsParNum + (Double)conc.getLoValue();
+		assertEquals(prefix + " getLoValue()", expEffValue, effRec.getLoValue());
+		//assertEquals(prefix + " getUnit()", "ng/ml", effRec.getUnit());
+
+	}	
+
+	
 	int replicateToNum (String rep)
 	{
 		if (rep.equals("Replicate 1"))
@@ -425,6 +501,14 @@ public class NMParserTest extends TestCase
 			return 2;
 		if (rep.equals("Replicate 3"))
 			return 3;
+		return 0;
+	}
+	
+	int htsParamToNum (String par)
+	{
+		for (int i = 0; i < htsParams.length; i++)
+			if (par.equals(htsParams[i]))
+				return (i+1);
 		return 0;
 	}
 	
@@ -444,7 +528,20 @@ public class NMParserTest extends TestCase
 		return -1;
 	}
 	
-	
+	String getWellLetter(int substNum)
+	{
+		switch (substNum)
+		{
+		case 1:
+			return "L";
+		case 2:
+			return "M";
+		case 3:
+			return "N";
+		}
+		return null;
+	}
+		
 	
 	
 	void checkParserConfiguration01 (GenericExcelParser parser)
