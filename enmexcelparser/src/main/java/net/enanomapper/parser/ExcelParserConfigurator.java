@@ -21,9 +21,9 @@ import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
-import net.enanomapper.parser.dynamicspan.ColumnSpan;
-import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
-import net.enanomapper.parser.dynamicspan.RowSpan;
+//import net.enanomapper.parser.dynamicspan.ColumnSpan;
+//import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
+//import net.enanomapper.parser.dynamicspan.RowSpan;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
@@ -1476,7 +1476,8 @@ public class ExcelParserConfigurator {
 		if (!varNode.isMissingNode()) {
 			eshc.variableLocations = extractDynamicSection(varNode, conf, null);
 		}
-
+		
+		/*
 		// DYNAMIC_ITERATION_SPAN
 		if (!node.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 			DynamicIterationSpan span = DynamicIterationSpan.extractDynamicIterationSpan(
@@ -1496,6 +1497,7 @@ public class ExcelParserConfigurator {
 			RowSpan span = extractRowSpan(node.path(KEYWORD.ROW_SPAN.name()), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
 			eshc.rowSpan = span;
 		}
+		*/
 
 		return eshc;
 	}
@@ -1600,7 +1602,8 @@ public class ExcelParserConfigurator {
 
 		return cdl;
 	}
-
+	
+	/*
 	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection) {
 		// TODO
 		return null;
@@ -1610,6 +1613,7 @@ public class ExcelParserConfigurator {
 		// TODO
 		return null;
 	}
+	*/
 
 	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf) {
 		Iterator<Entry<String, JsonNode>> it = node.fields();

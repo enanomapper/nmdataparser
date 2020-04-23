@@ -7,9 +7,9 @@ import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
-import net.enanomapper.parser.dynamicspan.ColumnSpan;
-import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
-import net.enanomapper.parser.dynamicspan.RowSpan;
+//import net.enanomapper.parser.dynamicspan.ColumnSpan;
+//import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
+//import net.enanomapper.parser.dynamicspan.RowSpan;
 
 public class ExcelSheetConfiguration 
 {
@@ -58,11 +58,12 @@ public class ExcelSheetConfiguration
 	//Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	
+	/*
 	//Handling locations dynamically
 	public DynamicIterationSpan dynamicIterationSpan = null;
 	public ColumnSpan columnSpan = null;
 	public RowSpan rowSpan = null;
-	
+	*/
 	
 	public String toJSONKeyWord(String offset)
 	{	
@@ -205,7 +206,7 @@ public class ExcelSheetConfiguration
 			sb.append(offset + "\t}" );
 		}
 		
-		
+		/*
 		//Dynamic locations
 		if (dynamicIterationSpan != null)
 		{
@@ -227,7 +228,7 @@ public class ExcelSheetConfiguration
 				sb.append(",\n\n");
 			sb.append(rowSpan.toJSONKeyWord(offset + "\t"));
 		}
-		
+		*/
 		
 		if (nFields > 0)
 			sb.append("\n");
