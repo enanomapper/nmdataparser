@@ -1,4 +1,4 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.dynamicspan;
 
 import java.util.ArrayList;
 

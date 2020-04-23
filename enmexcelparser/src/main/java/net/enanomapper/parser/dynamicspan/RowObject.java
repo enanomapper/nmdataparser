@@ -1,5 +1,4 @@
-package net.enanomapper.parser;
-
+package net.enanomapper.parser.dynamicspan;
 
 public class RowObject extends UniversalObject
 {

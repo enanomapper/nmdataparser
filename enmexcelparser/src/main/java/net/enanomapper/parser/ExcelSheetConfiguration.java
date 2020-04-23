@@ -7,6 +7,9 @@ import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
+import net.enanomapper.parser.dynamicspan.ColumnSpan;
+import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
+import net.enanomapper.parser.dynamicspan.RowSpan;
 
 public class ExcelSheetConfiguration 
 {

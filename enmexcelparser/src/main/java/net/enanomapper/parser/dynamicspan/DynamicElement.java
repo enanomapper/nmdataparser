@@ -1,4 +1,4 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.dynamicspan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,10 @@ import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
+import net.enanomapper.parser.CompositionDataLocation;
+import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.ExcelParserUtils;
+import net.enanomapper.parser.ParserConstants;
 import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
