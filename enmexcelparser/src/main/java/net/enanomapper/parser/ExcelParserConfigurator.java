@@ -117,6 +117,7 @@ public class ExcelParserConfigurator {
 	public ArrayList<VariableMapping> variableMappings = null;
 	public HashMap<String, Tokenize> tokenizers = null;
 
+	/*
 	// Handling locations dynamically
 	public boolean FlagDynamicSpan = false;
 	public boolean FlagDynamicSpanOnSubtsanceLevel = false;
@@ -126,6 +127,7 @@ public class ExcelParserConfigurator {
 													// and stored here
 	public ColumnSpan columnSpan = null;
 	public RowSpan rowSpan = null;
+	*/
 
 	public String getPrefix() {
 		return prefix;
@@ -417,7 +419,7 @@ public class ExcelParserConfigurator {
 				}
 			}
 			
-
+			/*	
 			// DYNAMIC_ITERATION_SPAN
 			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 				DynamicIterationSpan span = DynamicIterationSpan
@@ -437,6 +439,7 @@ public class ExcelParserConfigurator {
 				RowSpan span = extractRowSpan(curNode.path(KEYWORD.ROW_SPAN.name()), conf, KEYWORD.DATA_ACCESS.name());
 				conf.rowSpan = span;
 			}
+			*/
 
 		}
 
@@ -586,7 +589,7 @@ public class ExcelParserConfigurator {
 			}
 		}
 
-		conf.checkDynamicConfiguration();
+		//conf.checkDynamicConfiguration();
 
 		return conf;
 	}
@@ -758,6 +761,7 @@ public class ExcelParserConfigurator {
 			nDAFields++;
 		}
 
+		/*
 		// Dynamic locations
 		if (dynamicIterationSpan != null) {
 			if (nDAFields > 0)
@@ -779,6 +783,7 @@ public class ExcelParserConfigurator {
 			sb.append(rowSpan.toJSONKeyWord("\t\t"));
 			nDAFields++;
 		}
+		*/
 
 		if (nDAFields > 0)
 			sb.append("\n");
@@ -1624,6 +1629,7 @@ public class ExcelParserConfigurator {
 		return false;
 	}
 
+	/*
 	public void checkDynamicConfiguration() {
 		FlagDynamicSpan = haveDynamicSpan();
 		if (!FlagDynamicSpan) {
@@ -1800,6 +1806,7 @@ public class ExcelParserConfigurator {
 		}
 
 	}
+	*/
 
 	public String generateUUID(String s) {
 		return generateUUID(prefix, s);

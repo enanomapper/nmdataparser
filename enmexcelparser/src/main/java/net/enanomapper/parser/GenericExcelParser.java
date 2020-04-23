@@ -1090,9 +1090,10 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 			basicSubstanceRecord = null;
 		}
 
+		/*
 		if (!config.FlagDynamicSpan)
 			return;
-
+				
 		// Handle dynamic span
 		DIOSynchronization dioSynch = new DIOSynchronization(basicSubstanceRecord, config.dynamicSpanInfo, config);
 
@@ -1105,6 +1106,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 				break;
 			}
 		}
+		
 
 		if (parallelSheetStates != null)
 			for (int i = 0; i < parallelSheetStates.length; i++) {
@@ -1120,6 +1122,7 @@ public class GenericExcelParser implements IRawReader<IStructureRecord> {
 
 		ArrayList<SubstanceRecord> records = dioSynch.synchronize();
 		loadedRecordsBuffer.addAll(records);
+		*/
 	}
 
 	protected void putSRInfoToProtocolApplications(SubstanceRecord record) {
