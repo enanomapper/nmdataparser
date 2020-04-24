@@ -68,7 +68,7 @@ import net.enanomapper.parser.recognition.RichValueParser;
  * @author nick
  * 
  */
-public class GenericExcelParser implements IRawReader<IStructureRecord> {
+public class GenericExcelParser extends ExcelParserCore implements IRawReader<IStructureRecord> {
 
 	public final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
 	protected RichValueParser rvParser = new RichValueParser();
