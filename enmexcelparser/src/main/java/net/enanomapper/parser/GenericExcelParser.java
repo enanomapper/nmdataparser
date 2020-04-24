@@ -70,39 +70,28 @@ import net.enanomapper.parser.recognition.RichValueParser;
  */
 public class GenericExcelParser extends ExcelParserCore implements IRawReader<IStructureRecord> {
 
-	public final static Logger logger = Logger.getLogger(GenericExcelParser.class.getName());
+	
 	protected RichValueParser rvParser = new RichValueParser();
 	// protected ArrayList<String> parseErrors = new ArrayList<String>();
-	protected ArrayList<String> parallelSheetsErrors = new ArrayList<String>();
-
-	protected ExcelParserConfigurator config = null;
 	protected InputStream input;
-	protected JexlEngine jexlEngine = null;
-
-	protected Workbook workbook;
+	protected JexlEngine jexlEngine = null;	
 	protected boolean xlsxFormat = false;
 
 	// Helper variables for excel file iteration
 	protected ParallelSheetState parallelSheetStates[] = null;
 
 	// Primary sheet
-	protected int primarySheetNum = 0;
 	protected Sheet primarySheet = null;
 	protected int curRowNum = 1; // Used for iteration
 	protected int curReadRowNum = 1; // This shows the actual read rows in
 										// multi-dynamic iteration mode
 	protected int curCellNum = 1;
 	protected int iterationLastRowNum = 1;
-	protected Row curRow = null;
-	protected ArrayList<Row> curRows = null;
-	protected Iterator<Row> rowIt = null;
-	protected Cell curCell = null;
+	
+	//protected Iterator<Row> rowIt = null;
+	//protected Cell curCell = null;
 	protected String primarySheetSynchKey = null;
-
-	// All variables read from the primary sheet and all parallel sheets
-	protected HashMap<String, Object> curVariables = new HashMap<String, Object>();
-	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = new HashMap<String, HashMap<Object, Object>>();
-
+	
 	// Helpers for condition references
 	protected HashMap<String, EffectRecord> referencesEffectRecord = new HashMap<String, EffectRecord>();
 	protected ArrayList<String> addConditionRef = new ArrayList<String>();
@@ -120,10 +109,9 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	
 	protected boolean FlagVariableMappingLogging = true;
 	// protected boolean FlagAddParserStringError = true; // This is used to
-	// switch
-
-	// off errors in some
-	// cases
+	// switch off errors in some cases
+	
+	
 	/**
 	 * 
 	 * @param input
