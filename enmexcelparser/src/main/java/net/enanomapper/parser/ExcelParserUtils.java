@@ -2,7 +2,8 @@ package net.enanomapper.parser;
 
 import java.util.ArrayList;
 
-import org.apache.poi.hssf.util.CellReference;
+//import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

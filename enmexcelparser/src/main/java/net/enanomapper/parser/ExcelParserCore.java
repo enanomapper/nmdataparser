@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.poi.hssf.util.CellReference;
+//import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
 
 import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.excel.ExcelUtils;

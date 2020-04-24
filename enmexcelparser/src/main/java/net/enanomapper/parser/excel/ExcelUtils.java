@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.apache.poi.hssf.util.CellReference;
+//import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
