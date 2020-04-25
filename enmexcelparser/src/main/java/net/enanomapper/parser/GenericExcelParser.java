@@ -77,7 +77,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	protected JexlEngine jexlEngine = null;	
 	protected boolean xlsxFormat = false;
 
-	
+	protected ExcelDataBlockUtils dataBlockUtils = null; 
 
 	// Primary sheet
 	protected Sheet primarySheet = null;
@@ -164,6 +164,9 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		// Setting of the basic sheet work variables
 		initBasicWorkSheet();
+		
+		//Initial setup of the ExcelDataBlockUtils
+		initDataBlockUtils();
 
 		// Setting the parallel sheets work variables
 		if (!config.parallelSheets.isEmpty()) {
@@ -416,6 +419,22 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			setParallelSheet(efrdl.value);
 
 	}
+	
+	protected void initDataBlockUtils()
+	{
+		//TODO add check whether there is a need for using dataBlockUtils 
+		dataBlockUtils = new ExcelDataBlockUtils(); 
+		dataBlockUtils.setLogger(logger);
+		dataBlockUtils.setWorkbook(workbook);	
+	}
+	
+	protected void setDataBlockUtils()
+	{
+		dataBlockUtils.setCurRowNum(curRowNum);
+		dataBlockUtils.setCurRows(curRows);
+		dataBlockUtils.setCurVariables(curVariables);
+		dataBlockUtils.setCurVariableMappings(curVariableMappings);
+	}
 
 	/**
 	 * 
@@ -478,6 +497,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				// This is the actual reading of next substance record/records
 				try {
 					readVariables();
+					if (dataBlockUtils != null)
+						setDataBlockUtils();
 
 					loadSubstanceRecords();
 					logger.info("#### Loaded " + loadedRecordsBuffer.size() + " substances into the buffer");
@@ -1983,7 +2004,6 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	}
 
 	
-
 	
 
 	/**
