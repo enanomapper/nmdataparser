@@ -57,6 +57,8 @@ public class ParserConstants {
 				return true;
 			}
 		},
+		
+		SUBSTANCE_RECORD_MAP,
 
 		JSON_VALUE, JSON_REPOSITORY, VARIABLE, UNDEFINED;
 

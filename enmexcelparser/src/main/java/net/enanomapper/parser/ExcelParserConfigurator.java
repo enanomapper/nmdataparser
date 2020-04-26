@@ -449,7 +449,11 @@ public class ExcelParserConfigurator {
 		// Handle SubstanceRecord data locations
 		curNode = root.path(KEYWORD.SUBSTANCE_RECORD.name());
 		if (curNode.isMissingNode())
-			conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.SUBSTANCE_RECORD.name()));
+		{	
+			//SUBSTANCE_RECORD is not needed in iteration mode: SUBSTANCE_RECORD_MAP
+			if (conf.substanceIteration != IterationAccess.SUBSTANCE_RECORD_MAP)
+				conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.SUBSTANCE_RECORD.name()));			
+		}	
 		else {
 			// SUBSTANCE_NAME
 			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.SUBSTANCE_NAME.name(), conf);
@@ -552,7 +556,8 @@ public class ExcelParserConfigurator {
 				} else
 					conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.EXTERNAL_IDENTIFIERS.name()));
 			}
-		}
+		} //end of SUBSTANCE_RECORD section
+		
 
 		// Handle Parallel Sheets
 		curNode = root.path(KEYWORD.PARALLEL_SHEETS.name());

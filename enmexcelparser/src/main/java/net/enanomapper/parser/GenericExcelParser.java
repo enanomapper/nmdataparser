@@ -2145,7 +2145,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		return dataBlockUtils.getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, sbSizeRows, sbSizeColumns, exdb_loc);
 	}
 
-	
+		
 	
 	/*
 	 * public boolean hasErrors() { return (!parseErrors.isEmpty()); }
