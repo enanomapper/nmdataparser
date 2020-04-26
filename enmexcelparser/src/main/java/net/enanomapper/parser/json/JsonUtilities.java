@@ -257,7 +257,7 @@ public class JsonUtilities
 	
 	public static String objectToJsonKeywordAndField(String keyword, Object obj)
 	{
-		return "\"" + obj.toString() + "\" : " + objectToJsonField (obj);
+		return "\"" + keyword + "\" : " + objectToJsonField (obj);
 	}
 	
 	/**

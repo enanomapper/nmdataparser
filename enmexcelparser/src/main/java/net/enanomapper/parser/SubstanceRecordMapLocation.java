@@ -81,7 +81,7 @@ public class SubstanceRecordMapLocation
 		int nFields = 0;
 		Object obj;
 		StringBuffer sb = new StringBuffer();
-		sb.append(offset + "\"PROPORTION\" : \n" );
+		sb.append(offset + "\"SUBSTANCE_RECORD_MAP\" : \n" );
 		sb.append(offset + "{\n");
 		 
 		

@@ -114,7 +114,8 @@ public class ExcelParserConfigurator {
 	public HashMap<String, Object> jsonRepository = new HashMap<String, Object>();
 	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
 	public ArrayList<ExternalIdentifierDataLocation> externalIdentifiers = new ArrayList<ExternalIdentifierDataLocation>();
-
+	public SubstanceRecordMapLocation substanceRecordMap = null;
+	
 	// Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	public ArrayList<VariableMapping> variableMappings = null;
@@ -596,6 +597,12 @@ public class ExcelParserConfigurator {
 					conf.protocolAppLocations.add(padl);
 			}
 		}
+		
+		//SUBSTANCE_RECORD_MAP
+		curNode = root.path(KEYWORD.SUBSTANCE_RECORD_MAP.name());
+		if (!curNode.isMissingNode())
+			conf.substanceRecordMap = SubstanceRecordMapLocation.extractSubstanceRecordMapLocation(curNode, conf);
+		
 
 		//conf.checkDynamicConfiguration();
 
@@ -910,7 +917,14 @@ public class ExcelParserConfigurator {
 			sb.append("\n");
 
 		sb.append("\t},\n\n"); // end of SUBSTANCE_RECORD
-
+		
+		if (substanceRecordMap != null)
+		{	
+			sb.append(substanceRecordMap.toJSONKeyWord("\t"));
+			sb.append(",\n\n");
+		}	
+		
+		
 		sb.append("\t\"PROTOCOL_APPLICATIONS\":\n");
 		sb.append("\t[\n");
 		for (int i = 0; i < protocolAppLocations.size(); i++) {
