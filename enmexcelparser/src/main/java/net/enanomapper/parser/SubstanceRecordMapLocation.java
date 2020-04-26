@@ -75,5 +75,39 @@ public class SubstanceRecordMapLocation
 		}
 		return s;
 	}
+	
+	public String toJSONKeyWord(String offset)
+	{
+		int nFields = 0;
+		Object obj;
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "\"PROPORTION\" : \n" );
+		sb.append(offset + "{\n");
+		 
+		
+		//SUBSTANCE_NAME
+		obj = null;
+		if (substanceNameVariable != null)
+			obj = substanceNameVariable;
+		else if (substanceNameArray != null)
+			obj = substanceNameArray;
+		
+		if (obj != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");			
+			sb.append(offset + "\t" + JsonUtilities.objectToJsonKeywordAndField(
+					KEYWORD.SUBSTANCE_NAME.name(), obj));
+			nFields++;
+		}
+		
+
+		if (nFields > 0)
+			sb.append("\n");
+		
+		sb.append(offset + "}");
+
+		return sb.toString();
+	}	
 
 }
