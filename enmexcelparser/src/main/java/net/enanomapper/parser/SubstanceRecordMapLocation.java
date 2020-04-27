@@ -14,6 +14,9 @@ public class SubstanceRecordMapLocation
 	public String substanceNameVariable = null;
 	public String substanceNameArray[] = null;
 	
+	public String publicNameVariable = null;
+	public String publicNameArray[] = null;
+	
 	
 	public static SubstanceRecordMapLocation extractSubstanceRecordMapLocation(JsonNode node, ExcelParserConfigurator conf) 
 	{
@@ -47,6 +50,20 @@ public class SubstanceRecordMapLocation
 					srml.substanceNameVariable = (String) obj;
 				else
 					srml.substanceNameArray = (String[]) obj;
+			}		
+		}
+		
+		// PUBLIC_NAME
+		if (node.path(KEYWORD.PUBLIC_NAME.name()).isMissingNode()) {
+			conf.addError("In section SUBSTANCE_RECORD_MAP, keyword " + KEYWORD.PUBLIC_NAME.name() + " is missing");
+		}
+		else {
+			Object obj = extractKeyword(node, conf, KEYWORD.PUBLIC_NAME.name(), jsonUtils);
+			if (obj != null) {
+				if (obj instanceof String)
+					srml.publicNameVariable = (String) obj;
+				else
+					srml.publicNameArray = (String[]) obj;
 			}		
 		}
 		
@@ -146,6 +163,23 @@ public class SubstanceRecordMapLocation
 					KEYWORD.SUBSTANCE_NAME.name(), obj));
 			nFields++;
 		}
+
+		//PUBLIC_NAME
+		obj = null;
+		if (publicNameVariable != null)
+			obj = publicNameVariable;
+		else if (publicNameArray != null)
+			obj = publicNameArray;
+		
+		if (obj != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");			
+			sb.append(offset + "\t" + JsonUtilities.objectToJsonKeywordAndField(
+					KEYWORD.PUBLIC_NAME.name(), obj));
+			nFields++;
+		}
+		
 		
 
 		if (nFields > 0)
