@@ -41,8 +41,24 @@ public class SubstanceRecordMap
 		
 		setMapKeys();
 		
-		//TODO
+		if (mapKeys == null) {
+			errors.add("Unable to create set of mapping keys");
+			return;
+		}				
 		
+		int n = mapKeys.length;
+		
+		if (n == 0){
+			errors.add("Empty set of mapping keys");
+			return;
+		}
+		
+		for (int i = 0; i < n; i++)
+		{
+			SubstanceRecord rec =  setupSubstanceRecord(i);
+			if (rec != null)
+				substances.put(mapKeys[i], rec);
+		}
 		
 	}
 	
@@ -65,6 +81,23 @@ public class SubstanceRecordMap
 		} 
 		
 	}
+	
+	SubstanceRecord setupSubstanceRecord(int subIndex) 
+	{
+		SubstanceRecord rec = new SubstanceRecord(); 
+		//TODO
+		return rec;
+	}
+	
+	
+	String[] getStringArray(String variable, String strArray[])
+	{
+		if (variable != null)
+			return getStringArray(variable);
+		else
+			return strArray;
+	}
+	
 	
 	String[] getStringArray(String variable)
 	{
