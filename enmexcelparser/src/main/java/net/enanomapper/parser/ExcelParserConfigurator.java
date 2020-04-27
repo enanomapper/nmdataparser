@@ -601,7 +601,10 @@ public class ExcelParserConfigurator {
 		//SUBSTANCE_RECORD_MAP
 		curNode = root.path(KEYWORD.SUBSTANCE_RECORD_MAP.name());
 		if (!curNode.isMissingNode())
+		{	
 			conf.substanceRecordMap = SubstanceRecordMapLocation.extractSubstanceRecordMapLocation(curNode, conf);
+			conf.substanceRecordMap.checkConsistency(conf);
+		}	
 		
 
 		//conf.checkDynamicConfiguration();

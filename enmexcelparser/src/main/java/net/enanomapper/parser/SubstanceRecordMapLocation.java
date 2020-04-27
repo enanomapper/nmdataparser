@@ -1,6 +1,5 @@
 package net.enanomapper.parser;
 
-import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -8,6 +7,10 @@ import net.enanomapper.parser.json.JsonUtilities;
 
 public class SubstanceRecordMapLocation 
 {
+	public static final String ALLOWED_MAP_ELEMENTS[] = {"SUBSTANCE_NAME", "PUBLIC_NAME"};
+	
+	public String mapElement = null;
+	
 	public String substanceNameVariable = null;
 	public String substanceNameArray[] = null;
 	
@@ -17,6 +20,21 @@ public class SubstanceRecordMapLocation
 		SubstanceRecordMapLocation srml = new SubstanceRecordMapLocation();
 
 		JsonUtilities jsonUtils = new JsonUtilities();
+		
+		//MAP_ELEMENT
+		if (node.path(KEYWORD.MAP_ELEMENT.name()).isMissingNode()) {
+			conf.addError("In section SUBSTANCE_RECORD_MAP, keyword " +KEYWORD.MAP_ELEMENT.name() + " is missing");
+		}
+		else {
+			String s = jsonUtils.extractStringKeyword(node, KEYWORD.MAP_ELEMENT.name(), false);
+			if (s == null)				
+				conf.addError("In section SUBSTANCE_RECORD_MAP, keyword " +KEYWORD.MAP_ELEMENT.name() + ": " + jsonUtils.getError());
+			else {	
+				srml.mapElement = s;
+				//TODO check allowed map elements
+			}
+		}
+			
 		
 		// SUBSTANCE_NAME
 		if (node.path(KEYWORD.SUBSTANCE_NAME.name()).isMissingNode()) {
@@ -76,6 +94,24 @@ public class SubstanceRecordMapLocation
 		return s;
 	}
 	
+	public boolean checkConsistency(ExcelParserConfigurator conf) 
+	{
+		if (mapElement == null)
+			return false;
+		
+		if (!isAllowed (mapElement))
+			conf.addError("In section SUBSTANCE_RECORD_MAP, keyword " 
+					+ KEYWORD.MAP_ELEMENT.name() + " value " + mapElement + " is not allowed value");
+		return true;
+	}
+	
+	boolean isAllowed(String mapEl) {
+		for (int i = 0; i < ALLOWED_MAP_ELEMENTS.length; i++)
+			if (ALLOWED_MAP_ELEMENTS[i].equals(mapEl))
+				return true;
+		return false;
+	}
+	
 	public String toJSONKeyWord(String offset)
 	{
 		int nFields = 0;
@@ -84,6 +120,16 @@ public class SubstanceRecordMapLocation
 		sb.append(offset + "\"SUBSTANCE_RECORD_MAP\" : \n" );
 		sb.append(offset + "{\n");
 		 
+		
+		if (mapElement != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n\n");			
+			sb.append(offset + "\t" + JsonUtilities.objectToJsonKeywordAndField(
+					KEYWORD.MAP_ELEMENT.name(), mapElement));
+			nFields++;
+		}
+		
 		
 		//SUBSTANCE_NAME
 		obj = null;
