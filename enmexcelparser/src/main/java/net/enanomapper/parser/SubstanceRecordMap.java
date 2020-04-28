@@ -17,7 +17,7 @@ public class SubstanceRecordMap
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = null;
 	protected String mapKeys[] = null;
 	protected SubstanceRecordMapLocation subRecMapLoc = null;
-	protected HashMap<String, Object> strArrays = null;
+	protected HashMap<String, String[]> strArrays = null;
 	
 	public Map<String, SubstanceRecord> getSubstances() {
 		return substances;
@@ -85,8 +85,23 @@ public class SubstanceRecordMap
 	
 	SubstanceRecord setupSubstanceRecord(int subIndex) 
 	{
+		//Filling data from strArray into substance
 		SubstanceRecord rec = new SubstanceRecord(); 
-		//TODO
+		String s[];
+		
+		s = strArrays.get(KEYWORD.SUBSTANCE_NAME.name());
+		if (s != null)
+			if (subIndex < s.length)
+				if (s[subIndex] != null)
+					rec.setSubstanceName(s[subIndex]);
+		
+		s = strArrays.get(KEYWORD.PUBLIC_NAME.name());
+		if (s != null)
+			if (subIndex < s.length)
+				if (s[subIndex] != null)
+					rec.setPublicName(s[subIndex]);
+		
+		
 		return rec;
 	}
 	
