@@ -17,7 +17,7 @@ public class SubstanceRecordMap
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = null;
 	protected String mapKeys[] = null;
 	protected SubstanceRecordMapLocation subRecMapLoc = null;
-	
+	protected HashMap<String, Object> strArrays = null;
 	
 	public Map<String, SubstanceRecord> getSubstances() {
 		return substances;
@@ -40,6 +40,7 @@ public class SubstanceRecordMap
 		subRecMapLoc = config.substanceRecordMap; 
 		
 		setMapKeys();
+		fillStringArrays();
 		
 		if (mapKeys == null) {
 			errors.add("Unable to create set of mapping keys");
@@ -89,6 +90,20 @@ public class SubstanceRecordMap
 		return rec;
 	}
 	
+	void fillStringArrays() 
+	{
+		HashMap<String, Object> strArrays = new HashMap<String, Object>();
+		
+		String s[] = getStringArray(subRecMapLoc.substanceNameVariable, subRecMapLoc.substanceNameArray);
+		if (s != null)
+			strArrays.put(KEYWORD.SUBSTANCE_NAME.name(), s);
+		
+		s = getStringArray(subRecMapLoc.publicNameVariable, subRecMapLoc.publicNameArray);
+		if (s != null)
+			strArrays.put(KEYWORD.PUBLIC_NAME.name(), s);
+		
+	}
+	
 	
 	String[] getStringArray(String variable, String strArray[])
 	{
@@ -101,7 +116,10 @@ public class SubstanceRecordMap
 	
 	String[] getStringArray(String variable)
 	{
-		//TODO
+		Object o = curVariables.get(variable);
+		if (o instanceof Object[])
+			return SubstanceRecordMapLocation.objectArrayToStringArray ((Object[]) o);
+		
 		return null;
 	}
 	

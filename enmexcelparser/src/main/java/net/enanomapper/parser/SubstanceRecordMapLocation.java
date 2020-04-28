@@ -98,7 +98,7 @@ public class SubstanceRecordMapLocation
 		}	
 	}
 	
-	static String[] objectArrayToStringArray(Object obj[])
+	public static String[] objectArrayToStringArray(Object obj[])
 	{
 		String s[] = new String[obj.length];
 		for (int i = 0; i < obj.length; i++)
