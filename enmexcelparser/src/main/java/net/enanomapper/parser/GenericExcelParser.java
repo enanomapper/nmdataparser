@@ -830,10 +830,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		//Read protocol applications with dispatching to substances
 		//Duplicate the protocol parameters to all substances
 		//Check for problems; handle substRecordMap errors 
+				
 		
-		//Set iteration initial position 
-		substRecordMapPos = 0;
-		FlagNextRecordLoaded = (substRecordMapPos < substRecordMap.mapKeys.length); 
 	}
 
 	/**
