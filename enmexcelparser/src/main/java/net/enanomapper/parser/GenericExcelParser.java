@@ -79,6 +79,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 										// multi-dynamic iteration mode
 	protected int curCellNum = 1;
 	protected int iterationLastRowNum = 1;
+	protected SubstanceRecordMap substRecordMap = null;
+	protected int substRecordMapPos = -1; //used for iteration in mode SUBSTANCE_RECORD_MAP
 	
 	//protected Iterator<Row> rowIt = null;
 	//protected Cell curCell = null;
@@ -471,10 +473,29 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	@Override
 	public boolean hasNext() {
 
+		//Separate handling of SUBSTANCE_RECORD_MAP
+		if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) 
+		{
+			if (FlagNextRecordLoaded)
+			  return true;
+			
+			//Iterate to next pre-loaded substance
+			substRecordMapPos++;
+			
+			if (substRecordMapPos < substRecordMap.mapKeys.length)
+			{
+				String key = substRecordMap.mapKeys[substRecordMapPos];
+				nextRecordBuffer = substRecordMap.substances.get(key);
+				FlagNextRecordLoaded = true;
+			}
+			else
+				return false;
+		}
+		
 		if (FlagNextRecordLoaded) // Next record is already read and loaded to
 			// the buffer
 			return true;
-
+				
 		if (nextRecordIndex != -1) {
 			nextRecordIndex++;
 			if (nextRecordIndex < loadedRecordsBuffer.size()) {
@@ -739,7 +760,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 							.getRow(parallelSheetStates[i].curRowNum);
 				}
 		}
-			break;
+		break;
 
 		case ROW_MULTI_FIXED:
 		case ROW_MULTI_DYNAMIC: {
@@ -780,10 +801,39 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 			// TODO if needed check the first non empty row
 		}
+		break;
+		
+		case SUBSTANCE_RECORD_MAP: {
+			readSubstanceRecordMap();
+			
+		}
+		break;
 
 		default:
 			break;
 		}
+	}
+	
+	protected void readSubstanceRecordMap() {
+		try {
+			readVariables();
+		}
+		catch (Exception x) {
+			
+		}
+		
+		substRecordMap = new SubstanceRecordMap();
+		substRecordMap.setup(config, curVariables, curVariableMappings);
+		dataBlockUtils.setSubstRecordMap(substRecordMap);
+		
+		//TODO
+		//Read protocol applications with dispatching to substances
+		//Duplicate the protocol parameters to all substances
+		//Check for problems; handle substRecordMap errors 
+		
+		//Set iteration initial position 
+		substRecordMapPos = 0;
+		FlagNextRecordLoaded = (substRecordMapPos < substRecordMap.mapKeys.length); 
 	}
 
 	/**

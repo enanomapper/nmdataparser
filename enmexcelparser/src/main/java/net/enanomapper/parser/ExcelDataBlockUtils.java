@@ -30,6 +30,7 @@ public class ExcelDataBlockUtils
 	protected JexlEngine jexlEngine = null;
 	
 	protected Logger logger = null;
+	protected SubstanceRecordMap substRecordMap = null; 
 	protected ExcelParserConfigurator config = null;
 	protected Workbook workbook = null;
 	protected ArrayList<Row> curRows = null;
@@ -37,13 +38,22 @@ public class ExcelDataBlockUtils
 	protected HashMap<String, Object> curVariables = null;
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = null;
 	
-		
+	
+
 	public Logger getLogger() {
 		return logger;
 	}
 
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+	
+	public SubstanceRecordMap getSubstRecordMap() {
+		return substRecordMap;
+	}
+
+	public void setSubstRecordMap(SubstanceRecordMap substRecordMap) {
+		this.substRecordMap = substRecordMap;
 	}
 	
 

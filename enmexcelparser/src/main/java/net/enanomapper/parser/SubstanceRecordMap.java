@@ -107,7 +107,7 @@ public class SubstanceRecordMap
 	
 	void fillStringArrays() 
 	{
-		HashMap<String, Object> strArrays = new HashMap<String, Object>();
+		strArrays = new HashMap<String, String[]>();
 		
 		String s[] = getStringArray(subRecMapLoc.substanceNameVariable, subRecMapLoc.substanceNameArray);
 		if (s != null)
