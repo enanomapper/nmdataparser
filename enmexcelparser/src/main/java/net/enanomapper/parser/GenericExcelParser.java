@@ -818,6 +818,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	{
 		try {
 			readVariables();
+			if (dataBlockUtils != null)
+				setDataBlockUtils();
 		}
 		catch (Exception x) {
 			
