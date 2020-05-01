@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.ProtocolApplication;
 
 public class SubstanceRecordMap 
 {	
@@ -60,8 +61,57 @@ public class SubstanceRecordMap
 			if (rec != null)
 				substances.put(mapKeys[i], rec);
 		}
+	}
+	
+	public void duplicateProtocolApplication(ProtocolApplication pa) 
+	{
+		for (String mapkey : mapKeys) {
+			SubstanceRecord r = substances.get(mapkey);
+			ProtocolApplication dup_pa = duplicate(pa);
+			
+			//check needed when adding the first protocol application
+			if (r.getMeasurements() == null)
+				r.setMeasurements(new ArrayList<ProtocolApplication>());
+			
+			r.getMeasurements().add(dup_pa);
+		}	
 		
 	}
+	
+	ProtocolApplication duplicate(ProtocolApplication pa)
+	{
+		//The ProtocolApplication fields are not cloned. 
+		//The same references are used in all duplicated copies
+		ProtocolApplication dup_pa = new ProtocolApplication(pa.getProtocol());
+		
+		dup_pa.setDocumentUUID(pa.getDocumentUUID());
+		dup_pa.setInvestigationUUID(pa.getInvestigationUUID());
+		dup_pa.setAssayUUID(pa.getAssayUUID());	
+		
+		dup_pa.setReliability(pa.getReliability());
+		dup_pa.setInterpretationResult(pa.getInterpretationResult());
+		dup_pa.setInterpretationCriteria(pa.getInterpretationCriteria());
+		dup_pa.setParameters(pa.getParameters());
+		
+		//Duplicate reference info
+		if (pa.getReference() != null)
+		{
+			dup_pa.setReference(pa.getReference());
+			
+			String s = pa.getReferenceYear();
+			if (s != null)
+				dup_pa.setReferenceYear(s);
+			
+			s = pa.getReferenceOwner();
+			if (s != null)
+				dup_pa.setReferenceOwner(s);
+		}
+		
+		
+		
+		return dup_pa;
+	}
+	
 	
 	void setMapKeys()
 	{	
@@ -136,6 +186,17 @@ public class SubstanceRecordMap
 			return SubstanceRecordMapLocation.objectArrayToStringArray ((Object[]) o);
 		
 		return null;
+	}
+	
+	public boolean hasErrors() {
+		return (!errors.isEmpty());
+	}
+	
+	public String getAllErrorsAsString() {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < errors.size(); i++)
+			sb.append(errors.get(i) + "\n");
+		return sb.toString();
 	}
 	
 }

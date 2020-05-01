@@ -814,7 +814,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		}
 	}
 	
-	protected void readSubstanceRecordMap() {
+	protected void readSubstanceRecordMap()
+	{
 		try {
 			readVariables();
 		}
@@ -826,11 +827,26 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		substRecordMap.setup(config, curVariables, curVariableMappings);
 		dataBlockUtils.setSubstRecordMap(substRecordMap);
 		
-		//TODO
-		//Read protocol applications with dispatching to substances
-		//Duplicate the protocol parameters to all substances
-		//Check for problems; handle substRecordMap errors 
-				
+		
+		
+		try {
+			//Reading protocol applications with dispatching to substances
+			//The protocols and their parameters are duplicated to all substances			
+			readProtocolApplications(); 
+			
+			//put SubstanceRecord info into protocol applications 
+			for (String mapkey : substRecordMap.mapKeys) {
+				SubstanceRecord r = substRecordMap.substances.get(mapkey);
+				putSRInfoToProtocolApplications(r);
+			}
+			
+			//Check for problems and handle substRecordMap errors
+			if (substRecordMap.hasErrors())
+				logger.log(Level.WARNING, substRecordMap.getAllErrorsAsString());
+			
+		} catch (Exception x) {
+			logger.log(Level.SEVERE, x.getMessage(), x);
+		}
 		
 	}
 
@@ -1374,6 +1390,13 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					logger.log(Level.SEVERE, x.getMessage());
 					throw x;
 				}
+		}
+		
+		if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP)
+		{
+			//The protocol application is cloned and put in every substance
+			//since its duplicates will be needed for dispatching the effects block data
+			substRecordMap.duplicateProtocolApplication(pa);
 		}
 
 		// Read effects from EFFECTS_BLOCK
