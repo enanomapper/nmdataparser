@@ -1394,8 +1394,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		
 		if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP)
 		{
-			//The protocol application is cloned and put in every substance
-			//since its duplicates will be needed for dispatching the effects block data
+			//The protocol application is duplicated and put in every substance
+			//since the duplicates are needed for dispatching the effects block data
 			substRecordMap.duplicateProtocolApplication(pa);
 		}
 
@@ -1406,8 +1406,13 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				try {
 					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
 					for (DataBlockElement dbe : effDataBlock) {
-						EffectRecord effect = dbe.generateEffectRecord();
-						pa.addEffect(effect);
+						if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) {
+							substRecordMap.dispatch(dbe);
+						}	
+						else {							
+							EffectRecord effect = dbe.generateEffectRecord();
+							pa.addEffect(effect);
+						}
 					}
 				} catch (Exception x) {
 					throw new Exception("Excpetion on getting Effect Block [" + (i + 1) + "]" + " in protocol "

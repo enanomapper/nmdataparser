@@ -112,6 +112,11 @@ public class SubstanceRecordMap
 		return dup_pa;
 	}
 	
+	public void dispatch (DataBlockElement dbe)
+	{
+		//TODO
+	}
+	
 	
 	void setMapKeys()
 	{	
