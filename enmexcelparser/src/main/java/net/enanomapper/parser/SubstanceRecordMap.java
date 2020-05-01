@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.ProtocolApplication;
 
 public class SubstanceRecordMap 
@@ -112,9 +113,27 @@ public class SubstanceRecordMap
 		return dup_pa;
 	}
 	
-	public void dispatch (DataBlockElement dbe)
+	public void dispatch(List<DataBlockElement> effDataBlock)
 	{
-		//TODO
+		//Dispatch to all substances:
+		for (String mapkey : mapKeys) {
+			SubstanceRecord r = substances.get(mapkey);
+			
+			//Adding to the last protocol application
+			ProtocolApplication pa = r.getMeasurements().get(r.getMeasurements().size()-1);
+			dispatchToProtAppl(effDataBlock, pa);
+		}
+		
+		//TODO dispatch to specific substance
+	}
+	
+	public void dispatchToProtAppl(List<DataBlockElement> effDataBlock, ProtocolApplication pa)
+	{
+		for (DataBlockElement dbe : effDataBlock)
+		{
+			EffectRecord effect = dbe.generateEffectRecord();
+			pa.addEffect(effect);
+		}
 	}
 	
 	

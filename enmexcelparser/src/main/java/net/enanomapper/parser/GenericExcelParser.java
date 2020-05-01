@@ -1407,11 +1407,12 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				ExcelDataBlockLocation excelEffectBlock = padl.effectsBlock.get(i);
 				try {
 					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
-					for (DataBlockElement dbe : effDataBlock) {
-						if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) {
-							substRecordMap.dispatch(dbe);
-						}	
-						else {							
+					
+					if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) {
+						substRecordMap.dispatch(effDataBlock);
+					}
+					else {					
+						for (DataBlockElement dbe : effDataBlock) {							
 							EffectRecord effect = dbe.generateEffectRecord();
 							pa.addEffect(effect);
 						}
