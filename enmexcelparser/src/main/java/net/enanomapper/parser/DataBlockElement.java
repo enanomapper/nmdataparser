@@ -29,6 +29,7 @@ public class DataBlockElement
 	public IParams params = null;
 	public String blockValueGroup = null;
 	public String endpointType = null;
+	public String substanceRecordMap = null;
 	
 	public void setValue(Object obj, RichValueParser rvParser)
 	{

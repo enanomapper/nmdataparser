@@ -57,6 +57,9 @@ public class BlockValueGroupExtractedInfo
 	public ParamInfo errorQualifier = null;
 	public String errorQualifierString = null;
 	
+	public ParamInfo substanceRecordMap = null;
+	public String substanceRecordMapString = null;
+	
 	
 	public List<String> getErrors()
 	{
