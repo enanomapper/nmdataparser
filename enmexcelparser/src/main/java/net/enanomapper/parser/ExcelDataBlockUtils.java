@@ -701,6 +701,16 @@ public class ExcelDataBlockUtils
 					bvgei.errorQualifier = pi;
 			}
 		}
+		
+		if (bvg.substanceRecordMapString != null)
+			bvgei.substanceRecordMapString = bvg.substanceRecordMapString;
+		else {
+			if (bvg.substanceRecordMap != null) {
+				ParamInfo pi = extractParamInfo(bvg.substanceRecordMap, bvgei.errors, "SUBSTANCE_RECORD_MAP");
+				if (pi != null)
+					bvgei.substanceRecordMap = pi;
+			}
+		}
 
 		return bvgei;
 	}
