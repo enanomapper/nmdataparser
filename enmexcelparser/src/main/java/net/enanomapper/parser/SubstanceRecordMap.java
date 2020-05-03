@@ -114,19 +114,45 @@ public class SubstanceRecordMap
 	}
 	
 	public void dispatch(List<DataBlockElement> effDataBlock)
-	{
-		//Dispatch to all substances:
-		for (String mapkey : mapKeys) {
-			SubstanceRecord r = substances.get(mapkey);
+	{	
+		for (DataBlockElement dbe : effDataBlock)
+		{
+			EffectRecord effect = dbe.generateEffectRecord();
+			String substKey = dbe.substanceRecordMap;
 			
-			//Adding to the last protocol application
-			ProtocolApplication pa = r.getMeasurements().get(r.getMeasurements().size()-1);
-			dispatchToProtAppl(effDataBlock, pa);
+			if (substKey == null || substKey.equals("ALL_SUBSTANCES") )
+			{
+				//Dispatch to all substances:
+				for (String mapkey : mapKeys) {
+					SubstanceRecord r = substances.get(mapkey);
+					
+					//Adding to the last protocol application
+					ProtocolApplication pa = r.getMeasurements().get(r.getMeasurements().size()-1);
+					pa.addEffect(effect);
+				}	
+			}
+			else
+			{	
+				//Dispatch to a specific substance
+				SubstanceRecord r = substances.get(substKey);
+				if (r != null)
+				{
+					//Adding to the last protocol application
+					ProtocolApplication pa = r.getMeasurements().get(r.getMeasurements().size()-1);
+					pa.addEffect(effect);
+				}
+				else
+				{
+					//Error on SUBSTANCE_RECORD_MAP
+					System.out.println("---------------> Error on SUBSTANCE_RECORD_MAP: " + substKey);
+				}
+			}
 		}
 		
-		//TODO dispatch to specific substance
+		
 	}
 	
+	/*
 	public void dispatchToProtAppl(List<DataBlockElement> effDataBlock, ProtocolApplication pa)
 	{
 		for (DataBlockElement dbe : effDataBlock)
@@ -135,6 +161,7 @@ public class SubstanceRecordMap
 			pa.addEffect(effect);
 		}
 	}
+	*/
 	
 	
 	void setMapKeys()
