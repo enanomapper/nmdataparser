@@ -300,6 +300,24 @@ public class ExcelDataBlockUtils
 									if (bvgei.errorQualifierString != null)
 										dbEl.errQualifier = bvgei.errorQualifierString;
 								}
+								
+								// Handle SUBSTANCE_RECORD_MAP
+								if (bvgei.substanceRecordMap != null) {
+									ParamInfo pi = bvgei.substanceRecordMap;
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
+
+									if (c != null) {
+										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
+										if (value != null)
+											dbEl.substanceRecordMap = value.toString();
+									}
+								} else {
+									if (bvgei.substanceRecordMapString != null)
+										dbEl.substanceRecordMap = bvgei.substanceRecordMapString;
+								}
+								
 
 								// Handle value group parameters (which are
 								// effect conditions)
@@ -406,6 +424,10 @@ public class ExcelDataBlockUtils
 		return dbeList;
 	}
 	
+	/*
+	 * This function is used for extracting cell information for DataBlock elements 
+	 * associated with ParamInfo  
+	 */
 	Cell getCell(ParamInfo pi, Cell cells[][], int row0, int column0, int i, int k, BlockValueGroupExtractedInfo bvgei,
 			ExcelDataBlockLocation exdb_loc) {
 		// Upper left corner of the current sub-block (row0, column0)
