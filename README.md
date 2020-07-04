@@ -13,7 +13,7 @@ Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoM
 
 * [More details](http://ambit.sourceforge.net/enanomapper/templates/convertor.html) 
 
-* [JSON configuration keywords](http://ambit.sourceforge.net/enanomapper/templates/jsonconfig.html)
+* [JSON configuration documentation](https://github.com/enanomapper/nmdataparser/wiki)
 
 ### Data entry templates (NEW!)
 
