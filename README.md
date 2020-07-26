@@ -50,4 +50,16 @@ Development [snapshot at Maven repository](https://nexus.ideaconsult.net/#nexus-
 - [Excel file](https://github.com/enanomapper/nmdataparser/blob/master/src/test/resources/net/enanomapper/parser/csv/ProteinCoronaTest1.xlsx)
 - [More examples](https://github.com/enanomapper/nmdataparser/tree/master/enmexcelparser/src/test/resources/net/enanomapper/parser/csv)
 
+### NanoWiki RDF parser
+
+The NanoWiki RDF parser code was moved from https://github.com/vedina/loom  - please update your dependencies !
+
+````
+<dependency>
+  <groupId>net.enanomapper</groupId>
+  <artifactId>enmnanowiki</artifactId>
+  <version>1.3.1-SNAPSHOT</version>
+</dependency>
+````
+
 
