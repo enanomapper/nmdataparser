@@ -19,11 +19,9 @@
 			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
-			<!-- transitive Jena & ambit dep -->
-
-			<groupId>net.ideaconsult</groupId>
-			<artifactId>loom-nm</artifactId>
-			<version>${loom.version}</version>
+			<groupId>net.enanomapper</groupId>
+			<artifactId>enmnanowiki</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ambit</groupId>
