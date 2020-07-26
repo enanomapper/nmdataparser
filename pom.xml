@@ -165,5 +165,6 @@
 		<module>enmconvertor</module>
 
 		<module>enmtemplategen</module>
+		<module>enmnanowiki</module>
 	</modules>
 </project>
