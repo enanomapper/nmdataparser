@@ -193,10 +193,8 @@ public class SubstanceRecordMap
 		s = strArrays.get(KEYWORD.SUBSTANCE_NAME.name());
 		if (s != null)
 			if (subIndex < s.length)
-				if (s[subIndex] != null) {
+				if (s[subIndex] != null)
 					rec.setSubstanceName(s[subIndex]);
-					rec.setSubstanceUUID(ExcelParserConfigurator.generateUUID(config.getPrefix(), s[subIndex]));
-				}	
 		
 		s = strArrays.get(KEYWORD.PUBLIC_NAME.name());
 		if (s != null)
