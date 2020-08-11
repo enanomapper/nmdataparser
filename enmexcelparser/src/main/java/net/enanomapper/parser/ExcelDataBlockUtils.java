@@ -37,6 +37,8 @@ public class ExcelDataBlockUtils
 	protected int curRowNum = 1;
 	protected HashMap<String, Object> curVariables = null;
 	protected HashMap<String, HashMap<Object, Object>> curVariableMappings = null;
+	protected int curRowSubblock = 1;
+	protected int curColumnSubblock = 1;
 	
 	
 
@@ -117,10 +119,11 @@ public class ExcelDataBlockUtils
 		if (exdb_loc.valueGroups == null)
 			return dbeList;
 		
+		/*
 		// Analyze value groups: positions info is extracted from the used
 		// expressions
 		List<BlockValueGroupExtractedInfo> bvgExtrInfo = extractAllBlockValueGroups(exdb_loc);
-		
+		*/
 
 		// Iterating all sub-blocks
 		for (int sbRow = 0; sbRow < rowSubblocks; sbRow++)
@@ -128,7 +131,13 @@ public class ExcelDataBlockUtils
 				// Upper left corner of the current sub-block
 				int row0 = sbRow * subblockSizeRows;
 				int column0 = sbColumn * subblockSizeColumns;
-
+				curRowSubblock = sbRow + 1; //0-based --> 1-based
+				curColumnSubblock = sbColumn + 1; //0-based --> 1-based
+				
+				// Analyze value groups: positions info is extracted from the used
+				// expressions
+				List<BlockValueGroupExtractedInfo> bvgExtrInfo = extractAllBlockValueGroups(exdb_loc);
+								
 				for (BlockValueGroupExtractedInfo bvgei : bvgExtrInfo) {
 					if (bvgei.FlagValues) {
 						// Shifted by -1 to make it 0-based indexing
@@ -485,8 +494,7 @@ public class ExcelDataBlockUtils
 	
 	protected List<BlockValueGroupExtractedInfo> extractAllBlockValueGroups(ExcelDataBlockLocation exdb_loc)
 	{
-		// Analyze value groups: positions info is extracted from the used
-		// expressions
+		// Analyze value groups: positions info is extracted from the used expressions
 		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
 		for (BlockValueGroup bvg : exdb_loc.valueGroups) {
 			BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
@@ -501,7 +509,8 @@ public class ExcelDataBlockUtils
 		
 		return bvgExtrInfo;
 	}
-
+	
+	
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
 
@@ -900,6 +909,10 @@ public class ExcelDataBlockUtils
 					|| (config.substanceIteration == IterationAccess.ROW_MULTI_FIXED)) {
 				context.set("ITERATION_CUR_ROW_LIST_SIZE", new Integer(curRows.size()));
 			}
+			
+			context.set("CUR_ROW_SUBBLOCK", new Integer(curRowSubblock));
+			context.set("CUR_COLUMN_SUBBLOCK", new Integer(curColumnSubblock));
+			
 
 			// System.out.println(" ***** ITERATION_CUR_ROW_NUM = " +
 			// context.get("ITERATION_CUR_ROW_NUM"));
