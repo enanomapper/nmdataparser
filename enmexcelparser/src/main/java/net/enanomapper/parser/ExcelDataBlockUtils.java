@@ -108,7 +108,7 @@ public class ExcelDataBlockUtils
 	public void setCurVariableMappings(HashMap<String, HashMap<Object, Object>> curVariableMappings) {
 		this.curVariableMappings = curVariableMappings;
 	}
-	
+		
 	
 	protected List<DataBlockElement> getDataBlockFromCellMatrix(Cell cells[][], int rowSubblocks, int columnSubblocks,
 			int subblockSizeRows, int subblockSizeColumns, ExcelDataBlockLocation exdb_loc) {
@@ -116,20 +116,11 @@ public class ExcelDataBlockUtils
 
 		if (exdb_loc.valueGroups == null)
 			return dbeList;
-
+		
 		// Analyze value groups: positions info is extracted from the used
 		// expressions
-		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
-		for (BlockValueGroup bvg : exdb_loc.valueGroups) {
-			BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
-			if (bvgei.getErrors().isEmpty())
-				bvgExtrInfo.add(bvgei);
-			else {
-				logger.warning("------- Value Group " + bvg.name + "errors:");
-				for (String err : bvgei.getErrors())
-					logger.warning("   --- " + err);
-			}
-		}
+		List<BlockValueGroupExtractedInfo> bvgExtrInfo = extractAllBlockValueGroups(exdb_loc);
+		
 
 		// Iterating all sub-blocks
 		for (int sbRow = 0; sbRow < rowSubblocks; sbRow++)
@@ -489,6 +480,26 @@ public class ExcelDataBlockUtils
 		if (row != null)
 			return row.getCell(columnNum);
 		return null;
+	}
+	
+	
+	protected List<BlockValueGroupExtractedInfo> extractAllBlockValueGroups(ExcelDataBlockLocation exdb_loc)
+	{
+		// Analyze value groups: positions info is extracted from the used
+		// expressions
+		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
+		for (BlockValueGroup bvg : exdb_loc.valueGroups) {
+			BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
+			if (bvgei.getErrors().isEmpty())
+				bvgExtrInfo.add(bvgei);
+			else {
+				logger.warning("------- Value Group " + bvg.name + "errors:");
+				for (String err : bvgei.getErrors())
+					logger.warning("   --- " + err);
+			}
+		}
+		
+		return bvgExtrInfo;
 	}
 
 	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
