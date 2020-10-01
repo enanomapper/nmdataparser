@@ -934,10 +934,10 @@ public class ExcelParserCore
 	protected String locationStringForErrorMessage(ExcelDataLocation loc) {
 		StringBuffer sb = new StringBuffer();
 		if (loc.columnIndex > 0)
-			sb.append(String.format(" Col %d (%s)", loc.columnIndex,
+			sb.append(String.format(" Col %d (%s)", loc.columnIndex + 1,
 					CellReference.convertNumToColString(loc.columnIndex)));
 		if (loc.rowIndex > 0)
-			sb.append(String.format(" Rowl %d", loc.rowIndex));
+			sb.append(String.format(" Row %d", loc.rowIndex + 1));
 
 		return sb.toString();
 	}
@@ -949,10 +949,10 @@ public class ExcelParserCore
 
 		if (loc != null) {
 			if (loc.columnIndex > 0)
-				sb.append(String.format(" Col %d (%s)", loc.columnIndex,
+				sb.append(String.format(" Col %d (%s)", loc.columnIndex + 1,
 						CellReference.convertNumToColString(loc.columnIndex)));
 			if (loc.rowIndex > 0)
-				sb.append(String.format(" Rowl %d", loc.rowIndex));
+				sb.append(String.format(" Row %d", loc.rowIndex + 1));
 		}
 		return sb.toString();
 	}
