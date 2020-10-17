@@ -17,7 +17,8 @@
 		"ALLOW_EMPTY": true,
 		"RECOGNITION": "BY_INDEX",
 
-		"VARIABLES": {
+		"VARIABLES": 
+		{
 			"var1": {
 				"ITERATION" : "ABSOLUTE_LOCATION",
 				"COLUMN_INDEX" : "C",
@@ -26,6 +27,12 @@
 			
 			"var2": {
 				"COLUMN_INDEX" : "B"
+			},
+			
+			"topCategory": {
+				"ITERATION" : "ABSOLUTE_LOCATION",				
+				"COLUMN_INDEX" : "E" ,
+				"ROW_INDEX" : 10
 			}
 		}
 
@@ -48,34 +55,142 @@
 			"COLUMN_INDEX": "D"
 		},
 		
+		"__SUBSTANCE_UUID__": {
+			"COLUMN_INDEX": "D"
+		},
+		
 		"SUBSTANCE_TYPE": "NPO_1317",
 
 		"OWNER_UUID": {
 			"COLUMN_INDEX": "C"
 		},
+		
+		"OWNER_NAME" : "test-owner-name",
 
 
 		"SUBSTANCE_UUID": {
 			"COLUMN_INDEX": "D"
 		},
+		
+		"REFERENCE_SUBSTANCE_UUID": {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "D",
+			"ROW_INDEX" : 10
+		},
 
 		"PUBLIC_NAME": {
 			"COLUMN_INDEX": "A"
 		},
+		
+		"ID_SUBSTANCE": 123456,
 
 		
 		"EXTERNAL_IDENTIFIERS": [
-
+			{
+				"TYPE": "ID1",
+				"ID":{
+					"COLUMN_INDEX": "F"
+				}
+			},
+			{
+				"TYPE": "ID2",
+				"ID":{
+					"COLUMN_INDEX": "G"
+				}
+			}
 		],
 
 		"COMPOSITION": [
-
+			{
+				"FORMAT" : "test-format",
+				"CONTENT" : "test-content",
+				"FORMULA" : "test-formula",
+				
+				"PROPORTION" :
+				{
+					"FUNCTION" : "test-function",
+					"TYPICAL_PRECISION" : "test-typical-precision",
+					"TYPICAL_VALUE" : 0.33,
+					"TYPICAL_UNIT" : "test-typical-unit",
+					"REAL_VALUE__" : 0.40,
+					"REAL_LOWER_PRECISION" : "test-real-lower-precision",
+					"REAL_LOWER_VALUE" : 0.20,
+					"REAL_UPPER_PRECISION" : "test-real-upper-precision",
+					"REAL_UPPER_VALUE" : 0.50,
+					"REAL_UNIT" : "test-real-unit"
+				}	
+				
+			},
+			
+			{
+				"CONTENT": {
+					"COLUMN_INDEX": "T"
+				},
+				
+				"FORMAT" : {
+					"COLUMN_INDEX": "U"
+				},
+				
+				"FORMULA" : {
+					"COLUMN_INDEX": "V"
+				},
+				
+				"SMILES" : {
+					"COLUMN_INDEX": "W"
+				},
+				
+				"INCHI" : {
+					"COLUMN_INDEX": "X"
+				},
+				
+				"INCHI_KEY" : {
+					"COLUMN_INDEX": "Y"
+				},
+				
+				"PROPERTIES" :
+				{
+					"PROP1" :
+					{
+						"COLUMN_INDEX" : "Z"
+					},
+					
+					"PROP2" :
+					{
+						"COLUMN_INDEX" : "AA"
+					},
+					
+					
+					"PROP3" :
+					{
+						"COLUMN_INDEX" : "AB",
+						"DATA_INTERPRETATION" : "AS_TEXT"
+					}
+				}
+			}
 		]
 
 	},
 
 	"PROTOCOL_APPLICATIONS": [
 	{
+		"PROTOCOL_APPLICATION_UUID" : {
+			"COLUMN_INDEX": "H"
+		},
+		
+		"INVESTIGATION_UUID" : "test-investigation-uuid",
+		"INVESTIGATION_UUID__" : "8a9becb6-c841-3717-953c-9f05cda7b54a",	
+		
+		"ASSAY_UUID" : "test-assay-uuid",
+		
+		"PROTOCOL_ENDPOINT" : "test-protocol-endpoint",
+		
+		"PROTOCOL_TOP_CATEGORY" : {
+			"ITERATION" : "VARIABLE",
+			"VARIABLE_KEY" : "topCategory"
+		},
+		
+		"PROTOCOL_CATEGORY_CODE" : "test-category-code",
+		
 		"CITATION_TITLE": {
 			"COLUMN_INDEX": "I"
 		},
@@ -107,14 +222,35 @@
 				"COLUMN_INDEX": "O"
 			}
 		},
-
+		
+		"RELIABILITY_IS_ROBUST_STUDY" : {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "G",
+			"ROW_INDEX" : 10
+		},
+		
+		"RELIABILITY_IS_USED_FOR_CLASSIFICATION" : {
+			"ITERATION" : "ABSOLUTE_LOCATION",
+			"COLUMN_INDEX": "H",
+			"ROW_INDEX" : 10
+		},
+		
+		"RELIABILITY_IS_USED_FOR_MSDS" : "msds",
+		
+		"RELIABILITY_PURPOSE_FLAG" : "purpose-flag",
+		
+		"RELIABILITY_STUDY_RESULT_TYPE" : "result-type",
+		
+		"RELIABILITY_VALUE" : "reliability-value",
+		
+		
 		"PARAMETERS": {
 			"par1": {
-				"COLUMN_INDEX": "K"
+				"COLUMN_INDEX": "P"
 			},
 
 			"par2": {
-				"COLUMN_INDEX": "L"
+				"COLUMN_INDEX": "Q"
 			}
 		},
 
@@ -123,6 +259,8 @@
 		[
 			{
 				"ENDPOINT": "Size",
+				
+				"ENDPOINT_TYPE": "Average",
 			
 				"VALUE": {
 					"COLUMN_INDEX": "R"
@@ -130,6 +268,80 @@
 
 				"CONDITIONS": {
 					"cond1": "cond1-val"
+				}
+			},
+			{
+				"ENDPOINT": "Eff1",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AD"
+				},
+				
+				"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+				},
+
+				"CONDITIONS": {
+					"cond11": {
+						"COLUMN_INDEX": "AF"
+					},
+					"cond12": {
+						"COLUMN_INDEX": "AG"
+					}
+				}
+			},
+			{
+				"ENDPOINT": "Eff2",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AH"
+				},
+				
+				"ERR_VALUE": {
+					"COLUMN_INDEX": "AE"
+				},
+
+				"CONDITIONS": {
+					"cond21": {
+						"COLUMN_INDEX": "AI"
+					}
+				}
+			},
+			{
+				"ENDPOINT": "Eff3",
+			
+				"VALUE": {
+					"COLUMN_INDEX": "AJ"
+				}
+			},
+			{
+				"ENDPOINT": "Eff4",
+			
+				"LO_VALUE": {
+					"COLUMN_INDEX": "AK"
+				},
+				
+				"UP_VALUE": {
+					"COLUMN_INDEX": "AL"
+				},
+				
+				"UNIT": {
+					"COLUMN_INDEX": "AM"
+				},
+				
+				"LO_QUALIFIER": {
+					"COLUMN_INDEX": "AN"
+				},
+				
+				"UP_QUALIFIER": "~"
+			},			
+			{
+				"ENDPOINT": "Eff5",
+				
+				"SAMPLE_ID" : "sample-id-value",
+			
+				"TEXT_VALUE": {
+					"COLUMN_INDEX": "AO"
 				}
 			}
 		]

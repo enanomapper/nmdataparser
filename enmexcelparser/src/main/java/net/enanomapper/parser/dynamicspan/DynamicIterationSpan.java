@@ -1,4 +1,4 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.dynamicspan;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Row;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.ParserConstants;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.ElementPosition;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;

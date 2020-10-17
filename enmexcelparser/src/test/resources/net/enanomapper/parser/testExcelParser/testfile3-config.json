@@ -1,0 +1,145 @@
+{
+	"TEMPLATE_INFO": {
+		"NAME": "Test3-HTS",
+		"VERSION": "version 1",
+		"TYPE": 1,
+		"ALLOW_QUALIFIER_IN_VALUE_CELL": 1
+	},
+
+	"DATA_ACCESS": {
+		"ITERATION": "ROW_MULTI_DYNAMIC",
+		"SHEET_INDEX": 2,
+		"START_ROW": 4,
+		"END_ROW": 18,
+
+		"START_HEADER_ROW": 1,
+		"END_HEADER_ROW": 3,
+		"ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX",
+		"DYNAMIC_ITERATION": "NEXT_DIFFERENT_VALUE",
+		"DYNAMIC_ITERATION_COLUMN_INDEX": "D",
+
+		"VARIABLES": 
+		{
+			"Assay_endpoint": "HTS",			 
+			
+            "SampleShortName": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"DATA_INTERPRETATION": "AS_TEXT",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 2,
+				"ROW_INDICES": "2-4",
+				"COLUMN_INDEX": "A"
+			},
+			"SampleName": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 3,
+				"ROW_INDICES": [2,3,4],
+				"COLUMN_INDEX": "B"
+			}
+   
+		},
+		
+		"VARIABLE_MAPPINGS": [
+			{
+				"NAME": "Sample name",
+				"KEYS_VARIABLE": "SampleShortName",
+				"VALUES_VARIABLE": "SampleName"
+			}
+		]
+
+	},
+
+	
+	"SUBSTANCE_RECORD": 
+	{
+		"PUBLIC_NAME": {
+			"COLUMN_INDEX": "D",
+			"MAPPING": "Sample name"
+		},
+		
+		"EXTERNAL_IDENTIFIERS": [
+			{
+				"TYPE": "Sample name",
+				"ID": {
+					"COLUMN_INDEX": "D"
+				}
+			}
+		]
+	},	
+	
+	"PROTOCOL_APPLICATIONS": [
+	{	
+		"PROTOCOL_ENDPOINT" : {
+			"COLUMN_INDEX": "K"
+		},
+		
+		"PROTOCOL_TOP_CATEGORY": "TOX",
+		
+		"PROTOCOL_GUIDELINE": {
+			"COLUMN_INDEX": "M"
+		},
+		
+		"PARAMETERS" : {
+			"Par1": {
+				"COLUMN_INDEX": "L"
+			}
+		}, 
+		
+		"EFFECTS_BLOCK": [
+			{
+				"LOCATION": {
+					"SHEET_INDEX": 2,
+					"COLUMN_INDEX": "A"
+				},
+				"ROW_SUBBLOCKS": 1,
+				"COLUMN_SUBBLOCKS": 1,
+				"SUBBLOCK_SIZE_ROWS": "=ITERATION_CUR_ROW_LIST_SIZE",
+				"SUBBLOCK_SIZE_COLUMNS": 10,
+				"VALUE_GROUPS": [
+					{
+						"NAME": "=Assay_endpoint",
+						"START_COLUMN": 6,
+						"END_COLUMN": 9,
+						"START_ROW": 1,
+						"END_ROW": "=ITERATION_CUR_ROW_LIST_SIZE",
+						"ENDPOINT_TYPE": "RAW DATA",
+						"PARAMETERS": [
+							{
+								"NAME": "CONDITIONS_HTS",
+								"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
+								"SYNC_EXCEL_SHEET_COLUMN_WITH_VALUE_POS": true,
+								"DATA_INTERPRETATION" : "AS_TEXT",
+								"COLUMN_POS": 6,
+								"ROW_POS": 3
+							},
+							{
+								"NAME": "Concentration",
+								"ASSIGN": "ASSIGN_TO_VALUE",
+								"FIX_COLUMN_POS_TO_START_VALUE": true,
+								"COLUMN_POS": -1,
+								"ROW_POS": 0,
+								"UNIT": "ug/ml"
+							},
+							{
+								"NAME": "Well",
+								"ASSIGN": "ASSIGN_TO_VALUE",
+								"FIX_COLUMN_POS_TO_START_VALUE": true,
+								"COLUMN_POS": -3,
+								"ROW_POS": 0
+							}
+						]
+					}
+				]
+			}
+		]
+		
+	}		
+	]
+
+}

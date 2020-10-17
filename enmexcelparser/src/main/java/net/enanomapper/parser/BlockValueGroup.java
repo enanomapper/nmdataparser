@@ -101,6 +101,9 @@ public class BlockValueGroup {
 	public BlockParameter errorQualifier = null; //error Qualifier defined as a BlockParameter
 	public String errorQualifierString = null; //error Qualifier defined as a string directly from JSON
 	
+	public BlockParameter substanceRecordMap = null; //Substance Record Map defined as a BlockParameter
+	public String substanceRecordMapString = null; //Substance Record defined as a string directly from JSON
+	
 
 	public static BlockValueGroup extractValueGroup(JsonNode node, ExcelParserConfigurator conf, int valueGroupNum) {
 		BlockValueGroup bvg = new BlockValueGroup();
@@ -442,14 +445,31 @@ public class BlockValueGroup {
 				//Extracting as a block parameter
 				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ERROR_QUALIFIER);
 				bvg.errorQualifier = bp;
-				//System.out.println(bp.toJSONKeyWord(">>>>>>>>>"));
 			}
 			else 
 			{
 				conf.addError("In Value group, ERROR_QUALIFIER section is not TEXTUAL or parameter-style object!");				
 			}	
 		}
-		 
+		
+		//SUBSTANCE_RECORD_MAP
+		nd = node.path(KEYWORD.SUBSTANCE_RECORD_MAP.name());
+		if (!nd.isMissingNode()) 
+		{
+			if (nd.isTextual()) {
+				//Extracting as a string
+				bvg.substanceRecordMapString = nd.asText();
+			}
+			else if (nd.isObject()) {
+				//Extracting as a block parameter
+				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.ERROR_QUALIFIER);
+				bvg.substanceRecordMap = bp;
+			}
+			else 
+			{
+				conf.addError("In Value group, SUBSTANCE_RECORD_MAP section is not TEXTUAL or parameter-style object!");				
+			}	
+		}
 
 		return bvg;
 	}
@@ -600,7 +620,7 @@ public class BlockValueGroup {
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"ENDPOINT_TYPE\" : " + endpointTypeString);
+			sb.append(offset + "\t\"ENDPOINT_TYPE\" : " + JsonUtilities.objectToJsonField(endpointTypeString));
 		}
 		else
 		{
@@ -617,7 +637,7 @@ public class BlockValueGroup {
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"VALUE_QUALIFIER\" : " + valueQualifierString);
+			sb.append(offset + "\t\"VALUE_QUALIFIER\" : " + JsonUtilities.objectToJsonField(valueQualifierString));
 		}
 		else
 		{
@@ -634,7 +654,7 @@ public class BlockValueGroup {
 		{
 			if (nFields > 0)
 				sb.append(",\n");
-			sb.append(offset + "\t\"ERROR_QUALIFIER\" : " + errorQualifierString);
+			sb.append(offset + "\t\"ERROR_QUALIFIER\" : " + JsonUtilities.objectToJsonField(errorQualifierString));
 		}
 		else
 		{
@@ -644,6 +664,23 @@ public class BlockValueGroup {
 					sb.append(",\n");
 				sb.append(offset + "\t\"ERROR_QUALIFIER\" : \n" );
 				sb.append(errorQualifier.toJSONKeyWord(offset + "\t\t"));
+			}
+		}
+		
+		if (substanceRecordMapString != null)
+		{
+			if (nFields > 0)
+				sb.append(",\n");
+			sb.append(offset + "\t\"SUBSTANCE_RECORD_MAP\" : " + JsonUtilities.objectToJsonField(substanceRecordMapString));
+		}
+		else
+		{
+			if (substanceRecordMap != null)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(offset + "\t\"SUBSTANCE_RECORD_MAP\" : \n" );
+				sb.append(substanceRecordMap.toJSONKeyWord(offset + "\t\t"));
 			}
 		}
 

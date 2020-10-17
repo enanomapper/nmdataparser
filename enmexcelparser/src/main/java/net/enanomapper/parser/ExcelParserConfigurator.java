@@ -21,6 +21,9 @@ import net.enanomapper.parser.ParserConstants.ElementField;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.ParserConstants.Recognition;
 import net.enanomapper.parser.ParserConstants.SheetSynchronization;
+//import net.enanomapper.parser.dynamicspan.ColumnSpan;
+//import net.enanomapper.parser.dynamicspan.DynamicIterationSpan;
+//import net.enanomapper.parser.dynamicspan.RowSpan;
 import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.IndexSet;
 import net.enanomapper.parser.recognition.RecognitionUtils;
@@ -111,12 +114,14 @@ public class ExcelParserConfigurator {
 	public HashMap<String, Object> jsonRepository = new HashMap<String, Object>();
 	public ArrayList<CompositionDataLocation> composition = new ArrayList<CompositionDataLocation>();
 	public ArrayList<ExternalIdentifierDataLocation> externalIdentifiers = new ArrayList<ExternalIdentifierDataLocation>();
-
+	public SubstanceRecordMapLocation substanceRecordMap = null;
+	
 	// Read data as variables
 	public HashMap<String, ExcelDataLocation> variableLocations = null;
 	public ArrayList<VariableMapping> variableMappings = null;
 	public HashMap<String, Tokenize> tokenizers = null;
 
+	/*
 	// Handling locations dynamically
 	public boolean FlagDynamicSpan = false;
 	public boolean FlagDynamicSpanOnSubtsanceLevel = false;
@@ -126,6 +131,7 @@ public class ExcelParserConfigurator {
 													// and stored here
 	public ColumnSpan columnSpan = null;
 	public RowSpan rowSpan = null;
+	*/
 
 	public String getPrefix() {
 		return prefix;
@@ -417,7 +423,7 @@ public class ExcelParserConfigurator {
 				}
 			}
 			
-
+			/*	
 			// DYNAMIC_ITERATION_SPAN
 			if (!curNode.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 				DynamicIterationSpan span = DynamicIterationSpan
@@ -437,13 +443,18 @@ public class ExcelParserConfigurator {
 				RowSpan span = extractRowSpan(curNode.path(KEYWORD.ROW_SPAN.name()), conf, KEYWORD.DATA_ACCESS.name());
 				conf.rowSpan = span;
 			}
+			*/
 
 		}
 
 		// Handle SubstanceRecord data locations
 		curNode = root.path(KEYWORD.SUBSTANCE_RECORD.name());
 		if (curNode.isMissingNode())
-			conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.SUBSTANCE_RECORD.name()));
+		{	
+			//SUBSTANCE_RECORD is not needed in iteration mode: SUBSTANCE_RECORD_MAP
+			if (conf.substanceIteration != IterationAccess.SUBSTANCE_RECORD_MAP)
+				conf.configErrors.add(String.format("JSON Section '%s' is missing!",KEYWORD.SUBSTANCE_RECORD.name()));			
+		}	
 		else {
 			// SUBSTANCE_NAME
 			ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(curNode, KEYWORD.SUBSTANCE_NAME.name(), conf);
@@ -546,7 +557,8 @@ public class ExcelParserConfigurator {
 				} else
 					conf.configErrors.add(String.format("Section '%s' is not an array!",KEYWORD.EXTERNAL_IDENTIFIERS.name()));
 			}
-		}
+		} //end of SUBSTANCE_RECORD section
+		
 
 		// Handle Parallel Sheets
 		curNode = root.path(KEYWORD.PARALLEL_SHEETS.name());
@@ -585,8 +597,17 @@ public class ExcelParserConfigurator {
 					conf.protocolAppLocations.add(padl);
 			}
 		}
+		
+		//SUBSTANCE_RECORD_MAP
+		curNode = root.path(KEYWORD.SUBSTANCE_RECORD_MAP.name());
+		if (!curNode.isMissingNode())
+		{	
+			conf.substanceRecordMap = SubstanceRecordMapLocation.extractSubstanceRecordMapLocation(curNode, conf);
+			conf.substanceRecordMap.checkConsistency(conf);
+		}	
+		
 
-		conf.checkDynamicConfiguration();
+		//conf.checkDynamicConfiguration();
 
 		return conf;
 	}
@@ -758,6 +779,7 @@ public class ExcelParserConfigurator {
 			nDAFields++;
 		}
 
+		/*
 		// Dynamic locations
 		if (dynamicIterationSpan != null) {
 			if (nDAFields > 0)
@@ -779,6 +801,7 @@ public class ExcelParserConfigurator {
 			sb.append(rowSpan.toJSONKeyWord("\t\t"));
 			nDAFields++;
 		}
+		*/
 
 		if (nDAFields > 0)
 			sb.append("\n");
@@ -897,7 +920,14 @@ public class ExcelParserConfigurator {
 			sb.append("\n");
 
 		sb.append("\t},\n\n"); // end of SUBSTANCE_RECORD
-
+		
+		if (substanceRecordMap != null)
+		{	
+			sb.append(substanceRecordMap.toJSONKeyWord("\t"));
+			sb.append(",\n\n");
+		}	
+		
+		
 		sb.append("\t\"PROTOCOL_APPLICATIONS\":\n");
 		sb.append("\t[\n");
 		for (int i = 0; i < protocolAppLocations.size(); i++) {
@@ -1468,7 +1498,8 @@ public class ExcelParserConfigurator {
 		if (!varNode.isMissingNode()) {
 			eshc.variableLocations = extractDynamicSection(varNode, conf, null);
 		}
-
+		
+		/*
 		// DYNAMIC_ITERATION_SPAN
 		if (!node.path(KEYWORD.DYNAMIC_ITERATION_SPAN.name()).isMissingNode()) {
 			DynamicIterationSpan span = DynamicIterationSpan.extractDynamicIterationSpan(
@@ -1488,6 +1519,7 @@ public class ExcelParserConfigurator {
 			RowSpan span = extractRowSpan(node.path(KEYWORD.ROW_SPAN.name()), conf, "PARALLEL_SHEET[" + (jsonArrayIndex + 1) + "]");
 			eshc.rowSpan = span;
 		}
+		*/
 
 		return eshc;
 	}
@@ -1592,7 +1624,8 @@ public class ExcelParserConfigurator {
 
 		return cdl;
 	}
-
+	
+	/*
 	public static ColumnSpan extractColumnSpan(JsonNode node, ExcelParserConfigurator conf, String masterSection) {
 		// TODO
 		return null;
@@ -1602,6 +1635,7 @@ public class ExcelParserConfigurator {
 		// TODO
 		return null;
 	}
+	*/
 
 	public static void extractJsonRepository(JsonNode node, ExcelParserConfigurator conf) {
 		Iterator<Entry<String, JsonNode>> it = node.fields();
@@ -1624,6 +1658,7 @@ public class ExcelParserConfigurator {
 		return false;
 	}
 
+	/*
 	public void checkDynamicConfiguration() {
 		FlagDynamicSpan = haveDynamicSpan();
 		if (!FlagDynamicSpan) {
@@ -1800,6 +1835,7 @@ public class ExcelParserConfigurator {
 		}
 
 	}
+	*/
 
 	public String generateUUID(String s) {
 		return generateUUID(prefix, s);

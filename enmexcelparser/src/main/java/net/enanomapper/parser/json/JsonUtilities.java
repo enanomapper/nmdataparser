@@ -243,11 +243,23 @@ public class JsonUtilities
 		{
 			return toJsonField((double[]) obj);
 		}
+		
+		if (obj instanceof String[])
+		{
+			return toJsonField((String[]) obj);
+		}
+		
 			
 		//TODO handle some other cases as arrays etc.
 		
 		return null;
 	}
+	
+	public static String objectToJsonKeywordAndField(String keyword, Object obj)
+	{
+		return "\"" + keyword + "\" : " + objectToJsonField (obj);
+	}
+	
 	/**
 	 * 
 	 * @param d
@@ -264,6 +276,23 @@ public class JsonUtilities
 		{
 			sb.append(d[i]);
 			if (i < (d.length-1))
+				sb.append(",");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	public static String toJsonField(String s[])
+	{
+		if (s == null)
+			return null;
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		for (int i = 0; i < s.length; i++)
+		{
+			sb.append("\"" + s[i] + "\"");
+			if (i < (s.length-1))
 				sb.append(",");
 		}
 		sb.append("]");

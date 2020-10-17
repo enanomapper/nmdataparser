@@ -1,9 +1,11 @@
-package net.enanomapper.parser;
+package net.enanomapper.parser.dynamicspan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.ParserConstants;
 import net.enanomapper.parser.ParserConstants.ElementSynchronization;
 import ambit2.base.data.StructureRecord;
 import ambit2.base.data.SubstanceRecord;
