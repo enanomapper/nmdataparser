@@ -149,7 +149,23 @@ public enum _OPTIONS {
 		public String description() {
 			return "Template identifier";
 		}		
-	},		
+	},	
+	annotation {
+		@Override
+		public String argName() {
+			return "annotation";
+		}
+
+		@Override
+		public String command() {
+			return "a";
+		}
+		@Override
+		public String description() {
+			return "Path to annotation folder (see guide for folder layout)";
+		}		
+	},	
+
 	command {
 
 		@Override

@@ -46,9 +46,11 @@ import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
+import ambit2.base.ro.SubstanceRecordAnnotationProcessor;
 import ambit2.core.io.IRawReader;
 import ambit2.core.io.json.SubstanceStudyParser;
 import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
+import ambit2.rest.AmbitFreeMarkerApplication;
 import ambit2.rest.substance.SubstanceRDFReporter;
 import net.enanomapper.maker.JsonConfigAnnotator;
 import net.enanomapper.maker.TR;
@@ -243,7 +245,7 @@ public class DataConvertor {
 		}
 		return 0;
 	}
-
+	//tbd use annotator = new SubstanceRecordAnnotationProcessor
 	public int writeAsJSON(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 		int records = 0;
@@ -281,6 +283,14 @@ public class DataConvertor {
 	public int writeAsRDF(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 
+		SubstanceRecordAnnotationProcessor annotator = null;
+		try {
+			annotator = new SubstanceRecordAnnotationProcessor(annotationFolder,false);
+		} catch (Exception x) {
+			Logger.getGlobal().log(Level.WARNING,x.getMessage());
+			annotator = null;
+		}	
+		
 		Request hack = new Request();
 		hack.setRootRef(new Reference("http://localhost/ambit2"));
 		MediaType outmedia = MediaType.TEXT_RDF_N3;
@@ -292,6 +302,8 @@ public class DataConvertor {
 			outmedia = MediaType.APPLICATION_RDF_TURTLE;
 		else if ("json".equals(ext))
 			outmedia = ChemicalMediaType.APPLICATION_JSONLD;
+		
+				
 		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, outmedia);
 		Model model = ModelFactory.createDefaultModel();
 		exporter.header(model, null);

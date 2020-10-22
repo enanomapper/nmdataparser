@@ -21,7 +21,7 @@ public class Settings {
 	protected ConvertorCommand command = ConvertorCommand.data;
 	protected Integer nsheet = null;
 	protected String templateid = null;
-	
+	protected File annotationFolder = null;
 
 	public String getTemplateid() {
 		return templateid;
@@ -162,13 +162,19 @@ public class Settings {
 				return true;
 			}
 			case data: {
-
+				
 				if (_OPTIONS.listformats.getOption(line) != null) {
 					System.out.println(IO_FORMAT.list());
 					return false;
 
 				} else {
 
+					if (_OPTIONS.annotation.getOption(line) != null) {
+						annotationFolder = getAnnotationFolder(line);
+						if (!annotationFolder.exists() || !annotationFolder.isDirectory())
+							annotationFolder= null;
+					} else annotationFolder= null;
+					
 					setInputFile(getInput(line));
 
 					if (inputFile == null && !inputFile.exists())
@@ -276,6 +282,10 @@ public class Settings {
 		return fname == null ? null : new File(fname);
 	}
 
+	protected static File getAnnotationFolder(CommandLine line) {
+		String fname = _OPTIONS.annotation.getOption(line);
+		return fname == null ? null : new File(fname);
+	}
 	protected void printHelp(Options options, String message) {
 		if (message != null)
 			logger_cli.log(Level.WARNING, message);
