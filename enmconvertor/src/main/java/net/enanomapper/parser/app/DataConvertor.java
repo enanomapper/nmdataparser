@@ -40,6 +40,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.SubstanceRecord.jsonSubstance;
 import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.interfaces.IStructureRecord;
@@ -244,26 +245,32 @@ public class DataConvertor {
 	public int writeAsJSON(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 		int records = 0;
-		try {
+		try (Writer writer = new FileWriter(outputFile)) {
+			writer.write("{ \"substance\" : [\n");
+			String delimiter = "";
 			while (reader.hasNext()) {
 				Object record = reader.next();
 				if (record == null)
 					continue;
-				try {
+				try  {
 					validator.process((IStructureRecord) record);
-					Writer writer = new FileWriter(outputFile);
-					writer.write(((SubstanceRecord) record).toJSON(null));
-					writer.close();
+					;
+					String tmp = ((SubstanceRecord) record).toJSON("http://localhost/ambit2",true);
+					writer.write(delimiter);
+					writer.write(tmp);
+					writer.flush();
+					delimiter =",";
 				} catch (Exception x) {
+					x.printStackTrace();
 					logger_cli.log(Level.FINE, x.getMessage());
 				}
 				records++;
 			}
-
+			writer.write("\n]}");
 		} catch (Exception x) {
 			logger_cli.log(Level.WARNING, x.getMessage(), x);
 		} finally {
-
+			
 			logger_cli.log(Level.INFO, "MSG_IMPORTED", new Object[] { records });
 		}
 		return records;
