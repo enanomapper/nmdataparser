@@ -23,6 +23,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.log4j.PropertyConfigurator;
@@ -60,6 +61,7 @@ import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.InvalidCommand;
 import net.idea.loom.nm.nanowiki.ENanoMapperRDFReader;
 import net.idea.loom.nm.nanowiki.NanoWikiRDFReader;
+import net.idea.restnet.c.ChemicalMediaType;
 import net.idea.templates.extraction.AssayTemplatesParser;
 import net.idea.templates.generation.Term;
 import net.idea.templates.generation.Tools;
@@ -281,7 +283,16 @@ public class DataConvertor {
 
 		Request hack = new Request();
 		hack.setRootRef(new Reference("http://localhost/ambit2"));
-		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, MediaType.TEXT_RDF_N3);
+		MediaType outmedia = MediaType.TEXT_RDF_N3;
+		
+		String ext = FilenameUtils.getExtension(settings.getOutputFile().getName().toLowerCase());
+		if ("rdf".equals(ext))
+			outmedia = MediaType.APPLICATION_RDF_XML;
+		else if ("ttl".equals(ext))
+			outmedia = MediaType.APPLICATION_RDF_TURTLE;
+		else if ("json".equals(ext))
+			outmedia = ChemicalMediaType.APPLICATION_JSONLD;
+		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, outmedia);
 		Model model = ModelFactory.createDefaultModel();
 		exporter.header(model, null);
 		exporter.setOutput(model);
