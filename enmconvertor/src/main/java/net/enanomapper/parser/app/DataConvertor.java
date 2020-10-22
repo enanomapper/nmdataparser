@@ -41,7 +41,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
-import ambit2.base.data.SubstanceRecord.jsonSubstance;
 import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.data.substance.SubstanceEndpointsBundle;
 import ambit2.base.interfaces.IStructureRecord;
@@ -50,7 +49,6 @@ import ambit2.base.ro.SubstanceRecordAnnotationProcessor;
 import ambit2.core.io.IRawReader;
 import ambit2.core.io.json.SubstanceStudyParser;
 import ambit2.export.isa.v1_0.ISAJsonExporter1_0;
-import ambit2.rest.AmbitFreeMarkerApplication;
 import ambit2.rest.substance.SubstanceRDFReporter;
 import net.enanomapper.maker.JsonConfigAnnotator;
 import net.enanomapper.maker.TR;
@@ -165,14 +163,14 @@ public class DataConvertor {
 			};
 		};
 		tsettings.setSinglefile(true);
-		
+
 		switch (settings.getOutformat()) {
 		case xlsx_multisheet: {
 			tsettings.setTemplatesType(_TEMPLATES_TYPE.multisheet);
 			break;
 		}
 		default: {
-			tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);	
+			tsettings.setTemplatesType(_TEMPLATES_TYPE.jrc);
 		}
 		}
 		tsettings.setTemplatesCommand(_TEMPLATES_CMD.generate);
@@ -245,7 +243,8 @@ public class DataConvertor {
 		}
 		return 0;
 	}
-	//tbd use annotator = new SubstanceRecordAnnotationProcessor
+
+	// tbd use annotator = new SubstanceRecordAnnotationProcessor
 	public int writeAsJSON(IRawReader<IStructureRecord> reader, StructureRecordValidator validator, File outputFile)
 			throws Exception {
 		int records = 0;
@@ -256,14 +255,14 @@ public class DataConvertor {
 				Object record = reader.next();
 				if (record == null)
 					continue;
-				try  {
+				try {
 					validator.process((IStructureRecord) record);
 					;
-					String tmp = ((SubstanceRecord) record).toJSON("http://localhost/ambit2",true);
+					String tmp = ((SubstanceRecord) record).toJSON("http://localhost/ambit2", true);
 					writer.write(delimiter);
 					writer.write(tmp);
 					writer.flush();
-					delimiter =",";
+					delimiter = ",";
 				} catch (Exception x) {
 					x.printStackTrace();
 					logger_cli.log(Level.FINE, x.getMessage());
@@ -274,7 +273,7 @@ public class DataConvertor {
 		} catch (Exception x) {
 			logger_cli.log(Level.WARNING, x.getMessage(), x);
 		} finally {
-			
+
 			logger_cli.log(Level.INFO, "MSG_IMPORTED", new Object[] { records });
 		}
 		return records;
@@ -285,16 +284,16 @@ public class DataConvertor {
 
 		SubstanceRecordAnnotationProcessor annotator = null;
 		try {
-			annotator = new SubstanceRecordAnnotationProcessor(annotationFolder,false);
+			annotator = new SubstanceRecordAnnotationProcessor(settings.annotationFolder, false);
 		} catch (Exception x) {
-			Logger.getGlobal().log(Level.WARNING,x.getMessage());
+			Logger.getGlobal().log(Level.WARNING, x.getMessage());
 			annotator = null;
-		}	
-		
+		}
+
 		Request hack = new Request();
 		hack.setRootRef(new Reference("http://localhost/ambit2"));
 		MediaType outmedia = MediaType.TEXT_RDF_N3;
-		
+
 		String ext = FilenameUtils.getExtension(settings.getOutputFile().getName().toLowerCase());
 		if ("rdf".equals(ext))
 			outmedia = MediaType.APPLICATION_RDF_XML;
@@ -302,8 +301,7 @@ public class DataConvertor {
 			outmedia = MediaType.APPLICATION_RDF_TURTLE;
 		else if ("json".equals(ext))
 			outmedia = ChemicalMediaType.APPLICATION_JSONLD;
-		
-				
+
 		SubstanceRDFReporter exporter = new SubstanceRDFReporter(hack, outmedia);
 		Model model = ModelFactory.createDefaultModel();
 		exporter.header(model, null);
