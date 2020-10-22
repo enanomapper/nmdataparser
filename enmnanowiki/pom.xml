@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>1.4.1-SNAPSHOT1</version>
+			<version>1.4.01</version>
 		</dependency>
 	</dependencies>
 	<properties>
