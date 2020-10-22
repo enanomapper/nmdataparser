@@ -27,4 +27,5 @@
 	<build>
 		<finalName>enmparser</finalName>
 	</build>
+	<url>https://github.com/enanomapper/nmdataparser</url>
 </project>

@@ -193,4 +193,15 @@
 			</properties>
 		</profile>
 	</profiles>
+	<url>https://github.com/enanomapper/nmdataparser</url>
+	<description>A command line application for converting between supported data formats with nanomaterial safety data.</description>
+	<name>enmconvertor</name>
+	<organization>
+		<name>Ideaconsult Ltd</name>
+		<url>https://www.ideaconsult.net</url>
+	</organization>
+	<scm>
+		<developerConnection>git@github.com:enanomapper/nmdataparser.git</developerConnection>
+		<url>https://github.com/enanomapper/nmdataparser.git</url>
+	</scm>
 </project>
