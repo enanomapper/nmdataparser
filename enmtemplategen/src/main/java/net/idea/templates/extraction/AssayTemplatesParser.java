@@ -202,7 +202,7 @@ public abstract class AssayTemplatesParser {
 		}
 	}
 
-	public static void json2sql(File templatejson, File file_sql) throws Exception {
+	public static void json2sql(final File templatejson, File file_sql) throws Exception {
 		final String sql = "insert into assay_template (endpoint,assay,row,col,idtemplate,level1,level2,level3,value,value_clean,header1,hint,unit,annotation,file,folder,sheet,visible) "
 				+ "values (%s,%s,%d,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1);\n";
 		TemplateMakerSettings settings = new TemplateMakerSettings() {
@@ -446,11 +446,11 @@ public abstract class AssayTemplatesParser {
 		return generate_jsonconfig(spreadsheet, outputfolder, null);
 	}
 
-	public static String[] generate_jsonconfig(File spreadsheet, File outputFolder, Integer sheetNumber)
+	public static String[] generate_jsonconfig(final File spreadsheet, final File outputFolder, Integer sheetNumber)
 			throws Exception {
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 
-		Properties properties = new Properties();
+		final Properties properties = new Properties();
 		// release="2018-07-01 0:0:0"
 		properties.put(_root, spreadsheet.getParentFile().getAbsolutePath());
 		properties.put(_release, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));

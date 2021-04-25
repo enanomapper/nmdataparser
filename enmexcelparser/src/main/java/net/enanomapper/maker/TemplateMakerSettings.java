@@ -325,7 +325,7 @@ public class TemplateMakerSettings implements Serializable {
 		return ok;
 	}
 
-	public Iterable<TR> getTemplateRecords(Iterator<TR> iterator) {
+	public Iterable<TR> getTemplateRecords(final Iterator<TR> iterator) {
 		return new Iterable<TR>() {
 			@Override
 			public Iterator<TR> iterator() {

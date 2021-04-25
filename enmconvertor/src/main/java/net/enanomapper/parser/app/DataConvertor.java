@@ -549,13 +549,13 @@ public class DataConvertor {
 			throw new FileNotFoundException("Folders expected");
 	}
 
-	public static String[] spreadsheets2template(File rootSpreadsheetsFolder, File propertiesFolder, File outputFolder)
+	public static String[] spreadsheets2template(final File rootSpreadsheetsFolder, File propertiesFolder, File outputFolder)
 			throws FileNotFoundException, IOException, IllegalArgumentException, Exception {
 		final Map<String, Term> histogram = new HashMap<String, Term>();
 		File templates = new File(outputFolder, "templates.xlsx");
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 			try (FileOutputStream out = new FileOutputStream(templates)) {
-				XSSFSheet stats = workbook.createSheet();
+				final XSSFSheet stats = workbook.createSheet();
 				TR.writeHeader(stats);
 				AssayTemplatesParser parser = new AssayTemplatesParser() {
 					int rownum = 0;
