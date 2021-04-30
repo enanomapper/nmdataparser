@@ -112,40 +112,13 @@
 			<url>https://nexus.ideaconsult.net/content/repositories/releases</url>
 		</repository>
 	</distributionManagement>
-	<profiles>
-		<profile>
-			<id>JRE6</id>
-			<activation>
-				<jdk>1.6</jdk>
-			</activation>
-			<properties>
-				<sourceVersion>1.6</sourceVersion>
-			</properties>
-		</profile>
-		<profile>
-			<id>JRE7</id>
-			<activation>
-				<jdk>1.7</jdk>
-			</activation>
-			<properties>
-				<sourceVersion>1.7</sourceVersion>
-			</properties>
-		</profile>
-		<profile>
-			<id>JRE8</id>
-			<activation>
-				<jdk>1.8</jdk>
-			</activation>
-			<properties>
-				<sourceVersion>1.8</sourceVersion>
-			</properties>
-		</profile>
-	</profiles>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<ambit.version>4.0.1-SNAPSHOT</ambit.version>
 		<apache.jena.version>2.13.0</apache.jena.version>
 		<lucene.version>6.2.1</lucene.version>
+				<sourceVersion>1.8</sourceVersion>
+
 	</properties>
 	<scm>
 		<url>https://github.com/enanomapper/nmdataparser.git</url>
