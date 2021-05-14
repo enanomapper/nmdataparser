@@ -629,7 +629,19 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					logger.log(Level.FINE, x.getMessage());
 				}
 				if (s != null)
-					curVariables.put(var, s);
+				{	
+					//Check for number stored as a string
+					Double d = null;
+					try {
+						d = Double.parseDouble(s);
+					}
+					catch (Exception x) {}
+					
+					if (d == null)
+						curVariables.put(var, s);
+					else
+						curVariables.put(var, d);
+				}	
 				else {
 					Number d = getNumericValue(loc);
 					if (d != null)
