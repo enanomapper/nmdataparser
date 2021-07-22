@@ -42,6 +42,7 @@ import ambit2.base.data.study.ReliabilityParams;
 import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
+import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
@@ -2084,7 +2085,17 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		} // end of proportion
 
-		CompositionRelation relation = new CompositionRelation(record, structure, cdl.structureRelation, proportion);
+		STRUCTURE_RELATION strRel = STRUCTURE_RELATION.HAS_CONSTITUENT;
+		if (cdl.structureRelation != null) {
+			String s = getString(cdl.structureRelation);
+			STRUCTURE_RELATION strRel1 = CompositionDataLocation.structureRelationFromString(s);
+			if (strRel1 != null)
+				strRel = strRel1;
+			else 
+				logger.log(Level.WARNING, "Incorrect STRUCTURE_RELATION value " + s + ". Using default value: HAS_CONSTITUENT");
+		} 
+		
+		CompositionRelation relation = new CompositionRelation(record, structure, strRel, proportion);
 		return relation;
 	}
 

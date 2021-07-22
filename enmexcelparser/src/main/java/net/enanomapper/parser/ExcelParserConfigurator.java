@@ -1546,6 +1546,13 @@ public class ExcelParserConfigurator {
 		JsonUtilities jsonUtils = new JsonUtilities();
 
 		// STRUCTURE_RELATION
+		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.STRUCTURE_RELATION.name(), conf);
+		if (loc != null) {
+			if (loc.nErrors == 0)
+				cdl.structureRelation = loc;
+		}
+		
+		/* old approach allowed only direct JSON value from enum list
 		if (!node.path(KEYWORD.STRUCTURE_RELATION.name()).isMissingNode()) {
 			String keyword = jsonUtils.extractStringKeyword(node, KEYWORD.STRUCTURE_RELATION.name(), true);
 			if (keyword == null)
@@ -1561,9 +1568,10 @@ public class ExcelParserConfigurator {
 					cdl.FlagStructureRelation = true;
 			}
 		}
+		*/
 
 		// CONTENT
-		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CONTENT.name(), conf);
+		loc = ExcelDataLocation.extractDataLocation(node, KEYWORD.CONTENT.name(), conf);
 		if (loc != null) {
 			if (loc.nErrors == 0)
 				cdl.content = loc;

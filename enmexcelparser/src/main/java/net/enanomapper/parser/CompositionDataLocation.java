@@ -8,8 +8,8 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 
 public class CompositionDataLocation 
 {	
-	public STRUCTURE_RELATION structureRelation = STRUCTURE_RELATION.HAS_CONSTITUENT;
-	public boolean FlagStructureRelation = false;
+	//public STRUCTURE_RELATION structureRelationDefaultValue = STRUCTURE_RELATION.HAS_CONSTITUENT;
+	//public boolean FlagStructureRelation = false;
 	
 	//Locations for the Structure Record
 	public ExcelDataLocation content = null;
@@ -20,6 +20,7 @@ public class CompositionDataLocation
 	public ExcelDataLocation smiles = null;
 	public HashMap<String, ExcelDataLocation> properties = null;
 	public ProportionDataLocation proportion = null;
+	public ExcelDataLocation structureRelation = null;
 	
 	
 	public void setParallelSheets(ParallelSheetState parSheets[], int primarySheetNum, ArrayList<String> errors)
@@ -51,6 +52,9 @@ public class CompositionDataLocation
 
 		if (proportion != null)
 			proportion.setParallelSheets(parSheets, primarySheetNum, errors);
+		
+		if (structureRelation != null)
+			ExcelParserUtils.setParallelSheet(structureRelation, parSheets, primarySheetNum, errors);
 	}
 	
 	public String toJSONKeyWord(String offset)
@@ -59,11 +63,13 @@ public class CompositionDataLocation
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
-		if (FlagStructureRelation)
+		//if (FlagStructureRelation)
+		if (structureRelation != null)
 		{
 			if (nFields > 0)
 				sb.append(",\n\n");
-			sb.append(offset + "\t\"STRUCTURE_RELATION\" : \"" + structureRelation.toString() + "\"");
+			//sb.append(offset + "\t\"STRUCTURE_RELATION\" : \"" + structureRelation.toString() + "\"");
+			sb.append(structureRelation.toJSONKeyWord(offset + "\t"));
 			nFields++;
 		}
 		
