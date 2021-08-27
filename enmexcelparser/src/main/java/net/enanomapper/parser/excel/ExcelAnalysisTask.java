@@ -6,6 +6,10 @@ import java.util.List;
 
 public class ExcelAnalysisTask 
 {
+	public static final String mainSplitter = ";";
+	public static final String secondarySplitter = ",";
+	
+	
 	public static enum TaskType {
 		COMPARE_FILES, CHECK_VALUE, COUNT, UNDEFINED;
 		
@@ -27,14 +31,59 @@ public class ExcelAnalysisTask
 	
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
-	 * <task type>; <scope>; <params>; <target1>; <target>
+	 * <task type>; <scope>; <params>; <target1>; <target2>
 	 */
-	public static ExcelAnalysisTask parseFromString() throws Exception 
+	public static ExcelAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
 		List<String> errors = new ArrayList<String>();
-		ExcelAnalysisTask eaTask = new ExcelAnalysisTask(); 
+		ExcelAnalysisTask eaTask = new ExcelAnalysisTask();		
+		String tokens[] = taskStr.split(mainSplitter);
 		
-		//TODO
+		//Task type
+		if (tokens.length < 1)
+			errors.add("Missing task type token!");
+		else {	
+			eaTask.type = TaskType.fromString(tokens[0].trim());
+			if (eaTask.type == TaskType.UNDEFINED)
+				errors.add("Incorrect excel analysis task type: " + tokens[0]);
+		}
+		
+		//Excel Scope
+		if (tokens.length < 2)
+			errors.add("Missing excel scope token!");
+		else {	
+			String scopeStr = tokens[1].trim();
+			//TODO
+		}
+		
+		//Excel Scope
+		if (tokens.length < 3)
+			errors.add("Missing parameters token!");
+		else {	
+			String paramsStr = tokens[2].trim();
+			String paramTokens[] = paramsStr.split(secondarySplitter);
+			
+			if (paramTokens.length > 0) 
+			{
+				eaTask.params = new Object[paramTokens.length];
+
+				for (int i = 0; i < paramTokens.length; i++) {
+					String par = paramTokens[i].trim();
+					if (par.isEmpty())
+						errors.add("Parameter #" + (i+1) + " is empty!");
+
+					Object o = par;
+					try {
+						Double d = Double.parseDouble(par);
+						o = d;
+					}
+					catch (Exception x) {
+					}
+					eaTask.params[i] = o;
+				}
+			}
+		}
+			
 		
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
