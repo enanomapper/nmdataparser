@@ -56,7 +56,7 @@ public class ExcelAnalysisTask
 			//TODO
 		}
 		
-		//Excel Scope
+		//Excel params
 		if (tokens.length < 3)
 			errors.add("Missing parameters token!");
 		else {	
@@ -83,16 +83,35 @@ public class ExcelAnalysisTask
 				}
 			}
 		}
-			
+		
+		//Target1 (file path)		
+		if (tokens.length < 4)
+			errors.add("Missing target 1 token!");
+		else {	
+			String path = tokens[3].trim();
+			eaTask.target1 = new File(path);
+			if (!eaTask.target1.exists())
+				errors.add("Target1 file path: " + path + " does not exists!");
+		}
+		
+		//Target2 (file path)		
+		if (tokens.length >=5 )
+		{	
+			String path = tokens[4].trim();
+			eaTask.target2 = new File(path);
+			if (!eaTask.target2.exists())
+				errors.add("Target2 file path: " + path + " does not exists!");
+		}
+
 		
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
 			for (String err: errors)
 				errBuffer.append(err + "\n");
 			throw new Exception (errBuffer.toString());
-		}
-		else
-			return eaTask;
+		}		
+		
+		return eaTask;
 	}
 	
 	public List<String> run() 
