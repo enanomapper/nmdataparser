@@ -31,7 +31,9 @@ public class ExcelAnalysisTask
 	public File target1 = null;
 	public File target2 = null;
 	public boolean flagVerboseResult = false;
-		
+	
+	public List<String> analysisResult = new ArrayList<String>();
+	
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
 	 * <task type>; <scope>; <params>; <target1>; <target2>
@@ -142,9 +144,8 @@ public class ExcelAnalysisTask
 		return -1;
 	}
 	
-	
-	
-	public List<String> run() 
+		
+	public int run() 
 	{
 		switch (type) {
 		case COMPARE_FILES:
@@ -154,19 +155,17 @@ public class ExcelAnalysisTask
 			
 			//TODO
 		}
-		return null;
+		return -1;
 	}
 	
-	List<String> compareFiles() {
-		List<String> result = new ArrayList<String>();
+	int compareFiles() {		
 		//TODO
-		return result;
+		return 0;
 	}
 	
-	List<String> checkValue() {
-		List<String> result = new ArrayList<String>();
+	int checkValue() {
 		//TODO
-		return result;
+		return 1;
 	}
 	
 	public String toString() {
