@@ -54,7 +54,7 @@ public class NMParserTestUtils {
 		
 		//testCellRangeAddress("B1:C4");
 		
-		testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv");
+		testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv; VERBOSE");
 
 	}
 

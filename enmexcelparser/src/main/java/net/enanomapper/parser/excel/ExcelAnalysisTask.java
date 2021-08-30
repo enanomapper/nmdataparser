@@ -29,9 +29,9 @@ public class ExcelAnalysisTask
 	public ExcelScope excelScope = null;
 	public Object params[] = null;
 	public File target1 = null;
-	public File target2 = null;	
-	
-	
+	public File target2 = null;
+	public boolean flagVerboseResult = false;
+		
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
 	 * <task type>; <scope>; <params>; <target1>; <target2>
@@ -109,10 +109,15 @@ public class ExcelAnalysisTask
 		//Target2 (file path)		
 		if (tokens.length >=5 )
 		{	
-			String path = tokens[4].trim();
-			eaTask.target2 = new File(path);
-			if (!eaTask.target2.exists())
-				errors.add("Target2 file path: " + path + " does not exists!");
+			String tok4 = tokens[4].trim();
+			int specTokRes = checkForSpecialToken(tok4, eaTask,  errors);
+			if (specTokRes == -1)
+			{	
+				//Token 4 is not a special key word token
+				eaTask.target2 = new File(tok4);
+				if (!eaTask.target2.exists())
+					errors.add("Target2 file path: " + tok4 + " does not exists!");
+			}
 		}
 
 		
@@ -125,6 +130,19 @@ public class ExcelAnalysisTask
 		
 		return eaTask;
 	}
+	
+	public static int checkForSpecialToken(String token, ExcelAnalysisTask eaTask, List<String> errors) 
+	{
+		if (token.equalsIgnoreCase("verbose"))
+		{	
+			eaTask.flagVerboseResult = true;
+			return 0;
+		}
+		
+		return -1;
+	}
+	
+	
 	
 	public List<String> run() 
 	{
@@ -154,6 +172,7 @@ public class ExcelAnalysisTask
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Type: " + type + "\n");
+		sb.append("Verbose: " + flagVerboseResult + "\n");
 		sb.append("Excel Scope: ");
 		for (CellRangeAddress cra: excelScope.cellRanges)
 			sb.append(cra.formatAsString() + " ");
