@@ -19,6 +19,7 @@ import net.enanomapper.parser.recognition.RichValueParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
@@ -42,12 +43,15 @@ public class NMParserTestUtils {
 		// testExcelParserConfiguration("/Users/nick/Projects/eNanoMapper/config01.json");
 		// testExcelParserConfiguration("D:/Projects/nina/eNanoMapper/config01.json");
 
-		testExcelTemplate(
-				"/Users/nick/Projects/eNanoMapper/template01-NR.xlsx",
-				new File("/Users/nick/Projects/eNanoMapper/config01.json"));
+		//testExcelTemplate(
+		//		"/Users/nick/Projects/eNanoMapper/template01-NR.xlsx",
+		//		new File("/Users/nick/Projects/eNanoMapper/config01.json"));
+		
 		// testExcelTemplate("D:/Projects/nina/eNanoMapper/template01-NR.xlsx","D:/Projects/nina/eNanoMapper/config01.json");
 
 		// System.out.println(IterationAccess.fromString("ROW_SINGLE"));
+		
+		//testCellRangeAddress("B1:C4");
 
 	}
 
@@ -164,6 +168,18 @@ public class NMParserTestUtils {
 					+ groups.get(key));
 
 		fin.close();
+	}
+	
+	public static void testCellRangeAddress(String ref) {
+		CellRangeAddress cra = CellRangeAddress.valueOf(ref);
+		System.out.println("Testing: " + ref);
+		System.out.println("Format as string -->" + cra.formatAsString());
+		System.out.println("getFirstColumn() = " + cra.getFirstColumn());
+		System.out.println("getFirstRow() = " + cra.getFirstRow());
+		System.out.println("getFirstColumn() = " + cra.getLastColumn());
+		System.out.println("getFirstRow() = " + cra.getLastRow());
+		
+		
 	}
 
 	public static String structureRecordToString(IStructureRecord str) {
