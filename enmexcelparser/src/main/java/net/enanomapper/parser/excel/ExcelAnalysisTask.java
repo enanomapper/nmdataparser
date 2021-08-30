@@ -24,6 +24,7 @@ public class ExcelAnalysisTask
 	}
 	
 	public TaskType type = TaskType.UNDEFINED;
+	public ExcelScope excelScope = null;
 	public Object params[] = null;
 	public File target1 = null;
 	public File target2 = null;	
@@ -53,7 +54,12 @@ public class ExcelAnalysisTask
 			errors.add("Missing excel scope token!");
 		else {	
 			String scopeStr = tokens[1].trim();
-			//TODO
+			try {
+				eaTask.excelScope = ExcelScope.parseFromString(scopeStr);
+			}
+			catch (Exception x) {
+				errors.add("Incorrect excel scope: " + x.getMessage());
+			}
 		}
 		
 		//Excel params
