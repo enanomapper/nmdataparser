@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
+import net.enanomapper.parser.excel.ExcelAnalysisTask;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
@@ -52,6 +53,8 @@ public class NMParserTestUtils {
 		// System.out.println(IterationAccess.fromString("ROW_SINGLE"));
 		
 		//testCellRangeAddress("B1:C4");
+		
+		//testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; --; /work/test-train-set.csv");
 
 	}
 
@@ -178,9 +181,21 @@ public class NMParserTestUtils {
 		System.out.println("getFirstRow() = " + cra.getFirstRow());
 		System.out.println("getFirstColumn() = " + cra.getLastColumn());
 		System.out.println("getFirstRow() = " + cra.getLastRow());
-		
-		
 	}
+	
+	
+	public static void testExcelAnalysisTaskParser(String eaTaskStr) {
+		System.out.println("Testing excel task:\n" + eaTaskStr + "\n");
+		try {
+			ExcelAnalysisTask task = ExcelAnalysisTask.parseFromString(eaTaskStr);
+			System.out.println(task.toString());
+		} 
+		catch (Exception e) {
+			System.out.println("Excel Analysis Task errors:");
+			System.out.println(e.getMessage());
+		}
+	}
+	
 
 	public static String structureRecordToString(IStructureRecord str) {
 		StringBuffer sb = new StringBuffer();

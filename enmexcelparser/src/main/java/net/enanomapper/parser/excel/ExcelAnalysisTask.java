@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.util.CellRangeAddress;
+
 public class ExcelAnalysisTask 
 {
 	public static final String mainSplitter = ";";
@@ -145,4 +147,26 @@ public class ExcelAnalysisTask
 		return result;
 	}
 	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Type: " + type + "\n");
+		sb.append("Excel Scope: ");
+		for (CellRangeAddress cra: excelScope.cellRanges)
+			sb.append(cra.formatAsString() + " ");
+		sb.append("\n");
+		
+		if (params != null) {
+			sb.append("Params: ");
+			for (int i = 0; i < params.length; i++)
+				sb.append(params[i] + " ");
+			sb.append("\n");
+		}		
+		
+		if (target1 != null)
+			sb.append("Target1 :" + target1.getAbsolutePath() + "\n ");
+		if (target2 != null)
+			sb.append("Target2 :" + target2.getAbsolutePath() + "\n ");
+		
+		return sb.toString();
+	}
 }
