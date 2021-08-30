@@ -69,25 +69,29 @@ public class ExcelAnalysisTask
 			errors.add("Missing parameters token!");
 		else {	
 			String paramsStr = tokens[2].trim();
-			String paramTokens[] = paramsStr.split(secondarySplitter);
 			
-			if (paramTokens.length > 0) 
-			{
-				eaTask.params = new Object[paramTokens.length];
+			if (!paramsStr.equals("--") && !paramsStr.equals("no params"))
+			{						
+				String paramTokens[] = paramsStr.split(secondarySplitter);			
 
-				for (int i = 0; i < paramTokens.length; i++) {
-					String par = paramTokens[i].trim();
-					if (par.isEmpty())
-						errors.add("Parameter #" + (i+1) + " is empty!");
+				if (paramTokens.length > 0) 
+				{
+					eaTask.params = new Object[paramTokens.length];
 
-					Object o = par;
-					try {
-						Double d = Double.parseDouble(par);
-						o = d;
+					for (int i = 0; i < paramTokens.length; i++) {
+						String par = paramTokens[i].trim();
+						if (par.isEmpty())
+							errors.add("Parameter #" + (i+1) + " is empty!");
+
+						Object o = par;
+						try {
+							Double d = Double.parseDouble(par);
+							o = d;
+						}
+						catch (Exception x) {
+						}
+						eaTask.params[i] = o;
 					}
-					catch (Exception x) {
-					}
-					eaTask.params[i] = o;
 				}
 			}
 		}
