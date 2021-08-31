@@ -644,7 +644,15 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 						curVariables.put(var, d);
 				}	
 				else {
-					Number d = getNumericValue(loc);
+					//Number d = getNumericValue(loc);
+					Number d = null;
+					try {
+						d = getNumericValue(loc);
+					} 
+					catch (Exception x) {
+						logger.log(Level.FINE, x.getMessage());
+					}	
+					
 					if (d != null)
 						curVariables.put(var, d);
 				}
@@ -677,7 +685,15 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					if (s != null)
 						curVariables.put(var, s);
 					else {
-						Number d = getNumericValue(loc);
+						//Number d = getNumericValue(loc);						
+						Number d = null;
+						try {
+							d = getNumericValue(loc);
+						} 
+						catch (Exception x) {
+							logger.log(Level.FINE, x.getMessage());
+						}	
+						
 						if (d != null)
 							curVariables.put(var, d);
 					}
