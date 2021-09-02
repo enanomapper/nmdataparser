@@ -29,6 +29,10 @@ public class SALogicalCondition
 		}		
 	}
 	
+	public static final String ALLOWED_QUALIFIERS[] = {
+		"=", "<", "<=", ">", ">=", "in", "interval"	
+	};
+	
 	public LogicalConditionType conditionType = LogicalConditionType.UNDEFINED;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
@@ -42,21 +46,58 @@ public class SALogicalCondition
 	public static SALogicalCondition parseFromString(String taskStr) throws Exception 
 	{
 		List<String> errors = new ArrayList<String>();
-		SALogicalCondition saLogCond = new SALogicalCondition();		
-		String tokens[] = taskStr.split(";");
-				
-		//SA Task type
-		if (tokens.length < 1)
-			errors.add("Missing task type token!");
+		SALogicalCondition saLogCond = new SALogicalCondition();
+		
+		String workStr = taskStr.trim();
+		if (workStr.isEmpty())
+			throw new Exception ("Empty input string!");
+						
+		//Token trimming is not needed. Empty tokens are allowed and skipped
+		//Get all non-empty tokens
+		String initialTokens[] = workStr.split(" ");
+		List<String> tokens = new ArrayList<String>();
+		for (int i = 0; i  <initialTokens.length; i++) {
+			if (!initialTokens[i].isEmpty())
+				tokens.add(initialTokens[i]);		}
+
+		//SA Task type (first token is guaranteed because of the check for empty input string
+		saLogCond.conditionType = LogicalConditionType.fromString(tokens.get(0));
+		if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
+			errors.add("Incorrect substance analysis task type: " + tokens.get(0));
+		
+		
+		if (tokens.size() < 2)
+			errors.add("Missing qualifier token!");
 		else {	
-			saLogCond.conditionType = LogicalConditionType.fromString(tokens[0].trim());
-			if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
-				errors.add("Incorrect substance analysis task type: " + tokens[0]);
+			saLogCond.qualifier = tokens.get(1);
+			if (checkQualifier (saLogCond.qualifier) == -1)
+				errors.add("Incorrect qualifier: " + tokens.get(1));
 		}
 		
-		//TODO
-
-		
+		//Handle params and special keywords
+		if (tokens.size() >= 3)
+		{
+			List<Object> paramObjects = new ArrayList<Object>();
+			for (int i = 2; i < tokens.size(); i++)
+			{	
+				String par = tokens.get(i);
+				//TODO check for special keyword token
+				
+				Object o = par;
+				try {
+					Double d = Double.parseDouble(par);
+					o = d;
+				}
+				catch (Exception x) {
+				}
+				
+				paramObjects.add(o);
+			}
+			
+			if (!paramObjects.isEmpty())
+				saLogCond.params = paramObjects.toArray();
+		}		
+				
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
 			for (String err: errors)
@@ -67,6 +108,12 @@ public class SALogicalCondition
 		return saLogCond;
 	}
 	
+	public static int checkQualifier(String qual) {
+		for (int i = 0; i< ALLOWED_QUALIFIERS.length; i++)
+			if (qual.equals(ALLOWED_QUALIFIERS[i]))
+				return i;
+		return -1;
+	}	
 	
 	public boolean apply(Object target) {
 		//TODO
