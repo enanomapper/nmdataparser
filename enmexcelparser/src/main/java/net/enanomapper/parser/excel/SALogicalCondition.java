@@ -33,6 +33,7 @@ public class SALogicalCondition
 		"=", "<", "<=", ">", ">=", "in", "interval"	
 	};
 	
+	public String targetLabel = null;
 	public LogicalConditionType conditionType = LogicalConditionType.UNDEFINED;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
@@ -41,7 +42,7 @@ public class SALogicalCondition
 	
 	/*
 	 * Parsing a SALogicalCondition from a string in the following format
-	 * <log.cond. type> <qualifier> <params> <special keywords>
+	 * <target label> <log.cond. type> <qualifier> <params> <special keywords>
 	 */
 	public static SALogicalCondition parseFromString(String taskStr) throws Exception 
 	{
@@ -59,26 +60,33 @@ public class SALogicalCondition
 		for (int i = 0; i  <initialTokens.length; i++) {
 			if (!initialTokens[i].isEmpty())
 				tokens.add(initialTokens[i]);		}
-
-		//SA Task type (first token is guaranteed because of the check for empty input string
-		saLogCond.conditionType = LogicalConditionType.fromString(tokens.get(0));
-		if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
-			errors.add("Incorrect substance analysis task type: " + tokens.get(0));
 		
+		//Label is the first token and is guaranteed because of the check for empty input string
+		if (!tokens.get(0).equalsIgnoreCase("NO_LABEL"))
+			saLogCond.targetLabel = tokens.get(0);
 		
+		//SA Task type 
 		if (tokens.size() < 2)
 			errors.add("Missing qualifier token!");
+		else {
+			saLogCond.conditionType = LogicalConditionType.fromString(tokens.get(1));
+			if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
+				errors.add("Incorrect substance analysis task type: " + tokens.get(1));
+		}
+		
+		if (tokens.size() < 3)
+			errors.add("Missing qualifier token!");
 		else {	
-			saLogCond.qualifier = tokens.get(1);
+			saLogCond.qualifier = tokens.get(2);
 			if (checkQualifier (saLogCond.qualifier) == -1)
-				errors.add("Incorrect qualifier: " + tokens.get(1));
+				errors.add("Incorrect qualifier: " + tokens.get(2));
 		}
 		
 		//Handle params and special keywords
-		if (tokens.size() >= 3)
+		if (tokens.size() >= 4)
 		{
 			List<Object> paramObjects = new ArrayList<Object>();
-			for (int i = 2; i < tokens.size(); i++)
+			for (int i = 3; i < tokens.size(); i++)
 			{	
 				String par = tokens.get(i);
 				//TODO check for special keyword token
@@ -145,6 +153,11 @@ public class SALogicalCondition
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
+		if (targetLabel == null)
+			sb.append("NO_LABEL");
+		else
+			sb.append(targetLabel + " ");
+		
 		sb.append(conditionType + " ");
 		
 		if (qualifier != null) 
