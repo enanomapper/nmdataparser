@@ -3,8 +3,6 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.ss.util.CellRangeAddress;
-
 public class SALogicalCondition 
 {
 	public static enum LogicalConditionType {
@@ -38,8 +36,8 @@ public class SALogicalCondition
 	
 	
 	/*
-	 * Parsing an  SALogicalCondition from a string in the following format
-	 * <log.cond. type> <qualifier> <params> 
+	 * Parsing a SALogicalCondition from a string in the following format
+	 * <log.cond. type> <qualifier> <params> <special keywords>
 	 */
 	public static SALogicalCondition parseFromString(String taskStr) throws Exception 
 	{

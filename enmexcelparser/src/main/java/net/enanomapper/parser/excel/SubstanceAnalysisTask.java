@@ -3,10 +3,8 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.ss.util.CellRangeAddress;
-
 import ambit2.base.data.SubstanceRecord;
-import net.enanomapper.parser.excel.ExcelAnalysisTask.TaskType;
+
 
 public class SubstanceAnalysisTask 
 {
@@ -32,8 +30,8 @@ public class SubstanceAnalysisTask
 	public List<String> analysisResult = new ArrayList<String>();
 	
 	/*
-	 * Parsing an  SubstanceAnalysisTask from a string in the following format
-	 * <task type>; <Logical conditions>; 
+	 * Parsing a SubstanceAnalysisTask from a string in the following format
+	 * <task type>; <Logical conditions>; <qualifier>; <params>; <special keywords>
 	 */
 	public static SubstanceAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
