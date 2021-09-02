@@ -25,6 +25,8 @@ public class SubstanceAnalysisTask
 	
 	public SATaskType type = SATaskType.UNDEFINED;
 	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
+	public String qualifier = null;
+	public Object params[] = null;
 		
 	public boolean flagVerboseResult = false;	
 	public List<String> analysisResult = new ArrayList<String>();
