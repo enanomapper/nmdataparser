@@ -3,6 +3,8 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.util.CellRangeAddress;
+
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.excel.ExcelAnalysisTask.TaskType;
 
@@ -24,6 +26,7 @@ public class SubstanceAnalysisTask
 	
 	
 	public SATaskType type = SATaskType.UNDEFINED;
+	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
 		
 	public boolean flagVerboseResult = false;	
 	public List<String> analysisResult = new ArrayList<String>();
@@ -64,5 +67,20 @@ public class SubstanceAnalysisTask
 	{
 		//TODO
 		return 0;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SA Type: " + type + "\n");
+		
+		if (!logicalConditions.isEmpty()) {
+			sb.append("logicalConditions: " + "\n");
+			for (SALogicalCondition lc: logicalConditions)
+				sb.append(lc.toString()  + "\n");
+		}
+		
+		sb.append("Verbose: " + flagVerboseResult + "\n");
+				
+		return sb.toString();
 	}
 }

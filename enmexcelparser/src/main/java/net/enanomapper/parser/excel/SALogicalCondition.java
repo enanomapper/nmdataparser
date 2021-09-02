@@ -3,6 +3,8 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.util.CellRangeAddress;
+
 public class SALogicalCondition 
 {
 	public static enum LogicalConditionType {
@@ -76,5 +78,37 @@ public class SALogicalCondition
 	public boolean applyForSubstance() {
 		//TODO
 		return false;
+	}
+	
+	public String toStringVerbose() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("ConditionType: " + conditionType + "\n");
+		
+		if (qualifier != null) 
+			sb.append("Qualifier: " + qualifier + "\n");
+				
+		if (params != null) {
+			sb.append("Params: ");
+			for (int i = 0; i < params.length; i++)
+				sb.append(params[i] + " ");
+			sb.append("\n");
+		}
+		
+		sb.append("TargetType: " + targetType + "\n");		
+		return sb.toString();
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(conditionType + " ");
+		
+		if (qualifier != null) 
+			sb.append(qualifier + "  ");
+				
+		if (params != null) {
+			for (int i = 0; i < params.length; i++)
+				sb.append(params[i] + " ");			
+		}		
+		return sb.toString();
 	}
 }
