@@ -104,6 +104,7 @@ public class SubstanceAnalysisTask
 				{
 					try {
 						SALogicalCondition logCond = SALogicalCondition.parseFromString(lcTokens[i]);
+						saTask.logicalConditions.add(logCond);
 					}
 					catch (Exception x) {
 						errors.add("Errors on logical conditions #" + (i+1) + " : " + x.getMessage());
@@ -138,6 +139,25 @@ public class SubstanceAnalysisTask
 			sb.append("logicalConditions: " + "\n");
 			for (SALogicalCondition lc: logicalConditions)
 				sb.append(lc.toString()  + "\n");
+		}
+		
+		if (qualifier != null) 
+			sb.append("Qualifier: " + qualifier + "\n");
+				
+		if (params != null) {
+			sb.append("Params: ");
+			for (int i = 0; i < params.length; i++)
+				sb.append(params[i] + " ");
+			sb.append("\n");
+		}
+		
+		if (!logicalConditions.isEmpty()) {
+			sb.append("Logical Conditions: \n");
+			for (int i = 0; i < logicalConditions.size(); i++) {
+				SALogicalCondition lc = logicalConditions.get(i);
+				sb.append(lc.toString());
+				sb.append("\n");
+			}			
 		}
 		
 		sb.append("Verbose: " + flagVerboseResult + "\n");
