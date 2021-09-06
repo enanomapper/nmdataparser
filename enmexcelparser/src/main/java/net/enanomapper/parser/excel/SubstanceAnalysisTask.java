@@ -27,13 +27,14 @@ public class SubstanceAnalysisTask
 	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
 	public String qualifier = null;
 	public Object params[] = null;
+	
 		
 	public boolean flagVerboseResult = false;	
 	public List<String> analysisResult = new ArrayList<String>();
 	
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
-	 * <task type>; <Logical conditions>; <qualifier>; <params>; <special keywords>
+	 * <task type>; <qualifier>; <params>; <Logical conditions>; <special keywords>
 	 */
 	public static SubstanceAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
@@ -50,9 +51,69 @@ public class SubstanceAnalysisTask
 				errors.add("Incorrect substance analysis task type: " + tokens[0]);
 		}
 		
-		//TODO
-
+		//Quilifier
+		if (tokens.length < 2)
+			errors.add("Missing qualifier token!");
+		else {	
+			saTask.qualifier = tokens[1].trim();
+			if (SALogicalCondition.checkQualifier (saTask.qualifier) == -1)
+				errors.add("Incorrect qualifier: " + saTask.qualifier);
+		}
 		
+		//Params
+		if (tokens.length < 3)
+			errors.add("Missing parameters token!");
+		else {	
+			String paramsStr = tokens[2].trim();
+
+			if (!paramsStr.equals("--") && !paramsStr.equals("no params"))
+			{						
+				String paramTokens[] = paramsStr.split(",");			
+
+				if (paramTokens.length > 0) 
+				{
+					saTask.params = new Object[paramTokens.length];
+
+					for (int i = 0; i < paramTokens.length; i++) {
+						String par = paramTokens[i].trim();
+						if (par.isEmpty())
+							errors.add("Parameter #" + (i+1) + " is empty!");
+
+						Object o = par;
+						try {
+							Double d = Double.parseDouble(par);
+							o = d;
+						}
+						catch (Exception x) {
+						}
+						saTask.params[i] = o;
+					}
+				}
+			}
+		}		
+		
+		//Logical conditions
+		if (tokens.length < 4)
+			errors.add("Missing logical conditions token!");
+		else {	
+			String lcStr = tokens[3].trim();
+			if (!lcStr.equals("--") && !lcStr.equals("no conditions"))
+			{						
+				String lcTokens[] = lcStr.split(",");	
+				for (int i = 0; i < lcTokens.length; i++) 
+				{
+					try {
+						SALogicalCondition logCond = SALogicalCondition.parseFromString(lcTokens[i]);
+					}
+					catch (Exception x) {
+						errors.add("Errors on logical conditions #" + (i+1) + " : " + x.getMessage());
+					}
+				}
+			}			
+		}
+		
+		//TODO special keywords parsing		
+				
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
 			for (String err: errors)
