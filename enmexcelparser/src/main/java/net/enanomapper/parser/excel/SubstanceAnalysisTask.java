@@ -135,13 +135,7 @@ public class SubstanceAnalysisTask
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SA Type: " + type + "\n");
-		
-		if (!logicalConditions.isEmpty()) {
-			sb.append("logicalConditions: " + "\n");
-			for (SALogicalCondition lc: logicalConditions)
-				sb.append(lc.toString()  + "\n");
-		}
-		
+				
 		if (qualifier != null) 
 			sb.append("Qualifier: " + qualifier + "\n");
 				
@@ -156,7 +150,7 @@ public class SubstanceAnalysisTask
 			sb.append("Logical Conditions: \n");
 			for (int i = 0; i < logicalConditions.size(); i++) {
 				SALogicalCondition lc = logicalConditions.get(i);
-				sb.append(lc.toString());
+				sb.append("  " + lc.toString());
 				sb.append("\n");
 			}			
 		}
