@@ -56,8 +56,9 @@ public class SubstanceAnalysisTask
 			errors.add("Missing qualifier token!");
 		else {	
 			saTask.qualifier = tokens[1].trim();
-			if (SALogicalCondition.checkQualifier (saTask.qualifier) == -1)
-				errors.add("Incorrect qualifier: " + saTask.qualifier);
+			if (!saTask.qualifier.isEmpty())
+				if (SALogicalCondition.checkQualifier (saTask.qualifier) == -1)
+					errors.add("Incorrect qualifier: " + saTask.qualifier);
 		}
 		
 		//Params
@@ -66,7 +67,7 @@ public class SubstanceAnalysisTask
 		else {	
 			String paramsStr = tokens[2].trim();
 
-			if (!paramsStr.equals("--") && !paramsStr.equals("no params"))
+			if (!paramsStr.isEmpty() && !paramsStr.equals("--") && !paramsStr.equals("no params"))
 			{						
 				String paramTokens[] = paramsStr.split(",");			
 
@@ -97,7 +98,7 @@ public class SubstanceAnalysisTask
 			errors.add("Missing logical conditions token!");
 		else {	
 			String lcStr = tokens[3].trim();
-			if (!lcStr.equals("--") && !lcStr.equals("no conditions"))
+			if (!lcStr.isEmpty()  && !lcStr.equals("--") && !lcStr.equals("no conditions"))
 			{						
 				String lcTokens[] = lcStr.split(",");	
 				for (int i = 0; i < lcTokens.length; i++) 
