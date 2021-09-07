@@ -6,7 +6,7 @@ import java.util.List;
 public class SALogicalCondition 
 {
 	public static enum LogicalConditionType {
-		VALUE, NULL, UNDEFINED;
+		VALUE, UNDEFINED;
 		public static LogicalConditionType fromString(String s) {
 			try {
 				LogicalConditionType type = LogicalConditionType.valueOf(s);
@@ -30,7 +30,7 @@ public class SALogicalCondition
 	}
 	
 	public static final String ALLOWED_QUALIFIERS[] = {
-		"=", "<", "<=", ">", ">=", "in", "interval"	
+		"=", "<", "<=", ">", ">=", "in", "interval", "is_null"	
 	};
 	
 	public String targetLabel = null;
