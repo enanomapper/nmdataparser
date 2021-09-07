@@ -14,6 +14,7 @@ import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.excel.ExcelAnalysisTask;
 import net.enanomapper.parser.excel.ExcelUtils;
+import net.enanomapper.parser.excel.SubstanceAnalysisTask;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
 
@@ -54,8 +55,8 @@ public class NMParserTestUtils {
 		
 		//testCellRangeAddress("B1:C4");
 		
-		testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv; VERBOSE");
-
+		//testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv; VERBOSE");
+		
 	}
 
 	public static void testExcelParserConfiguration(File jsonFile)
@@ -188,6 +189,18 @@ public class NMParserTestUtils {
 		System.out.println("Testing excel task:\n" + eaTaskStr + "\n");
 		try {
 			ExcelAnalysisTask task = ExcelAnalysisTask.parseFromString(eaTaskStr);
+			System.out.println(task.toString());
+		} 
+		catch (Exception e) {
+			System.out.println("Excel Analysis Task errors:");
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void testSubstanceAnalysisTaskParser(String saTaskStr) {
+		System.out.println("Testing Substance Analysis task:\n" + saTaskStr + "\n");
+		try {
+			SubstanceAnalysisTask task = SubstanceAnalysisTask.parseFromString(saTaskStr);
 			System.out.println(task.toString());
 		} 
 		catch (Exception e) {
