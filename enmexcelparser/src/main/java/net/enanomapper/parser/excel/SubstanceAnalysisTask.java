@@ -128,9 +128,28 @@ public class SubstanceAnalysisTask
 	
 	public int run(List<SubstanceRecord> records) 
 	{
-		//TODO
+		analysisResult.clear();
+		for (int i = 0; i<records.size(); i++)
+		{
+			if (flagVerboseResult)
+				analysisResult.add("Record " + (i+1));
+			
+			switch (type) {
+			case COUNT_EFFECTS:
+				taskCountEffects(records.get(i), i);
+				break;
+			}
+		}
+		
 		return 0;
 	}
+	
+	public void taskCountEffects(SubstanceRecord record, int recordNum)
+	{
+		//TODO
+	}
+	
+	
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
