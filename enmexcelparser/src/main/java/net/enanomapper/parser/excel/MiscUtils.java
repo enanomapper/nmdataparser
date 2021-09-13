@@ -41,9 +41,16 @@ public class MiscUtils
 	
 	
 	public static void iterateFiles(File dirPath, String[] fileExtensions, 
-				boolean recursive, IHandleFile handler) throws Exception 
+				boolean recursive, IHandleFile handler, boolean handleFolders) throws Exception 
 	{
+		if (!dirPath.isDirectory())
+			return;
+		
 		File filesList[] = dirPath.listFiles();
+		
+		if (handleFolders)
+			handler.handle(dirPath);
+			
 		for(File file : filesList) {
 			if(file.isFile()) {
 				if (checkFileExtension(file, fileExtensions))
@@ -51,20 +58,26 @@ public class MiscUtils
 			}	
 			else {
 				if (recursive) 
-					iterateFiles(file, fileExtensions, true, handler);							
+					iterateFiles(file, fileExtensions, true, handler, handleFolders);							
 			}	
 		}
 	}
 	
 	public static void iterateFiles_BreadthFirst(File dirPath, String[] fileExtensions, 
-			boolean recursive, IHandleFile handler) throws Exception 
+			boolean recursive, IHandleFile handler, boolean handleFolders) throws Exception 
 	{
+		if (!dirPath.isDirectory())
+			return;
+		
 		File filesList[] = dirPath.listFiles();
 		//All folders are stored here and processed later
 		List<File> recFiles = null; 
 		
 		if (recursive)
 			recFiles = new ArrayList<File>();
+		
+		if (handleFolders)
+			handler.handle(dirPath);
 		
 		for(File file : filesList) {
 			if(file.isFile()) {
@@ -80,7 +93,7 @@ public class MiscUtils
 		if (recursive)
 		{
 			for (File file : recFiles)
-				iterateFiles(file, fileExtensions, true, handler);
+				iterateFiles(file, fileExtensions, true, handler, handleFolders);
 		}
 	}
 	
