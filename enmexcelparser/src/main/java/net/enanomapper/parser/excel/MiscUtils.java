@@ -1,9 +1,15 @@
 package net.enanomapper.parser.excel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MiscUtils 
 {
+	public static interface IHandleFile {
+		public void handle(File file) throws Exception;
+	}
+	
 	public static File getFirstFile(File dirPath, String[] fileExtensions, boolean recursive) {
 		File filesList[] = dirPath.listFiles();
 		for(File file : filesList) {
@@ -23,10 +29,60 @@ public class MiscUtils
 	}
 	
 	public static boolean checkFileExtension(File file, String[] fileExtensions) {
+		if (fileExtensions == null || fileExtensions.length == 0)
+			return true;
+		
 		String filePath = file.getAbsolutePath().toLowerCase();
 		for (String s : fileExtensions)
 			if (filePath.endsWith(s.toLowerCase()))
 				return true;
 		return false;
 	}
+	
+	
+	public static void iterateFiles(File dirPath, String[] fileExtensions, 
+				boolean recursive, IHandleFile handler) throws Exception 
+	{
+		File filesList[] = dirPath.listFiles();
+		for(File file : filesList) {
+			if(file.isFile()) {
+				if (checkFileExtension(file, fileExtensions))
+					handler.handle(file);
+			}	
+			else {
+				if (recursive) 
+					iterateFiles(file, fileExtensions, true, handler);							
+			}	
+		}
+	}
+	
+	public static void iterateFiles_BreadthFirst(File dirPath, String[] fileExtensions, 
+			boolean recursive, IHandleFile handler) throws Exception 
+	{
+		File filesList[] = dirPath.listFiles();
+		//All folders are stored here and processed later
+		List<File> recFiles = null; 
+		
+		if (recursive)
+			recFiles = new ArrayList<File>();
+		
+		for(File file : filesList) {
+			if(file.isFile()) {
+				if (checkFileExtension(file, fileExtensions))
+					handler.handle(file);
+			}	
+			else {
+				if (recursive) 
+					recFiles.add(file);						
+			}
+		}
+		
+		if (recursive)
+		{
+			for (File file : recFiles)
+				iterateFiles(file, fileExtensions, true, handler);
+		}
+	}
+	
+	
 }
