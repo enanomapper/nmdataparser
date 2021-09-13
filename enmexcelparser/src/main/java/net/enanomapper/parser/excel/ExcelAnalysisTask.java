@@ -31,8 +31,15 @@ public class ExcelAnalysisTask
 	public File target1 = null;
 	public File target2 = null;
 	public boolean flagVerboseResult = false;
+	public boolean flagFileRecursion = true;
 	
 	public List<String> analysisResult = new ArrayList<String>();
+	
+	
+	//work variables
+	public File referenceFile = null;
+	public File iterationFile = null;
+	
 	
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
@@ -122,6 +129,33 @@ public class ExcelAnalysisTask
 			}
 		}
 
+		//Set Reference and Iterate List Files 
+		if (eaTask.type == TaskType.COMPARE_FILES) {
+			if (eaTask.target2 == null) {
+				//The reference file is the first file from the target1 list
+				if (eaTask.target1.isFile()) 
+					errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
+							+ " is not a folder and Target2 is not specified for TaskType.COMPARE_FILES!");
+				else {
+					eaTask.referenceFile = MiscUtils.getFirstFile(eaTask.target1, new String[] {"xls", "xlsx"}, true);
+					if (eaTask.referenceFile == null)
+						errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
+						+ " folder does not contain at least one file needed as ref. file for TaskType.COMPARE_FILES!");
+					eaTask.iterationFile = eaTask.target1;
+				}
+			}
+			else {
+				//The reference file is target1
+				if (eaTask.target1.isFile())
+					eaTask.referenceFile = eaTask.target1;
+				else
+					errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
+							+ " is a folder and cannot be used as a refernce file for TaskType.COMPARE_FILES!");
+				
+				eaTask.iterationFile = eaTask.target2;
+			}
+		}
+		
 		
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
@@ -132,7 +166,8 @@ public class ExcelAnalysisTask
 		
 		return eaTask;
 	}
-	
+		
+
 	public static int checkForSpecialToken(String token, ExcelAnalysisTask eaTask, List<String> errors) 
 	{
 		if (token.equalsIgnoreCase("verbose"))
@@ -149,7 +184,7 @@ public class ExcelAnalysisTask
 	{
 		switch (type) {
 		case COMPARE_FILES:
-			return compareFiles();
+			return compareFiles();			
 		case CHECK_VALUE:
 			return checkValue();
 			
@@ -157,7 +192,7 @@ public class ExcelAnalysisTask
 		}
 		return -1;
 	}
-	
+		
 	int compareFiles() {		
 		//TODO
 		return 0;
