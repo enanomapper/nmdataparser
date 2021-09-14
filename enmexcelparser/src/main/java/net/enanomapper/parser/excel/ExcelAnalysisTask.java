@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import net.enanomapper.parser.excel.MiscUtils.IHandleFile;
+
 public class ExcelAnalysisTask 
 {
 	public static final String mainSplitter = ";";
@@ -34,8 +36,8 @@ public class ExcelAnalysisTask
 	public boolean flagFileRecursion = true;
 	
 	public List<String> analysisResult = new ArrayList<String>();
-	
-	
+	public List<String> analysisErrors = new ArrayList<String>();
+		
 	//work variables
 	public File referenceFile = null;
 	public File iterationFile = null;
@@ -182,25 +184,37 @@ public class ExcelAnalysisTask
 		
 	public int run() 
 	{
+		analysisResult.clear();
+		analysisErrors.clear();
+		
 		switch (type) {
 		case COMPARE_FILES:
 			return compareFiles();			
 		case CHECK_VALUE:
 			return checkValue();
+		case COUNT:
+			return count();
 			
-			//TODO
 		}
 		return -1;
 	}
 		
-	int compareFiles() {		
+	int compareFiles() 
+	{		
 		//TODO
 		return 0;
 	}
 	
-	int checkValue() {
+	int checkValue() 
+	{
 		//TODO
 		return 1;
+	}
+	
+	int count() 
+	{
+		//TODO
+		return 2;
 	}
 	
 	public String toString() {
