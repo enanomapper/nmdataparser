@@ -1,5 +1,7 @@
 package net.enanomapper.parser.excel;
 
+import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,10 +12,14 @@ import java.util.TreeMap;
 
 //import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openscience.cdk.exception.CDKException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelUtils 
 {
@@ -741,6 +747,17 @@ public class ExcelUtils
 	}
 	
 	
+	public static Workbook getExcelReader(InputStream input, boolean xlsxFormat) throws Exception 
+	{
+		Workbook workbook = null;
+
+		if (xlsxFormat)
+			workbook = new XSSFWorkbook(input);
+		else
+			workbook = new HSSFWorkbook(input);
+
+		return workbook;
+	}
 	
 	
 }
