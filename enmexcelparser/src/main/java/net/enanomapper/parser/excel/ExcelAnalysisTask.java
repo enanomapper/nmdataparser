@@ -182,7 +182,7 @@ public class ExcelAnalysisTask
 	}
 	
 		
-	public int run() 
+	public int run() throws Exception
 	{
 		analysisResult.clear();
 		analysisErrors.clear();
@@ -199,9 +199,20 @@ public class ExcelAnalysisTask
 		return -1;
 	}
 		
-	int compareFiles() 
-	{		
-		//TODO
+	int compareFiles() throws Exception
+	{
+		class FileHandler implements IHandleFile 
+		{
+			@Override
+			public void handle(File file) throws Exception 
+			{
+				System.out.println("---> " + file.getAbsolutePath());
+			}
+		}
+				
+		MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
+				flagFileRecursion, new FileHandler(), true);
+				
 		return 0;
 	}
 	
