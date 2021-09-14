@@ -13,7 +13,9 @@ public class ExcelScope
 	
 	public ScopeType type = ScopeType.UNDEFINED;
 	public List<CellRangeAddress> cellRanges = new ArrayList<CellRangeAddress>();
-	
+	public List<Integer> sheetNums = new ArrayList<Integer>();
+	public List<String> sheetNames = new ArrayList<String>();
+		
 	
 	public static ExcelScope parseFromString(String scopeStr) throws Exception 
 	{
