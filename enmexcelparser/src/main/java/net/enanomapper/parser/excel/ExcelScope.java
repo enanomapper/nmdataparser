@@ -47,11 +47,15 @@ public class ExcelScope
 						}
 						catch (Exception e) {}
 						
-						scope.sheetNums.add(shNum);
-						if (shNum == null)  
+						
+						if (shNum == null) {  
 							scope.sheetNames.add(sheetTok);
-						else
+							scope.sheetNums.add(null);
+						}	
+						else {
 							scope.sheetNames.add(null);
+							scope.sheetNums.add((shNum-1));
+						}	
 					}
 					
 					//Handle address

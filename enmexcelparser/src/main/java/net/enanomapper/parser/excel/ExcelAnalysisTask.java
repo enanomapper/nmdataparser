@@ -130,7 +130,8 @@ public class ExcelAnalysisTask
 					errors.add("Target2 file path: " + tok4 + " does not exists!");
 			}
 		}
-
+		
+		
 		//Set Reference and Iterate List Files 
 		if (eaTask.type == TaskType.COMPARE_FILES) {
 			if (eaTask.target2 == null) {
@@ -233,8 +234,15 @@ public class ExcelAnalysisTask
 		sb.append("Type: " + type + "\n");
 		sb.append("Verbose: " + flagVerboseResult + "\n");
 		sb.append("Excel Scope: ");
-		for (CellRangeAddress cra: excelScope.cellRanges)
-			sb.append(cra.formatAsString() + " ");
+		for (int i = 0; i < excelScope.cellRanges.size(); i++)
+		{			
+			CellRangeAddress cra = excelScope.cellRanges.get(i); 
+			sb.append(cra.formatAsString() + " Sheet ");
+			if (excelScope.sheetNums.get(i) != null)
+				sb.append("#" + (excelScope.sheetNums.get(i)+1));
+			else
+				sb.append(excelScope.sheetNames.get(i));
+		}	
 		sb.append("\n");
 		
 		if (params != null) {
@@ -245,9 +253,9 @@ public class ExcelAnalysisTask
 		}		
 		
 		if (target1 != null)
-			sb.append("Target1 :" + target1.getAbsolutePath() + "\n ");
+			sb.append("Target1:" + target1.getAbsolutePath() + "\n");
 		if (target2 != null)
-			sb.append("Target2 :" + target2.getAbsolutePath() + "\n ");
+			sb.append("Target2:" + target2.getAbsolutePath() + "\n");
 		
 		return sb.toString();
 	}
