@@ -113,8 +113,10 @@ public class ExcelAnalysisTask
 		else {	
 			String path = tokens[3].trim();
 			eaTask.target1 = new File(path);
-			if (!eaTask.target1.exists())
+			if (!eaTask.target1.exists()) {
 				errors.add("Target1 file path: " + path + " does not exists!");
+				eaTask.target1 = null;
+			}	
 		}
 		
 		//Target2 (file path)		
@@ -126,37 +128,55 @@ public class ExcelAnalysisTask
 			{	
 				//Token 4 is not a special key word token
 				eaTask.target2 = new File(tok4);
-				if (!eaTask.target2.exists())
+				if (!eaTask.target2.exists()) {
 					errors.add("Target2 file path: " + tok4 + " does not exists!");
+					eaTask.target2 = null;
+				}	
 			}
 		}
 		
 		
 		//Set Reference and Iterate List Files 
-		if (eaTask.type == TaskType.COMPARE_FILES) {
-			if (eaTask.target2 == null) {
+		if (eaTask.type == TaskType.COMPARE_FILES) 
+		{
+			if (eaTask.target2 == null) 
+			{
 				//The reference file is the first file from the target1 list
-				if (eaTask.target1.isFile()) 
-					errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
-							+ " is not a folder and Target2 is not specified for TaskType.COMPARE_FILES!");
-				else {
-					eaTask.referenceFile = MiscUtils.getFirstFile(eaTask.target1, new String[] {"xls", "xlsx"}, true);
-					if (eaTask.referenceFile == null)
+				if (eaTask.target1 != null) 
+				{
+					if (eaTask.target1.isFile()) 
 						errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
-						+ " folder does not contain at least one file needed as ref. file for TaskType.COMPARE_FILES!");
-					eaTask.iterationFile = eaTask.target1;
+						+ " is not a folder and Target2 is not specified for TaskType.COMPARE_FILES!");
+					else {
+						eaTask.referenceFile = MiscUtils.getFirstFile(eaTask.target1, new String[] {"xls", "xlsx"}, true);
+						if (eaTask.referenceFile == null)
+							errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
+							+ " folder does not contain at least one file needed as ref. file for TaskType.COMPARE_FILES!");
+						
+						eaTask.iterationFile = eaTask.target1;
+					}
 				}
 			}
-			else {
-				//The reference file is target1
-				if (eaTask.target1.isFile())
-					eaTask.referenceFile = eaTask.target1;
-				else
-					errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
-							+ " is a folder and cannot be used as a refernce file for TaskType.COMPARE_FILES!");
-				
-				eaTask.iterationFile = eaTask.target2;
+			else 
+			{
+				if (eaTask.target1 != null) {
+					//The reference file is target1
+					if (eaTask.target1.isFile())
+						eaTask.referenceFile = eaTask.target1;
+					else
+						errors.add("Target1 file path " + eaTask.target1.getAbsolutePath() 
+						+ " is a folder and cannot be used as a refernce file for TaskType.COMPARE_FILES!");
+				}
+				//The iteration files folder is target2 (it might be only a single file)
+				if (eaTask.target2 != null) 					
+					eaTask.iterationFile = eaTask.target2;
 			}
+		}
+		else
+		{
+			//All other task types use only eaTask.iterationFile 
+			if (eaTask.target1 != null)
+				eaTask.iterationFile = eaTask.target1;
 		}
 		
 		
