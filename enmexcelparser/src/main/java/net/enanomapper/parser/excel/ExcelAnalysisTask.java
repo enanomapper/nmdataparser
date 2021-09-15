@@ -1,6 +1,7 @@
 package net.enanomapper.parser.excel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +42,9 @@ public class ExcelAnalysisTask
 	//work variables
 	public File referenceFile = null;
 	public File iterationFile = null;
-	
-	
+	public FileInputStream referenceFileInput = null;
+	public FileInputStream curIterationFileInput = null;
+			
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
 	 * <task type>; <scope>; <params>; <target1>; <target2>
@@ -248,6 +250,49 @@ public class ExcelAnalysisTask
 		//TODO
 		return 2;
 	}
+	
+	int openRefernceFileStreem(File file) {
+		try {
+			referenceFileInput = new FileInputStream(file);
+			return 0;
+		} catch (Exception x) {
+			analysisErrors.add("Error on creating Reference File Input stream: " 
+				+ file.getAbsolutePath());
+			return -1;
+		}
+	}
+	
+	int closeRefernceFileStreem() {
+		try {
+			referenceFileInput.close();
+			return 0;
+		} catch (Exception x) {
+			analysisErrors.add("Error on closing Reference File Input stream!");
+			return -1;
+		}
+	}
+	
+	int openCurIterationFileStreem(File file) {
+		try {
+			curIterationFileInput = new FileInputStream(file);
+			return 0;
+		} catch (Exception x) {
+			analysisErrors.add("Error on creating Current Iteration File Input stream: " 
+				+ file.getAbsolutePath());
+			return -1;
+		}
+	}
+	
+	int closeCurIterationFileStreem() {
+		try {
+			curIterationFileInput.close();
+			return 0;
+		} catch (Exception x) {
+			analysisErrors.add("Error on closing Current Iteration File Input stream!");
+			return -1;
+		}
+	}
+	
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
