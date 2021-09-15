@@ -760,4 +760,11 @@ public class ExcelUtils
 	}
 	
 	
+	public static boolean isXLSXFormat(File file) {
+		if (file.getAbsolutePath().toLowerCase().endsWith("xlsx"))
+			return true;
+		return false;
+	}
+	
+	
 }
