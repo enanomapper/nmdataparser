@@ -2,9 +2,11 @@ package net.enanomapper.parser.excel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import net.enanomapper.parser.excel.MiscUtils.IHandleFile;
@@ -44,6 +46,8 @@ public class ExcelAnalysisTask
 	public File iterationFile = null;
 	public FileInputStream referenceFileInput = null;
 	public FileInputStream curIterationFileInput = null;
+	public Workbook refWorkbook = null;
+	public Workbook curWorkbook = null;	
 			
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
@@ -224,18 +228,59 @@ public class ExcelAnalysisTask
 		
 	int compareFiles() throws Exception
 	{
+		//Set up reference input file stream and corresponding excel workbook
+		int refFileRes = openRefernceFileStreem(referenceFile);
+		if (refFileRes != 0)
+		{
+			closeRefernceFileStreem();
+			return -1;
+		}
+		
+		boolean isRefXLSX = ExcelUtils.isXLSXFormat(referenceFile);
+		refWorkbook = null;		
+		try {
+			refWorkbook = ExcelUtils.getExcelReader(referenceFileInput, isRefXLSX);
+		} 
+		catch(Exception x) {
+			analysisErrors.add("Could not create workbook object for reference excel file: " 
+					+ referenceFile.getAbsolutePath());
+			closeRefernceFileStreem();
+			return -1;
+		}
+		
+		
 		class FileHandler implements IHandleFile 
 		{
 			@Override
 			public void handle(File file) throws Exception 
 			{
-				System.out.println("---> " + file.getAbsolutePath());
+				//Simple processing for folders
+				if (file.isDirectory())
+				{
+					analysisResult.add("Processing folder: " + file.getAbsolutePath());
+					return;
+				}
+				
+				int curWorkbookRes = createCurrentWorkbook(file);
+				if (curWorkbookRes != 0)
+					return;
+				
+				//TODO ... main processing goes here
+				
+				closeCurIterationFileStreem();				
 			}
 		}
-				
-		MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
-				flagFileRecursion, new FileHandler(), true);
-				
+		
+		try {
+			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
+					flagFileRecursion, new FileHandler(), true);
+		}
+		catch (Exception x) {
+		} 
+		finally {
+			closeRefernceFileStreem();
+		}	
+		
 		return 0;
 	}
 	
@@ -251,6 +296,30 @@ public class ExcelAnalysisTask
 		return 2;
 	}
 	
+	int createCurrentWorkbook(File file) 
+	{
+		//Set up current iteration input file stream and corresponding excel workbook
+		int curFileRes = openCurIterationFileStreem(file);
+		if (curFileRes != 0)
+		{
+			closeCurIterationFileStreem();
+			return -1;
+		}
+		
+		boolean isXLSX = ExcelUtils.isXLSXFormat(file);
+			
+		try {
+			curWorkbook = ExcelUtils.getExcelReader(curIterationFileInput, isXLSX);
+		} 
+		catch(Exception x) {
+			analysisErrors.add("Could not create workbook object for current iteration excel file: " 
+					+ file.getAbsolutePath());
+			closeCurIterationFileStreem();
+			return -2;
+		}
+		return 0;
+	}
+	
 	int openRefernceFileStreem(File file) {
 		try {
 			referenceFileInput = new FileInputStream(file);
@@ -264,7 +333,8 @@ public class ExcelAnalysisTask
 	
 	int closeRefernceFileStreem() {
 		try {
-			referenceFileInput.close();
+			if (referenceFileInput != null)
+				referenceFileInput.close();
 			return 0;
 		} catch (Exception x) {
 			analysisErrors.add("Error on closing Reference File Input stream!");
@@ -285,7 +355,8 @@ public class ExcelAnalysisTask
 	
 	int closeCurIterationFileStreem() {
 		try {
-			curIterationFileInput.close();
+			if (curIterationFileInput != null)
+				curIterationFileInput.close();
 			return 0;
 		} catch (Exception x) {
 			analysisErrors.add("Error on closing Current Iteration File Input stream!");
