@@ -374,8 +374,8 @@ public class ExcelAnalysisTask
 		{			
 			CellRangeAddress cra = excelScope.cellRanges.get(i); 
 			sb.append(cra.formatAsString() + " Sheet ");
-			if (excelScope.sheetNums.get(i) != null)
-				sb.append("#" + (excelScope.sheetNums.get(i)+1));
+			if (excelScope.sheetIndices.get(i) != null)
+				sb.append("#" + (excelScope.sheetIndices.get(i)+1));
 			else
 				sb.append(excelScope.sheetNames.get(i));
 		}	

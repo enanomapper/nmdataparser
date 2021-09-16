@@ -13,7 +13,7 @@ public class ExcelScope
 	
 	public ScopeType type = ScopeType.UNDEFINED;
 	public List<CellRangeAddress> cellRanges = new ArrayList<CellRangeAddress>();
-	public List<Integer> sheetNums = new ArrayList<Integer>();
+	public List<Integer> sheetIndices = new ArrayList<Integer>();
 	public List<String> sheetNames = new ArrayList<String>();
 		
 	
@@ -32,7 +32,7 @@ public class ExcelScope
 					CellRangeAddress cra = CellRangeAddress.valueOf(tok0);
 					scope.cellRanges.add(cra);
 					//default sheet 0 (first sheet)
-					scope.sheetNums.add(0); 
+					scope.sheetIndices.add(0); 
 					scope.sheetNames.add(null);
 				}
 				else {
@@ -50,11 +50,11 @@ public class ExcelScope
 						
 						if (shNum == null) {  
 							scope.sheetNames.add(sheetTok);
-							scope.sheetNums.add(null);
+							scope.sheetIndices.add(null);
 						}	
 						else {
 							scope.sheetNames.add(null);
-							scope.sheetNums.add((shNum-1));
+							scope.sheetIndices.add((shNum-1));
 						}	
 					}
 					
