@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.poi.ss.util.CellRangeAddress;
 //import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openscience.cdk.exception.CDKException;
+
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -30,6 +32,11 @@ public class ExcelUtils
 		}
 		public int startIndex;
 		public int endIndex;
+	}
+	
+	public static interface IHandleExcelCell {
+		public void handle(Cell cell) throws Exception;
+		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception;		
 	}
 	
 	public static final String NULL_POINTER_CLUSTER = "___NULL_POINTER_CLUSTER___";
@@ -764,6 +771,33 @@ public class ExcelUtils
 		if (file.getAbsolutePath().toLowerCase().endsWith("xlsx"))
 			return true;
 		return false;
+	}
+	
+	public static Sheet getSheet(Workbook workbook, Integer sheetIndex, String sheetName) 
+	{
+		if (sheetIndex != null) //sheet index takes precedence
+			return workbook.getSheetAt(sheetIndex);
+		else {
+			if (sheetName != null)
+				return workbook.getSheet(sheetName);
+			else
+				return null;
+		}	
+	}
+	
+	public static void iterateExcelScope(ExcelScope scope, Workbook workbook, 
+			IHandleExcelCell excHandler) throws Exception 
+	{
+		for (int i = 0; i < scope.cellRanges.size(); i++)
+		{
+			Sheet sheet = getSheet(workbook, scope.sheetIndices.get(i),scope.sheetNames.get(i));
+			//pre-handling  
+			excHandler.handle(scope.cellRanges.get(i), sheet);
+			
+			//Handling each cell from the range
+			//TODO
+			
+		}
 	}
 	
 	
