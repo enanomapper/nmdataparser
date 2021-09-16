@@ -55,7 +55,7 @@ public class NMParserTestUtils {
 		
 		//testCellRangeAddress("B1:C4");
 		
-		//testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv; VERBOSE");
+		//testExcelAnalysisTaskParser("COMPARE_FILES; B1:C4; no params; /work/test-train-set.csv; VERBOSE", false);
 		
 	}
 
@@ -185,15 +185,35 @@ public class NMParserTestUtils {
 	}
 	
 	
-	public static void testExcelAnalysisTaskParser(String eaTaskStr) {
+	public static void testExcelAnalysisTaskParser(String eaTaskStr, boolean run) {
 		System.out.println("Testing excel task:\n" + eaTaskStr + "\n");
+		ExcelAnalysisTask task = null;
 		try {
-			ExcelAnalysisTask task = ExcelAnalysisTask.parseFromString(eaTaskStr);
+			task = ExcelAnalysisTask.parseFromString(eaTaskStr);
 			System.out.println(task.toString());
 		} 
 		catch (Exception e) {
 			System.out.println("Excel Analysis Task errors:");
 			System.out.println(e.getMessage());
+		}
+
+		if (run && (task != null)) {
+			try {
+				task.run();
+				if (!task.analysisErrors.isEmpty()) {
+					System.out.println("Excel task errors:");
+					for (int i = 0; i < task.analysisErrors.size(); i++) 
+						System.out.println(task.analysisErrors.get(i));
+				}
+				
+				System.out.println("Excel task result:");
+				for (int i = 0; i < task.analysisResult.size(); i++) 
+					System.out.println(task.analysisResult.get(i));
+				
+			}
+			catch (Exception e) {
+				System.out.println("Excel task exception: " + e.getMessage());
+			}
 		}
 	}
 	
