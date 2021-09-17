@@ -4,9 +4,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import ambit2.core.io.FileState;
+import ambit2.db.substance.processor.DBSubstanceWriter;
 import net.enanomapper.maker.IAnnotator;
 import net.enanomapper.maker.TR;
 import net.enanomapper.maker.TemplateMakerSettings;
@@ -49,6 +56,7 @@ public abstract class AssayTemplatesParser {
 	private static final String _singledb = "singledb";
 	private static final String _release = "release";
 	private static final String _expandconfig = "expandconfig";
+	private static final String _recursive = "recursive";
 
 	protected static Logger logger = Logger.getLogger(AssayTemplatesParser.class.getName());
 
@@ -59,11 +67,32 @@ public abstract class AssayTemplatesParser {
 	public String getRootValue(ResourceBundle nanodataResources) {
 		return nanodataResources.getString(_root);
 	}
-
+	public static File[] listFiles(File file, boolean recursive) throws IOException {
+		class RecursiveFiles extends SimpleFileVisitor<Path> {
+			protected List<File> files = new ArrayList<File>();
+			public List<File> getFiles() {
+				return files;
+			}
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if (!file.toFile().isDirectory()) files.add(file.toFile());
+				return super.visitFile(file, attrs);
+			}
+		}		
+		if (file.isDirectory())
+			if (recursive) {
+				RecursiveFiles rf = new RecursiveFiles();
+				Files.walkFileTree(file.toPath(), rf);
+				return rf.getFiles().toArray(new File[rf.getFiles().size()]);
+			}
+			else return file.listFiles();
+		else return new File[] {file};
+	}
 	public int parseResources(ResourceBundle nanodataResources, String prefix, boolean dryRun, IProcessPair processpair)
 			throws Exception {
 		final String root = getRootValue(nanodataResources);
 		boolean singledb = Boolean.parseBoolean(nanodataResources.getString(_singledb));
+		boolean recursive = Boolean.parseBoolean(nanodataResources.getString(_recursive));
 		String expandconfig = null;
 		try {
 			expandconfig = nanodataResources.getString(_expandconfig);
@@ -88,6 +117,8 @@ public abstract class AssayTemplatesParser {
 				continue;
 			if (_expandconfig.equals(key))
 				continue;
+			if (_recursive.equals(key))
+				continue;			
 			// hack to have one file with multiple json configs - the keys
 			// should be unique, but files the same
 			int ix = key.indexOf("#");
@@ -103,7 +134,7 @@ public abstract class AssayTemplatesParser {
 						logger.log(Level.WARNING, String.format("%s not found", json.getAbsolutePath()));
 						json = null;
 					}
-					for (File data : file.listFiles())
+					for (File data : listFiles(file,recursive))
 						if (acceptDataFile(data))
 							if (dryRun && processpair != null)
 								processpair.process(prefix, root, data,
