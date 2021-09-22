@@ -270,9 +270,10 @@ public class ExcelAnalysisTask
 				}
 				
 				int curWorkbookRes = createCurrentWorkbook(file);
-				if (curWorkbookRes != 0)
+				if (curWorkbookRes != 0){
+					closeCurIterationFileStreem();
 					return;
-				
+				}
 				//TODO ... main processing goes here
 				
 				closeCurIterationFileStreem();				
