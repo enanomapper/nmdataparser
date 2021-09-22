@@ -35,7 +35,7 @@ public class ExcelUtils
 		public int endIndex;
 	}
 	
-	public static interface IHandleExcelCell {
+	public static interface IHandleExcelAddress {
 		public void handle(CellAddress cellAddr, Sheet sheet) throws Exception;
 		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception;
 	}
@@ -787,7 +787,7 @@ public class ExcelUtils
 	}
 	
 	public static void iterateExcelScope(ExcelScope scope, Workbook workbook, 
-			IHandleExcelCell excHandler) throws Exception 
+			IHandleExcelAddress excHandler) throws Exception 
 	{
 		for (int i = 0; i < scope.cellRanges.size(); i++)
 		{
