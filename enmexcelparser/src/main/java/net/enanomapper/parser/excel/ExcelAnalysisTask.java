@@ -205,6 +205,12 @@ public class ExcelAnalysisTask
 			return 0;
 		}
 		
+		if (token.equalsIgnoreCase("file_recursion"))
+		{	
+			eaTask.flagFileRecursion = true;
+			return 0;
+		}
+		
 		return -1;
 	}
 	
@@ -369,6 +375,8 @@ public class ExcelAnalysisTask
 		StringBuffer sb = new StringBuffer();
 		sb.append("Type: " + type + "\n");
 		sb.append("Verbose: " + flagVerboseResult + "\n");
+		sb.append("File recursion: " + flagFileRecursion + "\n");
+		
 		sb.append("Excel Scope: ");
 		for (int i = 0; i < excelScope.cellRanges.size(); i++)
 		{			
