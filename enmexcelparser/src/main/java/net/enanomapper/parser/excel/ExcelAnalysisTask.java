@@ -47,6 +47,8 @@ public class ExcelAnalysisTask
 				closeCurIterationFileStreem();
 				return;
 			}
+			
+			analysisResult.add("File: " + file.getAbsolutePath());
 			//TODO ... main processing goes here
 			
 			closeCurIterationFileStreem();				
