@@ -30,6 +30,29 @@ public class ExcelAnalysisTask
 		}		
 	}
 	
+	class BasicFileHandler implements IHandleFile 
+	{
+		@Override
+		public void handle(File file) throws Exception 
+		{
+			//Simple processing for folders
+			if (file.isDirectory())
+			{
+				analysisResult.add("Processing folder: " + file.getAbsolutePath());
+				return;
+			}
+			
+			int curWorkbookRes = createCurrentWorkbook(file);
+			if (curWorkbookRes != 0){
+				closeCurIterationFileStreem();
+				return;
+			}
+			//TODO ... main processing goes here
+			
+			closeCurIterationFileStreem();				
+		}
+	}
+	
 	public TaskType type = TaskType.UNDEFINED;
 	public ExcelScope excelScope = null;
 	public Object params[] = null;
@@ -256,7 +279,7 @@ public class ExcelAnalysisTask
 			return -1;
 		}
 		
-		
+		/*
 		class FileHandler implements IHandleFile 
 		{
 			@Override
@@ -279,10 +302,11 @@ public class ExcelAnalysisTask
 				closeCurIterationFileStreem();				
 			}
 		}
+		*/
 		
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
-					flagFileRecursion, new FileHandler(), true);
+					flagFileRecursion, new BasicFileHandler(), true);
 		}
 		catch (Exception x) {
 		} 
