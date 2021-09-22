@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import net.enanomapper.parser.excel.ExcelUtils.IHandleExcelAddress;
 import net.enanomapper.parser.excel.MiscUtils.IHandleFile;
 
 public class ExcelAnalysisTask 
@@ -72,7 +73,8 @@ public class ExcelAnalysisTask
 	public FileInputStream referenceFileInput = null;
 	public FileInputStream curIterationFileInput = null;
 	public Workbook refWorkbook = null;
-	public Workbook curWorkbook = null;	
+	public Workbook curWorkbook = null;
+	public IHandleExcelAddress curExcelHandler = null;
 			
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
