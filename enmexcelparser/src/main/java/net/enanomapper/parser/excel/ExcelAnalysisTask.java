@@ -18,7 +18,7 @@ public class ExcelAnalysisTask
 	
 	
 	public static enum TaskType {
-		COMPARE_FILES, CHECK_VALUE, COUNT, UNDEFINED;
+		COMPARE_FILES, CHECK_VALUE, COUNT, PRINT_VALUE, UNDEFINED;
 		
 		public static TaskType fromString(String s) {
 			try {
@@ -227,6 +227,8 @@ public class ExcelAnalysisTask
 			return checkValue();
 		case COUNT:
 			return count();
+		case PRINT_VALUE:
+			return printValue();
 			
 		}
 		return -1;
@@ -300,6 +302,12 @@ public class ExcelAnalysisTask
 	{
 		//TODO
 		return 2;
+	}
+	
+	int printValue() 
+	{
+		//TODO
+		return 3;
 	}
 	
 	int createCurrentWorkbook(File file) 
