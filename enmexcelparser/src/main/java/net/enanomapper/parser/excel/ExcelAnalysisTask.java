@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import net.enanomapper.parser.excel.ExcelUtils.IHandleExcelAddress;
@@ -50,7 +52,9 @@ public class ExcelAnalysisTask
 			}
 			
 			analysisResult.add("File: " + file.getAbsolutePath());
-			//TODO ... main processing goes here
+			
+			//main processing goes here
+			ExcelUtils.iterateExcelScope(excelScope, curWorkbook, curExcelHandler);
 			
 			closeCurIterationFileStreem();				
 		}
@@ -283,30 +287,18 @@ public class ExcelAnalysisTask
 			return -1;
 		}
 		
-		/*
-		class FileHandler implements IHandleFile 
-		{
+		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
-			public void handle(File file) throws Exception 
-			{
-				//Simple processing for folders
-				if (file.isDirectory())
-				{
-					analysisResult.add("Processing folder: " + file.getAbsolutePath());
-					return;
-				}
-				
-				int curWorkbookRes = createCurrentWorkbook(file);
-				if (curWorkbookRes != 0){
-					closeCurIterationFileStreem();
-					return;
-				}
-				//TODO ... main processing goes here
-				
-				closeCurIterationFileStreem();				
+			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {				
+				analysisResult.add(cellAddr.formatAsString());
+			}
+			@Override
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
+				analysisResult.add(cellRangeAddr.formatAsString());
 			}
 		}
-		*/
+		
+		curExcelHandler = new ExcelAddressHandler(); 
 		
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
