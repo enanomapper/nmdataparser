@@ -93,7 +93,7 @@ public class MiscUtils
 		if (recursive)
 		{
 			for (File file : recFiles)
-				iterateFiles(file, fileExtensions, true, handler, handleFolders);
+				iterateFiles_BreadthFirst(file, fileExtensions, true, handler, handleFolders);
 		}
 	}
 	
