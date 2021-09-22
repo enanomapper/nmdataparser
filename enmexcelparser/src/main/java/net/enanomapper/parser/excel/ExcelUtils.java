@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 //import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.util.CellReference;
@@ -35,8 +36,8 @@ public class ExcelUtils
 	}
 	
 	public static interface IHandleExcelCell {
-		public void handle(Cell cell) throws Exception;
-		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception;		
+		public void handle(CellAddress cellAddr, Sheet sheet) throws Exception;
+		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception;
 	}
 	
 	public static final String NULL_POINTER_CLUSTER = "___NULL_POINTER_CLUSTER___";
@@ -791,12 +792,13 @@ public class ExcelUtils
 		for (int i = 0; i < scope.cellRanges.size(); i++)
 		{
 			Sheet sheet = getSheet(workbook, scope.sheetIndices.get(i),scope.sheetNames.get(i));
+			CellRangeAddress cra = scope.cellRanges.get(i);
 			//pre-handling  
-			excHandler.handle(scope.cellRanges.get(i), sheet);
+			excHandler.handle(cra, sheet);
 			
 			//Handling each cell from the range
-			//TODO
-			
+			for (CellAddress cellAddr : cra)
+				excHandler.handle(cellAddr, sheet);
 		}
 	}
 	
