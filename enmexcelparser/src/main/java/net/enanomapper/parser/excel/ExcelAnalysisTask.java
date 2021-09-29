@@ -156,7 +156,7 @@ public class ExcelAnalysisTask
 			}	
 		}
 		
-		//Target2 (file path)		
+		//Target2 (file path and/or special tokens)		
 		if (tokens.length >=5 )
 		{	
 			String tok4 = tokens[4].trim();
@@ -170,6 +170,17 @@ public class ExcelAnalysisTask
 					eaTask.target2 = null;
 				}	
 			}
+			
+			for (int i = 5; i < tokens.length; i++)
+			{
+				String spec_tok = tokens[i].trim();
+				if (spec_tok.isEmpty())
+					continue;
+				
+				int specTokRes2 = checkForSpecialToken(spec_tok, eaTask,  errors);
+				if (specTokRes2 == -1)
+					errors.add("Incorrect special word/flag: " + spec_tok);
+			}	
 		}
 		
 		
@@ -236,9 +247,15 @@ public class ExcelAnalysisTask
 			return 0;
 		}
 		
-		if (token.equalsIgnoreCase("file_recursion"))
+		if (token.equalsIgnoreCase("file_recursion") || token.equalsIgnoreCase("recursion") )
 		{	
 			eaTask.flagFileRecursion = true;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("no_file_recursion") || token.equalsIgnoreCase("no_recursion") )
+		{	
+			eaTask.flagFileRecursion = false;
 			return 0;
 		}
 		
