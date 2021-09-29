@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
@@ -344,7 +346,26 @@ public class ExcelAnalysisTask
 	
 	int printValue() 
 	{
-		//TODO
+		class ExcelAddressHandler implements IHandleExcelAddress {
+			@Override
+			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {
+				Cell cell = sheet.getRow(cellAddr.getRow()).getCell(cellAddr.getColumn());
+				analysisResult.add(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
+			}
+			@Override
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
+				//do nothing
+			}
+		}
+		
+		curExcelHandler = new ExcelAddressHandler(); 
+		
+		try {
+			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
+					flagFileRecursion, new BasicFileHandler(), true);
+		}
+		catch (Exception x) {
+		} 
 		return 3;
 	}
 	
