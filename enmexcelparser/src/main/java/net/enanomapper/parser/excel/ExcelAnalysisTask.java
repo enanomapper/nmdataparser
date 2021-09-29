@@ -64,6 +64,7 @@ public class ExcelAnalysisTask
 	
 	public TaskType type = TaskType.UNDEFINED;
 	public ExcelScope excelScope = null;
+	public String qualifier = null;
 	public Object params[] = null;
 	public File target1 = null;
 	public File target2 = null;
@@ -84,7 +85,7 @@ public class ExcelAnalysisTask
 			
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
-	 * <task type>; <scope>; <params>; <target1>; <target2>
+	 * <task type + qualifier>; <scope>; <params>; <target1>; <target2>
 	 */
 	public static ExcelAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
@@ -92,13 +93,33 @@ public class ExcelAnalysisTask
 		ExcelAnalysisTask eaTask = new ExcelAnalysisTask();		
 		String tokens[] = taskStr.split(mainSplitter);
 		
-		//Task type
+		//Task type + qualifier 
 		if (tokens.length < 1)
 			errors.add("Missing task type token!");
 		else {	
-			eaTask.type = TaskType.fromString(tokens[0].trim());
-			if (eaTask.type == TaskType.UNDEFINED)
-				errors.add("Incorrect excel analysis task type: " + tokens[0]);
+			String ss0 = tokens[0].trim();
+			if (ss0.isEmpty()) {
+				errors.add("Empty string for excel analysis task type!");
+			}
+			else {
+				String subTokens[] = ss0.split(",");
+				eaTask.type = TaskType.fromString(subTokens[0]);
+				if (eaTask.type == TaskType.UNDEFINED)
+					errors.add("Incorrect excel analysis task type: " + subTokens[0]);
+				//Handle qualifier
+				if (subTokens.length > 1) {
+					eaTask.qualifier = subTokens[1];
+					if (SALogicalCondition.checkQualifier (eaTask.qualifier) == -1)
+						errors.add("Incorrect qualifier: " + eaTask.qualifier);
+				}
+								
+				//Check for extra tokens
+				if (subTokens.length > 2) {
+					for (int i = 2; i < subTokens.length; i++ )
+						if (!subTokens[i].isEmpty())
+							errors.add("Extra token '" + subTokens[i] + "' in excel type section: " + ss0);
+				}	
+			}
 		}
 		
 		//Excel Scope
@@ -441,6 +462,9 @@ public class ExcelAnalysisTask
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Type: " + type + "\n");
+		if (qualifier != null)
+			sb.append("Qualifier: " + qualifier + "\n");
+		
 		sb.append("Verbose: " + flagVerboseResult + "\n");
 		sb.append("File recursion: " + flagFileRecursion + "\n");
 		
