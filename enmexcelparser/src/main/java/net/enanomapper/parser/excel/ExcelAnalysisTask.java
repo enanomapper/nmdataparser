@@ -370,8 +370,16 @@ public class ExcelAnalysisTask
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
 			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {
-				Cell cell = sheet.getRow(cellAddr.getRow()).getCell(cellAddr.getColumn());
-				analysisResult.add(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
+				if (sheet == null || cellAddr == null)
+					return;
+				Row row = sheet.getRow(cellAddr.getRow());
+				if (row  != null)
+				{
+					Cell cell = row.getCell(cellAddr.getColumn());
+					if (cell != null)
+						analysisResult.add(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
+				}
+				
 			}
 			@Override
 			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
@@ -386,6 +394,7 @@ public class ExcelAnalysisTask
 					flagFileRecursion, new BasicFileHandler(), true);
 		}
 		catch (Exception x) {
+			analysisErrors.add(x.getMessage());
 		} 
 		return 3;
 	}
