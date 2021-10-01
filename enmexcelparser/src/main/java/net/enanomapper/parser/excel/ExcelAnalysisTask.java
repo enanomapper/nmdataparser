@@ -70,6 +70,8 @@ public class ExcelAnalysisTask
 	public File target2 = null;
 	public boolean flagVerboseResult = false;
 	public boolean flagFileRecursion = true;
+	public boolean flagConsoleOut = false;
+	public boolean flagConsoleOutOnly = false;
 	
 	public List<String> analysisResult = new ArrayList<String>();
 	public List<String> analysisErrors = new ArrayList<String>();
@@ -282,6 +284,18 @@ public class ExcelAnalysisTask
 			return 0;
 		}
 		
+		if (token.equalsIgnoreCase("console_out"))
+		{	
+			eaTask.flagConsoleOut = true;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("console_out_only"))
+		{	
+			eaTask.flagConsoleOutOnly = true;
+			return 0;
+		}
+		
 		return -1;
 	}
 	
@@ -476,6 +490,10 @@ public class ExcelAnalysisTask
 		
 		sb.append("Verbose: " + flagVerboseResult + "\n");
 		sb.append("File recursion: " + flagFileRecursion + "\n");
+		if (flagConsoleOutOnly)
+			sb.append("Console out only: " + flagConsoleOutOnly + "\n");
+		else
+			sb.append("Console out: " + flagConsoleOut + "\n");
 		
 		sb.append("Excel Scope: ");
 		for (int i = 0; i < excelScope.cellRanges.size(); i++)
