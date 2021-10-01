@@ -402,8 +402,10 @@ public class ExcelAnalysisTask
 				if (row  != null)
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
-					if (cell != null)
-						outputLine(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
+					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);
+					if (checkRes)
+						outputLine(cellAddr.formatAsString() + ": " 
+								+ ((cell!=null)?cell.getStringCellValue():"null") );
 				}
 				
 			}
