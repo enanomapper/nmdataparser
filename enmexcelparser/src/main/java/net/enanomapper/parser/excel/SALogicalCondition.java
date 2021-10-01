@@ -30,7 +30,7 @@ public class SALogicalCondition
 	}
 	
 	public static final String ALLOWED_QUALIFIERS[] = {
-		"=", "<", "<=", ">", ">=", "in", "interval", "is_null"	
+		"=", "<", "<=", ">", ">=", "in", "interval", "is_empty", "not_empty"	
 	};
 	
 	public String targetLabel = null;
