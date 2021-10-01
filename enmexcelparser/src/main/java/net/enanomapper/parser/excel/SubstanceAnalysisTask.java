@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
+import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 
 public class SubstanceAnalysisTask 
@@ -26,6 +27,7 @@ public class SubstanceAnalysisTask
 	public SATaskType type = SATaskType.UNDEFINED;
 	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
 	public String qualifier = null;
+	public ComparisonOperation comparison; //determined from the qualifier
 	public Object params[] = null;
 	
 		
@@ -56,9 +58,12 @@ public class SubstanceAnalysisTask
 			errors.add("Missing qualifier token!");
 		else {	
 			saTask.qualifier = tokens[1].trim();
-			if (!saTask.qualifier.isEmpty())
-				if (SALogicalCondition.checkQualifier (saTask.qualifier) == -1)
+			if (!saTask.qualifier.isEmpty()) 
+			{	
+				saTask.comparison = SALogicalCondition.qualifierToComparisonOperation(saTask.qualifier);
+				if (saTask.comparison == ComparisonOperation.UNDEFINED)
 					errors.add("Incorrect qualifier: " + saTask.qualifier);
+			}	
 		}
 		
 		//Params

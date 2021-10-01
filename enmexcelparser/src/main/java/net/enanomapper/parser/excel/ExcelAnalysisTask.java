@@ -15,6 +15,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import net.enanomapper.parser.excel.ExcelUtils.IHandleExcelAddress;
 import net.enanomapper.parser.excel.MiscUtils.IHandleFile;
+import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 public class ExcelAnalysisTask 
 {
@@ -65,7 +66,7 @@ public class ExcelAnalysisTask
 	public TaskType type = TaskType.UNDEFINED;
 	public ExcelScope excelScope = null;
 	public String qualifier = null;
-	public int qualifierIndex = -1;
+	public ComparisonOperation comparison; //determined from the qualifier
 	public Object params[] = null;
 	public File target1 = null;
 	public File target2 = null;
@@ -111,9 +112,9 @@ public class ExcelAnalysisTask
 					errors.add("Incorrect excel analysis task type: " + subTokens[0]);
 				//Handle qualifier
 				if (subTokens.length > 1) {
-					eaTask.qualifier = subTokens[1];
-					eaTask.qualifierIndex = SALogicalCondition.checkQualifier (eaTask.qualifier);
-					if (eaTask.qualifierIndex == -1)
+					eaTask.qualifier = subTokens[1].trim();
+					eaTask.comparison = SALogicalCondition.qualifierToComparisonOperation(eaTask.qualifier);
+					if (eaTask.comparison == ComparisonOperation.UNDEFINED)
 						errors.add("Incorrect qualifier: " + eaTask.qualifier);
 				}
 								

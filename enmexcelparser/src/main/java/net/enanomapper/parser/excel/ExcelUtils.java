@@ -16,6 +16,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -805,32 +806,29 @@ public class ExcelUtils
 	
 	public static boolean checkConditionForCell(Cell cell, String qualifier, Object param) 
 	{
-		int qualifierIndex = SALogicalCondition.checkQualifier(qualifier);
-		if (qualifierIndex != -1)
-			return checkConditionForCell(cell, qualifierIndex, param);
+		ComparisonOperation comparison = SALogicalCondition.qualifierToComparisonOperation(qualifier);
+		if (comparison != ComparisonOperation.UNDEFINED)
+			return checkConditionForCell(cell, comparison, param);
 		else
 			return false;
 	}
 	
-	public static boolean checkConditionForCell(Cell cell, int qualifierIndex, Object param) 
-	{
-		//0 "=", 1 "<", 2 "<=", 3 ">", 4 ">=", 5 "in_set", 
-		//6 "interval", 7 "is_empty", 8 "not_empty"		
-		
-		if (qualifierIndex == 7) {
+	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, Object param) 
+	{		
+		if (comparison == ComparisonOperation.IS_EMPTY) {
 			return isEmpty(cell);
 		}
 		
-		if (qualifierIndex == 8) {
+		if (comparison == ComparisonOperation.NOT_EMPTY) {
 			return !isEmpty(cell);
 		}
 		
 		
 		if (param instanceof String)
 		{
-			switch (qualifierIndex) 
+			switch (comparison) 
 			{
-			case 0:
+			case EQUAL:
 				//TODO
 				break;
 			}

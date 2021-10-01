@@ -3,6 +3,8 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
+
 public class SALogicalCondition 
 {
 	public static enum LogicalConditionType {
@@ -42,6 +44,7 @@ public class SALogicalCondition
 	public LogicalConditionType conditionType = LogicalConditionType.UNDEFINED;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
+	public ComparisonOperation comparison; //determined from the qualifier
 	public Object params[] = null;
 	
 	
@@ -93,8 +96,10 @@ public class SALogicalCondition
 			errors.add("Missing qualifier token!");
 		else {	
 			saLogCond.qualifier = tokens.get(3);
-			if (checkQualifier (saLogCond.qualifier) == -1)
-				errors.add("Incorrect qualifier: " + tokens.get(3));
+			
+			saLogCond.comparison = SALogicalCondition.qualifierToComparisonOperation(saLogCond.qualifier);
+			if (saLogCond.comparison == ComparisonOperation.UNDEFINED)
+				errors.add("Incorrect qualifier: " + saLogCond.qualifier);
 		}
 		
 		//Handle params and special keywords
@@ -131,12 +136,14 @@ public class SALogicalCondition
 		return saLogCond;
 	}
 	
+	/*
 	public static int checkQualifier(String qual) {
 		for (int i = 0; i< ALLOWED_QUALIFIERS.length; i++)
 			if (qual.equals(ALLOWED_QUALIFIERS[i]))
 				return i;
 		return -1;
-	}	
+	}
+	*/	
 	
 	public static ComparisonOperation qualifierToComparisonOperation(String qual) 
 	{
