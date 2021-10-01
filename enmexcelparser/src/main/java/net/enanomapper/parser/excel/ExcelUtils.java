@@ -803,4 +803,35 @@ public class ExcelUtils
 	}
 	
 	
+	public static boolean checkConditionForCell(Cell cell, String qualifier, Object param) 
+	{
+		int qualifierIndex = SALogicalCondition.checkQualifier(qualifier);
+		if (qualifierIndex != -1)
+			return checkConditionForCell(cell, qualifierIndex, param);
+		else
+			return false;
+	}
+	
+	public static boolean checkConditionForCell(Cell cell, int qualifierIndex, Object param) 
+	{
+		//"=", "<", "<=", ">", ">=", "in", "interval", "is_null"		
+		if (param instanceof String)
+		{
+			switch (qualifierIndex) 
+			{
+			case 0:
+				//TODO
+				break;
+			}
+		}
+		
+		
+		if (param instanceof Double)
+		{
+			//TODO
+		}
+	
+		return false;
+	}
+	
 }
