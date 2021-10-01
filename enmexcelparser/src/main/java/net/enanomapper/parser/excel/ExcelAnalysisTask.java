@@ -65,6 +65,7 @@ public class ExcelAnalysisTask
 	public TaskType type = TaskType.UNDEFINED;
 	public ExcelScope excelScope = null;
 	public String qualifier = null;
+	public int qualifierIndex = -1;
 	public Object params[] = null;
 	public File target1 = null;
 	public File target2 = null;
@@ -111,7 +112,8 @@ public class ExcelAnalysisTask
 				//Handle qualifier
 				if (subTokens.length > 1) {
 					eaTask.qualifier = subTokens[1];
-					if (SALogicalCondition.checkQualifier (eaTask.qualifier) == -1)
+					eaTask.qualifierIndex = SALogicalCondition.checkQualifier (eaTask.qualifier);
+					if (eaTask.qualifierIndex == -1)
 						errors.add("Incorrect qualifier: " + eaTask.qualifier);
 				}
 								
