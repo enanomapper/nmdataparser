@@ -845,4 +845,11 @@ public class ExcelUtils
 		return false;
 	}
 	
+	
+	public static Object extractParamsForLogicalConditionCheck(int qualifierIndex, Object params[], int checkIndex )
+	{
+		//TODO
+		return null;
+	}
+	
 }
