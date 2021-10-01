@@ -33,6 +33,11 @@ public class SALogicalCondition
 		"=", "<", "<=", ">", ">=", "in_set", "interval", "is_empty", "not_empty"	
 	};
 	
+	public static enum ComparisonOperation {
+		EQUAL, LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL, 
+		IN_SET, INTERVAL, IS_EMPTY, NOT_EMPTY, UNDEFINED 
+	}
+	
 	public String targetLabel = null;
 	public LogicalConditionType conditionType = LogicalConditionType.UNDEFINED;
 	public TargetType targetType = TargetType.UNDEFINED;
@@ -132,6 +137,31 @@ public class SALogicalCondition
 				return i;
 		return -1;
 	}	
+	
+	public static ComparisonOperation qualifierToComparisonOperation(String qual) 
+	{
+		if (qual.equals("=") ||qual.equals("==") )
+			return ComparisonOperation.EQUAL;
+		if (qual.equals("<"))
+			return ComparisonOperation.LESS;
+		if (qual.equals("<="))
+			return ComparisonOperation.LESS_OR_EQUAL;
+		if (qual.equals(">"))
+			return ComparisonOperation.GREATER;
+		if (qual.equals(">="))
+			return ComparisonOperation.GREATER_OR_EQUAL;		
+		if (qual.equalsIgnoreCase("in_set"))
+			return ComparisonOperation.IN_SET;
+		if (qual.equalsIgnoreCase("interval"))
+			return ComparisonOperation.INTERVAL;
+		if (qual.equalsIgnoreCase("is_empty"))
+			return ComparisonOperation.IS_EMPTY;
+		if (qual.equalsIgnoreCase("not_empty"))
+			return ComparisonOperation.NOT_EMPTY;
+			
+		return ComparisonOperation.UNDEFINED;
+	}
+	
 	
 	public boolean apply(Object target) {
 		//TODO
