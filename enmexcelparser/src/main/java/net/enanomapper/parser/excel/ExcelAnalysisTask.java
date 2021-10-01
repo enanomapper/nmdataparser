@@ -43,7 +43,7 @@ public class ExcelAnalysisTask
 			//Simple processing for folders
 			if (file.isDirectory())
 			{
-				analysisResult.add("Processing folder: " + file.getAbsolutePath());
+				outputLine("Processing folder: " + file.getAbsolutePath());
 				return;
 			}
 			
@@ -53,7 +53,7 @@ public class ExcelAnalysisTask
 				return;
 			}
 			
-			analysisResult.add("File: " + file.getAbsolutePath());
+			outputLine("File: " + file.getAbsolutePath());
 			
 			//main processing goes here
 			ExcelUtils.iterateExcelScope(excelScope, curWorkbook, curExcelHandler);
@@ -262,7 +262,7 @@ public class ExcelAnalysisTask
 		
 		return eaTask;
 	}
-		
+			
 
 	public static int checkForSpecialToken(String token, ExcelAnalysisTask eaTask, List<String> errors) 
 	{
@@ -299,7 +299,17 @@ public class ExcelAnalysisTask
 		return -1;
 	}
 	
-		
+	void outputLine(String line) {
+		if (flagConsoleOutOnly)
+			System.out.println(line);
+		else
+		{
+			analysisResult.add(line);
+			if (flagConsoleOut)
+				System.out.println(line);
+		}
+	}
+	
 	public int run() throws Exception
 	{
 		analysisResult.clear();
@@ -313,8 +323,7 @@ public class ExcelAnalysisTask
 		case COUNT:
 			return count();
 		case PRINT_VALUE:
-			return printValue();
-			
+			return printValue();			
 		}
 		return -1;
 	}
@@ -344,11 +353,11 @@ public class ExcelAnalysisTask
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
 			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {				
-				analysisResult.add(cellAddr.formatAsString());
+				outputLine(cellAddr.formatAsString());
 			}
 			@Override
 			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
-				analysisResult.add(cellRangeAddr.formatAsString());
+				outputLine(cellRangeAddr.formatAsString());
 			}
 		}
 		
@@ -391,7 +400,7 @@ public class ExcelAnalysisTask
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
 					if (cell != null)
-						analysisResult.add(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
+						outputLine(cellAddr.formatAsString() + ": " + cell.getStringCellValue());
 				}
 				
 			}

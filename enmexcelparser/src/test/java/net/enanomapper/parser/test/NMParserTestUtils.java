@@ -206,13 +206,20 @@ public class NMParserTestUtils {
 						System.out.println(task.analysisErrors.get(i));
 				}
 				
-				System.out.println("Excel task result:");
-				for (int i = 0; i < task.analysisResult.size(); i++) 
-					System.out.println(task.analysisResult.get(i));
-				
+				if (!task.flagConsoleOutOnly) {
+					System.out.println("Excel task result:");
+					for (int i = 0; i < task.analysisResult.size(); i++) 
+						System.out.println(task.analysisResult.get(i));
+				}
 			}
 			catch (Exception e) {
 				System.out.println("Excel task exception: " + e.getMessage());
+				
+				if (!task.analysisErrors.isEmpty()) {
+					System.out.println("Excel task errors:");
+					for (int i = 0; i < task.analysisErrors.size(); i++) 
+						System.out.println(task.analysisErrors.get(i));
+				}
 			}
 		}
 	}
