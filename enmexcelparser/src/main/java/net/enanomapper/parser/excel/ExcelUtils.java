@@ -823,6 +823,10 @@ public class ExcelUtils
 			return !isEmpty(cell);
 		}
 		
+		//Null cell is not valid for other cases
+		if (cell == null)
+			return false;
+		
 		
 		if (param instanceof String)
 		{
