@@ -814,7 +814,18 @@ public class ExcelUtils
 	
 	public static boolean checkConditionForCell(Cell cell, int qualifierIndex, Object param) 
 	{
-		//"=", "<", "<=", ">", ">=", "in", "interval", "is_empty", "not_empty"		
+		//0 "=", 1 "<", 2 "<=", 3 ">", 4 ">=", 5 "in_set", 
+		//6 "interval", 7 "is_empty", 8 "not_empty"		
+		
+		if (qualifierIndex == 7) {
+			return isEmpty(cell);
+		}
+		
+		if (qualifierIndex == 8) {
+			return !isEmpty(cell);
+		}
+		
+		
 		if (param instanceof String)
 		{
 			switch (qualifierIndex) 
