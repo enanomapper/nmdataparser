@@ -92,7 +92,12 @@ public abstract class AssayTemplatesParser {
 			throws Exception {
 		final String root = getRootValue(nanodataResources);
 		boolean singledb = Boolean.parseBoolean(nanodataResources.getString(_singledb));
-		boolean recursive = Boolean.parseBoolean(nanodataResources.getString(_recursive));
+		boolean recursive = false;
+		try {
+			recursive = Boolean.parseBoolean(nanodataResources.getString(_recursive));
+		} catch (Exception x) {
+			
+		}
 		String expandconfig = null;
 		try {
 			expandconfig = nanodataResources.getString(_expandconfig);
