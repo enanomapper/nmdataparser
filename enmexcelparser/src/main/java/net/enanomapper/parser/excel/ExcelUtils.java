@@ -830,12 +830,7 @@ public class ExcelUtils
 		
 		if (param instanceof String)
 		{
-			switch (comparison) 
-			{
-			case EQUAL:
-				//TODO
-				break;
-			}
+			return checkConditionForCellComparedToString(cell, comparison, false, (String) param);
 		}
 		
 		
@@ -844,6 +839,50 @@ public class ExcelUtils
 			//TODO
 		}
 	
+		return false;
+	}
+	
+	
+	public static boolean checkConditionForCellComparedToString(Cell cell, 
+			ComparisonOperation comparison, boolean ignoreCase, String param)
+	{
+		String cellStr = getStringFromCell(cell);
+		if (cellStr == null)
+			return false;
+		
+		int compareRes = 0;
+		if (ignoreCase)
+			compareRes = cellStr.compareToIgnoreCase(param);
+		else
+			compareRes = cellStr.compareTo(param);
+		
+		System.out.println("Comparing " + cellStr + " with " + param);
+		System.out.println("compareRes = " + compareRes);
+		
+		switch (comparison) 
+		{
+		case EQUAL:
+			return (compareRes == 0);
+		case GREATER:
+			return (compareRes > 0);
+		case GREATER_OR_EQUAL:
+			return (compareRes >= 0);
+		case LESS:
+			return (compareRes < 0);
+		case LESS_OR_EQUAL:
+			return (compareRes <= 0);
+		case NOT_EQUAL:
+			return (compareRes != 0);
+		case IN_SET:
+			//The set contains only one element (i.e. the param itself)
+			return (compareRes == 0);
+		case INTERVAL:
+			//With a single parameter, the INTERVAL comparison 
+			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
+			return (compareRes >= 0);
+		}
+		
+		//All other cases are not applicable here
 		return false;
 	}
 	
