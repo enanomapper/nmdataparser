@@ -381,9 +381,51 @@ public class ExcelAnalysisTask
 		return 0;
 	}
 	
+	
 	int checkValue() 
-	{
-		//TODO
+	{	
+		class ExcelAddressHandler implements IHandleExcelAddress {
+			@Override
+			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {
+				if (sheet == null || cellAddr == null)
+					return;
+				Row row = sheet.getRow(cellAddr.getRow());
+				if (row  != null)
+				{
+					Cell cell = row.getCell(cellAddr.getColumn());
+					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);					
+					if (checkRes)
+					{
+						if (flagVerboseResult)						
+							outputLine("Problem: " + cellAddr.formatAsString() + ": OK");
+					}
+					else 
+					{	
+						outputLine("Problem: " + cellAddr.formatAsString() + ": " 
+								+ ((cell!=null)?cell.getStringCellValue():"null") );
+					}	
+				}
+				else {
+					outputLine("Problem: " + cellAddr.formatAsString() + ": row null");
+				}
+				
+			}
+			@Override
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
+				//do nothing
+			}
+		}
+		
+		curExcelHandler = new ExcelAddressHandler(); 
+		
+		try {
+			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
+					flagFileRecursion, new BasicFileHandler(), true);
+		}
+		catch (Exception x) {
+			analysisErrors.add(x.getMessage());
+		} 
+		
 		return 1;
 	}
 	
