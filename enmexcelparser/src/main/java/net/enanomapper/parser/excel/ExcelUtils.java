@@ -907,6 +907,16 @@ public class ExcelUtils
 	}
 	
 	
+	public static boolean checkConditionForCellComparedToDouble(Cell cell, 
+			ComparisonOperation comparison, boolean ignoreCase, Double param)
+	{
+		Number n = getNumericValue(cell);
+		Double d = (Double) n;
+		
+		//TODO
+		return false;
+	}
+	
 	public static Object extractParamsForLogicalConditionCheck(ComparisonOperation comparison, Object params[], int checkIndex )
 	{
 		if (params == null)
