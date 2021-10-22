@@ -813,7 +813,7 @@ public class ExcelUtils
 			return false;
 	}
 	
-	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, Object param) 
+	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, Object params) 
 	{		
 		if (comparison == ComparisonOperation.IS_EMPTY) {
 			return isEmpty(cell);
@@ -827,17 +827,35 @@ public class ExcelUtils
 		if (cell == null)
 			return false;
 		
-		
-		if (param instanceof String)
+		if (params == null)
 		{
-			return checkConditionForCellComparedToString(cell, comparison, false, (String) param);
+			return false;
 		}
 		
+		if (params instanceof Object[]) 
+		{
+			Object[] objects = (Object[]) params;
+			if (objects.length == 1)
+			{
+				if (objects[0] instanceof String)
+					return checkConditionForCellComparedToString(cell, comparison, 
+							false, (String) objects[0]);
+				
+				if (objects[0] instanceof Double) {
+					//TODO
+				}
+			}
+		}	
+			
+		if (params instanceof String)
+			return checkConditionForCellComparedToString(cell, comparison, false, (String) params);
 		
-		if (param instanceof Double)
+		
+		if (params instanceof Double)
 		{
 			//TODO
 		}
+		
 	
 		return false;
 	}
@@ -856,8 +874,8 @@ public class ExcelUtils
 		else
 			compareRes = cellStr.compareTo(param);
 		
-		System.out.println("Comparing " + cellStr + " with " + param);
-		System.out.println("compareRes = " + compareRes);
+		//System.out.println("Comparing " + cellStr + " with " + param);
+		//System.out.println("compareRes = " + compareRes);
 		
 		switch (comparison) 
 		{
