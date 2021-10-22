@@ -89,7 +89,7 @@ public class ExcelAnalysisTask
 			
 	/*
 	 * Parsing an ExcelAnalysisTask from a string in the following format
-	 * <task type + qualifier>; <scope>; <params>; <target1>; <target2>
+	 * <task type + qualifier>; <params>; <scope>; <target1>; <target2>
 	 */
 	public static ExcelAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
@@ -127,24 +127,13 @@ public class ExcelAnalysisTask
 			}
 		}
 		
-		//Excel Scope
-		if (tokens.length < 2)
-			errors.add("Missing excel scope token!");
-		else {	
-			String scopeStr = tokens[1].trim();
-			try {
-				eaTask.excelScope = ExcelScope.parseFromString(scopeStr);
-			}
-			catch (Exception x) {
-				errors.add("Incorrect excel scope: " + x.getMessage());
-			}
-		}
+		
 		
 		//Excel params
-		if (tokens.length < 3)
+		if (tokens.length < 2)
 			errors.add("Missing parameters token!");
 		else {	
-			String paramsStr = tokens[2].trim();
+			String paramsStr = tokens[1].trim();
 			
 			if (!paramsStr.equals("--") && !paramsStr.equals("no params"))
 			{						
@@ -169,6 +158,19 @@ public class ExcelAnalysisTask
 						eaTask.params[i] = o;
 					}
 				}
+			}
+		}
+		
+		//Excel Scope
+		if (tokens.length < 3)
+			errors.add("Missing excel scope token!");
+		else {	
+			String scopeStr = tokens[2].trim();
+			try {
+				eaTask.excelScope = ExcelScope.parseFromString(scopeStr);
+			}
+			catch (Exception x) {
+				errors.add("Incorrect excel scope: " + x.getMessage());
 			}
 		}
 		
