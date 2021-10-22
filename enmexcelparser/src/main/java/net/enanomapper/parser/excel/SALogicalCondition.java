@@ -32,11 +32,11 @@ public class SALogicalCondition
 	}
 	
 	public static final String ALLOWED_QUALIFIERS[] = {
-		"=", "<", "<=", ">", ">=", "in_set", "interval", "is_empty", "not_empty"	
+		"=", "<", "<=", ">", ">=", "!=", "in_set", "interval", "is_empty", "not_empty"	
 	};
 	
 	public static enum ComparisonOperation {
-		EQUAL, LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL, 
+		EQUAL, LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL, NOT_EQUAL, 
 		IN_SET, INTERVAL, IS_EMPTY, NOT_EMPTY, UNDEFINED 
 	}
 	
@@ -156,7 +156,9 @@ public class SALogicalCondition
 		if (qual.equals(">"))
 			return ComparisonOperation.GREATER;
 		if (qual.equals(">="))
-			return ComparisonOperation.GREATER_OR_EQUAL;		
+			return ComparisonOperation.GREATER_OR_EQUAL;
+		if (qual.equals("!="))
+			return ComparisonOperation.NOT_EQUAL;
 		if (qual.equalsIgnoreCase("in_set"))
 			return ComparisonOperation.IN_SET;
 		if (qual.equalsIgnoreCase("interval"))
