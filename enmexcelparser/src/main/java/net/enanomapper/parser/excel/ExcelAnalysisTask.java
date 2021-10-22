@@ -74,6 +74,7 @@ public class ExcelAnalysisTask
 	public boolean flagFileRecursion = true;
 	public boolean flagConsoleOut = false;
 	public boolean flagConsoleOutOnly = false;
+	public boolean flagIgnoreCase = true;
 	
 	public List<String> analysisResult = new ArrayList<String>();
 	public List<String> analysisErrors = new ArrayList<String>();
@@ -403,7 +404,7 @@ public class ExcelAnalysisTask
 				if (row  != null)
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
-					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);					
+					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, flagIgnoreCase, params);					
 					if (checkRes)
 					{
 						analysisStatTotalOKNum++;
@@ -460,7 +461,7 @@ public class ExcelAnalysisTask
 				if (row  != null)
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
-					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);
+					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, flagIgnoreCase, params);
 					if (checkRes)
 					{	
 						analysisStatTotalOKNum++;

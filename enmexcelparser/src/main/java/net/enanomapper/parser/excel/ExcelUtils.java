@@ -804,16 +804,17 @@ public class ExcelUtils
 	}
 	
 	
-	public static boolean checkConditionForCell(Cell cell, String qualifier, Object param) 
+	public static boolean checkConditionForCell(Cell cell, String qualifier, boolean ignoreCase, Object param) 
 	{
 		ComparisonOperation comparison = SALogicalCondition.qualifierToComparisonOperation(qualifier);
 		if (comparison != ComparisonOperation.UNDEFINED)
-			return checkConditionForCell(cell, comparison, param);
+			return checkConditionForCell(cell, comparison, ignoreCase, param);
 		else
 			return false;
 	}
 	
-	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, Object params) 
+	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, 
+			boolean ignoreCase, Object params) 
 	{		
 		if (comparison == ComparisonOperation.IS_EMPTY) {
 			return isEmpty(cell);
@@ -832,6 +833,7 @@ public class ExcelUtils
 			return false;
 		}
 		
+		//Handle input parameters as generic array of objects
 		if (params instanceof Object[]) 
 		{
 			Object[] objects = (Object[]) params;
@@ -839,17 +841,17 @@ public class ExcelUtils
 			{
 				if (objects[0] instanceof String)
 					return checkConditionForCellComparedToString(cell, comparison, 
-							false, (String) objects[0]);
+							ignoreCase, (String) objects[0]);
 				
 				if (objects[0] instanceof Double) {
 					//TODO
 				}
 			}
 		}	
-			
-		if (params instanceof String)
-			return checkConditionForCellComparedToString(cell, comparison, false, (String) params);
 		
+		//Handle specific case of input parameters
+		if (params instanceof String)
+			return checkConditionForCellComparedToString(cell, comparison, ignoreCase, (String) params);
 		
 		if (params instanceof Double)
 		{
