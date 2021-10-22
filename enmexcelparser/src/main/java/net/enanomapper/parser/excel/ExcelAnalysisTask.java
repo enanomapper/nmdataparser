@@ -77,6 +77,8 @@ public class ExcelAnalysisTask
 	
 	public List<String> analysisResult = new ArrayList<String>();
 	public List<String> analysisErrors = new ArrayList<String>();
+	public int analysisStatTotalOKNum = 0;
+	public int analysisStatTotalProblemNum = 0;
 		
 	//work variables
 	public File referenceFile = null;
@@ -325,6 +327,8 @@ public class ExcelAnalysisTask
 	{
 		analysisResult.clear();
 		analysisErrors.clear();
+		analysisStatTotalOKNum = 0;
+		analysisStatTotalProblemNum = 0;
 		
 		switch (type) {
 		case COMPARE_FILES:
@@ -402,19 +406,21 @@ public class ExcelAnalysisTask
 					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);					
 					if (checkRes)
 					{
+						analysisStatTotalOKNum++;
 						if (flagVerboseResult)						
-							outputLine("Problem: " + cellAddr.formatAsString() + ": OK");
+							outputLine(cellAddr.formatAsString() + ": OK");
 					}
 					else 
 					{	
+						analysisStatTotalProblemNum++;
 						outputLine("Problem: " + cellAddr.formatAsString() + ": " 
 								+ ((cell!=null)?cell.getStringCellValue():"null") );
 					}	
 				}
 				else {
+					analysisStatTotalProblemNum++;
 					outputLine("Problem: " + cellAddr.formatAsString() + ": row null");
 				}
-				
 			}
 			@Override
 			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
@@ -426,7 +432,9 @@ public class ExcelAnalysisTask
 		
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
-					flagFileRecursion, new BasicFileHandler(), true);
+					flagFileRecursion, new BasicFileHandler(), true);			
+			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
+			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
 		}
 		catch (Exception x) {
 			analysisErrors.add(x.getMessage());
@@ -454,10 +462,15 @@ public class ExcelAnalysisTask
 					Cell cell = row.getCell(cellAddr.getColumn());
 					boolean checkRes = ExcelUtils.checkConditionForCell(cell, comparison, params);
 					if (checkRes)
+					{	
+						analysisStatTotalOKNum++;
 						outputLine(cellAddr.formatAsString() + ": " 
 								+ ((cell!=null)?cell.getStringCellValue():"null") );
+					}
+					else {
+						analysisStatTotalProblemNum++;
+					}
 				}
-				
 			}
 			@Override
 			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
@@ -470,6 +483,8 @@ public class ExcelAnalysisTask
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
 					flagFileRecursion, new BasicFileHandler(), true);
+			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
+			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
 		}
 		catch (Exception x) {
 			analysisErrors.add(x.getMessage());
