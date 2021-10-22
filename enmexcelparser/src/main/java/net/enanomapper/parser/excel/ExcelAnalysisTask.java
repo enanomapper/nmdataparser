@@ -271,6 +271,12 @@ public class ExcelAnalysisTask
 
 	public static int checkForSpecialToken(String token, ExcelAnalysisTask eaTask, List<String> errors) 
 	{
+		if (token.startsWith("#"))
+		{
+			//This token is omitted ('#' symbol makes it a comment token)
+			return 0;
+		}
+		
 		if (token.equalsIgnoreCase("verbose"))
 		{	
 			eaTask.flagVerboseResult = true;
