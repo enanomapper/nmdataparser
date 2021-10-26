@@ -415,7 +415,7 @@ public class ExcelAnalysisTask
 					{	
 						analysisStatTotalProblemNum++;
 						outputLine("Problem: " + cellAddr.formatAsString() + ": " 
-								+ ((cell!=null)?cell.getStringCellValue():"null") );
+								+ ((cell!=null)?ExcelUtils.getStringFromCell(cell):"null") );
 					}	
 				}
 				else {
@@ -437,7 +437,7 @@ public class ExcelAnalysisTask
 			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
 			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
 		}
-		catch (Exception x) {
+		catch (Exception x) {			
 			analysisErrors.add(x.getMessage());
 		} 
 		
@@ -466,7 +466,7 @@ public class ExcelAnalysisTask
 					{	
 						analysisStatTotalOKNum++;
 						outputLine(cellAddr.formatAsString() + ": " 
-								+ ((cell!=null)?cell.getStringCellValue():"null") );
+								+ ((cell!=null)?ExcelUtils.getStringFromCell(cell):"null") );
 					}
 					else {
 						analysisStatTotalProblemNum++;
