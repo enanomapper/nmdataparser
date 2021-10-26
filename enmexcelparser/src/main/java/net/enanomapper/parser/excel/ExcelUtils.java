@@ -27,6 +27,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelUtils 
 {
+	public static double eps = 1.0e-30;
+	
 	public static class IndexInterval {
 		public IndexInterval(int startIndex, int endIndex) {
 			this.startIndex = startIndex;
@@ -843,9 +845,9 @@ public class ExcelUtils
 					return checkConditionForCellComparedToString(cell, comparison, 
 							ignoreCase, (String) objects[0]);
 				
-				if (objects[0] instanceof Double) {
-					//TODO
-				}
+				if (objects[0] instanceof Double) 
+					return checkConditionForCellComparedToDouble(cell, comparison, 
+						(Double) objects[0]);
 			}
 		}	
 		
@@ -854,11 +856,8 @@ public class ExcelUtils
 			return checkConditionForCellComparedToString(cell, comparison, ignoreCase, (String) params);
 		
 		if (params instanceof Double)
-		{
-			//TODO
-		}
-		
-	
+			return checkConditionForCellComparedToDouble(cell, comparison, (Double) params);
+			
 		return false;
 	}
 	
@@ -908,12 +907,37 @@ public class ExcelUtils
 	
 	
 	public static boolean checkConditionForCellComparedToDouble(Cell cell, 
-			ComparisonOperation comparison, boolean ignoreCase, Double param)
-	{
+			ComparisonOperation comparison, Double param)
+	{	
 		Number n = getNumericValue(cell);
+		if (n == null)
+			return false;		
 		Double d = (Double) n;
+		//System.out.println(" " + d + "  <--->  " + param);
 		
-		//TODO
+		switch (comparison) 
+		{
+		case EQUAL:
+			return (equal(d, param));
+		case GREATER:
+			return (d > param);
+		case GREATER_OR_EQUAL:
+			return (d >= param);
+		case LESS:
+			return (d < param);
+		case LESS_OR_EQUAL:
+			return (d <= param);
+		case NOT_EQUAL:
+			return (d != param);
+		case IN_SET:
+			//The set contains only one element (i.e. the param itself)
+			return (equal(d, param));
+		case INTERVAL:
+			//With a single parameter, the INTERVAL comparison 
+			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
+			return (d >= param);
+		}
+		
 		return false;
 	}
 	
@@ -940,6 +964,16 @@ public class ExcelUtils
 		if (checkIndex >= params.length)
 			return params[params.length-1]; //last element is returned		
 		return params[checkIndex];
+	}
+	
+	public static boolean equal(double x1, double x2)
+	{
+		return equal(x1, x2, eps);
+	}
+	
+	public static boolean equal(double x1, double x2, double e)
+	{
+		return (Math.abs(x1-x2) < e);
 	}
 	
 }
