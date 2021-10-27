@@ -841,13 +841,24 @@ public class ExcelUtils
 			Object[] objects = (Object[]) params;
 			if (objects.length >= 1)
 			{
+				//The type of first objects determines the logic of array treatment
 				if (objects[0] instanceof String)
 					return checkConditionForCellComparedToStrings(cell, comparison, 
 							ignoreCase, objects);
 				
-				if (objects[0] instanceof Double) 
-					return checkConditionForCellComparedToDouble(cell, comparison, 
-						(Double) objects[0]);
+				if (objects[0] instanceof Double)
+				{	
+					double dObjs[] = new double[objects.length];
+					dObjs[0] = (Double)objects[0];
+					for (int i = 1; i < objects.length; i++)
+					{
+						if (objects[i] instanceof Double)
+							dObjs[i] = (Double)objects[i];
+						else
+							return false;
+					}
+					return checkConditionForCellComparedToDoubles(cell, comparison, dObjs);
+				}	
 			}
 		}	
 		
@@ -856,7 +867,7 @@ public class ExcelUtils
 			return checkConditionForCellComparedToStrings(cell, comparison, ignoreCase, new String[] {params.toString()});
 		
 		if (params instanceof Double)
-			return checkConditionForCellComparedToDouble(cell, comparison, (Double) params);
+			return checkConditionForCellComparedToDoubles(cell, comparison, new double[] {(Double) params});
 			
 		return false;
 	}
@@ -934,9 +945,13 @@ public class ExcelUtils
 	}
 	
 	
-	public static boolean checkConditionForCellComparedToDouble(Cell cell, 
-			ComparisonOperation comparison, Double param)
+	public static boolean checkConditionForCellComparedToDoubles(Cell cell, 
+			ComparisonOperation comparison, double params[])
 	{	
+		//Check for empty input params
+		if ((params == null) || (params.length == 0) )
+			return false;
+		
 		Number n = getNumericValue(cell);
 		if (n == null)
 			return false;		
@@ -946,24 +961,26 @@ public class ExcelUtils
 		switch (comparison) 
 		{
 		case EQUAL:
-			return (equal(d, param));
+			return (equal(d, params[0]));
 		case GREATER:
-			return (d > param);
+			return (d > params[0]);
 		case GREATER_OR_EQUAL:
-			return (d >= param);
+			return (d >= params[0]);
 		case LESS:
-			return (d < param);
+			return (d < params[0]);
 		case LESS_OR_EQUAL:
-			return (d <= param);
+			return (d <= params[0]);
 		case NOT_EQUAL:
-			return (d != param);
+			return (d != params[0]);
 		case IN_SET:
 			//The set contains only one element (i.e. the param itself)
-			return (equal(d, param));
+			//TODO
+			return (equal(d, params[0]));
 		case INTERVAL:
 			//With a single parameter, the INTERVAL comparison 
-			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
-			return (d >= param);
+			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL
+			//TODO
+			return (d >= params[0]);
 		}
 		
 		return false;
