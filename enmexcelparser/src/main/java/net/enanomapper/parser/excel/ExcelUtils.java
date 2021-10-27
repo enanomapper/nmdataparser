@@ -839,11 +839,11 @@ public class ExcelUtils
 		if (params instanceof Object[]) 
 		{
 			Object[] objects = (Object[]) params;
-			if (objects.length == 1)
+			if (objects.length >= 1)
 			{
 				if (objects[0] instanceof String)
-					return checkConditionForCellComparedToString(cell, comparison, 
-							ignoreCase, (String) objects[0]);
+					return checkConditionForCellComparedToStrings(cell, comparison, 
+							ignoreCase, objects);
 				
 				if (objects[0] instanceof Double) 
 					return checkConditionForCellComparedToDouble(cell, comparison, 
@@ -853,7 +853,7 @@ public class ExcelUtils
 		
 		//Handle specific case of input parameters
 		if (params instanceof String)
-			return checkConditionForCellComparedToString(cell, comparison, ignoreCase, (String) params);
+			return checkConditionForCellComparedToStrings(cell, comparison, ignoreCase, new String[] {params.toString()});
 		
 		if (params instanceof Double)
 			return checkConditionForCellComparedToDouble(cell, comparison, (Double) params);
@@ -862,18 +862,22 @@ public class ExcelUtils
 	}
 	
 	
-	public static boolean checkConditionForCellComparedToString(Cell cell, 
-			ComparisonOperation comparison, boolean ignoreCase, String param)
+	public static boolean checkConditionForCellComparedToStrings(Cell cell, 
+			ComparisonOperation comparison, boolean ignoreCase, Object params[])
 	{
+		//Check for empty input params
+		if ((params == null) || (params.length == 0) )
+			return false;
+		
 		String cellStr = getStringFromCell(cell);
 		if (cellStr == null)
 			return false;
 		
-		int compareRes = 0;
+		int compareRes;
 		if (ignoreCase)
-			compareRes = cellStr.compareToIgnoreCase(param);
+			compareRes = cellStr.compareToIgnoreCase(params[0].toString());
 		else
-			compareRes = cellStr.compareTo(param);
+			compareRes = cellStr.compareTo(params[0].toString());
 		
 		//System.out.println("Comparing " + cellStr + " with " + param);
 		//System.out.println("compareRes = " + compareRes);
@@ -892,13 +896,37 @@ public class ExcelUtils
 			return (compareRes <= 0);
 		case NOT_EQUAL:
 			return (compareRes != 0);
-		case IN_SET:
-			//The set contains only one element (i.e. the param itself)
-			return (compareRes == 0);
+		case IN_SET:			
+			if (compareRes == 0)
+				return true;
+			for (int i = 1; i < params.length; i++)
+			{
+				int compareRes_i;
+				if (ignoreCase)
+					compareRes_i = cellStr.compareToIgnoreCase(params[i].toString());
+				else
+					compareRes_i = cellStr.compareTo(params[i].toString());
+				
+				if (compareRes_i == 0)
+					return true;	
+			}
+			return false;
 		case INTERVAL:
-			//With a single parameter, the INTERVAL comparison 
-			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
-			return (compareRes >= 0);
+			if (params.length == 1) {
+				//With a single parameter, the INTERVAL comparison 
+				//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
+				return (compareRes >= 0);
+			}
+			else {
+				//params.length > 1
+				int compareRes1;
+				if (ignoreCase)
+					compareRes1 = cellStr.compareToIgnoreCase(params[1].toString());
+				else
+					compareRes1 = cellStr.compareTo(params[1].toString());
+				
+				return (compareRes >= 0 && compareRes1 <= 0);
+			}
 		}
 		
 		//All other cases are not applicable here
