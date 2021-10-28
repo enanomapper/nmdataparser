@@ -973,14 +973,19 @@ public class ExcelUtils
 		case NOT_EQUAL:
 			return (d != params[0]);
 		case IN_SET:
-			//The set contains only one element (i.e. the param itself)
-			//TODO
-			return (equal(d, params[0]));
+			for (int i = 0; i < params.length; i++)
+				if (equal(d, params[i]))
+					return true;
+			return false;
 		case INTERVAL:
-			//With a single parameter, the INTERVAL comparison 
-			//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL
-			//TODO
-			return (d >= params[0]);
+			if (params.length == 1)
+			{	
+				//With a single parameter, the INTERVAL comparison 
+				//is treated as [params[0],...] i.e. it equivalent to GREATER_OR_EQUAL
+				return (d >= params[0]);
+			}	
+			else
+				return ((d >= params[0]) && (d <= params[1]));
 		}
 		
 		return false;
