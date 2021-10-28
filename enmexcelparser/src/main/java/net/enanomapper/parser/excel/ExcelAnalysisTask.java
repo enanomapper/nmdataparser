@@ -368,12 +368,21 @@ public class ExcelAnalysisTask
 		
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
-			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {				
-				outputLine(cellAddr.formatAsString());
+			public void handle(CellAddress cellAddr, Sheet sheet, int cellRangeIndex) throws Exception 
+			{				
+				if (sheet == null || cellAddr == null)
+					return;
+				
+				//TODO
+				//Get reference sheet and cell for				
+				//Sheet refSheet = ExcelUtils.getSheet(refWorkbook, excelScope . Integer sheetIndex, String sheetName)
+								
+				//outputLine(cellAddr.formatAsString());
 			}
 			@Override
-			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
-				outputLine(cellRangeAddr.formatAsString());
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception {
+				if (flagVerboseResult)
+					outputLine("Range " + cellRangeAddr.formatAsString());
 			}
 		}
 		
@@ -397,7 +406,7 @@ public class ExcelAnalysisTask
 	{	
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
-			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {
+			public void handle(CellAddress cellAddr, Sheet sheet, int cellRangeIndex) throws Exception {
 				if (sheet == null || cellAddr == null)
 					return;
 				Row row = sheet.getRow(cellAddr.getRow());
@@ -424,7 +433,7 @@ public class ExcelAnalysisTask
 				}
 			}
 			@Override
-			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception {
 				//do nothing
 			}
 		}
@@ -454,7 +463,7 @@ public class ExcelAnalysisTask
 	{
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
-			public void handle(CellAddress cellAddr, Sheet sheet) throws Exception {
+			public void handle(CellAddress cellAddr, Sheet sheet, int cellRangeIndex) throws Exception {
 				if (sheet == null || cellAddr == null)
 					return;
 				Row row = sheet.getRow(cellAddr.getRow());
@@ -474,7 +483,7 @@ public class ExcelAnalysisTask
 				}
 			}
 			@Override
-			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception {
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception {
 				//do nothing
 			}
 		}

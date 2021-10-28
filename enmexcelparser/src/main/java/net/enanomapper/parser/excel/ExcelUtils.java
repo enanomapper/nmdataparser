@@ -39,8 +39,8 @@ public class ExcelUtils
 	}
 	
 	public static interface IHandleExcelAddress {
-		public void handle(CellAddress cellAddr, Sheet sheet) throws Exception;
-		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet) throws Exception;
+		public void handle(CellAddress cellAddr, Sheet sheet, int cellRangeIndex) throws Exception;
+		public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception;
 	}
 	
 	public static final String NULL_POINTER_CLUSTER = "___NULL_POINTER_CLUSTER___";
@@ -797,11 +797,11 @@ public class ExcelUtils
 			Sheet sheet = getSheet(workbook, scope.sheetIndices.get(i),scope.sheetNames.get(i));
 			CellRangeAddress cra = scope.cellRanges.get(i);
 			//pre-handling  
-			excHandler.handle(cra, sheet);
+			excHandler.handle(cra, sheet, i);
 			
 			//Handling each cell from the range
 			for (CellAddress cellAddr : cra)
-				excHandler.handle(cellAddr, sheet);
+				excHandler.handle(cellAddr, sheet, i);
 		}
 	}
 	
