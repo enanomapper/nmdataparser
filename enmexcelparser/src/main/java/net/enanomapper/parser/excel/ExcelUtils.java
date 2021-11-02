@@ -1016,6 +1016,18 @@ public class ExcelUtils
 		return params[checkIndex];
 	}
 	
+	public static int compareCells(Cell ref, Cell target)
+	{
+		//TODO
+		return -1;
+	}
+	
+	public static String getComparisonErrorMessage (int errorCode, Cell ref, Cell target) 
+	{
+		//TODO
+		return "error:";
+	}
+	
 	public static boolean equal(double x1, double x2)
 	{
 		return equal(x1, x2, eps);

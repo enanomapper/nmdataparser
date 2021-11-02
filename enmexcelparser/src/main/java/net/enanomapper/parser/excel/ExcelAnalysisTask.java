@@ -373,16 +373,55 @@ public class ExcelAnalysisTask
 				if (sheet == null || cellAddr == null)
 					return;
 				
-				//TODO
-				//Get reference sheet and cell for				
-				//Sheet refSheet = ExcelUtils.getSheet(refWorkbook, excelScope . Integer sheetIndex, String sheetName)
-								
-				//outputLine(cellAddr.formatAsString());
+				if (flagVerboseResult)				
+					outputLine(cellAddr.formatAsString());
+				
+				//Get reference sheet and cell
+				//cellRangeIndex is needed to get the reference sheet 				
+				Integer sheetIndex = excelScope.sheetIndices.get(cellRangeIndex); 
+				String sheetName = excelScope.sheetNames.get(cellRangeIndex);
+				Sheet refSheet = ExcelUtils.getSheet(refWorkbook, sheetIndex, sheetName);
+				Row refRow = refSheet.getRow(cellAddr.getRow());
+				Cell refCell = null;
+				if (refRow  != null)				
+					refCell = refRow.getCell(cellAddr.getColumn());
+				
+				if (refCell != null)
+				{
+					//Cell comparison is performed only for those reference cells 
+					//which comply parameters conditions
+					boolean paramCheckRes = ExcelUtils.checkConditionForCell(refCell, comparison, flagIgnoreCase, params);
+					if (paramCheckRes) 
+					{	
+						//Get current cell
+						Row row = sheet.getRow(cellAddr.getRow());
+						if (row  != null)
+						{
+							Cell cell = row.getCell(cellAddr.getColumn());
+							int cellCoparisonRes = ExcelUtils.compareCells(refCell, cell);						
+							
+							if (cellCoparisonRes == 0) {
+								analysisStatTotalOKNum++;
+								if (flagVerboseResult)						
+									outputLine(cellAddr.formatAsString() + ": OK");
+							}
+							else {
+								analysisStatTotalProblemNum++;
+								String errorMessage = ExcelUtils.getComparisonErrorMessage(cellCoparisonRes, refCell, cell);
+								outputLine("Problem: " + cellAddr.formatAsString() + ": " + errorMessage);
+							}
+						}
+					}
+				}
+				else {
+					//No comparison is performed between reference and current cell
+				}
 			}
+			
 			@Override
 			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception {
 				if (flagVerboseResult)
-					outputLine("Range " + cellRangeAddr.formatAsString());
+					outputLine("Range " + cellRangeAddr.formatAsString() + " cell range index = " + (cellRangeIndex+1));
 			}
 		}
 		
