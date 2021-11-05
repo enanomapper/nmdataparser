@@ -30,7 +30,7 @@ public class ExcelUtils
 	public static double eps = 1.0e-30;
 	
 	public static enum CellComparisonMethod {
-		IDENTICAL, STRING_VALUE, FORMAT
+		IDENTICAL, STRING_VALUE, STRING_VALUE_IGNORE_CASE, FORMAT
 	}
 	
 	public static class IndexInterval {
@@ -1039,21 +1039,84 @@ public class ExcelUtils
 		switch (compMethod)
 		{
 		case IDENTICAL:
+			return compareCellObjects(refObj, targetObj);
+			
+		case STRING_VALUE:
+			int compRes = refObj.toString().compareTo(targetObj.toString());
+			if (compRes == 0)
+				return 0;
+			else
+				return -3;
 		
-			break;
+		case STRING_VALUE_IGNORE_CASE:
+			int compRes2 = refObj.toString().compareToIgnoreCase(targetObj.toString());
+			if (compRes2 == 0)
+				return 0;
+			else
+				return -3;
+		
+		case FORMAT:
+			return compareCellFormats(ref, target);
 		}
 		
+		return -100;
+	}
+	
+	private static int compareCellObjects(Object refObj, Object targetObj)
+	{
+		if (refObj instanceof String)
+		{
+			if (targetObj instanceof String)
+			{
+				int compRes = refObj.toString().compareTo(targetObj.toString());
+				if (compRes == 0)
+					return 0;
+				else 
+					return -3;
+			}
+			else
+				return -4;
+		}
+		
+		if (refObj instanceof Double)
+		{
+			if (targetObj instanceof Double)
+			{
+				if (equal((Double)refObj, (Double)targetObj))
+					return 0;
+				else
+					return -3;
+			}
+			else
+				return -5;
+		}	
+		
+		//TODO handle Boolean, Date
+		
+		return -100;
+	}
+	
+	private static int compareCellFormats(Cell ref, Cell target)
+	{
 		//TODO
 		return -100;
 	}
 	
 	public static String getComparisonErrorMessage (int errorCode, Cell ref, Cell target) 
 	{
-		switch (errorCode){
+		switch (errorCode)
+		{
 		case -1:
 			return "Target cell is not BLANK (ref cell is BLANK)!";
 		case -2:
-			return "Target cell is BLANK! Reference cell = " + getStringFromCell(target);	
+			return "Target cell is BLANK! Reference cell = " + getStringFromCell(target);
+		case -3: 
+			return "Target cell is different from reference " + 
+				getStringFromCell(ref) + " != " + getStringFromCell(target);
+		case -4: 
+			return "Target cell is type is different than reference cell which is TEXT";
+		case -5: 
+			return "Target cell is type is different than reference cell which is NUMBER";	
 		}
 		
 		return "error:";
