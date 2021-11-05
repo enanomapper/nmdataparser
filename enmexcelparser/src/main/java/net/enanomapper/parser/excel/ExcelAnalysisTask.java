@@ -42,6 +42,13 @@ public class ExcelAnalysisTask
 		@Override
 		public void handle(File file) throws Exception 
 		{
+			//Reference file is omitted
+			if (referenceFile.equals(file))
+			{
+				outputLine("Reference file is not processed: " + file.getAbsolutePath());
+				return;
+			}	
+			
 			//Simple processing for folders
 			if (file.isDirectory())
 			{
