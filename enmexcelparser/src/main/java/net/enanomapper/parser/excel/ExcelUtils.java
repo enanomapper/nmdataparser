@@ -30,7 +30,7 @@ public class ExcelUtils
 	public static double eps = 1.0e-30;
 	
 	public static enum CellComparisonMethod {
-		IDENTICAL, IDENTICAL_IF_NOT_NULL, STRING_VALUE, STRING_VALUE_IF_NOT_NULL, FORMAT
+		IDENTICAL, STRING_VALUE, FORMAT
 	}
 	
 	public static class IndexInterval {
@@ -1022,13 +1022,40 @@ public class ExcelUtils
 	
 	public static int compareCells(Cell ref, Cell target, CellComparisonMethod compMethod)
 	{
+		Object refObj =  getObjectFromCell(ref);
+		Object targetObj =  getObjectFromCell(ref);
+		
+		if (refObj == null) 
+		{		
+			if (targetObj != null)
+				return -1;			
+			else
+				return 0;
+		}
+		
+		if (targetObj == null)
+			return -2;
+		
+		switch (compMethod)
+		{
+		case IDENTICAL:
+		
+			break;
+		}
+		
 		//TODO
-		return -1;
+		return -100;
 	}
 	
 	public static String getComparisonErrorMessage (int errorCode, Cell ref, Cell target) 
 	{
-		//TODO
+		switch (errorCode){
+		case -1:
+			return "Target cell is not BLANK (ref cell is BLANK)!";
+		case -2:
+			return "Target cell is BLANK! Reference cell = " + getStringFromCell(target);	
+		}
+		
 		return "error:";
 	}
 	
