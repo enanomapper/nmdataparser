@@ -1026,7 +1026,7 @@ public class ExcelUtils
 	public static int compareCells(Cell ref, Cell target, CellComparisonMethod compMethod)
 	{
 		Object refObj =  getObjectFromCell(ref);
-		Object targetObj =  getObjectFromCell(ref);
+		Object targetObj =  getObjectFromCell(target);
 		
 		if (refObj == null) 
 		{		
@@ -1066,7 +1066,7 @@ public class ExcelUtils
 	}
 	
 	private static int compareCellObjects(Object refObj, Object targetObj)
-	{
+	{	
 		if (refObj instanceof String)
 		{
 			if (targetObj instanceof String)
@@ -1082,7 +1082,7 @@ public class ExcelUtils
 		}
 		
 		if (refObj instanceof Double)
-		{
+		{	
 			if (targetObj instanceof Double)
 			{
 				if (equal((Double)refObj, (Double)targetObj))

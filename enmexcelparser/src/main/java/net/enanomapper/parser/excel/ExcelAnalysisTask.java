@@ -374,9 +374,6 @@ public class ExcelAnalysisTask
 				if (sheet == null || cellAddr == null)
 					return;
 				
-				if (flagVerboseResult)				
-					outputLine(cellAddr.formatAsString());
-				
 				//Get reference sheet and cell
 				//cellRangeIndex is needed to get the reference sheet 				
 				Integer sheetIndex = excelScope.sheetIndices.get(cellRangeIndex); 
@@ -386,37 +383,31 @@ public class ExcelAnalysisTask
 				Cell refCell = null;
 				if (refRow  != null)				
 					refCell = refRow.getCell(cellAddr.getColumn());
-				
-				if (refCell != null)
-				{
-					//Cell comparison is performed only for those reference cells 
-					//which comply parameters conditions
-					boolean paramCheckRes = ExcelUtils.checkConditionForCell(refCell, comparison, flagIgnoreCase, params);
-					if (paramCheckRes) 
-					{	
-						//Get current cell
-						Row row = sheet.getRow(cellAddr.getRow());
-						if (row  != null)
-						{
-							Cell cell = row.getCell(cellAddr.getColumn());
-							int cellCoparisonRes = ExcelUtils.compareCells(refCell, cell, CellComparisonMethod.IDENTICAL);						
-							
-							if (cellCoparisonRes == 0) {
-								analysisStatTotalOKNum++;
-								if (flagVerboseResult)						
-									outputLine(cellAddr.formatAsString() + ": OK");
-							}
-							else {
-								analysisStatTotalProblemNum++;
-								String errorMessage = ExcelUtils.getComparisonErrorMessage(cellCoparisonRes, refCell, cell);
-								outputLine("Problem: " + cellAddr.formatAsString() + ": " + errorMessage);
-							}
-						}
+								
+				//Cell comparison is performed only for those reference cells 
+				//which comply parameters conditions
+				boolean paramCheckRes = ExcelUtils.checkConditionForCell(refCell, comparison, flagIgnoreCase, params);
+				if (paramCheckRes) 
+				{	
+					//Get current cell
+					Cell cell = null;
+					Row row = sheet.getRow(cellAddr.getRow());
+					if (row  != null)					
+						cell = row.getCell(cellAddr.getColumn());
+					
+					int cellCoparisonRes = ExcelUtils.compareCells(refCell, cell, CellComparisonMethod.IDENTICAL);
+					
+					if (cellCoparisonRes == 0) {
+						analysisStatTotalOKNum++;
+						if (flagVerboseResult)						
+							outputLine(cellAddr.formatAsString() + ": OK");
 					}
-				}
-				else {
-					//No comparison is performed between reference and current cell
-				}
+					else {
+						analysisStatTotalProblemNum++;
+						String errorMessage = ExcelUtils.getComparisonErrorMessage(cellCoparisonRes, refCell, cell);
+						outputLine("Problem: " + cellAddr.formatAsString() + ": " + errorMessage);
+					}
+				}	
 			}
 			
 			@Override
@@ -431,6 +422,8 @@ public class ExcelAnalysisTask
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
 					flagFileRecursion, new BasicFileHandler(), true);
+			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
+			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
 		}
 		catch (Exception x) {
 		} 
