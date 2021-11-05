@@ -67,7 +67,7 @@ public class ExcelAnalysisTask
 	public TaskType type = TaskType.UNDEFINED;
 	public ExcelScope excelScope = null;
 	public String qualifier = null;
-	public ComparisonOperation comparison; //determined from the qualifier
+	public ComparisonOperation comparison = ComparisonOperation.UNDEFINED; //determined from the qualifier
 	public Object params[] = null;
 	public File target1 = null;
 	public File target2 = null;

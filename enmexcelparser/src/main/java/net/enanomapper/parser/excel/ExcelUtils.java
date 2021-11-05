@@ -822,6 +822,9 @@ public class ExcelUtils
 	public static boolean checkConditionForCell(Cell cell, ComparisonOperation comparison, 
 			boolean ignoreCase, Object params) 
 	{		
+		if (comparison == ComparisonOperation.UNDEFINED)
+			return true; //No comparison is performed then results is true;
+		
 		if (comparison == ComparisonOperation.IS_EMPTY) {
 			return isEmpty(cell);
 		}
