@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import net.enanomapper.parser.excel.ExcelUtils.CellComparisonMethod;
 import net.enanomapper.parser.excel.ExcelUtils.IHandleExcelAddress;
 import net.enanomapper.parser.excel.MiscUtils.IHandleFile;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
@@ -398,7 +399,7 @@ public class ExcelAnalysisTask
 						if (row  != null)
 						{
 							Cell cell = row.getCell(cellAddr.getColumn());
-							int cellCoparisonRes = ExcelUtils.compareCells(refCell, cell);						
+							int cellCoparisonRes = ExcelUtils.compareCells(refCell, cell, CellComparisonMethod.IDENTICAL);						
 							
 							if (cellCoparisonRes == 0) {
 								analysisStatTotalOKNum++;

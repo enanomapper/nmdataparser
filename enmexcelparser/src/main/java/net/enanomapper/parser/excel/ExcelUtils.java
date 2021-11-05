@@ -29,6 +29,10 @@ public class ExcelUtils
 {
 	public static double eps = 1.0e-30;
 	
+	public static enum CellComparisonMethod {
+		IDENTICAL, IDENTICAL_IF_NOT_NULL, STRING_VALUE, STRING_VALUE_IF_NOT_NULL, FORMAT
+	}
+	
 	public static class IndexInterval {
 		public IndexInterval(int startIndex, int endIndex) {
 			this.startIndex = startIndex;
@@ -1016,7 +1020,7 @@ public class ExcelUtils
 		return params[checkIndex];
 	}
 	
-	public static int compareCells(Cell ref, Cell target)
+	public static int compareCells(Cell ref, Cell target, CellComparisonMethod compMethod)
 	{
 		//TODO
 		return -1;
