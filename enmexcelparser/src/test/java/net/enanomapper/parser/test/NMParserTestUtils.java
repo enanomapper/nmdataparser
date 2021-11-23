@@ -224,16 +224,47 @@ public class NMParserTestUtils {
 		}
 	}
 	
-	public static void testSubstanceAnalysisTaskParser(String saTaskStr) {
+	public static void testSubstanceAnalysisTaskParser(String saTaskStr, List<SubstanceRecord> records) {
 		System.out.println("Testing Substance Analysis task:\n" + saTaskStr + "\n");
+		SubstanceAnalysisTask task = null;
+		
 		try {
-			SubstanceAnalysisTask task = SubstanceAnalysisTask.parseFromString(saTaskStr);
+			task = SubstanceAnalysisTask.parseFromString(saTaskStr);
 			System.out.println(task.toString());
 		} 
 		catch (Exception e) {
-			System.out.println("Excel Analysis Task errors:");
+			System.out.println("Substance Analysis Task errors:");
 			System.out.println(e.getMessage());
+			
+			System.out.println("SA Task Format: " + SubstanceAnalysisTask.SATaskSyntaxFormat);
 		}
+		
+		if ((records != null) && (task != null)) 
+		{
+			try {
+				task.run(records);
+				
+				if (!task.analysisErrors.isEmpty()) {
+					System.out.println("Substance Analysis task errors:");
+					for (int i = 0; i < task.analysisErrors.size(); i++) 
+						System.out.println(task.analysisErrors.get(i));
+				}
+				
+				if (!task.flagConsoleOutOnly) {
+					System.out.println("Substance Analysis task result:");
+					for (int i = 0; i < task.analysisResult.size(); i++) 
+						System.out.println(task.analysisResult.get(i));
+				}
+			}
+			catch (Exception e) {
+				System.out.println("Substance Analysis task exception: " + e.getMessage());				
+				if (!task.analysisErrors.isEmpty()) {
+					System.out.println("Excel task errors:");
+					for (int i = 0; i < task.analysisErrors.size(); i++) 
+						System.out.println(task.analysisErrors.get(i));
+				}
+			}
+		}	
 	}
 	
 

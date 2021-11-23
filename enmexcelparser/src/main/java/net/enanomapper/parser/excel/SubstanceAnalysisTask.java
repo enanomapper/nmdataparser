@@ -23,16 +23,23 @@ public class SubstanceAnalysisTask
 		}		
 	}
 	
+	public static final String SATaskSyntaxFormat = 
+				"<task type>; <qualifier>; <params>; <Logical conditions>; <special keywords>";
 	
 	public SATaskType type = SATaskType.UNDEFINED;
 	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
 	public String qualifier = null;
-	public ComparisonOperation comparison; //determined from the qualifier
+	public ComparisonOperation comparison = ComparisonOperation.UNDEFINED; //determined from the qualifier
 	public Object params[] = null;
-	
-		
+			
 	public boolean flagVerboseResult = false;	
+	public boolean flagConsoleOut = false;
+	public boolean flagConsoleOutOnly = false;
+	public boolean flagIgnoreCase = true;
 	public List<String> analysisResult = new ArrayList<String>();
+	public List<String> analysisErrors = new ArrayList<String>();
+	public int analysisStatTotalOKNum = 0;
+	public int analysisStatTotalProblemNum = 0;
 	
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
@@ -131,9 +138,27 @@ public class SubstanceAnalysisTask
 		return saTask;
 	}
 	
+	void outputLine(String line) {
+		if (flagConsoleOutOnly)
+			System.out.println(line);
+		else
+		{
+			analysisResult.add(line);
+			if (flagConsoleOut)
+				System.out.println(line);
+		}
+	}
+	
 	public int run(List<SubstanceRecord> records) 
 	{
 		analysisResult.clear();
+		analysisErrors.clear();
+		analysisStatTotalOKNum = 0;
+		analysisStatTotalProblemNum = 0;
+		
+		if (records == null)
+			return -1;
+		
 		for (int i = 0; i<records.size(); i++)
 		{
 			if (flagVerboseResult)
@@ -146,7 +171,7 @@ public class SubstanceAnalysisTask
 			}
 		}
 		
-		return 0;
+		return -1;
 	}
 	
 	public void taskCountEffects(SubstanceRecord record, int recordNum)
