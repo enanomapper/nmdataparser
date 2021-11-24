@@ -147,7 +147,7 @@ public class ExcelAnalysisTask
 		else {	
 			String paramsStr = tokens[1].trim();
 			
-			if (!paramsStr.equals("--") && !paramsStr.equals("no params"))
+			if (!paramsStr.isEmpty() && !paramsStr.equals("--") && !paramsStr.equals("no params"))
 			{						
 				String paramTokens[] = paramsStr.split(secondarySplitter);			
 
