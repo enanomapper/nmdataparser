@@ -43,11 +43,12 @@ public class ExcelAnalysisTask
 		public void handle(File file) throws Exception 
 		{
 			//Reference file is omitted
-			if (referenceFile.equals(file))
-			{
-				outputLine("Reference file is not processed: " + file.getAbsolutePath());
-				return;
-			}	
+			if (referenceFile != null)
+				if (referenceFile.equals(file))
+				{
+					outputLine("Reference file is not processed: " + file.getAbsolutePath());
+					return;
+				}	
 			
 			//Simple processing for folders
 			if (file.isDirectory())
@@ -478,7 +479,7 @@ public class ExcelAnalysisTask
 			}
 		}
 		
-		curExcelHandler = new ExcelAddressHandler(); 
+		curExcelHandler = new ExcelAddressHandler();
 		
 		try {
 			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
@@ -486,7 +487,7 @@ public class ExcelAnalysisTask
 			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
 			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
 		}
-		catch (Exception x) {			
+		catch (Exception x) {
 			analysisErrors.add(x.getMessage());
 		} 
 		
