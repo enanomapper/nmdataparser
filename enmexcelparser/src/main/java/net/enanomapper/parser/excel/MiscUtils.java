@@ -44,7 +44,12 @@ public class MiscUtils
 				boolean recursive, IHandleFile handler, boolean handleFolders) throws Exception 
 	{
 		if (!dirPath.isDirectory())
+		{	
+			//Just a single file is processed
+			if (checkFileExtension(dirPath, fileExtensions))
+				handler.handle(dirPath);
 			return;
+		}	
 		
 		File filesList[] = dirPath.listFiles();
 		
@@ -66,8 +71,13 @@ public class MiscUtils
 	public static void iterateFiles_BreadthFirst(File dirPath, String[] fileExtensions, 
 			boolean recursive, IHandleFile handler, boolean handleFolders) throws Exception 
 	{
-		if (!dirPath.isDirectory())
+		if (!dirPath.isDirectory()) 
+		{
+			//Just a single file is processed
+			if (checkFileExtension(dirPath, fileExtensions))
+				handler.handle(dirPath);
 			return;
+		}	
 		
 		File filesList[] = dirPath.listFiles();
 		//All folders are stored here and processed later
