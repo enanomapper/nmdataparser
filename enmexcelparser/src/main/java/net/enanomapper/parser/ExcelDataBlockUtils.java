@@ -212,11 +212,26 @@ public class ExcelDataBlockUtils
 									}
 
 								}
+								
+								// Handle UNIT
+								// The unit may be overridden by the
+								// setValue() function
+								if (bvgei.unit != null) {
+									ParamInfo pi = bvgei.unit;
+									Cell c = getCell(pi, cells, row0, column0, i, k, bvgei, exdb_loc);
 
-								dbEl.unit = bvgei.unit; // The unit may be
-														// overridden by the
-														// setValue() function
-
+									if (c != null) {
+										Object value = ExcelUtils.getObjectFromCell(c);
+										if (pi.mapping != null)
+											value = getMappingValue(value, pi.mapping);
+										if (value != null)
+											dbEl.unit = value.toString();
+									}
+								} else {
+									if (bvgei.unitString != null)
+										dbEl.unit = bvgei.unitString;
+								}
+								
 								// By default if object o is a pure number
 								// is stored as loValue
 								dbEl.setValue(o, rvParser);
@@ -543,11 +558,18 @@ public class ExcelDataBlockUtils
 			bvgei.addValueGroupAsPrefix = bvg.addValueGroupAsPrefix;
 			bvgei.separator = bvg.separator;
 		}
-
-		if (bvg.unit != null) {
-			bvgei.unit = getStringFromExpression(bvg.unit);
-			if (bvgei.name == null)
-				bvgei.errors.add("VALUE_GROUPS: \"UNIT\" is an incorrect expression: " + bvg.unit);
+		
+		if (bvg.unitString != null) {
+			bvgei.unitString = getStringFromExpression(bvg.unitString);
+			 if (bvgei.unitString == null)
+				bvgei.errors.add("VALUE_GROUPS: \"UNIT\" is an incorrect expression: " + bvg.unitString);			
+		}	
+		else {
+			if (bvg.unit != null) {
+				ParamInfo pi = extractParamInfo(bvg.unit, bvgei.errors, "UNIT");
+				if (pi != null)
+					bvgei.unit = pi;
+			}
 		}
 
 		// Handle values

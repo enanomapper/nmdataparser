@@ -10,7 +10,7 @@ import net.enanomapper.parser.recognition.ExpressionUtils;
 public class BlockParameter {
 	
 	public static enum Usage {
-		PARAMETER, ENDPOINT_TYPE, ENDPOINT_QUALIFIER, ERROR_QUALIFIER  
+		PARAMETER, UNIT, ENDPOINT_TYPE, ENDPOINT_QUALIFIER, ERROR_QUALIFIER  
 	}
 	
 	public String name = null;
@@ -48,7 +48,10 @@ public class BlockParameter {
 	public String mapping = null;
 	public boolean FlagMapping = false;
 
-	public String unit = null;
+	//This unit is only for this block parameter 
+	//and should not be mistaken with the UNIT keyword 
+	//used in VALUE_GROUP section 
+	public String unit = null;    
 	public boolean FlagUnit = false;
 
 	public Object jsonValue = null;
@@ -68,7 +71,8 @@ public class BlockParameter {
 		switch (paramUse) {
 		case ENDPOINT_TYPE:
 		case ENDPOINT_QUALIFIER:
-		case ERROR_QUALIFIER:	
+		case ERROR_QUALIFIER:
+		case UNIT:
 			errorPrefix = "In JSON Section " + paramUse.name();
 			break;
 		case PARAMETER:

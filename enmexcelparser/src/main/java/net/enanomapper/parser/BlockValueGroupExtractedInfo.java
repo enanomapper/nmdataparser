@@ -36,7 +36,9 @@ public class BlockValueGroupExtractedInfo
 	public boolean addValueGroupToEndpointName = false;
 	public boolean addValueGroupAsPrefix = false;
 	public String separator = " ";
-	public String unit = null;
+	
+	public ParamInfo unit = null;
+	public String unitString = null;
 	
 	public boolean FlagValues = false;
 	public Integer startColumn = null;

@@ -51,9 +51,9 @@ public class BlockValueGroup {
 	public String separator = " "; // used when adding name to endpoint
 	public boolean FlagSeparator = false;
 
-	public String unit = null;
-	public boolean FlagUnit = false;
-
+	public BlockParameter unit = null; //unit defined as a BlockParameter
+	public String unitString = null; //unit defined as a string directly from JSON
+	
 	// Values definitions are in the context of sub-block
 	public Object startColumn = null;
 	public boolean FlagStartColumn = false;
@@ -252,12 +252,22 @@ public class BlockValueGroup {
 		}
 
 		// UNIT
-		keyword = jsonUtils.extractStringKeyword(node, "UNIT", false);
-		if (keyword == null)
-			conf.addError(jsonUtils.getError());
-		else {
-			bvg.unit = keyword;
-			bvg.FlagUnit = true;
+		nd = node.path("UNIT");
+		if (!nd.isMissingNode()) 
+		{
+			if (nd.isTextual()) {
+				//Extracting as a string
+				bvg.unitString = nd.asText();
+			}
+			else if (nd.isObject()) {
+				//Extracting as a block parameter
+				BlockParameter bp = BlockParameter.extractBlockParameter(nd, conf, jsonUtils, -1, Usage.UNIT);
+				bvg.unit = bp;
+			}
+			else 
+			{
+				conf.addError("In Value group, UNIT section is not TEXTUAL or parameter-style object!");				
+			}	
 		}
 
 		// START_COLUMN
@@ -559,13 +569,22 @@ public class BlockValueGroup {
 			sb.append(offset + "\t\"SEPARATOR\" : " + JsonUtilities.objectToJsonField(separator));
 			nFields++;
 		}
-
-		if (FlagUnit) {
+		
+		if (unitString != null)
+		{
 			if (nFields > 0)
 				sb.append(",\n");
-
-			sb.append(offset + "\t\"UNIT\" : " + JsonUtilities.objectToJsonField(unit));
-			nFields++;
+			sb.append(offset + "\t\"UNIT\" : " + JsonUtilities.objectToJsonField(unitString));
+		}
+		else
+		{
+			if (unit != null)
+			{
+				if (nFields > 0)
+					sb.append(",\n");
+				sb.append(offset + "\t\"UNIT\" : \n" );
+				sb.append(unit.toJSONKeyWord(offset + "\t\t"));
+			}
 		}
 
 		if (FlagStartColumn) {
