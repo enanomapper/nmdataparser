@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.StructureRecordValidator;
+import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
 
@@ -398,5 +400,189 @@ public class NMParserTestUtils {
 			parser.close();
 		}
 	}
+	
+
+	public static class SubstanceRecordGenerator
+	{
+		public List<String> errors = new ArrayList<String>();
+
+		SubstanceRecord record = null;
+		ProtocolApplication curPA = null;
+
+		//Info format  <token 1>; <token 2>; ...;<token n>
+		//<token i> = <key> = <value>
+		public SubstanceRecord generateSubstanceRecord(String info)
+		{
+			errors.clear();
+			record = new SubstanceRecord();
+
+			List<ProtocolApplication> measurements = new ArrayList<ProtocolApplication>();
+			record.setMeasurements(measurements);
+			curPA = null;
+
+			String tokens[] = info.split(";");
+			for (int i = 0; i < tokens.length; i++)
+				handleSubRecToken(tokens[i].trim());
+
+			return record;
+		}
+
+		public void handleSubRecToken(String token)
+		{
+			if (token.isEmpty())
+				return;
+
+			int pos = token.indexOf("=");
+			if (pos == -1)
+			{   
+				errors.add("Incorrect token: " + token);
+				return;
+			}
+
+			String key = token.substring(0, pos).trim();
+			String value = token.substring(pos+1).trim();
+
+			//symbol '#' is used for commenting token
+			if (token.startsWith("#"))
+				return;
+
+			if (key.equalsIgnoreCase("substanceUUID"))
+			{
+				record.setSubstanceUUID(value);
+				return;
+			}            
+			if (key.equalsIgnoreCase("substanceName"))
+			{
+				record.setSubstanceName(value);
+				return;
+			}            
+			if (key.equalsIgnoreCase("ownerUUID"))
+			{
+				record.setOwnerUUID(value);
+				return;
+			}            
+			if (key.equalsIgnoreCase("ownerName"))
+			{
+				record.setOwnerName(value);
+				return;
+			}            
+			if (key.equalsIgnoreCase("substanceType"))
+			{
+				record.setSubstancetype(value);
+				return;
+			}
+			if (key.equalsIgnoreCase("publicName"))
+			{
+				record.setPublicName(value);
+				return;
+			}
+			if (key.equalsIgnoreCase("idSubstance"))
+			{
+				Integer i = getInt(value);
+				if (i == null)
+					errors.add("Incorrect idSubstance:" + value);
+				else
+					record.setIdsubstance(i);
+				return;
+			}
+
+			if (key.equalsIgnoreCase("composition"))
+			{
+				CompositionRelation relation = getComposition(value);
+				if (relation != null)
+					record.addStructureRelation(relation);
+				return;
+			}
+
+			if (key.equalsIgnoreCase("extIds") || key.equalsIgnoreCase("ExternalIdentifiers") )
+			{
+				List<ExternalIdentifier> ids = getExternalIdentifiers(value);
+				if (ids != null)
+					record.setExternalids(ids);
+				return;
+			}
+
+			if (key.equalsIgnoreCase("PA") || key.equalsIgnoreCase("ProtocolApplication") )
+			{
+				//Start parsing of a new ProtocolApplication
+				//value is used as protocol name
+				curPA = new ProtocolApplication(value);
+				record.getMeasurements().add(curPA);
+				return;
+			}
+
+			errors.add("Unknow key in token: " + token);
+
+		}
+
+
+		CompositionRelation getComposition(String value)
+		{
+			CompositionRelation relation = null;
+			//TODO
+			return relation;
+		}
+
+		List<ExternalIdentifier> getExternalIdentifiers(String value)
+		{
+			List<ExternalIdentifier> ids = new ArrayList<ExternalIdentifier>();
+			String toks[] = value.split(",");
+			for (int i = 0; i < (toks.length-1); i+=2)
+			{
+				String type = toks[i].trim();
+				String  id = toks[i+1].trim();
+
+				if ((id.isEmpty()) || (type.isEmpty()))
+					errors.add("Incorrect id/type at position " + (i+1));
+				else
+					ids.add(new ExternalIdentifier(type, id));
+			}
+			return ids;
+		}
+
+		//Helpers
+		Integer getInt(String value)
+		{
+			try {
+				Integer i = Integer.parseInt(value);
+				return i;
+			}
+			catch (Exception e) {                
+			}
+			return null;
+		}
+
+		Double getDouble(String value)
+		{
+			try {
+				Double d = Double.parseDouble(value);
+				return d;
+			}
+			catch (Exception e) {                
+			}
+			return null;
+		}
+
+		public static void print(SubstanceRecord r)
+		{
+			System.out.println( r.toJSON(null));
+			List<ProtocolApplication> paList = r.getMeasurements();
+			if (paList != null)
+			{    
+				int nPA = 0;
+				System.out.println(",");
+				for (ProtocolApplication pa : paList)
+				{    
+					nPA++;
+					if (nPA > 1)
+						System.out.println(",");
+
+					System.out.print( "\"Protocol application " + nPA + "\" :\n"
+							+ pa.toString() );
+				}
+			}    
+		}
+	}
+	//end of inner class
 
 }
