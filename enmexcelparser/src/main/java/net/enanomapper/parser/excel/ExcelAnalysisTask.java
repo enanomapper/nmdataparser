@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -53,9 +54,10 @@ public class ExcelAnalysisTask
 	class JSONGenerationInfo 
 	{
 		public JSONGenerationElement jsonElement = JSONGenerationElement.PARAMETER;
-		int sheetNumber = 1;
-		int rowShift = 0;
-		int columnShif = 1;
+		String jsonOffset = "\t\t";
+		public int sheetNumber = 1;
+		public int rowShift = 0;
+		public int columnShift = 1;
 	}
 	
 	class BasicFileHandler implements IHandleFile 
@@ -580,8 +582,10 @@ public class ExcelAnalysisTask
 				if (row  != null)
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
-					String jsonSection = generateJsonSection (cellAddr, sheet, cell, jsonInfo);
-					outputLine(jsonSection + ",\n");
+					if (cell != null) {						
+						String jsonSection = generateJsonSection (cellAddr, sheet, cell, jsonInfo);
+						outputLine(jsonSection + ",");
+					}
 				}
 			}
 			@Override
@@ -608,9 +612,32 @@ public class ExcelAnalysisTask
 				Cell cell, JSONGenerationInfo jsonInfo)
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append(cellAddr.toString() +  " test");
 		
-		//TODO
+		String endLine = "\n"; 
+		if (jsonInfo.jsonElement == JSONGenerationElement.PARAMETER)
+		{
+			sb.append(jsonInfo.jsonOffset);
+			sb.append("\"" + ExcelUtils.getStringFromCell(cell) + "\"{" + endLine);
+			
+			sb.append(jsonInfo.jsonOffset + "\t");
+			sb.append("\"ITERATION\": \"ABSOLUTE_LOCATION\"," + endLine);
+			
+			sb.append(jsonInfo.jsonOffset + "\t");
+			sb.append("\"SHEET_INDEX\": " + jsonInfo.sheetNumber + "," + endLine);
+			
+			int column = cellAddr.getColumn() + jsonInfo.columnShift;
+			String columnStr = CellReference.convertNumToColString(column);
+			sb.append(jsonInfo.jsonOffset + "\t");
+			sb.append("\"COLUMN_INDEX\": " + columnStr + "," + endLine);
+			
+			int row = cellAddr.getRow() + jsonInfo.rowShift;
+			sb.append(jsonInfo.jsonOffset + "\t");
+			sb.append("\"ROW_INDEX\": " + row + endLine);
+			
+			sb.append(jsonInfo.jsonOffset);
+			sb.append("}");
+		}
+		
 		return sb.toString();
 	}
 	
