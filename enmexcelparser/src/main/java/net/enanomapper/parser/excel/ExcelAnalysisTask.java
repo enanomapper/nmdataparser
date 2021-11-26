@@ -25,7 +25,7 @@ public class ExcelAnalysisTask
 	
 	
 	public static enum TaskType {
-		COMPARE_FILES, CHECK_VALUE, COUNT, PRINT_VALUE, UNDEFINED;
+		COMPARE_FILES, CHECK_VALUE, COUNT, PRINT_VALUE, GENERATE_JSON_CONFIG, UNDEFINED;
 		
 		public static TaskType fromString(String s) {
 			try {
@@ -35,6 +35,27 @@ public class ExcelAnalysisTask
 				return TaskType.UNDEFINED;
 			}
 		}		
+	}
+	
+	public static enum JSONGenerationElement {
+		PARAMETER, UNDEFINED;
+		
+		public static JSONGenerationElement fromString(String s) {
+			try {
+				JSONGenerationElement jge = JSONGenerationElement.valueOf(s);
+				return (jge);
+			} catch (Exception e) {
+				return JSONGenerationElement.UNDEFINED;
+			}
+		}		
+	}
+	
+	class JSONGenerationInfo 
+	{
+		public JSONGenerationElement jsonElement = JSONGenerationElement.PARAMETER;
+		int sheetNumber = 1;
+		int rowShift = 0;
+		int columnShif = 1;
 	}
 	
 	class BasicFileHandler implements IHandleFile 
@@ -348,7 +369,9 @@ public class ExcelAnalysisTask
 		case COUNT:
 			return count();
 		case PRINT_VALUE:
-			return printValue();			
+			return printValue();
+		case GENERATE_JSON_CONFIG:
+			return generateJsonConfig();
 		}
 		return -1;
 	}
@@ -542,6 +565,69 @@ public class ExcelAnalysisTask
 		} 
 		return 3;
 	}
+	
+	
+	int generateJsonConfig() 
+	{
+		JSONGenerationInfo jsonInfo = getJSONGenerationInfoFromParams();
+		
+		class ExcelAddressHandler implements IHandleExcelAddress {
+			@Override
+			public void handle(CellAddress cellAddr, Sheet sheet, int cellRangeIndex) throws Exception {
+				if (sheet == null || cellAddr == null)
+					return;
+				Row row = sheet.getRow(cellAddr.getRow());
+				if (row  != null)
+				{
+					Cell cell = row.getCell(cellAddr.getColumn());
+					String jsonSection = generateJsonSection (cellAddr, sheet, cell, jsonInfo);
+					outputLine(jsonSection + ",\n");
+				}
+			}
+			@Override
+			public void handle(CellRangeAddress cellRangeAddr, Sheet sheet, int cellRangeIndex) throws Exception {
+				//do nothing
+			}
+		}
+		
+		curExcelHandler = new ExcelAddressHandler(); 
+		
+		try {
+			MiscUtils.iterateFiles_BreadthFirst(iterationFile, new String[] {"xlsx", "xls" }, 
+					flagFileRecursion, new BasicFileHandler(), true);
+			outputLine("Total number of OK checks: " + analysisStatTotalOKNum);
+			outputLine("Total number of problems: " + analysisStatTotalProblemNum);
+		}
+		catch (Exception x) {
+			analysisErrors.add(x.getMessage());
+		} 
+		return 4;
+	}
+	
+	String generateJsonSection (CellAddress cellAddr, Sheet sheet, 
+				Cell cell, JSONGenerationInfo jsonInfo)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(cellAddr.toString() +  " test");
+		
+		//TODO
+		return sb.toString();
+	}
+	
+	JSONGenerationInfo getJSONGenerationInfoFromParams()
+	{
+		JSONGenerationInfo jsonInfo = new JSONGenerationInfo();
+		
+		if (params == null)
+		{
+			//default task is generated parameters
+			return jsonInfo;
+		}
+		
+		//TODO handle parameters
+		return jsonInfo;
+	}
+	
 	
 	int createCurrentWorkbook(File file) 
 	{
