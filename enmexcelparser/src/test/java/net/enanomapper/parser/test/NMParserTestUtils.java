@@ -31,6 +31,7 @@ import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.StructureRecordValidator;
+import ambit2.base.data.study.Value;
 import ambit2.base.data.substance.ExternalIdentifier;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.base.relation.composition.CompositionRelation;
@@ -590,6 +591,30 @@ public class NMParserTestUtils {
 					ids.add(new ExternalIdentifier(type, id));
 			}
 			return ids;
+		}
+		
+		Object getParameter(String parStr) 
+		{
+			RichValue rv = rvParser.parse(parStr);
+			String rv_error = rvParser.getAllErrorsAsString();
+
+			if (rv_error == null) {
+				Value pVal = new Value();
+				if (rv.unit != null)
+					pVal.setUnits(rv.unit);
+				if (rv.loValue != null)
+					pVal.setLoValue(rv.loValue);
+				if (rv.loQualifier != null)
+					pVal.setLoQualifier(rv.loQualifier);
+				if (rv.upValue != null)
+					pVal.setUpValue(rv.upValue);
+				if (rv.upQualifier != null)
+					pVal.setUpQualifier(rv.upQualifier);
+				return pVal;
+			}
+			else {
+				return parStr;
+			}
 		}
 
 		//Helpers
