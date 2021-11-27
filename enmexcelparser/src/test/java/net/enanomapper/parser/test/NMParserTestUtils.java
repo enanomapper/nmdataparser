@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.data.substance.ExternalIdentifier;
@@ -405,20 +406,22 @@ public class NMParserTestUtils {
 	public static class SubstanceRecordGenerator
 	{
 		public List<String> errors = new ArrayList<String>();
-
+		RichValueParser rvParser = new RichValueParser(); 
 		SubstanceRecord record = null;
 		ProtocolApplication curPA = null;
+		EffectRecord curEff = null;
 
 		//Info format  <token 1>; <token 2>; ...;<token n>
 		//<token i> = <key> = <value>
 		public SubstanceRecord generateSubstanceRecord(String info)
-		{
+		{	
 			errors.clear();
 			record = new SubstanceRecord();
 
 			List<ProtocolApplication> measurements = new ArrayList<ProtocolApplication>();
 			record.setMeasurements(measurements);
 			curPA = null;
+			curEff = null;
 
 			String tokens[] = info.split(";");
 			for (int i = 0; i < tokens.length; i++)
@@ -431,7 +434,11 @@ public class NMParserTestUtils {
 		{
 			if (token.isEmpty())
 				return;
-
+			
+			//symbol '#' is used for commenting token
+			if (token.startsWith("#"))
+				return;
+			
 			int pos = token.indexOf("=");
 			if (pos == -1)
 			{   
@@ -441,11 +448,7 @@ public class NMParserTestUtils {
 
 			String key = token.substring(0, pos).trim();
 			String value = token.substring(pos+1).trim();
-
-			//symbol '#' is used for commenting token
-			if (token.startsWith("#"))
-				return;
-
+			
 			if (key.equalsIgnoreCase("substanceUUID"))
 			{
 				record.setSubstanceUUID(value);
@@ -485,7 +488,6 @@ public class NMParserTestUtils {
 					record.setIdsubstance(i);
 				return;
 			}
-
 			if (key.equalsIgnoreCase("composition"))
 			{
 				CompositionRelation relation = getComposition(value);
@@ -493,7 +495,6 @@ public class NMParserTestUtils {
 					record.addStructureRelation(relation);
 				return;
 			}
-
 			if (key.equalsIgnoreCase("extIds") || key.equalsIgnoreCase("ExternalIdentifiers") )
 			{
 				List<ExternalIdentifier> ids = getExternalIdentifiers(value);
@@ -501,18 +502,69 @@ public class NMParserTestUtils {
 					record.setExternalids(ids);
 				return;
 			}
-
+			
+			//Handle Protocol Application info
 			if (key.equalsIgnoreCase("PA") || key.equalsIgnoreCase("ProtocolApplication") )
 			{
 				//Start parsing of a new ProtocolApplication
 				//value is used as protocol name
 				curPA = new ProtocolApplication(value);
 				record.getMeasurements().add(curPA);
+				//Reseting curEff
+				curEff = null;
 				return;
 			}
+			
+			//Handle effect info
+			if (key.equalsIgnoreCase("Eff") || key.equalsIgnoreCase("Effect") )
+			{
+				if (curPA == null)
+				{
+					errors.add("Adding an Effect but no Protocol Appliaction is set: " + token);
+					return;
+				}
+				//Adding a new effect object to the currenr protocol application
+				EffectRecord effect = new EffectRecord();
+				effect.setEndpoint(value);
+				curPA.addEffect(effect);
+				curEff = effect;
+				return;
+			}
+			
+			if (key.equalsIgnoreCase("Val") || key.equalsIgnoreCase("Value") )
+			{
+				if (curEff == null)
+				{
+					errors.add("Adding an value but no Effect is set: " + token);
+					return;
+				}
+				
+				RichValue rv = rvParser.parse(value, false);
+				String rv_error = rvParser.getAllErrorsAsString();
+				if (rv_error == null) {
+					if (rv.unit != null)
+						curEff.setUnit(rv.unit);
+					if (rv.loValue != null)
+						curEff.setLoValue(rv.loValue);
+					if (rv.loQualifier != null)
+						curEff.setLoQualifier(rv.loQualifier);
+					if (rv.upValue != null)
+						curEff.setUpValue(rv.upValue);
+					if (rv.upQualifier != null)
+						curEff.setUpQualifier(rv.upQualifier);
+					if (rv.errorValue != null)
+						curEff.setErrorValue(rv.errorValue);
+					if (rv.errorValueQualifier != null)
+						curEff.setErrQualifier(rv.errorValueQualifier);
+				} 
+				else {
+					curEff.setTextValue(value);
+				}
+				return;
+			}
+			
 
 			errors.add("Unknow key in token: " + token);
-
 		}
 
 
