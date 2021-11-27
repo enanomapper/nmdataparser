@@ -539,35 +539,38 @@ public class NMParserTestUtils {
 					errors.add("Adding an value but no Effect is set: " + token);
 					return;
 				}
-				
-				RichValue rv = rvParser.parse(value, false);
-				String rv_error = rvParser.getAllErrorsAsString();
-				if (rv_error == null) {
-					if (rv.unit != null)
-						curEff.setUnit(rv.unit);
-					if (rv.loValue != null)
-						curEff.setLoValue(rv.loValue);
-					if (rv.loQualifier != null)
-						curEff.setLoQualifier(rv.loQualifier);
-					if (rv.upValue != null)
-						curEff.setUpValue(rv.upValue);
-					if (rv.upQualifier != null)
-						curEff.setUpQualifier(rv.upQualifier);
-					if (rv.errorValue != null)
-						curEff.setErrorValue(rv.errorValue);
-					if (rv.errorValueQualifier != null)
-						curEff.setErrQualifier(rv.errorValueQualifier);
-				} 
-				else {
-					curEff.setTextValue(value);
-				}
+				setEffectValue(value);
 				return;
 			}
 			
 
 			errors.add("Unknow key in token: " + token);
 		}
-
+		
+		void setEffectValue(String value)
+		{
+			RichValue rv = rvParser.parse(value, false);
+			String rv_error = rvParser.getAllErrorsAsString();
+			if (rv_error == null) {
+				if (rv.unit != null)
+					curEff.setUnit(rv.unit);
+				if (rv.loValue != null)
+					curEff.setLoValue(rv.loValue);
+				if (rv.loQualifier != null)
+					curEff.setLoQualifier(rv.loQualifier);
+				if (rv.upValue != null)
+					curEff.setUpValue(rv.upValue);
+				if (rv.upQualifier != null)
+					curEff.setUpQualifier(rv.upQualifier);
+				if (rv.errorValue != null)
+					curEff.setErrorValue(rv.errorValue);
+				if (rv.errorValueQualifier != null)
+					curEff.setErrQualifier(rv.errorValueQualifier);
+			} 
+			else {
+				curEff.setTextValue(value);
+			}
+		}
 
 		CompositionRelation getComposition(String value)
 		{
