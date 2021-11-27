@@ -29,6 +29,8 @@ import org.junit.Test;
 import ambit2.base.data.Property;
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.Params;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.data.study.StructureRecordValidator;
 import ambit2.base.data.study.Value;
@@ -543,6 +545,16 @@ public class NMParserTestUtils {
 				return;
 			}
 			
+			if (key.equalsIgnoreCase("Cond") || key.equalsIgnoreCase("Condition") )
+			{
+				if (curEff == null)
+				{
+					errors.add("Adding an value but no Effect is set: " + token);
+					return;
+				}
+				setParameter(value, false);
+				return;
+			}
 
 			errors.add("Unknow key in token: " + token);
 		}
@@ -596,7 +608,50 @@ public class NMParserTestUtils {
 			return ids;
 		}
 		
-		Object getParameter(String parStr) 
+		void setParameter(String tokValue, boolean isProtocolParameter) 
+		{
+			int pos = tokValue.indexOf(",");
+			if (pos == -1)
+			{   
+				errors.add("Incorrect " + (isProtocolParameter?"parameter":"condition") + 
+						" token " + tokValue);
+				return;
+			}
+
+			String parName = tokValue.substring(0, pos).trim();
+			String parStrValue = tokValue.substring(pos+1).trim();
+			
+			if (parName.isEmpty() || parStrValue.isEmpty())
+			{   
+				errors.add("Incorrect " + (isProtocolParameter?"parameter":"condition") + 
+						" token: " + tokValue);
+				return;
+			}
+			
+			Object obj = getParameterObject(parStrValue);
+			if (obj != null) 
+			{
+				if (isProtocolParameter)
+				{
+					//TODO
+				}
+				else
+				{
+					IParams conditions = (IParams) curEff.getConditions();
+					if (conditions == null) {
+						conditions = new Params();
+						curEff.setConditions(conditions);
+					}
+					conditions.put(parName, obj);
+				}
+			}
+			else
+				errors.add("Cannot create " + (isProtocolParameter?"parameter":"condition") + 
+						" object for token: " + tokValue);
+
+		}
+		
+		Object getParameterObject(String parStr) 
 		{
 			RichValue rv = rvParser.parse(parStr);
 			String rv_error = rvParser.getAllErrorsAsString();
