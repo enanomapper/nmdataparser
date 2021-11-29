@@ -656,6 +656,26 @@ public class ExcelAnalysisTask
 	}
 	
 	
+	String[] getKeyValuePair(String token)
+	{
+		if (token.isEmpty())
+			return null;
+		
+		int pos = token.indexOf("=");
+		if (pos == -1)
+		{   
+			return null;
+		}
+
+		String key = token.substring(0, pos).trim();
+		String value = token.substring(pos+1).trim();
+		
+		if (key.isEmpty() || value.isEmpty())
+			return null;
+		
+		return new String[] {key, value};
+	}	
+	
 	int createCurrentWorkbook(File file) 
 	{
 		//Set up current iteration input file stream and corresponding excel workbook
