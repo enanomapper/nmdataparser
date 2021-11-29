@@ -572,6 +572,8 @@ public class ExcelAnalysisTask
 	int generateJsonConfig() 
 	{
 		JSONGenerationInfo jsonInfo = getJSONGenerationInfoFromParams();
+		if (!analysisErrors.isEmpty())
+			return -1;
 		
 		class ExcelAddressHandler implements IHandleExcelAddress {
 			@Override
@@ -647,11 +649,42 @@ public class ExcelAnalysisTask
 		
 		if (params == null)
 		{
-			//default task is generated parameters
+			//default task is generated
 			return jsonInfo;
 		}
 		
-		//TODO handle parameters
+		//Handle parameters
+		for (int i = 0; i < params.length; i++)
+		{
+			String keyval[] = getKeyValuePair(params[i].toString());
+			if (keyval == null)
+			{	
+				analysisErrors.add("Incorrect parameter for JSON Generation: " + params[i]);
+				continue;
+			}
+			String key = keyval[0];
+			String val = keyval[1];
+			
+			if (key.equalsIgnoreCase("offset"))
+			{
+				try {
+					Integer nTabs = Integer.parseInt(val);
+					if (nTabs >= 0)
+					{
+						String s = "";
+						for (int k = 0; k < nTabs; k++)
+							s += "\t";
+						jsonInfo.jsonOffset = s;
+					}
+					else
+						analysisErrors.add("Incorrect parameter for JSON Generation: " + params[i]);
+				}
+				catch (Exception e) {
+					analysisErrors.add("Incorrect parameter for JSON Generation: " + params[i]);
+				}
+			}
+		}
+			
 		return jsonInfo;
 	}
 	
