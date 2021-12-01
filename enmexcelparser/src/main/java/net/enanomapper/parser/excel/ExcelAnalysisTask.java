@@ -584,7 +584,7 @@ public class ExcelAnalysisTask
 				if (row  != null)
 				{
 					Cell cell = row.getCell(cellAddr.getColumn());
-					if (cell != null) {						
+					if (cell != null) {
 						String jsonSection = generateJsonSection (cellAddr, sheet, cell, jsonInfo);
 						outputLine(jsonSection + ",");
 					}
@@ -634,7 +634,7 @@ public class ExcelAnalysisTask
 			
 			int row = cellAddr.getRow() + jsonInfo.rowShift;
 			sb.append(jsonInfo.jsonOffset + "\t");
-			sb.append("\"ROW_INDEX\": " + row + endLine);
+			sb.append("\"ROW_INDEX\": " + (row + 1) + endLine);  //+1 for switching to 1-based indexing
 			
 			sb.append(jsonInfo.jsonOffset);
 			sb.append("}");
