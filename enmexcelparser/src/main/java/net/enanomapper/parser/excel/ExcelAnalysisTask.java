@@ -619,7 +619,7 @@ public class ExcelAnalysisTask
 		if (jsonInfo.jsonElement == JSONGenerationElement.PARAMETER)
 		{
 			sb.append(jsonInfo.jsonOffset);
-			sb.append("\"" + ExcelUtils.getStringFromCell(cell) + "\"{" + endLine);
+			sb.append("\"" + ExcelUtils.getStringFromCell(cell) + "\": {" + endLine);
 			
 			sb.append(jsonInfo.jsonOffset + "\t");
 			sb.append("\"ITERATION\": \"ABSOLUTE_LOCATION\"," + endLine);
@@ -630,7 +630,7 @@ public class ExcelAnalysisTask
 			int column = cellAddr.getColumn() + jsonInfo.columnShift;
 			String columnStr = CellReference.convertNumToColString(column);
 			sb.append(jsonInfo.jsonOffset + "\t");
-			sb.append("\"COLUMN_INDEX\": " + columnStr + "," + endLine);
+			sb.append("\"COLUMN_INDEX\": \"" + columnStr + "\"," + endLine);
 			
 			int row = cellAddr.getRow() + jsonInfo.rowShift;
 			sb.append(jsonInfo.jsonOffset + "\t");
