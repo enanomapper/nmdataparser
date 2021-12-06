@@ -1175,8 +1175,6 @@ public class ExcelParserConfigurator {
 
 		
 		// SIMPLE_EFFECT_BLOCK
-		//public boolean simpleEffectBlock = false;
-		//public boolean FlagSimpleEffectBlock = false;
 		if (!node.path("SIMPLE_EFFECT_BLOCK").isMissingNode()) {
 			JsonUtilities jsonUtils = new JsonUtilities();
 			Boolean b = jsonUtils.extractBooleanKeyword(node, "SIMPLE_EFFECT_BLOCK", false);
