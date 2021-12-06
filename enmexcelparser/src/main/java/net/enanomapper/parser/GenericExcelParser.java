@@ -1401,22 +1401,48 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			for (int i = 0; i < padl.effects.size(); i++)
 				try {
 					EffectRecordDataLocation erdl = padl.effects.get(i);
-					EffectRecord effect = readEffect(erdl);
-					if (config.clearEmptyEffectRecords) {
-						if (effect.isEmpty())
-							continue;
-					}
-					pa.addEffect(effect);
-
-					// Register effect reference
-					if (erdl.reference != null)
-						referencesEffectRecord.put(erdl.reference, effect);
-					// Register condition additions by reference
-					if (erdl.addConditionsByRef != null)
-						for (int k = 0; k < erdl.addConditionsByRef.length; k++) {
-							addConditionRef.add(erdl.addConditionsByRef[k]);
-							addConditionTargetEffectRecord.add(effect);
+					if (erdl.simpleEffectBlock)
+					{
+						//Handle mutlipe effects specified as a simple effect block
+						List<EffectRecord> effList = readSimpleEffectBlock(erdl);
+						for (EffectRecord effect : effList) 
+						{
+							if (config.clearEmptyEffectRecords) {
+								if (effect.isEmpty())
+									continue;
+							}
+							pa.addEffect(effect);
+							// Register effect reference
+							if (erdl.reference != null)
+								referencesEffectRecord.put(erdl.reference, effect);
+							// Register condition additions by reference
+							if (erdl.addConditionsByRef != null)
+								for (int k = 0; k < erdl.addConditionsByRef.length; k++) {
+									addConditionRef.add(erdl.addConditionsByRef[k]);
+									addConditionTargetEffectRecord.add(effect);
+								}
 						}
+					}
+					else 
+					{
+						//Read an ordinary effect record
+						EffectRecord effect = readEffect(erdl);
+						if (config.clearEmptyEffectRecords) {
+							if (effect.isEmpty())
+								continue;
+						}
+						pa.addEffect(effect);						
+						// Register effect reference
+						if (erdl.reference != null)
+							referencesEffectRecord.put(erdl.reference, effect);
+						// Register condition additions by reference
+						if (erdl.addConditionsByRef != null)
+							for (int k = 0; k < erdl.addConditionsByRef.length; k++) {
+								addConditionRef.add(erdl.addConditionsByRef[k]);
+								addConditionTargetEffectRecord.add(effect);
+							}
+					}
+					
 				} catch (Exception x) {
 					logger.log(Level.SEVERE, x.getMessage());
 					throw x;
@@ -1933,6 +1959,12 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		}
 
 		return effect;
+	}
+	
+	protected List<EffectRecord> readSimpleEffectBlock(EffectRecordDataLocation efrdl) throws Exception {
+		List<EffectRecord> effects = new ArrayList<EffectRecord>();
+		//TODO
+		return effects;
 	}
 
 	IParams readConditions(HashMap<String, ExcelDataLocation> conditionsInfo) throws Exception {
