@@ -1403,7 +1403,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					EffectRecordDataLocation erdl = padl.effects.get(i);
 					if (erdl.simpleEffectBlock)
 					{
-						//Handle mutlipe effects specified as a simple effect block
+						//Handle multiple effects specified as a simple effect block
 						List<EffectRecord> effList = readSimpleEffectBlock(erdl);
 						for (EffectRecord effect : effList) 
 						{
@@ -1963,6 +1963,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	
 	protected List<EffectRecord> readSimpleEffectBlock(EffectRecordDataLocation efrdl) throws Exception {
 		List<EffectRecord> effects = new ArrayList<EffectRecord>();
+		
+		
 		//TODO
 		return effects;
 	}

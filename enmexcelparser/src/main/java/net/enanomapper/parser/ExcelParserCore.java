@@ -453,8 +453,15 @@ public class ExcelParserCore
 	protected Object[] getArray(ExcelDataLocation loc) throws Exception {
 		switch (loc.iteration) {
 		case ROW_SINGLE:
-			// TODO
-			return null;
+			Row row = null;
+			if (loc.isFromParallelSheet()) 
+				row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
+			 else
+				row = curRow;
+			if (row == null)
+				return null;
+			else
+				return getArrayFromColumnIndices(row, loc);
 
 		case ROW_MULTI_FIXED: // Both treated the same way
 		case ROW_MULTI_DYNAMIC:
