@@ -1965,7 +1965,32 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		List<EffectRecord> effects = new ArrayList<EffectRecord>();
 		
 		
-		//TODO
+		if (efrdl.value != null) {			
+			Object objs[] = getArray(efrdl.value);
+			for (int i = 0; i < objs.length; i++)
+			{
+				if (objs[i] == null)
+					continue;
+				
+				EffectRecord effect = new EffectRecord();
+				readEffectBasicMetaData(efrdl, effect);
+								
+				if (objs[i] instanceof  Double) { 
+					effect.setLoValue((Double) objs[i]);
+					effects.add(effect);
+				}	
+				
+				if (objs[i] instanceof  String) {
+					//TODO
+				}
+					
+			}
+		}
+		
+		
+		//TODO 
+		//Handle conditions and synchronize with values
+		
 		return effects;
 	}
 
