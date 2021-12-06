@@ -1643,35 +1643,33 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		return protocol;
 	}
-
-	/**
-	 * 
-	 * @param efrdl
-	 * @return
-	 * @throws Exception
-	 */
-	protected EffectRecord readEffect(EffectRecordDataLocation efrdl) throws Exception {
-		logger.log(Level.FINE, "Reading effect record");
-		EffectRecord effect = new EffectRecord();
-
+	
+	protected void readEffectBasicMetaData(EffectRecordDataLocation efrdl, EffectRecord effect) throws Exception
+	{	
 		if (efrdl.sampleID != null) {
 			String s = getString(efrdl.sampleID);
 			if (s != null)
 				effect.setSampleID(s);
 		}
-
+		
 		if (efrdl.endpoint != null) {
 			String s = getString(efrdl.endpoint);
 			if (s != null)
 				effect.setEndpoint(s.trim().toUpperCase());
 		}
-
+		
 		if (efrdl.endpointType != null) {
 			String s = getString(efrdl.endpointType);
 			if (s != null)
 				effect.setEndpointType(s.trim().toUpperCase());
 		}
-
+		
+		if (efrdl.unit != null) {
+			String s = getString(efrdl.unit);
+			if (s != null)
+				effect.setUnit(s);
+		}
+				
 		if (efrdl.loQualifier != null) {
 			String s = getString(efrdl.loQualifier);
 			if (s != null) {
@@ -1688,6 +1686,35 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				}
 			}
 		}
+		
+		if (efrdl.upQualifier != null) {
+			String s = getString(efrdl.upQualifier);
+			if (s != null) {
+				if (ExcelParserConfigurator.isValidQualifier(s))
+					effect.setUpQualifier(s);
+				else
+					logger.log(Level.WARNING, String.format("[%s] Up Qualifier \"%s\" is incorrect!",
+							locationStringForErrorMessage(efrdl.upQualifier, primarySheetNum), s));
+				// parseErrors.add("[" +
+				// locationStringForErrorMessage(efrdl.upQualifier,
+				// primarySheetNum) + "] Up Qualifier \"" + s +
+				// "\" is incorrect!");
+			}
+		}
+		
+	}
+
+	/**
+	 * 
+	 * @param efrdl
+	 * @return
+	 * @throws Exception
+	 */
+	protected EffectRecord readEffect(EffectRecordDataLocation efrdl) throws Exception {
+		logger.log(Level.FINE, "Reading effect record");
+		EffectRecord effect = new EffectRecord();
+		
+		readEffectBasicMetaData(efrdl, effect);		
 
 		if (efrdl.loValue != null) {
 			Number d = null;
@@ -1729,21 +1756,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				effect.setLoValue(d.doubleValue());
 		}
 
-		if (efrdl.upQualifier != null) {
-			String s = getString(efrdl.upQualifier);
-			if (s != null) {
-				if (ExcelParserConfigurator.isValidQualifier(s))
-					effect.setUpQualifier(s);
-				else
-					logger.log(Level.WARNING, String.format("[%s] Up Qualifier \"%s\" is incorrect!",
-							locationStringForErrorMessage(efrdl.upQualifier, primarySheetNum), s));
-				// parseErrors.add("[" +
-				// locationStringForErrorMessage(efrdl.upQualifier,
-				// primarySheetNum) + "] Up Qualifier \"" + s +
-				// "\" is incorrect!");
-			}
-		}
-
+		
 		if (efrdl.upValue != null) {
 			Number d = null;
 			if (config.Fl_AllowQualifierInValueCell) {
@@ -1849,12 +1862,6 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 			if (d != null)
 				effect.setErrorValue(d.doubleValue());
-		}
-
-		if (efrdl.unit != null) {
-			String s = getString(efrdl.unit);
-			if (s != null)
-				effect.setUnit(s);
 		}
 
 		if (efrdl.value != null) {
