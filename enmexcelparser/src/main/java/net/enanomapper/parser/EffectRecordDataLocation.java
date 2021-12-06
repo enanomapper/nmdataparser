@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 public class EffectRecordDataLocation 
 {
+	public boolean simpleEffectBlock = false;
+	public boolean FlagSimpleEffectBlock = false;
+	
 	public ExcelDataLocation sampleID = null;
 	public ExcelDataLocation endpoint = null;
 	public String reference = null;
@@ -21,16 +24,22 @@ public class EffectRecordDataLocation
 		
 	public ExcelDataLocation value = null; //It is read as a RichValue object and takes precedent over lo/up values and qualifiers
 	
-	
 	public String toJSONKeyWord(String offset)
 	{	
 		int nSections = 0;
 		StringBuffer sb = new StringBuffer();
 		sb.append(offset + "{\n");
 		
+		if (FlagSimpleEffectBlock) {
+			
+			sb.append(offset + "\t\"SIMPLE_EFFECT_BLOCK\" : " + simpleEffectBlock);
+			nSections++;
+		}
 		
 		if (sampleID != null)
 		{	
+			if (nSections > 0)
+				sb.append(",\n\n");
 			sb.append(sampleID.toJSONKeyWord(offset+"\t"));
 			nSections++;
 		}

@@ -1173,6 +1173,22 @@ public class ExcelParserConfigurator {
 	public static EffectRecordDataLocation extractEffectDataLocation(JsonNode node, ExcelParserConfigurator conf) {
 		EffectRecordDataLocation efrdl = new EffectRecordDataLocation();
 
+		
+		// SIMPLE_EFFECT_BLOCK
+		//public boolean simpleEffectBlock = false;
+		//public boolean FlagSimpleEffectBlock = false;
+		if (!node.path("SIMPLE_EFFECT_BLOCK").isMissingNode()) {
+			JsonUtilities jsonUtils = new JsonUtilities();
+			Boolean b = jsonUtils.extractBooleanKeyword(node, "SIMPLE_EFFECT_BLOCK", false);
+			if (b == null) {
+				conf.addError("In Effects element, Keyword \"SIMPLE_EFFECT_BLOCK\" : "
+						+ jsonUtils.getError());
+			} else {
+				efrdl.simpleEffectBlock = b;
+				efrdl.FlagSimpleEffectBlock = true;
+			}
+		}
+		
 		// ENDPOINT
 		ExcelDataLocation loc = ExcelDataLocation.extractDataLocation(node, ElementField.ENDPOINT.name(), conf);
 		if (loc != null) {
