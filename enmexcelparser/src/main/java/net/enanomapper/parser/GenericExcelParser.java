@@ -1627,6 +1627,23 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				destinationParams.put(parameterName, paramStringValue);
 		}
 	}
+	
+	void readParameter(String param, ExcelDataLocation loc, 
+				int effBlockIndex, IParams destinationParams) throws Exception 
+	{
+		if (loc.isArray == false)
+		{
+			//Handling the parameter in the standard way (not as array)
+			readParameter(param, loc, destinationParams);
+		}
+		else 
+		{	
+			//effBlockIndex is used for picking up the correct
+			// array element when IS_ARRAY is set true
+
+			//TODO
+		}	
+	}
 
 	/**
 	 * 
@@ -2016,13 +2033,21 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 											rv_error));
 					}	
 				}
+				
+				//Handle conditions and synchronize with simple effect block values via index 'i'
+				if (efrdl.conditions != null) {
+					IParams conditions = new Params();
+					Set<Entry<String, ExcelDataLocation>> locEntries = efrdl.conditions.entrySet();
+					for (Entry<String, ExcelDataLocation> entry : locEntries) {
+						// Conditions are read in the same way as parameters are read
+						//but using specialized function taking into account effect block index 'i' 
+						readParameter(entry.getKey(), entry.getValue(), i, conditions);
+					}
+					effect.setConditions(conditions);
+				}
 					
 			}
 		}
-		
-		
-		//TODO 
-		//Handle conditions and synchronize with values
 		
 		return effects;
 	}
