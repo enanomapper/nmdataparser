@@ -866,4 +866,60 @@ public class ExcelDataLocation {
 	public String toString() {
 		return String.format("Col %d Row %d", columnIndex, rowIndex);
 	}
+	
+	public ExcelDataLocation clone()
+	{
+		ExcelDataLocation c = new ExcelDataLocation();
+		
+		//Following fields are not cloned (the flags used for JSON output)
+		//FlagExtractValueQualifier
+		//FlagExtractAsRichValue
+		//
+		//FlagSourceCombination, FlagCombinationSeparator
+		//FlagMapping, FlagIsArray, FlagTrimArray
+		//FlagDataType, FlagRecognition, FlagDataInterpretation
+		//FlagDateFormat, FlagIteration, FlagAllowEmpty
+		//FlagSheetIndex, FlagSheetName, FlagColumnIndex
+		//FlagColumnName, FlagRowIndex, FlagRowName
+		
+		c.parallelSheetIndex = parallelSheetIndex;
+		c.absoluteLocationValue = absoluteLocationValue;
+		c.jsonValue = jsonValue;
+		c.jsonRepositoryKey = jsonRepositoryKey;
+		c.variableKey = variableKey;
+
+		c.sourceCombination = sourceCombination;
+		c.combinationSeparator = combinationSeparator;
+		c.mapping = mapping;
+		c.isArray = isArray;
+		c.trimArray = trimArray; 
+		
+		c.nErrors = nErrors;
+		c.sectionName = sectionName;
+		c.dataType = dataType;
+		c.recognition = recognition;
+		
+		c.dataInterpretation = dataInterpretation;
+		c.dateFormat = dateFormat;
+		c.iteration = iteration;
+
+		c.allowEmpty = allowEmpty;
+
+		c.sheetIndex = sheetIndex;
+		c.sheetName = sheetName;
+		c.columnIndex = columnIndex;
+		c.columnName = columnName;
+		c.rowIndex = rowIndex;
+		c.rowName = rowName;
+
+		c.columnIndices = columnIndices;
+		c.columnIndicesString = columnIndicesString;
+		c.rowIndices = rowIndices;
+		c.rowIndicesString = rowIndicesString;
+		
+		c.variableKeys = variableKeys; 
+		c.otherLocationFields = otherLocationFields;
+		
+		return c;
+	}
 }
