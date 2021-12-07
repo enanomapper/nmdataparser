@@ -1961,11 +1961,12 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		return effect;
 	}
 	
-	protected List<EffectRecord> readSimpleEffectBlock(EffectRecordDataLocation efrdl) throws Exception {
+	protected List<EffectRecord> readSimpleEffectBlock(EffectRecordDataLocation efrdl) throws Exception 
+	{
 		List<EffectRecord> effects = new ArrayList<EffectRecord>();
-		
-		
-		if (efrdl.value != null) {			
+				
+		if (efrdl.value != null) 
+		{			
 			Object objs[] = getArray(efrdl.value);
 			for (int i = 0; i < objs.length; i++)
 			{
@@ -1981,7 +1982,39 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				}	
 				
 				if (objs[i] instanceof  String) {
-					//TODO
+					// EffectRecord can handle error that is why
+					// representPlusMinusAsInterval = false
+					String richValueString = (String)objs[i];					
+					RichValue rv = rvParser.parse(richValueString, false);
+					String rv_error = rvParser.getAllErrorsAsString();					
+					if (rv_error == null) {						
+						if (rv.unit != null)
+							effect.setUnit(rv.unit);
+						if (rv.loValue != null)
+							effect.setLoValue(rv.loValue);
+						if (rv.loQualifier != null)
+							effect.setLoQualifier(rv.loQualifier);
+						if (rv.upValue != null)
+							effect.setUpValue(rv.upValue);
+						if (rv.upQualifier != null)
+							effect.setUpQualifier(rv.upQualifier);
+						if (rv.errorValue != null)
+							effect.setErrorValue(rv.errorValue);
+						if (rv.errorValueQualifier != null)
+							effect.setErrQualifier(rv.errorValueQualifier);
+						effects.add(effect);
+					} else {
+						// The string is not recognized as a valid rich value
+						if (efrdl.value.dataInterpretation == DataInterpretation.AS_VALUE_OR_TEXT) {
+							effect.setTextValue(richValueString);
+							effects.add(effect);
+						}
+						else
+							logger.log(Level.WARNING,
+									String.format("[%s] %s Value error: %s",
+											locationStringForErrorMessage(efrdl.value, primarySheetNum), richValueString,
+											rv_error));
+					}	
 				}
 					
 			}
