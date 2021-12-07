@@ -460,8 +460,15 @@ public class ExcelParserCore
 				row = curRow;
 			if (row == null)
 				return null;
-			else
-				return getArrayFromColumnIndices(row, loc);
+			else {
+				if (loc.columnIndices == null) {
+					Cell c = row.getCell(loc.columnIndex);
+					Object o = ExcelUtils.getObjectFromCell(c);
+					return new Object[] {o};
+				}
+				else
+					return getArrayFromColumnIndices(row, loc);
+			}	
 
 		case ROW_MULTI_FIXED: // Both treated the same way
 		case ROW_MULTI_DYNAMIC:
