@@ -922,4 +922,73 @@ public class ExcelDataLocation {
 		
 		return c;
 	}
+	
+	public ExcelDataLocation getSingleEDLCopyFromArrayEDL(int arrayElementIndex)
+	{
+		//Original EDL is cloned and the copy
+		//is turned to an ordinary EDL 
+		ExcelDataLocation edl = clone();
+		
+		switch (iteration) {
+			case ROW_SINGLE:
+			case ROW_MULTI_FIXED:
+			case ROW_MULTI_DYNAMIC:	
+				if (columnIndices != null)
+				{	
+					int n = arrayElementIndex;
+					//Using last element when index
+					//exceeds array size
+					if (n >= columnIndices.length)
+						n = columnIndices.length-1;
+					
+					edl.columnIndex = columnIndices[n];
+					edl.isArray = false;
+					edl.columnIndices = null;
+				}
+			break;	
+			case ABSOLUTE_LOCATION:
+				if(rowIndices != null && columnIndices != null) 
+				{
+					int n = arrayElementIndex;
+					//Using last element when index
+					//exceeds array size
+					if (n >= rowIndices.length*columnIndices.length)
+						n = rowIndices.length*columnIndices.length - 1;
+					int rowInd = n / columnIndices.length;
+					int colInd = n % columnIndices.length;
+					
+					edl.columnIndex = columnIndices[colInd];
+					edl.rowIndex = rowIndices[rowInd];
+					edl.isArray = false;
+					edl.columnIndices = null;
+					edl.rowIndices = null;					
+				}
+				else if(rowIndices == null && columnIndices != null) 
+				{
+					int n = arrayElementIndex;
+					//Using last element when index
+					//exceeds array size
+					if (n >= columnIndices.length)
+						n = columnIndices.length-1;
+					
+					edl.columnIndex = columnIndices[n];
+					edl.isArray = false;
+					edl.columnIndices = null;
+				}else if(rowIndices != null && columnIndices == null) 
+				{
+					int n = arrayElementIndex;
+					//Using last element when index
+					//exceeds array size
+					if (n >= rowIndices.length)
+						n = rowIndices.length-1;
+					
+					edl.rowIndex = rowIndices[n];
+					edl.isArray = false;
+					edl.rowIndices = null;
+				}	
+			break;	
+		}
+		
+		return edl;
+	}
 }

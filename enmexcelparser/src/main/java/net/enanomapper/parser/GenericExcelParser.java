@@ -1638,10 +1638,17 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		}
 		else 
 		{	
-			//effBlockIndex is used for picking up the correct
-			// array element when IS_ARRAY is set true
-
-			//TODO
+			if (loc.sourceCombination == true) {
+				//Handling the parameter in the standard way 
+				//it is an array but is also a source combination
+				readParameter(param, loc, destinationParams);
+			}
+			else {
+				//effBlockIndex is used for picking up the correct
+				//array element 
+				ExcelDataLocation singleEDL = loc.getSingleEDLCopyFromArrayEDL(effBlockIndex);
+				readParameter(param, singleEDL, destinationParams);
+			}
 		}	
 	}
 
