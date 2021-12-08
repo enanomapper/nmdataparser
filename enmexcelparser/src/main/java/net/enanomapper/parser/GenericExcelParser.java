@@ -2041,6 +2041,17 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					}	
 				}
 				
+				//Handle endpoint defined as an ARRAY and synchronize with current index i
+				if (efrdl.endpoint != null && 
+						efrdl.endpoint.isArray && (!efrdl.endpoint.sourceCombination)) 
+				{
+					//Overwrite the value set in readEffectBasicMetaData()
+					ExcelDataLocation singleEDL = efrdl.endpoint.getSingleEDLCopyFromArrayEDL(i);					
+					String s = getString(singleEDL);
+					if (s != null)
+						effect.setEndpoint(s.trim().toUpperCase());
+				}
+				
 				//Handle conditions and synchronize with simple effect block values via index 'i'
 				if (efrdl.conditions != null) {
 					IParams conditions = new Params();
