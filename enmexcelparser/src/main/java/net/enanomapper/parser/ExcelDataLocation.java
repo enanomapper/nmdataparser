@@ -947,6 +947,7 @@ public class ExcelDataLocation {
 				}
 			break;	
 			case ABSOLUTE_LOCATION:
+				edl.absoluteLocationValue = null; //in order to avoid side effects of the clone
 				if(rowIndices != null && columnIndices != null) 
 				{
 					int n = arrayElementIndex;
@@ -973,7 +974,7 @@ public class ExcelDataLocation {
 					
 					edl.columnIndex = columnIndices[n];
 					edl.isArray = false;
-					edl.columnIndices = null;
+					edl.columnIndices = null;				
 				}else if(rowIndices != null && columnIndices == null) 
 				{
 					int n = arrayElementIndex;

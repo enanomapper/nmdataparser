@@ -1714,7 +1714,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				effect.setEndpointType(s.trim().toUpperCase());
 		}
 		
-		if (efrdl.unit != null) {
+		if (efrdl.unit != null) {			
 			String s = getString(efrdl.unit);
 			if (s != null)
 				effect.setUnit(s);
@@ -1999,6 +1999,16 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				
 				EffectRecord effect = new EffectRecord();
 				readEffectBasicMetaData(efrdl, effect);
+				
+				//Handle unit defined as an ARRAY and synchronize with current index i
+				if (efrdl.unit != null && 
+						efrdl.unit.isArray && (!efrdl.unit.sourceCombination)) 
+				{					
+					ExcelDataLocation singleEDL = efrdl.unit.getSingleEDLCopyFromArrayEDL(i);
+					String s = getString(singleEDL);					
+					if (s != null)
+						effect.setUnit(s);
+				}
 								
 				if (objs[i] instanceof  Double) { 
 					effect.setLoValue((Double) objs[i]);
@@ -2051,6 +2061,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					if (s != null)
 						effect.setEndpoint(s.trim().toUpperCase());
 				}
+								
 				
 				//Handle conditions and synchronize with simple effect block values via index 'i'
 				if (efrdl.conditions != null) {
