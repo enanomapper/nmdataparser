@@ -415,7 +415,7 @@ public class NMParserTestUtils {
 		EffectRecord curEff = null;
 
 		//Info format  <token 1>; <token 2>; ...;<token n>
-		//<token i> = <key> = <value>
+		//<token i> is defined as: <key> = <value>
 		public SubstanceRecord generateSubstanceRecord(String info)
 		{	
 			errors.clear();
@@ -555,6 +555,17 @@ public class NMParserTestUtils {
 				setParameter(value, false);
 				return;
 			}
+			
+			if (key.equalsIgnoreCase("Par") || key.equalsIgnoreCase("Parameter") )
+			{
+				if (curPA == null)
+				{
+					errors.add("Adding protocol parameter but no protocol applicatiopn is set: " + token);
+					return;
+				}
+				setParameter(value, true);
+				return;
+			}
 
 			errors.add("Unknow key in token: " + token);
 		}
@@ -633,7 +644,12 @@ public class NMParserTestUtils {
 			{
 				if (isProtocolParameter)
 				{
-					//TODO
+					IParams params = (IParams) curPA.getParameters();
+					if (params == null) {
+						params = new Params();
+						curPA.setParameters(params);
+					}
+					params.put(parName, obj);
 				}
 				else
 				{
