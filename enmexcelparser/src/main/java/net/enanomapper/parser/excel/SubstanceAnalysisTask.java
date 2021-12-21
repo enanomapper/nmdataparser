@@ -44,6 +44,10 @@ public class SubstanceAnalysisTask
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
 	 * <task type>; <qualifier>; <params>; <Logical conditions>; <special keywords>
+	 * 
+	 * Qualifier and params checks are applied on the task level object.
+	 * If applicable, Logical conditions checks are applied on lower level objects i.e. 
+	 * elements (sub-objects) of the main task object
 	 */
 	public static SubstanceAnalysisTask parseFromString(String taskStr) throws Exception 
 	{
@@ -136,6 +140,35 @@ public class SubstanceAnalysisTask
 		}		
 		
 		return saTask;
+	}
+	
+	public static int checkForSpecialToken(String token, SubstanceAnalysisTask saTask, List<String> errors) 
+	{
+		if (token.startsWith("#"))
+		{
+			//This token is omitted ('#' symbol makes it a comment token)
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("verbose"))
+		{	
+			saTask.flagVerboseResult = true;
+			return 0;
+		}		
+		
+		if (token.equalsIgnoreCase("console_out"))
+		{	
+			saTask.flagConsoleOut = true;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("console_out_only"))
+		{	
+			saTask.flagConsoleOutOnly = true;
+			return 0;
+		}
+		
+		return -1;
 	}
 	
 	void outputLine(String line) {
