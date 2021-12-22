@@ -413,6 +413,9 @@ public class NMParserTestUtils {
 		SubstanceRecord record = null;
 		ProtocolApplication curPA = null;
 		EffectRecord curEff = null;
+		String curEffBlockEndpoint = null;
+		List<EffectRecord> curEffBlockList = new ArrayList<EffectRecord>();
+		
 
 		//Info format  <token 1>; <token 2>; ...;<token n>
 		//<token i> is defined as: <key> = <value>
@@ -429,7 +432,10 @@ public class NMParserTestUtils {
 			String tokens[] = info.split(";");
 			for (int i = 0; i < tokens.length; i++)
 				handleSubRecToken(tokens[i].trim());
-
+			
+			if (curEffBlockEndpoint != null)
+				finalizeEffectBlock();
+			
 			return record;
 		}
 
@@ -509,12 +515,21 @@ public class NMParserTestUtils {
 			//Handle Protocol Application info
 			if (key.equalsIgnoreCase("PA") || key.equalsIgnoreCase("ProtocolApplication") )
 			{
+				//If effect block is started then it must be finalized 
+				//and put in previous protocol application
+				if (curEffBlockEndpoint != null)
+				{	
+					finalizeEffectBlock();
+					curEffBlockEndpoint = null;
+				}	
+				
 				//Start parsing of a new ProtocolApplication
 				//value is used as protocol name
 				curPA = new ProtocolApplication(value);
 				record.getMeasurements().add(curPA);
-				//Reseting curEff
+				//Reseting curEff and effect block
 				curEff = null;
+				curEffBlockEndpoint = null;
 				return;
 			}
 			
@@ -526,6 +541,13 @@ public class NMParserTestUtils {
 					errors.add("Adding an Effect but no Protocol Appliaction is set: " + token);
 					return;
 				}
+				
+				if (curEffBlockEndpoint != null)
+				{	
+					finalizeEffectBlock();
+					curEffBlockEndpoint = null;
+				}	
+				
 				//Adding a new effect object to the currenr protocol application
 				EffectRecord effect = new EffectRecord();
 				effect.setEndpoint(value);
@@ -534,9 +556,25 @@ public class NMParserTestUtils {
 				return;
 			}
 			
+			//Handle simple effect block
+			if (key.equalsIgnoreCase("EffBlock") || key.equalsIgnoreCase("EffectBlock") )
+			{
+				if (curPA == null)
+				{
+					errors.add("Adding an EffectBlock but no Protocol Appliaction is set: " + token);
+					return;
+				}
+				
+				//Starting a new effect block
+				curEff = null;
+				curEffBlockEndpoint = value;
+				curEffBlockList.clear();
+				return;
+			}
+			
 			if (key.equalsIgnoreCase("Val") || key.equalsIgnoreCase("Value") )
 			{
-				if (curEff == null)
+				if (curEff == null && curEffBlockEndpoint == null)
 				{
 					errors.add("Adding an value but no Effect is set: " + token);
 					return;
@@ -547,7 +585,7 @@ public class NMParserTestUtils {
 			
 			if (key.equalsIgnoreCase("Cond") || key.equalsIgnoreCase("Condition") )
 			{
-				if (curEff == null)
+				if (curEff == null && curEffBlockEndpoint == null)
 				{
 					errors.add("Adding an value but no Effect is set: " + token);
 					return;
@@ -570,31 +608,58 @@ public class NMParserTestUtils {
 			errors.add("Unknow key in token: " + token);
 		}
 		
+		void finalizeEffectBlock() 
+		{
+			for (int i = 0; i < curEffBlockList.size(); i++) 
+				curPA.addEffect(curEffBlockList.get(i));
+		}
+		
 		void setEffectValue(String value)
+		{
+			if (curEff != null)
+				setEffectValue(value, curEff);
+			else
+			{
+				//Handle EffBlockList
+				String toks[] = value.split(",");
+				for (int i = 0; i < toks.length; i++) {
+					EffectRecord eff = new EffectRecord();
+					eff.setEndpoint(curEffBlockEndpoint);
+					setEffectValue(toks[i].trim(), eff);
+					curEffBlockList.add(eff);
+				}
+				
+				//Set the unit of the last effects to all 
+				//other effect records
+				//TODO
+			}
+		}
+		
+		void setEffectValue(String value, EffectRecord eff)
 		{
 			RichValue rv = rvParser.parse(value, false);
 			String rv_error = rvParser.getAllErrorsAsString();
 			if (rv_error == null) {
 				if (rv.unit != null)
-					curEff.setUnit(rv.unit);
+					eff.setUnit(rv.unit);
 				if (rv.loValue != null)
-					curEff.setLoValue(rv.loValue);
+					eff.setLoValue(rv.loValue);
 				if (rv.loQualifier != null)
-					curEff.setLoQualifier(rv.loQualifier);
+					eff.setLoQualifier(rv.loQualifier);
 				if (rv.upValue != null)
-					curEff.setUpValue(rv.upValue);
+					eff.setUpValue(rv.upValue);
 				if (rv.upQualifier != null)
-					curEff.setUpQualifier(rv.upQualifier);
+					eff.setUpQualifier(rv.upQualifier);
 				if (rv.errorValue != null)
-					curEff.setErrorValue(rv.errorValue);
+					eff.setErrorValue(rv.errorValue);
 				if (rv.errorValueQualifier != null)
-					curEff.setErrQualifier(rv.errorValueQualifier);
+					eff.setErrQualifier(rv.errorValueQualifier);
 			} 
 			else {
-				curEff.setTextValue(value);
+				eff.setTextValue(value);
 			}
 		}
-
+		
 		CompositionRelation getComposition(String value)
 		{
 			CompositionRelation relation = null;
@@ -652,7 +717,7 @@ public class NMParserTestUtils {
 					params.put(parName, obj);
 				}
 				else
-				{
+				{	
 					IParams conditions = (IParams) curEff.getConditions();
 					if (conditions == null) {
 						conditions = new Params();
