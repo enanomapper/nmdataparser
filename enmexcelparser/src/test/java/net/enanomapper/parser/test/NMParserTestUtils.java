@@ -730,12 +730,37 @@ public class NMParserTestUtils {
 				}
 				else
 				{	
-					IParams conditions = (IParams) curEff.getConditions();
-					if (conditions == null) {
-						conditions = new Params();
-						curEff.setConditions(conditions);
+					if (curEff != null) {
+						IParams conditions = (IParams) curEff.getConditions();
+						if (conditions == null) {
+							conditions = new Params();
+							curEff.setConditions(conditions);
+						}
+						conditions.put(parName, obj);
 					}
-					conditions.put(parName, obj);
+					else {
+						//Handle effect block
+						String subToks[] = tokValue.split(",");
+						for (int i = 0; i < curEffBlockList.size(); i++) 
+						{
+							int k = i+1; //first token is codition name (parName)
+							if (k >= subToks.length)
+								k = subToks.length-1;
+							
+							Object obj_k = getParameterObject(subToks[k].trim());
+							if (obj_k != null) {							
+								IParams conditions = (IParams) curEffBlockList.get(i).getConditions();
+								if (conditions == null) {
+									conditions = new Params();
+									curEffBlockList.get(i).setConditions(conditions);
+								}
+								conditions.put(parName, obj_k);
+							}
+							else
+								errors.add("Cannot create " + (isProtocolParameter?"parameter":"condition") + 
+										" object["+ (k+1) + " for token: " + tokValue);
+						}
+					}						
 				}
 			}
 			else
