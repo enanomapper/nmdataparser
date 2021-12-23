@@ -630,8 +630,20 @@ public class NMParserTestUtils {
 				}
 				
 				//Set the unit of the last effects to all 
-				//other effect records
-				//TODO
+				//other effect records which does not have unit set
+				if (!curEffBlockList.isEmpty())
+				{
+					EffectRecord lastEff = curEffBlockList.get(curEffBlockList.size()-1);
+					Object unit = lastEff.getUnit();
+					if (unit != null) 
+					{
+						for (int i = 0; i < curEffBlockList.size()-1; i++) 
+						{
+							if (curEffBlockList.get(i).getUnit() == null)
+								curEffBlockList.get(i).setUnit(unit);
+						}	
+					}		
+				}				
 			}
 		}
 		
