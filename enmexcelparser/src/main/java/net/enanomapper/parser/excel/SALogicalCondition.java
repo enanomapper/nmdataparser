@@ -41,7 +41,7 @@ public class SALogicalCondition
 	}
 	
 	public String targetLabel = null;
-	public LogicalConditionType conditionType = LogicalConditionType.UNDEFINED;
+	public LogicalConditionType conditionType = null;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
 	public ComparisonOperation comparison; //determined from the qualifier
@@ -84,19 +84,21 @@ public class SALogicalCondition
 		}
 		
 		//SA Task type 
-		if (tokens.size() < 3)
-			errors.add("Missing logical condition type!");
+		if (tokens.size() < 3) {
+			//errors.add("Missing logical condition type!");
+		}	
 		else {
 			saLogCond.conditionType = LogicalConditionType.fromString(tokens.get(2));
 			if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
 				errors.add("Incorrect logical condition type: " + tokens.get(2));
 		}
 		
-		if (tokens.size() < 4)
-			errors.add("Missing qualifier token!");
+		if (tokens.size() < 4) {
+			if (tokens.size() > 2)
+				errors.add("Missing qualifier token!");
+		}	
 		else {	
-			saLogCond.qualifier = tokens.get(3);
-			
+			saLogCond.qualifier = tokens.get(3);			
 			saLogCond.comparison = SALogicalCondition.qualifierToComparisonOperation(saLogCond.qualifier);
 			if (saLogCond.comparison == ComparisonOperation.UNDEFINED)
 				errors.add("Incorrect qualifier: " + saLogCond.qualifier);
@@ -184,7 +186,8 @@ public class SALogicalCondition
 	
 	public String toStringVerbose() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("ConditionType: " + conditionType + "\n");
+		if (conditionType != null)
+			sb.append("ConditionType: " + conditionType + "\n");
 		
 		if (qualifier != null) 
 			sb.append("Qualifier: " + qualifier + "\n");
@@ -210,7 +213,8 @@ public class SALogicalCondition
 		else
 			sb.append(targetLabel + " ");
 		
-		sb.append(conditionType + " ");
+		if (conditionType != null)
+			sb.append(conditionType + " ");
 		
 		if (qualifier != null) 
 			sb.append(qualifier + "  ");
