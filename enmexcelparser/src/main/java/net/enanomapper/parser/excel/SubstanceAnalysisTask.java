@@ -38,12 +38,13 @@ public class SubstanceAnalysisTask
 	public boolean flagIgnoreCase = true;
 	public List<String> analysisResult = new ArrayList<String>();
 	public List<String> analysisErrors = new ArrayList<String>();
+	public List<String> analysisWarnings = new ArrayList<String>();	
 	public int analysisStatTotalOKNum = 0;
 	public int analysisStatTotalProblemNum = 0;
 	
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
-	 * <task type>; <qualifier>; <params>; <Logical conditions>; <special keywords>
+	 * <task type>; <qualifier>; <params>; <Logical conditions>; <special keywords> ...
 	 * 
 	 * Qualifier and params checks are applied on the task level object.
 	 * If applicable, Logical conditions checks are applied on lower level objects i.e. 
@@ -130,7 +131,19 @@ public class SubstanceAnalysisTask
 			}			
 		}
 		
-		//TODO special keywords parsing		
+		//Special keywords parsing
+		if (tokens.length > 4)
+			for (int i = 4; i < tokens.length; i++)
+			{
+				String spec_tok = tokens[i].trim();
+				if (spec_tok.isEmpty())
+					continue;
+
+				int specTokRes = checkForSpecialToken(spec_tok, saTask,  errors);
+				if (specTokRes == -1)
+					errors.add("Incorrect special word/flag: " + spec_tok);
+			}	
+		
 				
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
@@ -186,6 +199,7 @@ public class SubstanceAnalysisTask
 	{
 		analysisResult.clear();
 		analysisErrors.clear();
+		analysisWarnings.clear();
 		analysisStatTotalOKNum = 0;
 		analysisStatTotalProblemNum = 0;
 		
