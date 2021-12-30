@@ -60,57 +60,45 @@ public class SALogicalCondition
 		String workStr = taskStr.trim();
 		if (workStr.isEmpty())
 			throw new Exception ("Empty input string!");
-						
-		//Token trimming is not needed. Empty tokens are allowed and skipped
-		//Get all non-empty tokens
-		String initialTokens[] = workStr.split(",");
-		List<String> tokens = new ArrayList<String>();
-		for (int i = 0; i  <initialTokens.length; i++) {
-			if (!initialTokens[i].isEmpty())
-				tokens.add(initialTokens[i]);		}
+			
+		String tokens[] = workStr.split(",");
 		
 		//Target type
 		//it is the first token and is guaranteed because of the check for empty input string
-		saLogCond.targetType = TargetType.fromString(tokens.get(0));
+		String tok0 = tokens[0].trim();
+		saLogCond.targetType = TargetType.fromString(tok0);
 		if (saLogCond.targetType == TargetType.UNDEFINED)
-			errors.add("Incorrect logical condition target type: " + tokens.get(0));
+			errors.add("Incorrect logical condition target type: " + tok0);
 		
 		//Label 
-		if (tokens.size() < 2)
-			errors.add("Missing qualifier token!");
-		else {
-			if (!tokens.get(1).equalsIgnoreCase("NO_LABEL"))
-				saLogCond.targetLabel = tokens.get(1);
+		if (tokens.length >= 2) {
+			String tok = tokens[1].trim();
+			if (!tok.equalsIgnoreCase("NO_LABEL"))
+				saLogCond.targetLabel = tok;
 		}
 		
 		//SA Task type 
-		if (tokens.size() < 3) {
-			//errors.add("Missing logical condition type!");
-		}	
-		else {
-			saLogCond.conditionType = LogicalConditionType.fromString(tokens.get(2));
+		if (tokens.length >= 3) {
+			String tok = tokens[2].trim();
+			saLogCond.conditionType = LogicalConditionType.fromString(tok);
 			if (saLogCond.conditionType == LogicalConditionType.UNDEFINED)
-				errors.add("Incorrect logical condition type: " + tokens.get(2));
+				errors.add("Incorrect logical condition type: " + tok);
 		}
 		
-		if (tokens.size() < 4) {
-			if (tokens.size() > 2)
-				errors.add("Missing qualifier token!");
-		}	
-		else {	
-			saLogCond.qualifier = tokens.get(3);			
+		if (tokens.length >= 4) {	
+			saLogCond.qualifier = tokens[3].trim();			
 			saLogCond.comparison = SALogicalCondition.qualifierToComparisonOperation(saLogCond.qualifier);
 			if (saLogCond.comparison == ComparisonOperation.UNDEFINED)
 				errors.add("Incorrect qualifier: " + saLogCond.qualifier);
 		}
 		
 		//Handle params and special keywords
-		if (tokens.size() >= 5)
+		if (tokens.length >= 5)
 		{
 			List<Object> paramObjects = new ArrayList<Object>();
-			for (int i = 4; i < tokens.size(); i++)
+			for (int i = 4; i < tokens.length; i++)
 			{	
-				String par = tokens.get(i);
+				String par = tokens[i].trim();
 				//TODO check for special keyword token
 				
 				Object o = par;
@@ -206,22 +194,22 @@ public class SALogicalCondition
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(targetType + " ");
+		sb.append(targetType);
 		
 		if (targetLabel == null)
-			sb.append("NO_LABEL");
+			sb.append(", NO_LABEL");
 		else
-			sb.append(targetLabel + " ");
+			sb.append(", " + targetLabel);
 		
 		if (conditionType != null)
-			sb.append(conditionType + " ");
+			sb.append(", " + conditionType);
 		
 		if (qualifier != null) 
-			sb.append(qualifier + "  ");
+			sb.append(", " + qualifier);
 				
 		if (params != null) {
 			for (int i = 0; i < params.length; i++)
-				sb.append(params[i] + " ");			
+				sb.append(", " + params[i]);			
 		}		
 		return sb.toString();
 	}
