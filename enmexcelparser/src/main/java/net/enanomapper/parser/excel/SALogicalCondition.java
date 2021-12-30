@@ -63,7 +63,7 @@ public class SALogicalCondition
 						
 		//Token trimming is not needed. Empty tokens are allowed and skipped
 		//Get all non-empty tokens
-		String initialTokens[] = workStr.split(" ");
+		String initialTokens[] = workStr.split(",");
 		List<String> tokens = new ArrayList<String>();
 		for (int i = 0; i  <initialTokens.length; i++) {
 			if (!initialTokens[i].isEmpty())

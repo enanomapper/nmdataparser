@@ -110,41 +110,29 @@ public class SubstanceAnalysisTask
 			}
 		}		
 		
-		//Logical conditions
-		if (tokens.length < 4)
-			errors.add("Missing logical conditions token!");
-		else {	
-			String lcStr = tokens[3].trim();
-			if (!lcStr.isEmpty()  && !lcStr.equals("--") && !lcStr.equals("no conditions"))
-			{						
-				String lcTokens[] = lcStr.split(",");	
-				for (int i = 0; i < lcTokens.length; i++) 
-				{
-					try {
-						SALogicalCondition logCond = SALogicalCondition.parseFromString(lcTokens[i]);
-						saTask.logicalConditions.add(logCond);
-					}
-					catch (Exception x) {
-						errors.add("Errors on logical conditions #" + (i+1) + " : " + x.getMessage());
-					}
-				}
-			}			
-		}
-		
-		//Special keywords parsing
-		if (tokens.length > 4)
-			for (int i = 4; i < tokens.length; i++)
-			{
-				String spec_tok = tokens[i].trim();
-				if (spec_tok.isEmpty())
+		//Logical conditions + special keywords parsing
+		if (tokens.length >= 4)
+			for (int i = 3; i < tokens.length; i++)	
+			{	
+				String lcStr = tokens[i].trim();				
+				if (lcStr.isEmpty())
 					continue;
+				int specTokRes = checkForSpecialToken(lcStr, saTask,  errors);
+				if (specTokRes == 0)
+					continue; //The token is either a special keyword or a comment 
 
-				int specTokRes = checkForSpecialToken(spec_tok, saTask,  errors);
-				if (specTokRes == -1)
-					errors.add("Incorrect special word/flag: " + spec_tok);
-			}	
+				try {
+					SALogicalCondition logCond = SALogicalCondition.parseFromString(lcStr);
+					saTask.logicalConditions.add(logCond);
+				}
+				catch (Exception x) {
+					System.out.println("--------> " + x.getMessage());
+					errors.add("Errors on logical conditions #" + (i-3) + " : " + x.getMessage());
+				}
+						
+			}
 		
-				
+						
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
 			for (String err: errors)
