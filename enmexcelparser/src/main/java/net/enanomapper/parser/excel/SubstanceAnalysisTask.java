@@ -24,7 +24,7 @@ public class SubstanceAnalysisTask
 	}
 	
 	public static final String SATaskSyntaxFormat = 
-				"<task type>; <qualifier>; <params>; <Logical conditions>; <special keywords>";
+				"<task type>; <qualifier>; <params>; <Logical condition 1>; ...; <special keyword 1>...";
 	
 	public SATaskType type = SATaskType.UNDEFINED;
 	List<SALogicalCondition> logicalConditions = new ArrayList<SALogicalCondition>();
@@ -41,6 +41,7 @@ public class SubstanceAnalysisTask
 	public List<String> analysisWarnings = new ArrayList<String>();	
 	public int analysisStatTotalOKNum = 0;
 	public int analysisStatTotalProblemNum = 0;
+	
 	
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
@@ -126,7 +127,6 @@ public class SubstanceAnalysisTask
 					saTask.logicalConditions.add(logCond);
 				}
 				catch (Exception x) {
-					System.out.println("--------> " + x.getMessage());
 					errors.add("Errors on logical conditions #" + (i-3) + " : " + x.getMessage());
 				}
 						
@@ -197,7 +197,7 @@ public class SubstanceAnalysisTask
 		for (int i = 0; i<records.size(); i++)
 		{
 			if (flagVerboseResult)
-				analysisResult.add("Record " + (i+1));
+				outputLine("Record " + (i+1));
 			
 			switch (type) {
 			case COUNT_EFFECTS:
@@ -206,7 +206,39 @@ public class SubstanceAnalysisTask
 			}
 		}
 		
-		return -1;
+		makeResultSummary();
+		return 0;
+	}
+	
+	public void makeResultSummary() 
+	{
+		String okLabel = "OK";
+		String problemLabel = "Problem";
+		
+		
+		switch (type) {
+		case COUNT_EFFECTS:
+			okLabel = "Effects OK: ";
+			problemLabel = "Problematic effects: ";
+			break;
+		}
+		
+		outputLine(okLabel + analysisStatTotalOKNum);
+		outputLine(problemLabel + analysisStatTotalProblemNum);
+		
+	}
+	
+	public void taskCountRecord(List<SubstanceRecord> records)
+	{
+		for (int i = 0; i<records.size(); i++)
+		{
+			if (flagVerboseResult)
+				outputLine("Record " + (i+1));
+			
+			analysisStatTotalOKNum++;
+			
+			//TODO use logical conditions
+		}	
 	}
 	
 	public void taskCountEffects(SubstanceRecord record, int recordNum)
