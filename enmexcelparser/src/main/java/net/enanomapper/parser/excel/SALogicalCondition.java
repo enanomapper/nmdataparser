@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 public class SALogicalCondition 
@@ -42,7 +44,12 @@ public class SALogicalCondition
 	}
 	
 	public static class SAConditionResult {
-		public boolean applicationStatus = true;
+		public SAConditionResult(boolean applicationStatus, boolean booleanResult, String info) {
+			this.applicationStatus = applicationStatus;
+			this.booleanResult = booleanResult;
+			this.info = info;
+		}
+		public boolean applicationStatus = false;
 		public boolean booleanResult = false;
 		public String info = null;
 	}
@@ -170,14 +177,42 @@ public class SALogicalCondition
 	
 	
 	public SAConditionResult apply(Object target) {
-		//TODO
-		return null;
+		
+		if (target instanceof SubstanceRecord)
+			return applyForSubstance((SubstanceRecord) target);
+		if (target instanceof ProtocolApplication)
+			return applyForProtocolApplication((ProtocolApplication) target);
+		if (target instanceof EffectRecord)
+			return applyForEffect((EffectRecord) target);
+		if (target instanceof Object[]) {
+			Object obj[] = (Object[]) target;
+			if (obj.length > 1)
+				return applyForKeyValue(obj[0], obj[1]);
+		}	
+		
+		return new SAConditionResult(false, false, "Not applicable for " + target.getClass().getName());
 	}
 	
 	public SAConditionResult applyForSubstance(SubstanceRecord subst) {
 		//TODO
 		return null;
 	}
+	
+	public SAConditionResult applyForProtocolApplication(ProtocolApplication pa) {
+		//TODO
+		return null;
+	}
+	
+	public SAConditionResult applyForEffect(EffectRecord effect) {
+		//TODO
+		return null;
+	}
+	
+	public SAConditionResult applyForKeyValue(Object key, Object value) {
+		//TODO
+		return null;
+	}
+	
 	
 	public String toStringVerbose() {
 		StringBuffer sb = new StringBuffer();
