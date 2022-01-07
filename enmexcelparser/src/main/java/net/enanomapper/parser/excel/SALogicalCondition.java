@@ -3,6 +3,7 @@ package net.enanomapper.parser.excel;
 import java.util.ArrayList;
 import java.util.List;
 
+import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 public class SALogicalCondition 
@@ -38,6 +39,12 @@ public class SALogicalCondition
 	public static enum ComparisonOperation {
 		EQUAL, LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL, NOT_EQUAL, 
 		IN_SET, INTERVAL, IS_EMPTY, NOT_EMPTY, UNDEFINED 
+	}
+	
+	public static class SAConditionResult {
+		public boolean applicationStatus = true;
+		public boolean booleanResult = false;
+		public String info = null;
 	}
 	
 	public String targetLabel = null;
@@ -162,14 +169,14 @@ public class SALogicalCondition
 	}
 	
 	
-	public boolean apply(Object target) {
+	public SAConditionResult apply(Object target) {
 		//TODO
-		return false;
+		return null;
 	}
 	
-	public boolean applyForSubstance() {
+	public SAConditionResult applyForSubstance(SubstanceRecord subst) {
 		//TODO
-		return false;
+		return null;
 	}
 	
 	public String toStringVerbose() {
