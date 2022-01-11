@@ -55,7 +55,7 @@ public class SALogicalCondition
 	}
 	
 	public String targetLabel = null;
-	public String targetLabelPrefix = null;
+	public String targetLabelParam = null;
 	public LogicalConditionType conditionType = null;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
@@ -88,15 +88,17 @@ public class SALogicalCondition
 		//Label 
 		if (tokens.length >= 2) {
 			String tok = tokens[1].trim();
-			if (!tok.equalsIgnoreCase("NO_LABEL"))
+			if (!tok.equalsIgnoreCase("NO_LABEL") && !tok.isEmpty())
 			{	
 				int ind = tok.indexOf(":"); 
 				if (ind == -1)
 					saLogCond.targetLabel = tok;
 				else
 				{
-					saLogCond.targetLabel = tok.substring(ind+1).trim();
-					saLogCond.targetLabelPrefix = tok.substring(0,ind).trim();
+					saLogCond.targetLabelParam = tok.substring(ind+1).trim();
+					saLogCond.targetLabel = tok.substring(0,ind).trim();
+					if (saLogCond.targetLabel.isEmpty())
+						errors.add("Label is empty!");
 				}
 			}	
 		}
@@ -251,11 +253,11 @@ public class SALogicalCondition
 		if (targetLabel == null)
 			sb.append(", NO_LABEL");
 		else {
-			if (targetLabelPrefix != null)
-				sb.append(", " + targetLabelPrefix + ":" + targetLabel);
-			else
-				sb.append(", " + targetLabel);
+			sb.append(", " + targetLabel);
+			if (targetLabelParam != null)
+				sb.append(":" + targetLabelParam);
 		}
+		
 		if (conditionType != null)
 			sb.append(", " + conditionType);
 		
