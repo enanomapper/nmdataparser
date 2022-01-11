@@ -55,6 +55,7 @@ public class SALogicalCondition
 	}
 	
 	public String targetLabel = null;
+	public String targetLabelPrefix = null;
 	public LogicalConditionType conditionType = null;
 	public TargetType targetType = TargetType.UNDEFINED;
 	public String qualifier = null;
@@ -88,7 +89,16 @@ public class SALogicalCondition
 		if (tokens.length >= 2) {
 			String tok = tokens[1].trim();
 			if (!tok.equalsIgnoreCase("NO_LABEL"))
-				saLogCond.targetLabel = tok;
+			{	
+				int ind = tok.indexOf(":"); 
+				if (ind == -1)
+					saLogCond.targetLabel = tok;
+				else
+				{
+					saLogCond.targetLabel = tok.substring(ind+1).trim();
+					saLogCond.targetLabelPrefix = tok.substring(0,ind).trim();
+				}
+			}	
 		}
 		
 		//SA Task type 
@@ -240,9 +250,12 @@ public class SALogicalCondition
 		
 		if (targetLabel == null)
 			sb.append(", NO_LABEL");
-		else
-			sb.append(", " + targetLabel);
-		
+		else {
+			if (targetLabelPrefix != null)
+				sb.append(", " + targetLabelPrefix + ":" + targetLabel);
+			else
+				sb.append(", " + targetLabel);
+		}
 		if (conditionType != null)
 			sb.append(", " + conditionType);
 		
