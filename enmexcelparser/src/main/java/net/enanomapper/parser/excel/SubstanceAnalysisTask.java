@@ -11,7 +11,7 @@ public class SubstanceAnalysisTask
 {
 	public static enum SATaskType {
 		CHECK_EFFECT_VALUE, CHECK_PROTOCOL_PARAMETER_VALUE, CHECK_CONDITION_VALUE, 
-		COUNT_RECORDS, COUNT_EFFECTS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, UNDEFINED;
+		COUNT_RECORDS, COUNT_EFFECTS, COUNT_PROTOCOLS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, UNDEFINED;
 		
 		public static SATaskType fromString(String s) {
 			try {
@@ -214,13 +214,28 @@ public class SubstanceAnalysisTask
 	{
 		String okLabel = "OK";
 		String problemLabel = "Problem";
-		
-		
+				
 		switch (type) {
+		case COUNT_RECORDS:
+			okLabel = "Subst. records OK: ";
+			problemLabel = "Problematic subst. records: ";
+			break;
+		case COUNT_PROTOCOLS:
+			okLabel = "Protocols OK: ";
+			problemLabel = "Problematic protocols: ";
+			break;
+		case COUNT_PROTOCOL_PARAMETERS:
+			okLabel = "Protocol parameterss OK: ";
+			problemLabel = "Problematic protocol parameters: ";
+			break;	
 		case COUNT_EFFECTS:
 			okLabel = "Effects OK: ";
 			problemLabel = "Problematic effects: ";
 			break;
+		case COUNT_CONDITIONS:
+			okLabel = "Conditions OK: ";
+			problemLabel = "Problematic conditions: ";
+			break;	
 		}
 		
 		outputLine(okLabel + analysisStatTotalOKNum);
