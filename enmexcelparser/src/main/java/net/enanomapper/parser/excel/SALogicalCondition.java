@@ -11,7 +11,7 @@ import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 public class SALogicalCondition 
 {
 	public static enum LogicalConditionType {
-		VALUE, UNDEFINED;
+		VALUE, LABEL, UNDEFINED;
 		public static LogicalConditionType fromString(String s) {
 			try {
 				LogicalConditionType type = LogicalConditionType.valueOf(s);
