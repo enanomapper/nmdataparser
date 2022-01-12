@@ -394,4 +394,29 @@ public class SALogicalCondition
 		return (Math.abs(x1-x2) < e);
 	}
 	
+	public static Object extractParamsForLogicalConditionCheck(ComparisonOperation comparison, Object params[], int checkIndex )
+	{
+		if (params == null)
+			return null;
+		if (params.length == 0)
+			return null;
+		
+		if (comparison == ComparisonOperation.UNDEFINED 
+				|| comparison == ComparisonOperation.IS_EMPTY
+				|| comparison == ComparisonOperation.NOT_EMPTY)
+			return null;
+		
+		if (comparison == ComparisonOperation.IN_SET
+				|| comparison == ComparisonOperation.INTERVAL)
+			return params;
+		
+		//Handling standard comparison case: 
+		//EQUAL, LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL
+		if (checkIndex == -1)
+			return null;		
+		if (checkIndex >= params.length)
+			return params[params.length-1]; //last element is returned		
+		return params[checkIndex];
+	}
+	
 }
