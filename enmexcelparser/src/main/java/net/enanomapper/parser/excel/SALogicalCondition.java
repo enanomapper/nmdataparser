@@ -10,6 +10,8 @@ import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
 public class SALogicalCondition 
 {
+	public static double eps = 1.0e-30;
+	
 	public static enum LogicalConditionType {
 		VALUE, LABEL, UNDEFINED;
 		public static LogicalConditionType fromString(String s) {
@@ -270,4 +272,126 @@ public class SALogicalCondition
 		}		
 		return sb.toString();
 	}
+	
+	
+	public static boolean checkConditionForStringTarget(String targetStr, 
+			ComparisonOperation comparison, boolean ignoreCase, Object params[])
+	{
+		//Check for empty input params
+		if ((params == null) || (params.length == 0) )
+			return false;
+		
+		
+		if (targetStr == null)
+			return false;
+		
+		int compareRes;
+		if (ignoreCase)
+			compareRes = targetStr.compareToIgnoreCase(params[0].toString());
+		else
+			compareRes = targetStr.compareTo(params[0].toString());
+		
+		
+		switch (comparison) 
+		{
+		case EQUAL:
+			return (compareRes == 0);
+		case GREATER:
+			return (compareRes > 0);
+		case GREATER_OR_EQUAL:
+			return (compareRes >= 0);
+		case LESS:
+			return (compareRes < 0);
+		case LESS_OR_EQUAL:
+			return (compareRes <= 0);
+		case NOT_EQUAL:
+			return (compareRes != 0);
+		case IN_SET:			
+			if (compareRes == 0)
+				return true;
+			for (int i = 1; i < params.length; i++)
+			{
+				int compareRes_i;
+				if (ignoreCase)
+					compareRes_i = targetStr.compareToIgnoreCase(params[i].toString());
+				else
+					compareRes_i = targetStr.compareTo(params[i].toString());
+				
+				if (compareRes_i == 0)
+					return true;	
+			}
+			return false;
+		case INTERVAL:
+			if (params.length == 1) {
+				//With a single parameter, the INTERVAL comparison 
+				//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
+				return (compareRes >= 0);
+			}
+			else {
+				//params.length > 1
+				int compareRes1;
+				if (ignoreCase)
+					compareRes1 = targetStr.compareToIgnoreCase(params[1].toString());
+				else
+					compareRes1 = targetStr.compareTo(params[1].toString());
+				
+				return (compareRes >= 0 && compareRes1 <= 0);
+			}
+		}
+		
+		//All other cases are not applicable here
+		return false;
+	}
+	
+	
+	public static boolean checkConditionForDoubleTarget(double d, 
+			ComparisonOperation comparison, double params[])
+	{	
+		//Check for empty input params
+		if ((params == null) || (params.length == 0) )
+			return false;
+				
+		switch (comparison) 
+		{
+		case EQUAL:
+			return (equal(d, params[0]));
+		case GREATER:
+			return (d > params[0]);
+		case GREATER_OR_EQUAL:
+			return (d >= params[0]);
+		case LESS:
+			return (d < params[0]);
+		case LESS_OR_EQUAL:
+			return (d <= params[0]);
+		case NOT_EQUAL:
+			return (d != params[0]);
+		case IN_SET:
+			for (int i = 0; i < params.length; i++)
+				if (equal(d, params[i]))
+					return true;
+			return false;
+		case INTERVAL:
+			if (params.length == 1)
+			{	
+				//With a single parameter, the INTERVAL comparison 
+				//is treated as [params[0],...] i.e. it equivalent to GREATER_OR_EQUAL
+				return (d >= params[0]);
+			}	
+			else
+				return ((d >= params[0]) && (d <= params[1]));
+		}
+		
+		return false;
+	}
+	
+	public static boolean equal(double x1, double x2)
+	{
+		return equal(x1, x2, eps);
+	}
+	
+	public static boolean equal(double x1, double x2, double e)
+	{
+		return (Math.abs(x1-x2) < e);
+	}
+	
 }
