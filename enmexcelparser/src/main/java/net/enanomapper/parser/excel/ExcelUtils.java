@@ -891,64 +891,8 @@ public class ExcelUtils
 		if (cellStr == null)
 			return false;
 		
-		int compareRes;
-		if (ignoreCase)
-			compareRes = cellStr.compareToIgnoreCase(params[0].toString());
-		else
-			compareRes = cellStr.compareTo(params[0].toString());
-		
-		//System.out.println("Comparing " + cellStr + " with " + param);
-		//System.out.println("compareRes = " + compareRes);
-		
-		switch (comparison) 
-		{
-		case EQUAL:
-			return (compareRes == 0);
-		case GREATER:
-			return (compareRes > 0);
-		case GREATER_OR_EQUAL:
-			return (compareRes >= 0);
-		case LESS:
-			return (compareRes < 0);
-		case LESS_OR_EQUAL:
-			return (compareRes <= 0);
-		case NOT_EQUAL:
-			return (compareRes != 0);
-		case IN_SET:			
-			if (compareRes == 0)
-				return true;
-			for (int i = 1; i < params.length; i++)
-			{
-				int compareRes_i;
-				if (ignoreCase)
-					compareRes_i = cellStr.compareToIgnoreCase(params[i].toString());
-				else
-					compareRes_i = cellStr.compareTo(params[i].toString());
-				
-				if (compareRes_i == 0)
-					return true;	
-			}
-			return false;
-		case INTERVAL:
-			if (params.length == 1) {
-				//With a single parameter, the INTERVAL comparison 
-				//is treated as [param,...] i.e. equavalent to GREATER_OR_EQUAL 
-				return (compareRes >= 0);
-			}
-			else {
-				//params.length > 1
-				int compareRes1;
-				if (ignoreCase)
-					compareRes1 = cellStr.compareToIgnoreCase(params[1].toString());
-				else
-					compareRes1 = cellStr.compareTo(params[1].toString());
-				
-				return (compareRes >= 0 && compareRes1 <= 0);
-			}
-		}
-		
-		//All other cases are not applicable here
-		return false;
+		return SALogicalCondition.checkConditionForStringTarget(cellStr, 
+				comparison, ignoreCase, params);		
 	}
 	
 	
@@ -965,37 +909,7 @@ public class ExcelUtils
 		Double d = (Double) n;
 		//System.out.println(" " + d + "  <--->  " + param);
 		
-		switch (comparison) 
-		{
-		case EQUAL:
-			return (equal(d, params[0]));
-		case GREATER:
-			return (d > params[0]);
-		case GREATER_OR_EQUAL:
-			return (d >= params[0]);
-		case LESS:
-			return (d < params[0]);
-		case LESS_OR_EQUAL:
-			return (d <= params[0]);
-		case NOT_EQUAL:
-			return (d != params[0]);
-		case IN_SET:
-			for (int i = 0; i < params.length; i++)
-				if (equal(d, params[i]))
-					return true;
-			return false;
-		case INTERVAL:
-			if (params.length == 1)
-			{	
-				//With a single parameter, the INTERVAL comparison 
-				//is treated as [params[0],...] i.e. it equivalent to GREATER_OR_EQUAL
-				return (d >= params[0]);
-			}	
-			else
-				return ((d >= params[0]) && (d <= params[1]));
-		}
-		
-		return false;
+		return SALogicalCondition.checkConditionForDoubleTarget(d, comparison, params);		
 	}
 	
 	

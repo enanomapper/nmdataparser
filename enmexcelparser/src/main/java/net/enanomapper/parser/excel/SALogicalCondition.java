@@ -277,11 +277,28 @@ public class SALogicalCondition
 	public static boolean checkConditionForStringTarget(String targetStr, 
 			ComparisonOperation comparison, boolean ignoreCase, Object params[])
 	{
+		//Check comparison cases without parameters
+		if (comparison == ComparisonOperation.UNDEFINED)
+			return true; //No comparison is performed then results is true;
+		
+		if (comparison == ComparisonOperation.IS_EMPTY) {
+			if ((targetStr == null) || targetStr.isEmpty())
+				return true;
+			else
+				return false;
+		}
+		
+		if (comparison == ComparisonOperation.NOT_EMPTY) {
+			if ((targetStr == null) || targetStr.isEmpty())
+				return false;
+			else
+				return true;
+		}
+		
 		//Check for empty input params
 		if ((params == null) || (params.length == 0) )
 			return false;
-		
-		
+				
 		if (targetStr == null)
 			return false;
 		
@@ -344,13 +361,33 @@ public class SALogicalCondition
 	}
 	
 	
-	public static boolean checkConditionForDoubleTarget(double d, 
+	public static boolean checkConditionForDoubleTarget(Double d, 
 			ComparisonOperation comparison, double params[])
 	{	
+		if (comparison == ComparisonOperation.UNDEFINED)
+			return true; //No comparison is performed then results is true;
+		
+		if (comparison == ComparisonOperation.IS_EMPTY) {
+			if (d == null)
+				return true;
+			else
+				return false;
+		}
+		
+		if (comparison == ComparisonOperation.NOT_EMPTY) {
+			if (d == null)
+				return false;
+			else
+				return true;
+		}
+		
 		//Check for empty input params
 		if ((params == null) || (params.length == 0) )
 			return false;
-				
+		
+		if (d == null)
+			return false;
+		
 		switch (comparison) 
 		{
 		case EQUAL:
