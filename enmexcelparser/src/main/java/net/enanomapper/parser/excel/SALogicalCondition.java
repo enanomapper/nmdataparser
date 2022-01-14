@@ -25,7 +25,7 @@ public class SALogicalCondition
 	}
 	
 	public static enum TargetType {
-		SUBSTANCE, PROTOCOL_PARAMETER, EFFECT, CONDITION, UNDEFINED;
+		SUBSTANCE, PROTOCOL, PROTOCOL_PARAMETER, EFFECT, CONDITION, UNDEFINED;
 		public static TargetType fromString(String s) {
 			try {
 				TargetType type = TargetType.valueOf(s);
