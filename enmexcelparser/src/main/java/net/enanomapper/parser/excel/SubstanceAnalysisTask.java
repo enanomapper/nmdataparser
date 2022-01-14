@@ -11,7 +11,7 @@ public class SubstanceAnalysisTask
 {
 	public static enum SATaskType {
 		CHECK_EFFECT_VALUE, CHECK_PROTOCOL_PARAMETER_VALUE, CHECK_CONDITION_VALUE, 
-		COUNT_RECORDS, COUNT_EFFECTS, COUNT_PROTOCOLS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, UNDEFINED;
+		COUNT_SUBSTANCES, COUNT_EFFECTS, COUNT_PROTOCOLS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, UNDEFINED;
 		
 		public static SATaskType fromString(String s) {
 			try {
@@ -200,6 +200,9 @@ public class SubstanceAnalysisTask
 				outputLine("Record " + (i+1));
 			
 			switch (type) {
+			case COUNT_SUBSTANCES:
+				taskCountSubstanceRecords(records.get(i), i);
+				break;
 			case COUNT_EFFECTS:
 				taskCountEffects(records.get(i), i);
 				break;
@@ -216,7 +219,7 @@ public class SubstanceAnalysisTask
 		String problemLabel = "Problem";
 				
 		switch (type) {
-		case COUNT_RECORDS:
+		case COUNT_SUBSTANCES:
 			okLabel = "Subst. records OK: ";
 			problemLabel = "Problematic subst. records: ";
 			break;
@@ -243,20 +246,15 @@ public class SubstanceAnalysisTask
 		
 	}
 	
-	public void taskCountRecord(List<SubstanceRecord> records)
+	public void taskCountSubstanceRecords(SubstanceRecord records, int recIndex)
 	{
-		for (int i = 0; i<records.size(); i++)
-		{
-			if (flagVerboseResult)
-				outputLine("Record " + (i+1));
-			
-			analysisStatTotalOKNum++;
-			
-			//TODO use logical conditions
-		}	
+		analysisStatTotalOKNum++;
+
+		//TODO use logical conditions
+
 	}
 	
-	public void taskCountEffects(SubstanceRecord record, int recordNum)
+	public void taskCountEffects(SubstanceRecord record, int recIndex)
 	{
 		//TODO
 	}
