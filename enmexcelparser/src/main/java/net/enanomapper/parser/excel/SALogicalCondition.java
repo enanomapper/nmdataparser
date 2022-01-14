@@ -204,12 +204,33 @@ public class SALogicalCondition
 				return applyForKeyValue(obj[0], obj[1]);
 		}	
 		
-		return new SAConditionResult(false, false, "Not applicable for " + target.getClass().getName());
+		return new SAConditionResult(false, false, "Not applicable for " + target.getClass().getName());		
 	}
 	
-	public SAConditionResult applyForSubstance(SubstanceRecord subst) {
-		//TODO
-		return null;
+	public SAConditionResult applyForSubstance(SubstanceRecord subst) 
+	{
+		if (targetLabel == null)
+			return new SAConditionResult(false, false, "Not applicable for Substance without label");
+		
+		if (conditionType == LogicalConditionType.VALUE) {
+		
+			if (targetLabel.equalsIgnoreCase("substanceName"))
+			{
+				String targetStr = subst.getSubstanceName();
+				boolean res = checkConditionForStringTarget(targetStr, comparison, true, params);
+				return (new SAConditionResult(true, res, null));
+			}
+			
+			if (targetLabel.equalsIgnoreCase("substanceUUID"))
+			{
+				String targetStr = subst.getSubstanceUUID();
+				boolean res = checkConditionForStringTarget(targetStr, comparison, true, params);
+				return (new SAConditionResult(true, res, null));
+			}
+		}
+		
+		return new SAConditionResult(false, false, "Not applicable for Substance with label: " + targetLabel);
+		
 	}
 	
 	public SAConditionResult applyForProtocolApplication(ProtocolApplication pa) {
