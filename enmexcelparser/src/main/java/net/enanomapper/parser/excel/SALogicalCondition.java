@@ -190,7 +190,7 @@ public class SALogicalCondition
 	}
 	
 	
-	public SAConditionResult apply(Object target) {
+	public boolean apply(Object target) {
 		
 		if (target instanceof SubstanceRecord)
 			return applyForSubstance((SubstanceRecord) target);
@@ -204,48 +204,51 @@ public class SALogicalCondition
 				return applyForKeyValue(obj[0], obj[1]);
 		}	
 		
-		return new SAConditionResult(false, false, "Not applicable for " + target.getClass().getName());		
+		return false;
+		//return new SAConditionResult(false, false, "Not applicable for " + target.getClass().getName());		
 	}
 	
-	public SAConditionResult applyForSubstance(SubstanceRecord subst) 
+	public boolean applyForSubstance(SubstanceRecord subst) 
 	{
 		if (targetLabel == null)
-			return new SAConditionResult(false, false, "Not applicable for Substance without label");
+			return false;
+			//return new SAConditionResult(false, false, "Not applicable for Substance without label");
 		
 		if (conditionType == LogicalConditionType.VALUE) {
 		
 			if (targetLabel.equalsIgnoreCase("substanceName"))
 			{
 				String targetStr = subst.getSubstanceName();
-				boolean res = checkConditionForStringTarget(targetStr, comparison, true, params);
-				return (new SAConditionResult(true, res, null));
+				return checkConditionForStringTarget(targetStr, comparison, true, params);
+				
 			}
 			
 			if (targetLabel.equalsIgnoreCase("substanceUUID"))
 			{
 				String targetStr = subst.getSubstanceUUID();
-				boolean res = checkConditionForStringTarget(targetStr, comparison, true, params);
-				return (new SAConditionResult(true, res, null));
+				return checkConditionForStringTarget(targetStr, comparison, true, params);
+				
 			}
 		}
 		
-		return new SAConditionResult(false, false, "Not applicable for Substance with label: " + targetLabel);
+		return false;
+		//return new SAConditionResult(false, false, "Not applicable for Substance with label: " + targetLabel);
 		
 	}
 	
-	public SAConditionResult applyForProtocolApplication(ProtocolApplication pa) {
+	public boolean applyForProtocolApplication(ProtocolApplication pa) {
 		//TODO
-		return null;
+		return true;
 	}
 	
-	public SAConditionResult applyForEffect(EffectRecord effect) {
+	public boolean applyForEffect(EffectRecord effect) {
 		//TODO
-		return null;
+		return true;
 	}
 	
-	public SAConditionResult applyForKeyValue(Object key, Object value) {
+	public boolean applyForKeyValue(Object key, Object value) {
 		//TODO
-		return null;
+		return true;
 	}
 	
 	

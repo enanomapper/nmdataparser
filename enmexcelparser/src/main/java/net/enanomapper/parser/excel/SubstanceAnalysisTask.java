@@ -267,12 +267,10 @@ public class SubstanceAnalysisTask
 		{
 			if (lc.targetType == TargetType.SUBSTANCE)
 			{
-				SAConditionResult res = lc.applyForSubstance(record);
-				
-					
+				if (!lc.applyForSubstance(record))
+					return false;	
 			}
 		}
-		
 		return true;
 	}
 	
