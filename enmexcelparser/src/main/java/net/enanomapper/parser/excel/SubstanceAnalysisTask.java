@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
+import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 import net.enanomapper.parser.excel.SALogicalCondition.SAConditionResult;
 import net.enanomapper.parser.excel.SALogicalCondition.TargetType;
@@ -261,7 +263,7 @@ public class SubstanceAnalysisTask
 		//TODO
 	}
 	
-	boolean checkConditions(SubstanceRecord record)
+	boolean checkLogConditions(SubstanceRecord record)
 	{
 		for (SALogicalCondition lc:  logicalConditions)
 		{
@@ -274,6 +276,57 @@ public class SubstanceAnalysisTask
 		return true;
 	}
 	
+	boolean checkLogConditions(ProtocolApplication pa)
+	{
+		for (SALogicalCondition lc:  logicalConditions)
+		{
+			if (lc.targetType == TargetType.PROTOCOL)
+			{
+				if (!lc.applyForProtocolApplication(pa))
+					return false;	
+			}
+		}
+		return true;
+	}
+			
+	boolean checkLogConditions(EffectRecord effect)
+	{
+		for (SALogicalCondition lc:  logicalConditions)
+		{
+			if (lc.targetType == TargetType.EFFECT)
+			{
+				if (!lc.applyForEffect(effect))
+					return false;	
+			}
+		}
+		return true;
+	}
+	
+	boolean checkLogConditionsForProtocolParameter(Object key, Object value)
+	{
+		for (SALogicalCondition lc:  logicalConditions)
+		{
+			if (lc.targetType == TargetType.PROTOCOL_PARAMETER)
+			{
+				if (!lc.applyForKeyValue(key, value))
+					return false;	
+			}
+		}
+		return true;
+	}
+	
+	boolean checkLogConditionsForCondition(Object key, Object value)
+	{
+		for (SALogicalCondition lc:  logicalConditions)
+		{
+			if (lc.targetType == TargetType.CONDITION)
+			{
+				if (!lc.applyForKeyValue(key, value))
+					return false;	
+			}
+		}
+		return true;
+	}
 	
 	
 	public String toString() {
