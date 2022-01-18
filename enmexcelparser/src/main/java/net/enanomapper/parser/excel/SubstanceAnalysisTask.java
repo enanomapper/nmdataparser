@@ -46,6 +46,7 @@ public class SubstanceAnalysisTask
 	public int analysisStatTotalOKNum = 0;
 	public int analysisStatTotalProblemNum = 0;
 	
+	public List<SALogicalCondition> curFailedLogConditions = new ArrayList<SALogicalCondition>();
 	
 	/*
 	 * Parsing a SubstanceAnalysisTask from a string in the following format
@@ -199,9 +200,8 @@ public class SubstanceAnalysisTask
 			return -1;
 		
 		for (int i = 0; i<records.size(); i++)
-		{
-			if (flagVerboseResult)
-				outputLine("Record " + (i+1));
+		{	
+			outputLine("Record " + (i+1));
 			
 			switch (type) {
 			case COUNT_SUBSTANCES:
@@ -250,12 +250,21 @@ public class SubstanceAnalysisTask
 		
 	}
 	
-	public void taskCountSubstanceRecords(SubstanceRecord records, int recIndex)
+	public void taskCountSubstanceRecords(SubstanceRecord record, int recIndex)
 	{
-		analysisStatTotalOKNum++;
-
-		//TODO use logical conditions
-
+		boolean checkRes = checkLogConditions(record);
+		if (checkRes) 
+		{
+			analysisStatTotalOKNum++;
+			if (flagVerboseResult)
+				outputLine("Record " + (recIndex + 1) + ": OK");
+		}	
+		else {
+			analysisStatTotalProblemNum++;
+			outputLine("Problem: record " + (recIndex + 1) + ": " + curFailedLogConditionToMessageString());
+		}
+			
+		
 	}
 	
 	public void taskCountEffects(SubstanceRecord record, int recIndex)
@@ -265,12 +274,15 @@ public class SubstanceAnalysisTask
 	
 	boolean checkLogConditions(SubstanceRecord record)
 	{
+		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
 		{
 			if (lc.targetType == TargetType.SUBSTANCE)
 			{
-				if (!lc.applyForSubstance(record))
+				if (!lc.applyForSubstance(record)) {
+					curFailedLogConditions.add(lc);
 					return false;	
+				}	
 			}
 		}
 		return true;
@@ -278,12 +290,15 @@ public class SubstanceAnalysisTask
 	
 	boolean checkLogConditions(ProtocolApplication pa)
 	{
+		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
 		{
 			if (lc.targetType == TargetType.PROTOCOL)
 			{
-				if (!lc.applyForProtocolApplication(pa))
+				if (!lc.applyForProtocolApplication(pa)) {
+					curFailedLogConditions.add(lc);
 					return false;	
+				}	
 			}
 		}
 		return true;
@@ -291,12 +306,15 @@ public class SubstanceAnalysisTask
 			
 	boolean checkLogConditions(EffectRecord effect)
 	{
+		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
 		{
 			if (lc.targetType == TargetType.EFFECT)
 			{
-				if (!lc.applyForEffect(effect))
+				if (!lc.applyForEffect(effect)) {
+					curFailedLogConditions.add(lc);
 					return false;	
+				}	
 			}
 		}
 		return true;
@@ -304,12 +322,15 @@ public class SubstanceAnalysisTask
 	
 	boolean checkLogConditionsForProtocolParameter(Object key, Object value)
 	{
+		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
 		{
 			if (lc.targetType == TargetType.PROTOCOL_PARAMETER)
 			{
-				if (!lc.applyForKeyValue(key, value))
+				if (!lc.applyForKeyValue(key, value)) {
+					curFailedLogConditions.add(lc);
 					return false;	
+				}	
 			}
 		}
 		return true;
@@ -317,17 +338,31 @@ public class SubstanceAnalysisTask
 	
 	boolean checkLogConditionsForCondition(Object key, Object value)
 	{
+		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
 		{
 			if (lc.targetType == TargetType.CONDITION)
 			{
-				if (!lc.applyForKeyValue(key, value))
+				if (!lc.applyForKeyValue(key, value)) {
+					curFailedLogConditions.add(lc);
 					return false;	
+				}	
 			}
 		}
 		return true;
 	}
 	
+	String curFailedLogConditionToMessageString() {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < curFailedLogConditions.size(); i++)
+		{
+			if (i > 0)
+				sb.append("\n  ");
+			SALogicalCondition lc = curFailedLogConditions.get(i);
+			sb.append(lc.toString());
+		}
+		return sb.toString();
+	}	
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
