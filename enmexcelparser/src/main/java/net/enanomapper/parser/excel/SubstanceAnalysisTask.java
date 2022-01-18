@@ -5,6 +5,8 @@ import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
+import net.enanomapper.parser.excel.SALogicalCondition.SAConditionResult;
+import net.enanomapper.parser.excel.SALogicalCondition.TargetType;
 
 
 public class SubstanceAnalysisTask 
@@ -257,6 +259,21 @@ public class SubstanceAnalysisTask
 	public void taskCountEffects(SubstanceRecord record, int recIndex)
 	{
 		//TODO
+	}
+	
+	boolean checkConditions(SubstanceRecord record)
+	{
+		for (SALogicalCondition lc:  logicalConditions)
+		{
+			if (lc.targetType == TargetType.SUBSTANCE)
+			{
+				SAConditionResult res = lc.applyForSubstance(record);
+				
+					
+			}
+		}
+		
+		return true;
 	}
 	
 	
