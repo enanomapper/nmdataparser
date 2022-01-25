@@ -283,8 +283,8 @@ public class SALogicalCondition
 			}
 			else
 			{
-				//Check for specific targetLabelParam (suffix)  
-				//TODO
+				//Check for specific targetLabelParam (suffix)				
+				applyForKeyValueWithTargetLabelParam(key, value);
 			}
 		}
 		
@@ -293,6 +293,23 @@ public class SALogicalCondition
 			//is applied in mode LABEL i.e. the key is the target			
 			return checkConditionForStringTarget(key, comparison, true, params);
 		}
+		return false;
+	}
+	
+	public boolean applyForKeyValueWithTargetLabelParam(String key, Object value)
+	{
+		if (targetLabelParam.equalsIgnoreCase("unit"))
+		{	
+			if (value instanceof IValue) //It is applicable for IValue
+			{
+				IValue val = (IValue)value;
+				Object unitsObj = val.getUnits();
+				if (unitsObj instanceof String) {
+					checkConditionForStringTarget((String)unitsObj, comparison, true, params);
+				}
+			}
+		}
+		
 		return false;
 	}
 	
