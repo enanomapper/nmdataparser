@@ -320,7 +320,7 @@ public class SubstanceAnalysisTask
 		return true;
 	}
 	
-	boolean checkLogConditionsForProtocolParameter(Object key, Object value)
+	boolean checkLogConditionsForProtocolParameter(String key, Object value)
 	{
 		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)
@@ -336,7 +336,7 @@ public class SubstanceAnalysisTask
 		return true;
 	}
 	
-	boolean checkLogConditionsForCondition(Object key, Object value)
+	boolean checkLogConditionsForCondition(String key, Object value)
 	{
 		curFailedLogConditions.clear();
 		for (SALogicalCondition lc:  logicalConditions)

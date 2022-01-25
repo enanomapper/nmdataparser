@@ -5,6 +5,7 @@ import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IValue;
 import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 
@@ -201,7 +202,7 @@ public class SALogicalCondition
 		if (target instanceof Object[]) {
 			Object obj[] = (Object[]) target;
 			if (obj.length > 1)
-				return applyForKeyValue(obj[0], obj[1]);
+				return applyForKeyValue(obj[0].toString(), obj[1]);
 		}	
 		
 		return false;
@@ -220,14 +221,12 @@ public class SALogicalCondition
 			{
 				String targetStr = subst.getSubstanceName();
 				return checkConditionForStringTarget(targetStr, comparison, true, params);
-				
 			}
 			
 			if (targetLabel.equalsIgnoreCase("substanceUUID"))
 			{
 				String targetStr = subst.getSubstanceUUID();
 				return checkConditionForStringTarget(targetStr, comparison, true, params);
-				
 			}
 		}
 		
@@ -246,9 +245,55 @@ public class SALogicalCondition
 		return true;
 	}
 	
-	public boolean applyForKeyValue(Object key, Object value) {
-		//TODO
-		return true;
+	public boolean applyForKeyValue(String key, Object value) 
+	{	
+		//This function is typically applied for pairs of type (key, value)
+		//for protocol parameter or condition
+		if (conditionType == LogicalConditionType.VALUE) {
+			if (targetLabel != null){
+				//the log. condition is checked against
+				//specific key/label
+				if (!targetLabel.equalsIgnoreCase(key))
+					return false; 
+			}
+			
+			if (targetLabelParam == null)
+			{
+				if (value == null)
+					return checkConditionForStringTarget(null, comparison, true, params);
+				
+				if (value instanceof String)
+					return checkConditionForStringTarget(value.toString(), comparison, true, params);
+				
+				if (value instanceof Double) {
+					double d_params[] = extractDoubleArray(params);
+					return checkConditionForDoubleTarget((Double)value, comparison, d_params);
+				}
+				
+				if (value instanceof IValue)
+				{
+					IValue val = (IValue)value;
+					if (val.getLoValue() != null && 
+							(val.getLoValue() instanceof Double))
+					{
+						double d_params[] = extractDoubleArray(params);
+						return checkConditionForDoubleTarget((Double)val.getLoValue(), comparison, d_params);
+					}	
+				}
+			}
+			else
+			{
+				//Check for specific targetLabelParam (suffix)  
+				//TODO
+			}
+		}
+		
+		if (conditionType == LogicalConditionType.LABEL) {
+			//targetLabel info (if present) is not used since the logical condition 
+			//is applied in mode LABEL i.e. the key is the target			
+			return checkConditionForStringTarget(key, comparison, true, params);
+		}
+		return false;
 	}
 	
 	
@@ -478,6 +523,22 @@ public class SALogicalCondition
 		if (checkIndex >= params.length)
 			return params[params.length-1]; //last element is returned		
 		return params[checkIndex];
+	}
+	
+	public static double[] extractDoubleArray(Object objects[])
+	{
+		if (objects == null)
+			return null;
+		
+		double dObjs[] = new double[objects.length];
+		for (int i = 0; i < objects.length; i++)
+		{
+			if (objects[i] instanceof Double)
+				dObjs[i] = (Double)objects[i];
+			else
+				return null;
+		}
+		return dObjs;
 	}
 	
 }
