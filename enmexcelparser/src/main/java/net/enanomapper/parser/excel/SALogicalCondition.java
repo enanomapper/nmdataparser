@@ -272,30 +272,23 @@ public class SALogicalCondition
 				flagDouble = true;
 			}
 			
-			if (obj == null) {
-				if (flagDouble) {
-					double d_params[] = extractDoubleArray(params);
-					return checkConditionForDoubleTarget(null, comparison, d_params);
-				} 
-				else	
-					return checkConditionForStringTarget(null, comparison, true, params);
-			}	
+			return checkConditionForObject(obj, flagDouble); 
 			
-			if (obj instanceof String) 
-				checkConditionForStringTarget((String)obj, comparison, true, params);
-			
-			if (obj instanceof Double) {
-				double d_params[] = extractDoubleArray(params);
-				return checkConditionForDoubleTarget((Double)obj, comparison, d_params);
-			}
 		}
 		
 		return false;
 	}
 	
-	public boolean applyForEffect(EffectRecord effect) {
-		//TODO
-		return true;
+	public boolean applyForEffect(EffectRecord effect) 
+	{
+		if (conditionType == LogicalConditionType.VALUE) 
+		{
+			Object obj = null;
+			boolean flagDouble = false;
+		}
+		
+		
+		return false;
 	}
 	
 	public boolean applyForKeyValue(String key, Object value) 
@@ -377,23 +370,32 @@ public class SALogicalCondition
 			if (targetLabelParam.equalsIgnoreCase("annotation"))
 				obj = val.getAnnotation();
 			
-			if (obj == null) {
-				if (flagDouble) {
-					double d_params[] = extractDoubleArray(params);
-					return checkConditionForDoubleTarget(null, comparison, d_params);
-				} 
-				else	
-					return checkConditionForStringTarget(null, comparison, true, params);
-			}	
+			return checkConditionForObject(obj, flagDouble); 
 			
-			if (obj instanceof String) 
-				checkConditionForStringTarget((String)obj, comparison, true, params);
-			
-			if (obj instanceof Double) {
-				double d_params[] = extractDoubleArray(params);
-				return checkConditionForDoubleTarget((Double)obj, comparison, d_params);
-			}
 		}		
+		return false;
+	}
+	
+	
+	public boolean checkConditionForObject(Object obj, boolean flagDouble) 
+	{
+		if (obj == null) {
+			if (flagDouble) {
+				double d_params[] = extractDoubleArray(params);
+				return checkConditionForDoubleTarget(null, comparison, d_params);
+			} 
+			else	
+				return checkConditionForStringTarget(null, comparison, true, params);
+		}	
+		
+		if (obj instanceof String) 
+			checkConditionForStringTarget((String)obj, comparison, true, params);
+		
+		if (obj instanceof Double) {
+			double d_params[] = extractDoubleArray(params);
+			return checkConditionForDoubleTarget((Double)obj, comparison, d_params);
+		}
+		
 		return false;
 	}
 	
