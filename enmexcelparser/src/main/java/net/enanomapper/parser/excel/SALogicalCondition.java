@@ -246,10 +246,6 @@ public class SALogicalCondition
 			if (targetLabel != null) {
 				//When targetLabel is missing comparison is performed
 				obj = pa.getProtocol();
-				if (obj == null)
-					return checkConditionForStringTarget(null, comparison, true, params);
-				else
-					return checkConditionForStringTarget(obj.toString(), comparison, true, params);
 			}
 			
 			if (targetLabel.equalsIgnoreCase("protocol"))
@@ -273,7 +269,6 @@ public class SALogicalCondition
 			}
 			
 			return checkConditionForObject(obj, flagDouble); 
-			
 		}
 		
 		return false;
@@ -285,6 +280,9 @@ public class SALogicalCondition
 		{
 			Object obj = null;
 			boolean flagDouble = false;
+			
+			
+			return checkConditionForObject(obj, flagDouble); 
 		}
 		
 		
@@ -302,9 +300,9 @@ public class SALogicalCondition
 				if (!targetLabel.equalsIgnoreCase(key))
 					return false; 
 			}
-			
+						
 			if (targetLabelParam == null)
-			{
+			{	
 				if (value == null)
 					return checkConditionForStringTarget(null, comparison, true, params);
 				
@@ -315,23 +313,18 @@ public class SALogicalCondition
 					double d_params[] = extractDoubleArray(params);
 					return checkConditionForDoubleTarget((Double)value, comparison, d_params);
 				}
-				
+				 
 				if (value instanceof IValue)
 				{
-					//loValue is checked by default. 
+					//loValue is checked by default when targetLabelParam is not specified. 
 					//More precise checks need to specified via  targetLabelParam
 					IValue val = (IValue)value;
-					if (val.getLoValue() != null && 
-							(val.getLoValue() instanceof Double))
-					{
-						double d_params[] = extractDoubleArray(params);
-						return checkConditionForDoubleTarget((Double)val.getLoValue(), comparison, d_params);
-					}
+					return checkConditionForObject(val.getLoValue(), true);
 				}
 			}
 			else
 			{
-				//Check for specific targetLabelParam (':' suffix)				
+				//Check condition using specific targetLabelParam (defined by suffix after ':')				
 				applyForKeyValueWithTargetLabelParam(key, value);
 			}
 		}
