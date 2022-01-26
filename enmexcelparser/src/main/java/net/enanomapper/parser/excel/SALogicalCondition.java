@@ -244,7 +244,7 @@ public class SALogicalCondition
 			boolean flagDouble = false;
 			
 			if (targetLabel != null) {
-				//When targetLabel is missing comparison is performed
+				//When targetLabel is missing protocol check is performed
 				obj = pa.getProtocol();
 			}
 			else {
@@ -252,7 +252,7 @@ public class SALogicalCondition
 					obj = pa.getProtocol();			
 				//TODO - handle other fields of the ProtocolApplication 
 
-				if (targetLabel.equalsIgnoreCase("effectNumber")) {
+				if (targetLabel.equalsIgnoreCase("numberOfEffects")) {
 					obj = new Double(0);
 					List effList = pa.getEffects();
 					if (effList != null)
@@ -260,7 +260,7 @@ public class SALogicalCondition
 					flagDouble = true;
 				}
 
-				if (targetLabel.equalsIgnoreCase("parameterNumber")) {
+				if (targetLabel.equalsIgnoreCase("numberOfParameters")) {
 					obj = new Double(0);
 					IParams par = (IParams)pa.getParameters();
 					if (par != null) 
@@ -282,13 +282,44 @@ public class SALogicalCondition
 			Object obj = null;
 			boolean flagDouble = false;
 			
-			
-			
-			
+			if (targetLabel != null) {
+				//When targetLabel is missing LoValuue check is performed
+				obj = effect.getLoValue();
+			}
+			else {
+				if (targetLabel.equalsIgnoreCase("loValue")) {
+					obj = effect.getLoValue();
+					flagDouble = true;
+				}	
+				if (targetLabel.equalsIgnoreCase("LoQualifier"))
+					obj = effect.getLoQualifier();
+				if (targetLabel.equalsIgnoreCase("upValue")) {
+					obj = effect.getUpValue();
+					flagDouble = true;
+				}	
+				if (targetLabel.equalsIgnoreCase("upValue"))
+					obj = effect.getUpQualifier();
+				if (targetLabel.equalsIgnoreCase("textValue"))
+					obj = effect.getTextValue();
+				if (targetLabel.equalsIgnoreCase("unit"))
+					obj = effect.getUnit();
+				if (targetLabel.equalsIgnoreCase("endpoint"))
+					obj = effect.getEndpoint();
+				if (targetLabel.equalsIgnoreCase("endpointType"))
+					obj = effect.getEndpointType();
+				if (targetLabel.equalsIgnoreCase("numberOfConditions"))
+				{
+					obj = new Double(0);
+					effect.getConditions();
+					IParams par = (IParams)effect.getConditions();
+					if (par != null) 
+						obj = new Double(par.size());					
+					flagDouble = true;
+				}	
+			}
 			
 			return checkConditionForObject(obj, flagDouble); 
-		}
-		
+		}		
 		
 		return false;
 	}
@@ -347,9 +378,8 @@ public class SALogicalCondition
 		{
 			IValue val = (IValue)value;			
 			Object obj = null;
-			boolean flagDouble = false;
-			
-			//String cases
+			boolean flagDouble = false;			
+		
 			if (targetLabelParam.equalsIgnoreCase("unit"))
 				obj = val.getUnits(); 
 			if (targetLabelParam.equalsIgnoreCase("loQualifier"))
