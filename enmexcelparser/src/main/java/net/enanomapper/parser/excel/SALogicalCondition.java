@@ -247,25 +247,26 @@ public class SALogicalCondition
 				//When targetLabel is missing comparison is performed
 				obj = pa.getProtocol();
 			}
-			
-			if (targetLabel.equalsIgnoreCase("protocol"))
-				obj = pa.getProtocol();			
-			//TODO - handle other fields of the ProtocolApplication 
-			
-			if (targetLabel.equalsIgnoreCase("effectNumber")) {
-				obj = new Double(0);
-				List effList = pa.getEffects();
-				if (effList != null)
-					obj = new Double(effList.size());
-				flagDouble = true;
-			}
-			
-			if (targetLabel.equalsIgnoreCase("parameterNumber")) {
-				obj = new Double(0);
-				IParams par = (IParams)pa.getParameters();
-				if (par != null) 
-					obj = new Double(par.size());					
-				flagDouble = true;
+			else {
+				if (targetLabel.equalsIgnoreCase("protocol"))
+					obj = pa.getProtocol();			
+				//TODO - handle other fields of the ProtocolApplication 
+
+				if (targetLabel.equalsIgnoreCase("effectNumber")) {
+					obj = new Double(0);
+					List effList = pa.getEffects();
+					if (effList != null)
+						obj = new Double(effList.size());
+					flagDouble = true;
+				}
+
+				if (targetLabel.equalsIgnoreCase("parameterNumber")) {
+					obj = new Double(0);
+					IParams par = (IParams)pa.getParameters();
+					if (par != null) 
+						obj = new Double(par.size());					
+					flagDouble = true;
+				}
 			}
 			
 			return checkConditionForObject(obj, flagDouble); 
@@ -280,6 +281,9 @@ public class SALogicalCondition
 		{
 			Object obj = null;
 			boolean flagDouble = false;
+			
+			
+			
 			
 			
 			return checkConditionForObject(obj, flagDouble); 
