@@ -5,6 +5,7 @@ import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.IValue;
 import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
@@ -235,9 +236,61 @@ public class SALogicalCondition
 		
 	}
 	
-	public boolean applyForProtocolApplication(ProtocolApplication pa) {
-		//TODO
-		return true;
+	public boolean applyForProtocolApplication(ProtocolApplication pa) 
+	{
+		if (conditionType == LogicalConditionType.VALUE) 
+		{
+			Object obj = null;
+			boolean flagDouble = false;
+			
+			if (targetLabel != null) {
+				//When targetLabel is missing comparison is performed
+				obj = pa.getProtocol();
+				if (obj == null)
+					return checkConditionForStringTarget(null, comparison, true, params);
+				else
+					return checkConditionForStringTarget(obj.toString(), comparison, true, params);
+			}
+			
+			if (targetLabel.equalsIgnoreCase("protocol"))
+				obj = pa.getProtocol();			
+			//TODO - handle other fields of the ProtocolApplication 
+			
+			if (targetLabel.equalsIgnoreCase("effectNumber")) {
+				obj = new Double(0);
+				List effList = pa.getEffects();
+				if (effList != null)
+					obj = new Double(effList.size());
+				flagDouble = true;
+			}
+			
+			if (targetLabel.equalsIgnoreCase("parameterNumber")) {
+				obj = new Double(0);
+				IParams par = (IParams)pa.getParameters();
+				if (par != null) 
+					obj = new Double(par.size());					
+				flagDouble = true;
+			}
+			
+			if (obj == null) {
+				if (flagDouble) {
+					double d_params[] = extractDoubleArray(params);
+					return checkConditionForDoubleTarget(null, comparison, d_params);
+				} 
+				else	
+					return checkConditionForStringTarget(null, comparison, true, params);
+			}	
+			
+			if (obj instanceof String) 
+				checkConditionForStringTarget((String)obj, comparison, true, params);
+			
+			if (obj instanceof Double) {
+				double d_params[] = extractDoubleArray(params);
+				return checkConditionForDoubleTarget((Double)obj, comparison, d_params);
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean applyForEffect(EffectRecord effect) {
