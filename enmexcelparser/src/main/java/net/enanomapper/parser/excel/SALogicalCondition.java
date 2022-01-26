@@ -272,18 +272,20 @@ public class SALogicalCondition
 				
 				if (value instanceof IValue)
 				{
+					//loValue is checked by default. 
+					//More precise checks need to specified via  targetLabelParam
 					IValue val = (IValue)value;
 					if (val.getLoValue() != null && 
 							(val.getLoValue() instanceof Double))
 					{
 						double d_params[] = extractDoubleArray(params);
 						return checkConditionForDoubleTarget((Double)val.getLoValue(), comparison, d_params);
-					}	
+					}
 				}
 			}
 			else
 			{
-				//Check for specific targetLabelParam (suffix)				
+				//Check for specific targetLabelParam (':' suffix)				
 				applyForKeyValueWithTargetLabelParam(key, value);
 			}
 		}
@@ -298,18 +300,47 @@ public class SALogicalCondition
 	
 	public boolean applyForKeyValueWithTargetLabelParam(String key, Object value)
 	{
-		if (targetLabelParam.equalsIgnoreCase("unit"))
-		{	
-			if (value instanceof IValue) //It is applicable for IValue
-			{
-				IValue val = (IValue)value;
-				Object unitsObj = val.getUnits();
-				if (unitsObj instanceof String) {
-					checkConditionForStringTarget((String)unitsObj, comparison, true, params);
-				}
+		if (value instanceof IValue) //Cases applicable for IValue
+		{
+			IValue val = (IValue)value;			
+			Object obj = null;
+			boolean flagDouble = false;
+			
+			//String cases
+			if (targetLabelParam.equalsIgnoreCase("unit"))
+				obj = val.getUnits(); 
+			if (targetLabelParam.equalsIgnoreCase("loQualifier"))
+				obj = val.getLoQualifier();
+			if (targetLabelParam.equalsIgnoreCase("loValue")) {
+				obj = val.getLoValue();
+				flagDouble = true;
+			}	
+			if (targetLabelParam.equalsIgnoreCase("upQualifier"))
+				obj = val.getUpQualifier();
+			if (targetLabelParam.equalsIgnoreCase("upValue")) {
+				obj = val.getUpValue();
+				flagDouble = true;
+			}	
+			if (targetLabelParam.equalsIgnoreCase("annotation"))
+				obj = val.getAnnotation();
+			
+			if (obj == null) {
+				if (flagDouble) {
+					double d_params[] = extractDoubleArray(params);
+					return checkConditionForDoubleTarget(null, comparison, d_params);
+				} 
+				else	
+					return checkConditionForStringTarget(null, comparison, true, params);
+			}	
+			
+			if (obj instanceof String) 
+				checkConditionForStringTarget((String)obj, comparison, true, params);
+			
+			if (obj instanceof Double) {
+				double d_params[] = extractDoubleArray(params);
+				return checkConditionForDoubleTarget((Double)obj, comparison, d_params);
 			}
-		}
-		
+		}		
 		return false;
 	}
 	
