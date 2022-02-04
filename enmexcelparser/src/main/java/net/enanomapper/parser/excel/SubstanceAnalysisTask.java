@@ -248,7 +248,22 @@ public class SubstanceAnalysisTask
 		outputLine(okLabel + analysisStatTotalOKNum);
 		outputLine(problemLabel + analysisStatTotalProblemNum);
 		
+		checkAnalysisStat();
 	}
+	
+	void checkAnalysisStat() {
+		//Check analysisStatTotalOKNum with qualifier and params info
+		if (comparison != ComparisonOperation.UNDEFINED)
+		{
+			double d_params[] = SALogicalCondition.extractDoubleArray(params);
+			boolean comparRes = SALogicalCondition.checkConditionForDoubleTarget(
+					new Double(analysisStatTotalOKNum), comparison, d_params);
+			if (comparRes)
+				outputLine("analysisStatTotalOKNum is OK");
+			else
+				outputLine("Probm: with analysisStatTotalOKNum = " + analysisStatTotalOKNum);
+		}
+	}		
 	
 	public void taskCountSubstanceRecords(SubstanceRecord record, int recIndex)
 	{
@@ -263,9 +278,10 @@ public class SubstanceAnalysisTask
 			analysisStatTotalProblemNum++;
 			outputLine("Problem: record " + (recIndex + 1) + ": " + curFailedLogConditionToMessageString());
 		}
-			
-		
 	}
+	
+	
+	
 	
 	public void taskCountEffects(SubstanceRecord record, int recIndex)
 	{
