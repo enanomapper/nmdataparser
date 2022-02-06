@@ -138,6 +138,32 @@ public class SubstanceAnalysisTask
 						
 			}
 		
+		//Check parsed info consistency
+		//Check groupBy
+		if (saTask.groupBy != TargetType.UNDEFINED)
+		{
+			boolean flagErr = true; //Majority of the combinations are not supported
+			switch (saTask.type) {
+			case COUNT_PROTOCOLS:
+				if (saTask.groupBy == TargetType.SUBSTANCE)
+					flagErr = false;
+				break;
+			case COUNT_EFFECTS:
+				if (saTask.groupBy == TargetType.PROTOCOL || 
+				saTask.groupBy == TargetType.SUBSTANCE)
+					flagErr = false;
+				break;
+			case COUNT_CONDITIONS:
+				if (saTask.groupBy == TargetType.EFFECT ||
+				saTask.groupBy == TargetType.PROTOCOL || 
+				saTask.groupBy == TargetType.SUBSTANCE)
+					flagErr = false;
+				break;				
+			}
+
+			if (flagErr)
+				errors.add("Group by " + saTask.groupBy + " is not supported for task type " + saTask.type);
+		}
 						
 		if (!errors.isEmpty()) {
 			StringBuffer errBuffer = new StringBuffer();
