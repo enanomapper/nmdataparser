@@ -45,6 +45,7 @@ public class SubstanceAnalysisTask
 	public List<String> analysisWarnings = new ArrayList<String>();	
 	public int analysisStatTotalOKNum = 0;
 	public int analysisStatTotalProblemNum = 0;
+	public TargetType groupBy = TargetType.UNDEFINED;
 	
 	public List<SALogicalCondition> curFailedLogConditions = new ArrayList<SALogicalCondition>();
 	
@@ -174,6 +175,36 @@ public class SubstanceAnalysisTask
 			return 0;
 		}
 		
+		if (token.equalsIgnoreCase("GROUP_BY_SUBSTANCE"))
+		{	
+			saTask.groupBy = SALogicalCondition.TargetType.SUBSTANCE;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("GROUP_BY_PROTOCOL"))
+		{	
+			saTask.groupBy = SALogicalCondition.TargetType.PROTOCOL;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("GROUP_BY_PROTOCOL_PARAMETER"))
+		{	
+			saTask.groupBy = SALogicalCondition.TargetType.PROTOCOL_PARAMETER;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("GROUP_BY_EFFECT"))
+		{	
+			saTask.groupBy = SALogicalCondition.TargetType.EFFECT;
+			return 0;
+		}
+		
+		if (token.equalsIgnoreCase("GROUP_BY_CONDITION"))
+		{	
+			saTask.groupBy = SALogicalCondition.TargetType.CONDITION;
+			return 0;
+		}
+		
 		return -1;
 	}
 	
@@ -279,10 +310,8 @@ public class SubstanceAnalysisTask
 			outputLine("Problem: record " + (recIndex + 1) + ": " + curFailedLogConditionToMessageString());
 		}
 	}
-	
-	
-	
-	
+		
+		
 	public void taskCountEffects(SubstanceRecord record, int recIndex)
 	{
 		//TODO
@@ -402,6 +431,9 @@ public class SubstanceAnalysisTask
 				sb.append("\n");
 			}			
 		}
+		
+		if (groupBy != TargetType.UNDEFINED)
+			sb.append("groupBy: " + groupBy + "\n");
 		
 		sb.append("Verbose: " + flagVerboseResult + "\n");
 				
