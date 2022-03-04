@@ -1,6 +1,8 @@
 package net.enanomapper.parser.excel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
@@ -24,6 +26,11 @@ public class SubstanceDataAggregator
 	}
 
 	public AggrationMode aggrationMode = AggrationMode.UNDEFINED;
+	public int rowSubblocks = 1;
+	public int columnSubblocks = 1;
+	public int subblockSizeRows = 1;
+	public int subblockSizeColumns = 1;	
+	public Map<String, String> expressions = new HashMap<String, String>();
 	
 
 	public void iterate(IRawReader<IStructureRecord> substanceIterator)
@@ -57,6 +64,11 @@ public class SubstanceDataAggregator
 	}
 
 	public void analyse(EffectRecord eff)
+	{
+		//TODO
+	}
+	
+	public void handleExpressions()
 	{
 		//TODO
 	}
