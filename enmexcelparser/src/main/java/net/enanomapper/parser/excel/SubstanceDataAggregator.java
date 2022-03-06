@@ -24,6 +24,10 @@ public class SubstanceDataAggregator
 			}
 		}
 	}
+	
+	public enum IterationTask {
+		ANALYSE, AGGREGATE
+	}
 
 	public AggrationMode aggrationMode = AggrationMode.UNDEFINED;
 	public int rowSubblocks = 1;
@@ -33,14 +37,21 @@ public class SubstanceDataAggregator
 	public Map<String, String> expressions = new HashMap<String, String>();
 	
 
-	public void iterate(IRawReader<IStructureRecord> substanceIterator)
+	public void iterate(IRawReader<IStructureRecord> substanceIterator, IterationTask itTask)
 	{
 		if (substanceIterator == null)
 			return;
 
 		while (substanceIterator.hasNext()) {
 			SubstanceRecord r = (SubstanceRecord)substanceIterator.nextRecord();
-			analyse(r);
+			switch (itTask) {
+			case ANALYSE:
+				analyse(r);
+				break;
+			case AGGREGATE:
+				//TODO
+				break;
+			}
 		}
 	}
 
