@@ -1,5 +1,6 @@
 package net.enanomapper.parser.excel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import ambit2.base.data.study.EffectRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
+import net.enanomapper.parser.ExcelParserConfigurator;
 
 public class SubstanceDataAggregator 
 {
@@ -31,6 +33,8 @@ public class SubstanceDataAggregator
 	}
 
 	public AggrationMode aggrationMode = AggrationMode.UNDEFINED;
+	public int startRow = 1;
+	public int startColumn = 1;
 	public int rowSubblocks = 1;
 	public int columnSubblocks = 1;
 	public int subblockSizeRows = 1;
@@ -40,9 +44,12 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> agregatorParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();
 	
+	//work variable
 	public double dataMatrix[][] = null;
+	public SubstanceRecord curSubstance;
+	public ProtocolApplication curPA;
 	
-	
+		
 	public void aggregate(IRawReader<IStructureRecord> substanceIterator)
 	{
 		//TODO
@@ -71,7 +78,7 @@ public class SubstanceDataAggregator
 	}
 	
 	public void iterate(List<SubstanceRecord> substanceList, IterationTask itTask)
-	{		
+	{	
 		for (SubstanceRecord r : substanceList) {
 			iterate (r, itTask);
 		}
@@ -79,6 +86,20 @@ public class SubstanceDataAggregator
 
 	public void iterate(SubstanceRecord rec, IterationTask itTask) 
 	{
+		curSubstance = rec;
+		
+		switch (itTask) {
+		case ANALYSE:
+			analyse(rec);
+			break;
+		case AGGREGATE:
+			aggregate(rec);
+			break;
+		case DATA_SIMULATION:
+			//TODO
+			break;
+		}
+		
 		List<ProtocolApplication> paList = rec.getMeasurements();
 		for (ProtocolApplication pa : paList) 
 		{
@@ -89,28 +110,71 @@ public class SubstanceDataAggregator
 
 	public void iterate(ProtocolApplication pa, IterationTask itTask)
 	{
+		curPA = pa;
+		
+		switch (itTask) {
+		case ANALYSE:
+			analyse(pa);
+			break;
+		case AGGREGATE:
+			aggregate(pa);
+			break;
+		case DATA_SIMULATION:
+			//TODO
+			break;
+		}
+		
 		List<EffectRecord> effects = pa.getEffects();
 		for (EffectRecord eff : effects)
-		{
 			iterate(eff, itTask);
-		}
 	}
 
 	public void iterate(EffectRecord eff, IterationTask itTask)
 	{
 		switch (itTask) {
 		case ANALYSE:
-			//TODO
+			analyse(eff);
 			break;
 		case AGGREGATE:
-			//TODO
+			aggregate(eff);
 			break;
-		
 		case DATA_SIMULATION:
 			//TODO
 			break;
 		}
 	}
+	
+	
+	public void analyse(SubstanceRecord rec)
+	{
+		//TODO
+	}
+	
+	public void analyse(ProtocolApplication pa)
+	{
+		//TODO
+	}
+	
+	public void analyse(EffectRecord eff)
+	{
+		//TODO
+	}
+	
+	public void aggregate(SubstanceRecord rec)
+	{
+		//TODO
+	}
+	
+	public void aggregate(ProtocolApplication pa)
+	{
+		//TODO
+	}
+	
+	public void aggregate(EffectRecord eff)
+	{
+		//TODO
+	}
+	
 	
 	public void exportDataMatrixToCSV(String fileName) throws Exception 
 	{
@@ -120,5 +184,17 @@ public class SubstanceDataAggregator
 	public void handleExpressions()
 	{
 		//TODO
+	}
+	
+	public static SubstanceDataAggregator generateAggregator(ExcelParserConfigurator config)
+	{
+		//TIODO
+		return null;
+	}
+	
+	public static SubstanceDataAggregator generateAggregator(File jsonConfig)
+	{
+		//TIODO
+		return null;
 	}
 }
