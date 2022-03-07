@@ -26,7 +26,7 @@ public class SubstanceDataAggregator
 	}
 	
 	public enum IterationTask {
-		ANALYSE, AGGREGATE
+		ANALYSE, AGGREGATE, DATA_SIMULATION
 	}
 
 	public AggrationMode aggrationMode = AggrationMode.UNDEFINED;
