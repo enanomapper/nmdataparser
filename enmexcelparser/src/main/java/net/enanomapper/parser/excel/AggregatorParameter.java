@@ -1,7 +1,7 @@
 package net.enanomapper.parser.excel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AggregatorParameter 
 {
@@ -22,5 +22,5 @@ public class AggregatorParameter
 	public AggregationTarget aggregationTarget = AggregationTarget.VALUE_GROUP; 
 	public boolean isHorizontalOrientation = false;
 	public int blockAggregationLevel = 1;
-	public List<Object> values = new ArrayList<Object>();
+	public Set<Object> values = new HashSet<Object>();
 }
