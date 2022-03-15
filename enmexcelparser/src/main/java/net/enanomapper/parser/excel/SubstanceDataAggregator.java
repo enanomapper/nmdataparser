@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.Params;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
@@ -164,12 +166,34 @@ public class SubstanceDataAggregator
 	
 	public void analyse(ProtocolApplication pa)
 	{
-		//TODO
+		/*
+		for (AggregatorParameter par : agregatorParameters)
+			if (par.substanceElement == SubstanceElement.PROTOCOL_PARAMETER)
+			{
+				//TODO
+			}
+		*/	
 	}
 	
 	public void analyse(EffectRecord eff)
 	{
-		//TODO
+		Params conditions = (Params) eff.getConditions();
+		Set keys = conditions.keySet();
+		for (Object key: keys) 
+		{
+			Object val = conditions.get(key);
+			boolean FlagRegisteredAggPar = false;
+			for (AggregatorParameter aggPar : agregatorParameters)
+				if (aggPar.substanceElement == SubstanceElement.CONDITION)
+				{
+					if (aggPar.name.equals(key)) {
+						aggPar.values.add(val);
+						FlagRegisteredAggPar = true;
+					}	
+				}
+		}
+		
+		//TODO handle unregistered conditions
 	}
 	
 	public void aggregate(SubstanceRecord rec)
