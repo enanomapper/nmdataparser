@@ -12,6 +12,7 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.excel.AggregatorParameter.SubstanceElement;
 
 public class SubstanceDataAggregator 
 {
@@ -65,6 +66,12 @@ public class SubstanceDataAggregator
 		//TODO
 	}
 	
+	
+	public void reset() {
+		valueGroups.clear();
+		agregatorParameters.clear();
+		expressions.clear();
+	}
 	
 	public void iterate(IRawReader<IStructureRecord> substanceIterator, IterationTask itTask)
 	{
@@ -143,11 +150,16 @@ public class SubstanceDataAggregator
 			break;
 		}
 	}
-	
-	
+		
 	public void analyse(SubstanceRecord rec)
 	{
-		//TODO
+		for (AggregatorParameter par : agregatorParameters)
+			if (par.substanceElement == SubstanceElement.SUBSTANCE_NAME)
+			{
+				String name = rec.getSubstanceName();
+				if (name != null)
+					par.values.add(name);
+			}
 	}
 	
 	public void analyse(ProtocolApplication pa)
