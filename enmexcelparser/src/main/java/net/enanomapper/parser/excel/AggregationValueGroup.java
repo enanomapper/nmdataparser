@@ -9,6 +9,11 @@ public class AggregationValueGroup
 	public String endpointType = null;
 	public List<AggregatorParameter> parameters = new ArrayList<AggregatorParameter>();
 	
+	//Position relative to other value group
+	public int refAggValueGroupIndex = -1;
+	public int horizontalShift = 0;
+	public int verticalShift = 0;
+	
 	//Position within a sub-block
 	public int startRow = 0;
 	public int endRow = 0;
