@@ -35,6 +35,8 @@ public class SubstanceDataAggregator
 		ANALYSE, AGGREGATE, DATA_SIMULATION
 	}
 
+	public boolean FlagHandleUnregisteredElements = false;
+	
 	public AggrationMode aggrationMode = AggrationMode.UNDEFINED;
 	public int startRow = 1;
 	public int startColumn = 1;
@@ -45,8 +47,9 @@ public class SubstanceDataAggregator
 	
 	public List<AggregationValueGroup> valueGroups = new  ArrayList<AggregationValueGroup>();
 	public List<AggregatorParameter> agregatorParameters = new  ArrayList<AggregatorParameter>();
+	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();
-	
+		
 	//work variable
 	public double dataMatrix[][] = null;
 	public SubstanceRecord curSubstance;
@@ -191,9 +194,26 @@ public class SubstanceDataAggregator
 						FlagRegisteredAggPar = true;
 					}	
 				}
+			
+			if (!FlagRegisteredAggPar && FlagHandleUnregisteredElements)
+			{
+				//Handle unregistered conditions
+				boolean newUnregisteredAggPar = true;
+				for (AggregatorParameter aggPar : unregisteredParameters)
+					if (aggPar.substanceElement == SubstanceElement.CONDITION)
+					{
+						if (aggPar.name.equals(key)) {
+							aggPar.values.add(val);
+							newUnregisteredAggPar = false;
+						}	
+					}
+				
+				if (newUnregisteredAggPar) {
+					//TODO
+				}	
+			}
+				
 		}
-		
-		//TODO handle unregistered conditions
 	}
 	
 	public void aggregate(SubstanceRecord rec)
