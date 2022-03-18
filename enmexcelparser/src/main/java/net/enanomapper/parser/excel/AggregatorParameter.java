@@ -6,7 +6,7 @@ import java.util.Set;
 public class AggregatorParameter 
 {
 	public enum SubstanceElement {
-		CONDITION, PROTOCOL_PARAMETER, SUBSTANCE_NAME;
+		CONDITION, PROTOCOL_PARAMETER, PROTOCOL, ENDPOINT, SUBSTANCE_NAME;
 	}
 	
 	public enum AggregationTarget {
