@@ -169,13 +169,41 @@ public class SubstanceDataAggregator
 	
 	public void analyse(ProtocolApplication pa)
 	{
-		/*
-		for (AggregatorParameter par : agregatorParameters)
-			if (par.substanceElement == SubstanceElement.PROTOCOL_PARAMETER)
+		Params paParams = (Params) pa.getParameters();		
+		Set keys = paParams.keySet();
+		for (Object key: keys) 
+		{
+			Object val = paParams.get(key);
+			boolean FlagRegisteredAggPar = false;
+			for (AggregatorParameter aggPar : agregatorParameters)
+				if (aggPar.substanceElement == SubstanceElement.PROTOCOL_PARAMETER)
+				{
+					if (aggPar.name.equals(key)) {
+						aggPar.values.add(val);
+						FlagRegisteredAggPar = true;
+					}	
+				}
+			
+			if (!FlagRegisteredAggPar && FlagHandleUnregisteredElements)
 			{
-				//TODO
+				//Handle unregistered protocol parameters
+				boolean newUnregisteredAggPar = true;
+				for (AggregatorParameter aggPar : unregisteredParameters)
+					if (aggPar.substanceElement == SubstanceElement.PROTOCOL_PARAMETER)
+					{
+						if (aggPar.name.equals(key)) {
+							aggPar.values.add(val);
+							newUnregisteredAggPar = false;
+						}	
+					}
+				
+				if (newUnregisteredAggPar) {
+					AggregatorParameter aggPar = new AggregatorParameter(key.toString(), SubstanceElement.PROTOCOL_PARAMETER);
+					aggPar.values.add(val);
+				}	
 			}
-		*/	
+				
+		}
 	}
 	
 	public void analyse(EffectRecord eff)
