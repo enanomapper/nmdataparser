@@ -209,7 +209,8 @@ public class SubstanceDataAggregator
 					}
 				
 				if (newUnregisteredAggPar) {
-					//TODO
+					AggregatorParameter aggPar = new AggregatorParameter(key.toString(), SubstanceElement.CONDITION);
+					aggPar.values.add(val);
 				}	
 			}
 				

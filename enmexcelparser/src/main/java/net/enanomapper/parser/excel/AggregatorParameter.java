@@ -17,6 +17,11 @@ public class AggregatorParameter
 		this.name = name;
 	}
 	
+	public AggregatorParameter(String name, SubstanceElement substanceElement) {
+		this.name = name;
+		this.substanceElement = substanceElement;
+	}
+	
 	public String name = null;
 	public SubstanceElement substanceElement = SubstanceElement.CONDITION;
 	public AggregationTarget aggregationTarget = AggregationTarget.VALUE_GROUP; 
