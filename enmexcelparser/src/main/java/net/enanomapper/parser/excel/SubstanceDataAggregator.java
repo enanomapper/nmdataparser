@@ -51,6 +51,7 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> agregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();
+	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
 	public double dataMatrix[][] = null;
@@ -66,7 +67,8 @@ public class SubstanceDataAggregator
 	
 	public void quickIOMConfiguration(int blockIndex, 
 			String verticalSubblocksCondition, String horizontalSubblocksCondition,  
-			String verticalConditions[], String horizontalConditions[]) 
+			String verticalConditions[], String horizontalConditions[],
+			Object valueGroupsDefinitions[][]) 
 	{
 		//Add needed blocks up to blockIndexs, each block is on a separate sheet
 		if (blockIndex > (blocks.size() - 1) ) {
@@ -102,7 +104,19 @@ public class SubstanceDataAggregator
 				AggregatorParameter aggPar = new AggregatorParameter(s);
 				aggPar.isHorizontalOrientation = true;
 				agregatorParameters.add(aggPar);
-			}	
+			}
+		
+		if (valueGroupsDefinitions == null) {
+			//No value groups are defined
+			//Adding a default value group with all aggregation parameters
+			
+			//TODO
+		}
+		else {
+			//Value group definition is in the format:
+			//endpointName, horizontalShift, verticalShift, aggregationParameter
+		}
+		
 	}
 	
 	public void aggregate(IRawReader<IStructureRecord> substanceIterator)
