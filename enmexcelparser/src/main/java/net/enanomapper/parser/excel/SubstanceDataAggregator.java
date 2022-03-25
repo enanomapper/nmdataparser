@@ -74,17 +74,18 @@ public class SubstanceDataAggregator
 				blocks.add(block);
 			}
 		}
-			
-		for (String s : verticalConditions) {
-			AggregatorParameter aggPar = new AggregatorParameter(s);
-			agregatorParameters.add(aggPar);
-		}
+		if (verticalConditions != null)	
+			for (String s : verticalConditions) {
+				AggregatorParameter aggPar = new AggregatorParameter(s);
+				agregatorParameters.add(aggPar);
+			}
 		
-		for (String s : horizontalConditions) {
-			AggregatorParameter aggPar = new AggregatorParameter(s);
-			aggPar.isHorizontalOrientation = true;
-			agregatorParameters.add(aggPar);
-		}	
+		if (horizontalConditions != null)
+			for (String s : horizontalConditions) {
+				AggregatorParameter aggPar = new AggregatorParameter(s);
+				aggPar.isHorizontalOrientation = true;
+				agregatorParameters.add(aggPar);
+			}	
 	}
 	
 	public void aggregate(IRawReader<IStructureRecord> substanceIterator)
