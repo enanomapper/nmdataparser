@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AggregationValueGroup 
 {
+	public int blockIndex = 0;
 	public String endpointName = null;
 	public String endpointType = null;
 	public List<AggregatorParameter> parameters = new ArrayList<AggregatorParameter>();
