@@ -45,17 +45,25 @@ public class SubstanceDataAggregator
 	public int subblockSizeRows = 1;
 	public int subblockSizeColumns = 1;	
 	
+	public List<AggregationBlock> blocks = new ArrayList<AggregationBlock>();
 	public List<AggregationValueGroup> valueGroups = new  ArrayList<AggregationValueGroup>();
 	public List<AggregatorParameter> agregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();
-		
+			
 	//work variable
 	public double dataMatrix[][] = null;
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
-		
+	public SubstanceDataAggregator() {
+		addDefaultIOMBlock();
+	}
+	
+	void addDefaultIOMBlock() {
+		blocks.add(new AggregationBlock());
+	}
+	
 	public void aggregate(IRawReader<IStructureRecord> substanceIterator)
 	{
 		//TODO
