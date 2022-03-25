@@ -23,6 +23,12 @@ public class AggregatorParameter
 		this.substanceElement = substanceElement;
 	}
 	
+	public AggregatorParameter(String name, SubstanceElement substanceElement, boolean isHorizontalOrientation) {
+		this.name = name;
+		this.substanceElement = substanceElement;
+		this.isHorizontalOrientation = isHorizontalOrientation;
+	}
+	
 	public String name = null;
 	public SubstanceElement substanceElement = SubstanceElement.CONDITION;
 	public AggregationTarget aggregationTarget = AggregationTarget.VALUE_GROUP; 
