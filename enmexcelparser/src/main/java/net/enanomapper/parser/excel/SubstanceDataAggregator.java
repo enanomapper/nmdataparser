@@ -56,12 +56,35 @@ public class SubstanceDataAggregator
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
-	public SubstanceDataAggregator() {
-		addDefaultIOMBlock();
+	public SubstanceDataAggregator() {		
 	}
 	
 	void addDefaultIOMBlock() {
 		blocks.add(new AggregationBlock());
+	}
+	
+	public void quickIOMConfiguration(int blockIndex, String verticalConditions[], 
+				String horizontalConditions[]) 
+	{
+		//Add needed blocks up to blockIndexs, each block is on a separate sheet
+		if (blockIndex > (blocks.size() - 1) ) {
+			for (int i = blocks.size(); i <= blockIndex; i++) {
+				AggregationBlock block = new AggregationBlock();
+				block.sheetIndex = i;
+				blocks.add(block);
+			}
+		}
+			
+		for (String s : verticalConditions) {
+			AggregatorParameter aggPar = new AggregatorParameter(s);
+			agregatorParameters.add(aggPar);
+		}
+		
+		for (String s : horizontalConditions) {
+			AggregatorParameter aggPar = new AggregatorParameter(s);
+			aggPar.isHorizontalOrientation = true;
+			agregatorParameters.add(aggPar);
+		}	
 	}
 	
 	public void aggregate(IRawReader<IStructureRecord> substanceIterator)
@@ -81,6 +104,7 @@ public class SubstanceDataAggregator
 	
 	
 	public void reset() {
+		blocks.clear();
 		valueGroups.clear();
 		agregatorParameters.clear();
 		expressions.clear();
