@@ -14,6 +14,7 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
 import ambit2.core.io.IRawReader;
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.excel.AggregatorParameter.AggregationTarget;
 import net.enanomapper.parser.excel.AggregatorParameter.SubstanceElement;
 
 public class SubstanceDataAggregator 
@@ -63,8 +64,9 @@ public class SubstanceDataAggregator
 		blocks.add(new AggregationBlock());
 	}
 	
-	public void quickIOMConfiguration(int blockIndex, String verticalConditions[], 
-				String horizontalConditions[]) 
+	public void quickIOMConfiguration(int blockIndex, 
+			String verticalSubblocksCondition, String horizontalSubblocksCondition,  
+			String verticalConditions[], String horizontalConditions[]) 
 	{
 		//Add needed blocks up to blockIndexs, each block is on a separate sheet
 		if (blockIndex > (blocks.size() - 1) ) {
@@ -74,6 +76,21 @@ public class SubstanceDataAggregator
 				blocks.add(block);
 			}
 		}
+		
+		if (verticalSubblocksCondition != null) {
+			AggregatorParameter aggPar = new AggregatorParameter(
+					verticalSubblocksCondition, SubstanceElement.CONDITION, 
+					AggregationTarget.SUBBLOCK, false);
+			agregatorParameters.add(aggPar);
+		}
+		
+		if (horizontalSubblocksCondition != null) {
+			AggregatorParameter aggPar = new AggregatorParameter(
+					horizontalSubblocksCondition, SubstanceElement.CONDITION, 
+					AggregationTarget.SUBBLOCK, true);
+			agregatorParameters.add(aggPar);
+		}
+		
 		if (verticalConditions != null)	
 			for (String s : verticalConditions) {
 				AggregatorParameter aggPar = new AggregatorParameter(s);
