@@ -1,6 +1,7 @@
 package net.enanomapper.parser.excel;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AggregatorParameter 
@@ -28,4 +29,13 @@ public class AggregatorParameter
 	public boolean isHorizontalOrientation = false;
 	public int blockAggregationLevel = 1;
 	public Set<Object> values = new HashSet<Object>();
+	public List<Object> predefinedValues = null; 
+	
+	public Object[] getValuesAsArray() {
+		if (predefinedValues != null)
+			return predefinedValues.toArray();
+		else
+			return values.toArray();
+	}
+	
 }
