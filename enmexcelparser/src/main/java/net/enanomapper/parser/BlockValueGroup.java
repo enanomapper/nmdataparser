@@ -18,6 +18,9 @@ import net.enanomapper.parser.recognition.ExpressionUtils;
  *
  */
 public class BlockValueGroup {
+	public boolean isActive = true;
+	public boolean FlagIsActive = false;
+
 	// Value group name is used as endpoint if FlagEndpointAssign = false
 	public String name = null;
 	public boolean FlagName = false;
@@ -111,6 +114,17 @@ public class BlockValueGroup {
 		JsonUtilities jsonUtils = new JsonUtilities();
 		String keyword;
 
+		//IS_ACTIVE
+		if (!node.path("IS_ACTIVE").isMissingNode()) {
+			Boolean boolValue = jsonUtils.extractBooleanKeyword(node, "IS_ACTIVE", false);
+			if (boolValue == null)
+				conf.addError(jsonUtils.getError());
+			else {
+				bvg.isActive = boolValue;
+				bvg.FlagIsActive = true;
+			}
+		}
+		
 		// NAME
 		if (!node.path("NAME").isMissingNode()) {
 			keyword = jsonUtils.extractStringKeyword(node, "NAME", false);
@@ -490,6 +504,14 @@ public class BlockValueGroup {
 
 		sb.append(offset + "{\n");
 
+		if (FlagIsActive) {
+			if (nFields > 0)
+				sb.append(",\n");
+
+			sb.append(offset + "\t\"IS_ACTIVE\" : " + isActive);
+			nFields++;
+		}
+		
 		if (FlagName) {
 			if (nFields > 0)
 				sb.append(",\n");

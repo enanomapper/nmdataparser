@@ -512,6 +512,8 @@ public class ExcelDataBlockUtils
 		// Analyze value groups: positions info is extracted from the used expressions
 		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
 		for (BlockValueGroup bvg : exdb_loc.valueGroups) {
+			if (!bvg.isActive)
+				continue; //Omitting non active BlockValueGroup
 			BlockValueGroupExtractedInfo bvgei = extractBlockValueGroup(bvg);
 			if (bvgei.getErrors().isEmpty())
 				bvgExtrInfo.add(bvgei);
