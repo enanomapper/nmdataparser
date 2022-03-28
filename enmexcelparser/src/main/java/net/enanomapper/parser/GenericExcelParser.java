@@ -1460,6 +1460,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		if (padl.effectsBlock != null) {
 			for (int i = 0; i < padl.effectsBlock.size(); i++) {
 				ExcelDataBlockLocation excelEffectBlock = padl.effectsBlock.get(i);
+				if (!excelEffectBlock.isActive)
+					continue;
 				try {
 					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
 					

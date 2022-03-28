@@ -9,7 +9,9 @@ import net.enanomapper.parser.json.JsonUtilities;
 import net.enanomapper.parser.recognition.ExpressionUtils;
 
 public class ExcelDataBlockLocation {
-
+	public boolean isActive = true;
+	public boolean FlagIsActive = false;
+	
 	private Object absoluteLocationValue = null;
 	public String blockSectionName = null;
 
@@ -49,6 +51,18 @@ public class ExcelDataBlockLocation {
 			if (sectionNode.isMissingNode())
 				return null;
 		}
+		
+		//IS_ACTIVE
+		JsonNode nd = sectionNode.path("IS_ACTIVE");
+		if(!nd.isMissingNode()) {
+			Object obj = JsonUtilities.extractObject(nd);
+			if (obj == null || (!(obj instanceof Boolean))) {
+				conf.addError("In JSON section \"" + jsonSection + "\", keyword \"IS_ACTIVE\" is incorrect!");
+			} else {
+				edbl.isActive = (Boolean)obj;
+				edbl.FlagIsActive = true;
+			}
+		}
 
 		if (sectionNode.path(KEYWORD.LOCATION.name()).isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"LOCATION\" is missing!");
@@ -61,7 +75,7 @@ public class ExcelDataBlockLocation {
 		}
 
 		// ROW_SUBBLOCKS
-		JsonNode nd = sectionNode.path(KEYWORD.ROW_SUBBLOCKS.name());
+		nd = sectionNode.path(KEYWORD.ROW_SUBBLOCKS.name());
 		if (nd.isMissingNode()) {
 			conf.addError("In JSON section \"" + jsonSection + "\", keyword \"ROW_SUBBLOCKS\" is missing!");
 		} else {
@@ -177,7 +191,15 @@ public class ExcelDataBlockLocation {
 		if (!isBlockPartOfArray)
 			sb.append(offset + "\"" + secName + "\":\n");
 		sb.append(offset + "{\n");
+		
+		if (FlagIsActive) {
+			if (nFields > 0)
+				sb.append(",\n");
 
+			sb.append(offset + "\t\"IS_ACTIVE\" : " + isActive);
+			nFields++;
+		}
+		
 		if (location != null) {
 			if (nFields > 0)
 				sb.append(",\n");
