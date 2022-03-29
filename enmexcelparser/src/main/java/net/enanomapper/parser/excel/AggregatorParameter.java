@@ -48,4 +48,17 @@ public class AggregatorParameter
 			return values.toArray();
 	}
 	
+	
+	public String toString(String offset)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "name = " + name + "\n");
+		sb.append(offset + "substanceElement = " + substanceElement + "\n");
+		sb.append(offset + "aggregationTarget = " + aggregationTarget + "\n");
+		sb.append(offset + "isHorizontalOrientation = " + isHorizontalOrientation + "\n");
+		//TODO
+		
+		return sb.toString();
+	}
+	
 }

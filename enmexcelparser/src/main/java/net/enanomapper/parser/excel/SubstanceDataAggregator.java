@@ -418,4 +418,32 @@ public class SubstanceDataAggregator
 		//TIODO
 		return null;
 	}
+	
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("FlagHandleUnregisteredElements = " + FlagHandleUnregisteredElements + "\n");
+		sb.append("AggrationMode = " + aggrationMode + "\n");
+		sb.append("startRow = " + startRow + "\n");
+		sb.append("startColumn = " + startColumn + "\n");
+		sb.append("rowSubblocks = " + rowSubblocks + "\n");
+		//sb.append("columnSubblocks = " + columnSubblocks + "\n");
+		//sb.append("subblockSizeRows = " + subblockSizeRows + "\n");
+		//sb.append("subblockSizeColumns = " + subblockSizeColumns + "\n");
+		//sb.append("aggregatorParameters = " + subblockSizeColumns + "\n");
+		
+		sb.append("aggregatorParameters = \n");
+		for (AggregatorParameter aggPar : aggregatorParameters) {
+			sb.append(aggPar.toString("    "));
+		}
+		
+		sb.append("valueGroups = \n");
+		for (AggregationValueGroup aggVG : valueGroups) {
+			sb.append(aggVG.toString("    "));
+		}
+		
+		//TODO blocks
+		
+		return sb.toString();
+	}
 }

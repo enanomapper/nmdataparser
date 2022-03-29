@@ -21,4 +21,28 @@ public class AggregationValueGroup
 	public int rowSize = 0;
 	public int columnSize = 0;
 	
+	public String toString(String offset)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(offset + "endpointName = " + endpointName  + "\n");
+		if (endpointType != null)
+			sb.append(offset + "endpointType = " + endpointType + "\n");
+		
+		sb.append(offset + "refAggValueGroupIndex = " + refAggValueGroupIndex + "\n");
+		sb.append(offset + "horizontalShift = " + horizontalShift + "\n");
+		sb.append(offset + "verticalShift = " + verticalShift + "\n");
+		
+		if (!parameters.isEmpty()) {
+			sb.append(offset);
+			for (AggregatorParameter aggPar : parameters) {
+				sb.append(" ");
+				sb.append(aggPar.name);
+				sb.append("\n");
+			}
+		}
+		
+		
+		return sb.toString();
+	}
+	
 }
