@@ -48,7 +48,7 @@ public class SubstanceDataAggregator
 	
 	public List<AggregationBlock> blocks = new ArrayList<AggregationBlock>();
 	public List<AggregationValueGroup> valueGroups = new  ArrayList<AggregationValueGroup>();
-	public List<AggregatorParameter> agregatorParameters = new  ArrayList<AggregatorParameter>();
+	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();
 	public List<String> errors = new ArrayList<String>();
@@ -83,14 +83,14 @@ public class SubstanceDataAggregator
 			AggregatorParameter aggPar = new AggregatorParameter(
 					verticalSubblocksCondition, SubstanceElement.CONDITION, 
 					AggregationTarget.SUBBLOCK, false);
-			agregatorParameters.add(aggPar);
+			aggregatorParameters.add(aggPar);
 		}
 		
 		if (horizontalSubblocksCondition != null) {
 			AggregatorParameter aggPar = new AggregatorParameter(
 					horizontalSubblocksCondition, SubstanceElement.CONDITION, 
 					AggregationTarget.SUBBLOCK, true);
-			agregatorParameters.add(aggPar);
+			aggregatorParameters.add(aggPar);
 		}
 		
 		if (verticalConditions != null)	
@@ -98,7 +98,7 @@ public class SubstanceDataAggregator
 				if (s == null)
 					continue;
 				AggregatorParameter aggPar = new AggregatorParameter(s);
-				agregatorParameters.add(aggPar);
+				aggregatorParameters.add(aggPar);
 			}
 		
 		if (horizontalConditions != null)
@@ -107,7 +107,7 @@ public class SubstanceDataAggregator
 					continue;
 				AggregatorParameter aggPar = new AggregatorParameter(s);
 				aggPar.isHorizontalOrientation = true;
-				agregatorParameters.add(aggPar);
+				aggregatorParameters.add(aggPar);
 			}
 		
 		if (valueGroupsDefinitions == null) {
@@ -115,7 +115,7 @@ public class SubstanceDataAggregator
 			//Adding a default value group with all aggregation parameters
 			AggregationValueGroup aggValGrp = new AggregationValueGroup();
 			aggValGrp.endpointName = "endpoint";
-			aggValGrp.parameters.addAll(agregatorParameters);
+			aggValGrp.parameters.addAll(aggregatorParameters);
 			valueGroups.add(aggValGrp);
 		}
 		else {
@@ -202,13 +202,13 @@ public class SubstanceDataAggregator
 	public void reset() {
 		blocks.clear();
 		valueGroups.clear();
-		agregatorParameters.clear();
+		aggregatorParameters.clear();
 		expressions.clear();
 		errors.clear();
 	}
 	
 	public AggregatorParameter getAggregatorParameterByName(String name) {
-		for (AggregatorParameter aggPar : agregatorParameters)
+		for (AggregatorParameter aggPar : aggregatorParameters)
 			if (aggPar.name.equals(name))
 				return aggPar;
 		return null;
@@ -294,7 +294,7 @@ public class SubstanceDataAggregator
 		
 	public void analyse(SubstanceRecord rec)
 	{
-		for (AggregatorParameter par : agregatorParameters)
+		for (AggregatorParameter par : aggregatorParameters)
 			if (par.substanceElement == SubstanceElement.SUBSTANCE_NAME)
 			{
 				String name = rec.getSubstanceName();
@@ -311,7 +311,7 @@ public class SubstanceDataAggregator
 		{
 			Object val = paParams.get(key);
 			boolean FlagRegisteredAggPar = false;
-			for (AggregatorParameter aggPar : agregatorParameters)
+			for (AggregatorParameter aggPar : aggregatorParameters)
 				if (aggPar.substanceElement == SubstanceElement.PROTOCOL_PARAMETER)
 				{
 					if (aggPar.name.equals(key)) {
@@ -350,7 +350,7 @@ public class SubstanceDataAggregator
 		{
 			Object val = conditions.get(key);
 			boolean FlagRegisteredAggPar = false;
-			for (AggregatorParameter aggPar : agregatorParameters)
+			for (AggregatorParameter aggPar : aggregatorParameters)
 				if (aggPar.substanceElement == SubstanceElement.CONDITION)
 				{
 					if (aggPar.name.equals(key)) {
