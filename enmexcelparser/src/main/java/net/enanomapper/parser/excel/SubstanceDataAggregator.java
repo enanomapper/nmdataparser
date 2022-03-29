@@ -95,12 +95,16 @@ public class SubstanceDataAggregator
 		
 		if (verticalConditions != null)	
 			for (String s : verticalConditions) {
+				if (s == null)
+					continue;
 				AggregatorParameter aggPar = new AggregatorParameter(s);
 				agregatorParameters.add(aggPar);
 			}
 		
 		if (horizontalConditions != null)
 			for (String s : horizontalConditions) {
+				if (s == null)
+					continue;
 				AggregatorParameter aggPar = new AggregatorParameter(s);
 				aggPar.isHorizontalOrientation = true;
 				agregatorParameters.add(aggPar);
@@ -109,12 +113,72 @@ public class SubstanceDataAggregator
 		if (valueGroupsDefinitions == null) {
 			//No value groups are defined
 			//Adding a default value group with all aggregation parameters
-			
-			//TODO
+			AggregationValueGroup aggValGrp = new AggregationValueGroup();
+			aggValGrp.endpointName = "endpoint";
+			aggValGrp.parameters.addAll(agregatorParameters);
+			valueGroups.add(aggValGrp);
 		}
 		else {
-			//Value group definition is in the format:
-			//endpointName, horizontalShift, verticalShift, aggregationParameter
+			for (int i = 0; i < valueGroupsDefinitions.length; i++) 
+			{
+				//Value group definition is in the format:
+				//endpointName, horizontalShift, verticalShift, aggrPar 1, aggrPar 2,...
+				Object vgObj[] = valueGroupsDefinitions[i];
+				if (vgObj == null || vgObj.length < 4) {
+					errors.add("Incorrect quick IOM Configuration, value Groups Definitions #" + (i+1) 
+							+ ", insufficient number of array elements");
+					continue;
+				}
+				
+				//Check correctness
+				boolean FlagOK = true;
+				for (int k = 0; k < vgObj.length; k++) 
+				{
+					if (vgObj[k] == null) {
+						FlagOK = false;
+						errors.add("Incorrect quick IOM Configuration, value Groups Definitions #" + (i+1) 
+								+ ", null array element " + (k+1));
+						continue;
+					}
+					if (k == 1 || k== 2) {
+						if (!(vgObj[k] instanceof Integer)) {
+							errors.add("Incorrect quick IOM Configuration, value Groups Definitions #" + (i+1) 
+									+ ", array elements 2 and 3 must be of type integer!");
+							continue;
+						}	
+					}
+					else {
+						if (!(vgObj[k] instanceof String)) {
+							errors.add("Incorrect quick IOM Configuration, value Groups Definitions #" + (i+1) 
+									+ ", array elements, except 2 and 3, must be of type String!");
+							continue;
+						}	
+					}
+					
+					if (k >= 3) {
+						//Check whether the aggregation parameter name is correct
+						String parName = (String)vgObj[k];
+						if (getAggregatorParameterByName(parName) == null) {
+							errors.add("Incorrect quick IOM Configuration, value Groups Definitions #" + (i+1) 
+									+ ", aggregation parameter " + parName + " is not defined!");
+						}
+					}
+				}	
+				if (!FlagOK ) 
+					continue; //definition errors found
+												
+				AggregationValueGroup aggValGrp = new AggregationValueGroup();
+				aggValGrp.endpointName = (String)vgObj[0];
+				aggValGrp.horizontalShift = (Integer)vgObj[1];
+				aggValGrp.verticalShift = (Integer)vgObj[2];
+				
+				for (int k = 3;  k < vgObj.length; k++) {
+					String parName = (String)vgObj[k];
+					AggregatorParameter aggPar = getAggregatorParameterByName(parName);
+					aggValGrp.parameters.add(aggPar);
+				}		
+				valueGroups.add(aggValGrp);
+			}
 		}
 		
 	}
@@ -140,6 +204,14 @@ public class SubstanceDataAggregator
 		valueGroups.clear();
 		agregatorParameters.clear();
 		expressions.clear();
+		errors.clear();
+	}
+	
+	public AggregatorParameter getAggregatorParameterByName(String name) {
+		for (AggregatorParameter aggPar : agregatorParameters)
+			if (aggPar.name.equals(name))
+				return aggPar;
+		return null;
 	}
 	
 	public void iterate(IRawReader<IStructureRecord> substanceIterator, IterationTask itTask)
