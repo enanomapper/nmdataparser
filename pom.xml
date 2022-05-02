@@ -114,11 +114,11 @@
 	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<ambit.version>4.0.1-SNAPSHOT</ambit.version>
+		<ambit.version>4.1.0-SNAPSHOT</ambit.version>
 		<apache.jena.version>2.13.0</apache.jena.version>
 		<lucene.version>6.2.1</lucene.version>
-				<sourceVersion>1.8</sourceVersion>
-
+		<sourceVersion>1.8</sourceVersion>
+		<i5.version>2.2.0-SNAPSHOT</i5.version>
 	</properties>
 	<scm>
 		<url>https://github.com/enanomapper/nmdataparser.git</url>
@@ -138,5 +138,8 @@
 
 		<module>enmtemplategen</module>
 		<module>enmnanowiki</module>
+		<!-- 
+		<module>enm2h5</module>
+		 -->
 	</modules>
 </project>

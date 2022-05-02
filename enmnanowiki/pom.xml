@@ -45,7 +45,5 @@
 			<version>1.4.01</version>
 		</dependency>
 	</dependencies>
-	<properties>
-	    <i5.version>2.1.0-SNAPSHOT</i5.version>
-	</properties>
+
 </project>
