@@ -127,13 +127,14 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	public GenericExcelParser(InputStream input, File jsonConfig, boolean xlsxFormat) throws Exception {
 		this(input, jsonConfig, xlsxFormat, "XLSX");
 	}
-
+	
 	public GenericExcelParser(InputStream input, File jsonConfig, boolean xlsxFormat, String prefix) throws Exception {
+		this(input, ExcelParserConfigurator.loadFromJSON(jsonConfig), xlsxFormat, "XLSX");
+	}
+	public GenericExcelParser(InputStream input, ExcelParserConfigurator config, boolean xlsxFormat, String prefix) throws Exception {
 		super();
 		this.xlsxFormat = xlsxFormat;
 		this.input = input;
-
-		config = ExcelParserConfigurator.loadFromJSON(jsonConfig);
 		config.setPrefix(prefix);
 		if (config.hasErrors())
 			throw new Exception("GenericExcelParser configuration errors:\n" + config.getAllErrorsAsString());

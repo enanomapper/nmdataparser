@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -150,19 +151,22 @@ public class ExcelParserConfigurator {
 	}
 
 	public static ExcelParserConfigurator loadFromJSON(File jsonConfig) throws FileNotFoundException, IOException, JsonProcessingException {
-		FileInputStream fin = new FileInputStream(jsonConfig);
+		return loadFromJSON(new FileInputStream(jsonConfig));
+	}
+	public static ExcelParserConfigurator loadFromJSON(InputStream jsonConfig) throws FileNotFoundException, IOException, JsonProcessingException {
+	
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 
 		try {
-			root = mapper.readTree(fin);
+			root = mapper.readTree(jsonConfig);
 		} catch (JsonProcessingException x) {
 			throw x;			
 		} catch (IOException x) {
 			throw x;
 		} finally {
 			try {
-				fin.close();
+				jsonConfig.close();
 			} catch (Exception x) {
 			}
 		}
