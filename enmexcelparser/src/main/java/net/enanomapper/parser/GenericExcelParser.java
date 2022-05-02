@@ -135,6 +135,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		super();
 		this.xlsxFormat = xlsxFormat;
 		this.input = input;
+		this.config = config;
 		config.setPrefix(prefix);
 		if (config.hasErrors())
 			throw new Exception("GenericExcelParser configuration errors:\n" + config.getAllErrorsAsString());
