@@ -37,14 +37,19 @@ public class SubstanceRecordMapper extends DefaultAmbitProcessor<IStructureRecor
 	protected String prefix;
 
 	public SubstanceRecordMapper(String prefix, File expandMap) throws IOException {
+		this(prefix,new FileInputStream(expandMap));
+	}
+	public SubstanceRecordMapper(String prefix, InputStream expandMap) throws IOException {
 		super();
 		this.prefix = prefix;
 		ObjectMapper dx = new ObjectMapper();
 		JsonNode rootNode = null;
-		try (InputStream in = new FileInputStream(expandMap)) {
-			rootNode = dx.readTree(in);
+		try {
+			rootNode = dx.readTree(expandMap);
 		} catch (IOException x) {
 			throw x;
+		} finally {
+			expandMap.close();
 		}
 
 		if (rootNode == null)
