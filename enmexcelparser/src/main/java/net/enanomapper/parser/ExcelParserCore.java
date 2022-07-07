@@ -979,6 +979,69 @@ public class ExcelParserCore
 		return map.get(originalValue);
 	}
 
+	protected boolean isCellPercentageFormatted(ExcelDataLocation loc) throws Exception 
+	{
+		switch (loc.iteration) {
+		case ROW_SINGLE:
+			if (loc.isFromParallelSheet()) {
+				Row row = parallelSheetStates[loc.getParallelSheetIndex()].curRow;
+				if (row != null)
+					return isCellPercentageFormatted(row, loc);
+				else
+					return false;
+			} else
+				return isCellPercentageFormatted(curRow, loc);
 
+		case ROW_MULTI_FIXED: // Both treated the same way
+		case ROW_MULTI_DYNAMIC:
+			// Taking the value from the first row
+			ArrayList<Row> rows;
+			if (loc.isFromParallelSheet())
+				rows = parallelSheetStates[loc.getParallelSheetIndex()].curRows;
+			else
+				rows = curRows;
+			if (rows != null)
+				if (!rows.isEmpty())
+					return isCellPercentageFormatted(rows.get(0), loc);
+			return false;
 
+		case ABSOLUTE_LOCATION: {
+			return isCellPercentageFormattedAbsoluteLocation(loc);
+		}
+
+		case JSON_VALUE: 
+		case JSON_REPOSITORY: 
+		case VARIABLE: 
+			return false;
+		
+		default:
+			return false;
+		}
+
+	}
+	
+	protected boolean isCellPercentageFormatted(Row row, ExcelDataLocation loc) {
+		Cell c = row.getCell(loc.columnIndex);
+		if (c == null) 
+			return false;
+		else
+			return (c.getCellStyle().getDataFormatString().contains("%"));		
+	}
+	
+	protected boolean isCellPercentageFormattedAbsoluteLocation(ExcelDataLocation loc) throws Exception {
+		int sheetIndex = loc.getSheetIndex(workbook, primarySheetNum);
+		Sheet sheet = workbook.getSheetAt(sheetIndex);
+		if (sheet != null) {
+			Row r = sheet.getRow(loc.rowIndex);
+			if (r == null)
+				return false;
+
+			Cell c = r.getCell(loc.columnIndex);
+			if (c == null) 
+				return false;
+			else
+				return (c.getCellStyle().getDataFormatString().contains("%"));			
+		}
+		return false;
+	}
 }

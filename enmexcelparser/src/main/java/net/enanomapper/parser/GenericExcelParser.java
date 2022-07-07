@@ -1601,6 +1601,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				if (paramDoubleValue != null) {
 					pVal = new Value();
 					pVal.setLoValue(paramDoubleValue);
+					if (isCellPercentageFormatted(loc))
+						pVal.setUnits("%");
 				}
 			} catch (Exception x) {
 				logger.log(Level.FINE, String.format("%s\t%s\t%s", param, x.getMessage(), loc.toString()));
@@ -1609,9 +1611,6 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		if (pVal != null) // Parameters is stored as a Value object
 		{
 			// Handle parameter unit from other excel data location
-
-			// System.out.println(parameterName + "\t" + pVal + "\t" + loc +
-			// "\t" + loc.otherLocationFields);
 			if (loc.otherLocationFields != null) {
 				ExcelDataLocation pUnitLoc = loc.otherLocationFields.get("UNIT");
 				if (pUnitLoc != null) {
