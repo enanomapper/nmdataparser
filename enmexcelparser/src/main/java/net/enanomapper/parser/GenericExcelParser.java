@@ -1478,7 +1478,9 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					}
 				} catch (Exception x) {
 					throw new Exception("Exception on getting Effect Block [" + (i + 1) + "]" + " in protocol "
-							+ protocol.toString() + "  " + x.toString() + "\nCheck EFFECT_BLOCK expressions!");
+							+ protocol.toString() 
+							+ "\nCheck EFFECT_BLOCK expressions for "
+							+ "COLUMN_SUBBLOCKS, ROW_SUBBLOCKS, SUBBLOCK_SIZE_COLUMNS and SUBBLOCK_SIZE_ROWS");
 				}
 			}
 		}
