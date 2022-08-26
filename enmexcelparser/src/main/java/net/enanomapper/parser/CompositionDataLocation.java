@@ -165,6 +165,7 @@ public class CompositionDataLocation
 	public static  STRUCTURE_RELATION structureRelationFromString(String s)
 	{
 		try{
+			s = s.startsWith("HAS_")?s:("HAS_"+s);
 			STRUCTURE_RELATION res = STRUCTURE_RELATION.valueOf(s);
 			return res;
 		}
