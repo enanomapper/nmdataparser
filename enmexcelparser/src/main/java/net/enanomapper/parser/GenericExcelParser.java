@@ -2155,7 +2155,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					} catch (Exception x) {
 						logger.log(Level.FINE, x.getMessage());
 					}
-
+				if (propObj == null)
 				try {
 
 					propObj = getStringValue(loc);
