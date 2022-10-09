@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -46,13 +44,12 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
-
 import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.exceptions.CellException;
-
+import net.enanomapper.parser.exceptions.ExceptionEffectBlock;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
 import net.enanomapper.parser.recognition.RichValueParser;
@@ -1477,10 +1474,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 						}
 					}
 				} catch (Exception x) {
-					throw new Exception("Exception on getting Effect Block [" + (i + 1) + "]" + " in protocol "
-							+ protocol.toString() 
-							+ "\nCheck EFFECT_BLOCK expressions for "
-							+ "COLUMN_SUBBLOCKS, ROW_SUBBLOCKS, SUBBLOCK_SIZE_COLUMNS and SUBBLOCK_SIZE_ROWS");
+					throw new ExceptionEffectBlock(x,excelEffectBlock,i,protocol);
+
 				}
 			}
 		}
