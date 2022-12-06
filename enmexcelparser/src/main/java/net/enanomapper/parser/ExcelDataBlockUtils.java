@@ -113,7 +113,7 @@ public class ExcelDataBlockUtils
 		
 	
 	protected List<DataBlockElement> getDataBlockFromCellMatrix(Cell cells[][], int rowSubblocks, int columnSubblocks,
-			int subblockSizeRows, int subblockSizeColumns, ExcelDataBlockLocation exdb_loc) {
+			int subblockSizeRows, int subblockSizeColumns, ExcelDataBlockLocation exdb_loc) throws Exception {
 		List<DataBlockElement> dbeList = new ArrayList<DataBlockElement>();
 
 		if (exdb_loc.valueGroups == null)
@@ -507,7 +507,7 @@ public class ExcelDataBlockUtils
 	}
 	
 	
-	protected List<BlockValueGroupExtractedInfo> extractAllBlockValueGroups(ExcelDataBlockLocation exdb_loc)
+	protected List<BlockValueGroupExtractedInfo> extractAllBlockValueGroups(ExcelDataBlockLocation exdb_loc) throws Exception
 	{
 		// Analyze value groups: positions info is extracted from the used expressions
 		List<BlockValueGroupExtractedInfo> bvgExtrInfo = new ArrayList<BlockValueGroupExtractedInfo>();
@@ -528,7 +528,7 @@ public class ExcelDataBlockUtils
 	}
 	
 	
-	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) {
+	protected BlockValueGroupExtractedInfo extractBlockValueGroup(BlockValueGroup bvg) throws Exception {
 		BlockValueGroupExtractedInfo bvgei = new BlockValueGroupExtractedInfo();
 
 		if (bvg.name != null) {
@@ -583,7 +583,7 @@ public class ExcelDataBlockUtils
 		bvgei.errorColumnShift = getIntegerFromExpression(bvg.errorColumnShift);
 		bvgei.errorRowShift = getIntegerFromExpression(bvg.errorRowShift);
 
-		logger.info("--- Extracting inffo for value group: " + bvg.name);
+		logger.info("--- Extracting info for value group: " + bvg.name);
 		logger.info("--- startColumn " + bvgei.startColumn);
 		logger.info("--- endColumn " + bvgei.endColumn);
 		logger.info("--- startRow " + bvgei.startRow);
@@ -781,7 +781,7 @@ public class ExcelDataBlockUtils
 		return bvgei;
 	}
 
-	ParamInfo extractParamInfo(BlockParameter bp, List<String> errorOutput, String section) {
+	ParamInfo extractParamInfo(BlockParameter bp, List<String> errorOutput, String section) throws Exception {
 		ParamInfo pi = new ParamInfo();
 		boolean FlagParamOK = true;
 
@@ -831,7 +831,7 @@ public class ExcelDataBlockUtils
 		return null;
 	}
 
-	protected Integer getIntegerFromExpression(Object obj) {
+	protected Integer getIntegerFromExpression(Object obj) throws Exception {
 		if (obj == null)
 			return null;
 
@@ -861,6 +861,7 @@ public class ExcelDataBlockUtils
 
 				} catch (Exception e) {
 					logger.warning("Expression error: " + e.getMessage());
+					throw(e);
 				}
 			} else {
 				try {
@@ -868,6 +869,7 @@ public class ExcelDataBlockUtils
 					return res;
 				} catch (Exception e) {
 					logger.warning("Expression error: " + e.getMessage());
+					throw(e);
 				}
 			}
 		}

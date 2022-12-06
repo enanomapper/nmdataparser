@@ -624,7 +624,7 @@ public class ExcelParserCore
 			if (d != null)
 				return d;
 			else {
-				String msg = String.format("[%s]: Cell is not of formatted as date!",
+				String msg = String.format("[%s]: Cell is not formatted as date!",
 						locationStringForErrorMessage(loc));
 				logger.log(Level.WARNING, msg);
 				throw new Exception(msg);

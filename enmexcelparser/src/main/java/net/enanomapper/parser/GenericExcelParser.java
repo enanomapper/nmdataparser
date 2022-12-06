@@ -49,6 +49,7 @@ import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
 import net.enanomapper.parser.excel.ExcelUtils;
 import net.enanomapper.parser.exceptions.CellException;
+import net.enanomapper.parser.exceptions.ExceptionAtLocation;
 import net.enanomapper.parser.exceptions.ExceptionEffectBlock;
 import net.enanomapper.parser.recognition.RecognitionUtils;
 import net.enanomapper.parser.recognition.RichValue;
@@ -617,7 +618,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 							else
 								s += " null";
 
-						logger.info("%%%%%%%%%%% Reading array variable " + s);
+						logger.info(String.format("%s Reading array variable %s '%s' %s","%%%%%%%%%%%",var,s,loc.toString()));
 
 						continue;
 					}
@@ -1463,6 +1464,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					continue;
 				try {
 					List<DataBlockElement> effDataBlock = getDataBlock(excelEffectBlock);
+					if (effDataBlock == null)
+						throw new ExceptionAtLocation(excelEffectBlock.location, excelEffectBlock.location.sheetIndex, "ExcelDataBlock", protocol.toString());
 					
 					if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) {
 						substRecordMap.dispatch(effDataBlock);
@@ -1473,6 +1476,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 							pa.addEffect(effect);
 						}
 					}
+				} catch (ExceptionAtLocation x) {
+					throw x;
 				} catch (Exception x) {
 					throw new ExceptionEffectBlock(x,excelEffectBlock,i,protocol);
 
@@ -2276,7 +2281,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	 * @param exdb_loc
 	 * @return
 	 */
-	protected List<DataBlockElement> getDataBlock(ExcelDataBlockLocation exdb_loc) {
+	protected List<DataBlockElement> getDataBlock(ExcelDataBlockLocation exdb_loc) throws Exception {
 		switch (exdb_loc.location.iteration) {
 		case ROW_SINGLE:
 			List<Row> rList = new ArrayList<Row>();
@@ -2305,7 +2310,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		}
 	}
 
-	protected List<DataBlockElement> getDataBlockFromRowList(List<Row> rowList, ExcelDataBlockLocation exdb_loc) {
+	protected List<DataBlockElement> getDataBlockFromRowList(List<Row> rowList, ExcelDataBlockLocation exdb_loc) throws Exception {
 		Integer rowSubblocks = dataBlockUtils.getIntegerFromExpression(exdb_loc.rowSubblocks);
 		Integer columnSubblocks = dataBlockUtils.getIntegerFromExpression(exdb_loc.columnSubblocks);
 		Integer sbSizeRows = dataBlockUtils.getIntegerFromExpression(exdb_loc.subblockSizeRows);
@@ -2358,7 +2363,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		return dataBlockUtils.getDataBlockFromCellMatrix(cells, rowSubblocks, columnSubblocks, sbSizeRows, sbSizeColumns, exdb_loc);
 	}
 
-	protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc) {
+	protected List<DataBlockElement> getDataBlockFromAbsolutePosition(ExcelDataBlockLocation exdb_loc) throws Exception {
 		Integer rowSubblocks = dataBlockUtils.getIntegerFromExpression(exdb_loc.rowSubblocks);
 		Integer columnSubblocks = dataBlockUtils.getIntegerFromExpression(exdb_loc.columnSubblocks);
 		Integer sbSizeRows = dataBlockUtils.getIntegerFromExpression(exdb_loc.subblockSizeRows);
@@ -2369,8 +2374,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		logger.info("   --- columnSubblocks = " + columnSubblocks);
 		logger.info("   --- subblockSizeRows = " + sbSizeRows);
 		logger.info("   --- subblockSizeColumns = " + sbSizeColumns);
-
-		if (rowSubblocks == null || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null) {
+		
+		if (rowSubblocks == null  || columnSubblocks == null || sbSizeRows == null || sbSizeColumns == null) {
 			return null;
 		}
 

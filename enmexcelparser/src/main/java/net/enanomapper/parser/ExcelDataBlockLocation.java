@@ -271,4 +271,9 @@ public class ExcelDataBlockLocation {
 	public void setAbsoluteLocationValue(Object absoluteLocationValue) {
 		this.absoluteLocationValue = absoluteLocationValue;
 	}
+	
+	@Override
+	public String toString() {
+		return location.toString();
+	}
 }
