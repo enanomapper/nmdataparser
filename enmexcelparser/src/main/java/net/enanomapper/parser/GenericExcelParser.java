@@ -1540,7 +1540,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		// Enforcing parameter to be read as string
 		if (loc.dataInterpretation == DataInterpretation.AS_TEXT) {
-			String s = getString(loc);
+			String s = getString(loc);   //SOURCE_COMBINATION and MAPPING are performed here
 			if (s != null) {
 				String unitString = null;
 				if (loc.otherLocationFields != null) {
@@ -1581,6 +1581,15 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			logger.log(Level.FINE, String.format("%s\t%s\t%s", param, x.getMessage(), loc.toString()));
 		}
 		if (paramStringValue != null) {
+			// Post processing of the string value with MAPPING
+			if (loc.mapping != null) {
+				Object obj = getMappingValue(paramStringValue, loc.mapping);
+				if (obj == null)
+					return; //parameter is not added due to null mapping
+				else
+					paramStringValue = obj.toString();
+			}
+
 			RichValue rv = rvParser.parse(paramStringValue);
 			String rv_error = rvParser.getAllErrorsAsString();
 
@@ -1601,6 +1610,43 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			try {
 				Number paramDoubleValue = getNumericValue(loc);
 				if (paramDoubleValue != null) {
+					// Post processing of the number value with MAPPING
+					if (loc.mapping != null) {
+						Object obj = getMappingValue(paramDoubleValue, loc.mapping);
+						if (obj == null)
+							return; //parameter is not added due to null mapping
+						else {
+							if (obj instanceof Number) {
+								paramDoubleValue = (Number) obj; //mapped another number
+							}
+							else {
+								paramDoubleValue = null;
+
+								//Handling the mapped object as a string and trying to
+								//parse RichValue object
+								paramStringValue = obj.toString();
+								RichValue rv = rvParser.parse(paramStringValue);
+								String rv_error = rvParser.getAllErrorsAsString();
+
+								if (rv_error == null) {
+									pVal = new Value();
+									if (rv.unit != null)
+										pVal.setUnits(rv.unit);
+									if (rv.loValue != null)
+										pVal.setLoValue(rv.loValue);
+									if (rv.loQualifier != null)
+										pVal.setLoQualifier(rv.loQualifier);
+									if (rv.upValue != null)
+										pVal.setUpValue(rv.upValue);
+									if (rv.upQualifier != null)
+										pVal.setUpQualifier(rv.upQualifier);
+								}
+							}
+						}
+					}
+				}
+
+				if (paramDoubleValue != null) { //no mapping or mapped another number
 					pVal = new Value();
 					pVal.setLoValue(paramDoubleValue);
 					if (isCellPercentageFormatted(loc))
