@@ -1568,6 +1568,12 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			Date d = getDate(loc);
 			if (d != null)
 				destinationParams.put(parameterName, d);
+			else {
+				//cell is not correctly formatted as date. Use string instead.
+				String s = getString(loc);
+				if (s != null)
+					destinationParams.put(parameterName, s);
+			}
 			return;
 		}
 

@@ -1,6 +1,7 @@
 package net.enanomapper.parser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -415,8 +416,17 @@ public class ExcelDataBlockUtils
 													
 													if (pi.dataInterpretation == DataInterpretation.AS_TEXT)
 													{
-														//Take value as it is
+														//Take value as a string
 														value = value.toString();
+													}
+													else if (pi.dataInterpretation == DataInterpretation.AS_DATE)
+													{
+														//Take value as a date
+														Date d = ExcelUtils.getDateFromCell(c);
+														if (d != null)
+															value = d;
+														else 
+															value = value.toString(); //cell is not correctly formatted as date
 													}
 													else
 														value = RichValue.recognizeRichValueFromObject(value, pi.unit,
