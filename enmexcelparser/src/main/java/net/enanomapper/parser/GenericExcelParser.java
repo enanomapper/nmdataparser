@@ -1582,7 +1582,10 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		// Parameter is allowed to be Rich Value, String or Numeric object
 		try {
-			paramStringValue = getStringValue(loc);
+			if (loc.sourceCombination)
+				paramStringValue = getString0(loc);   //SOURCE_COMBINATION is performed here but not MAPPING
+			else
+				paramStringValue = getStringValue(loc);
 		} catch (Exception x) {
 			logger.log(Level.FINE, String.format("%s\t%s\t%s", param, x.getMessage(), loc.toString()));
 		}
@@ -1595,7 +1598,6 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				else
 					paramStringValue = obj.toString();
 			}
-
 			RichValue rv = rvParser.parse(paramStringValue);
 			String rv_error = rvParser.getAllErrorsAsString();
 
