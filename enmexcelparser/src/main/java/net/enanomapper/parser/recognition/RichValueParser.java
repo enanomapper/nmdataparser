@@ -75,9 +75,10 @@ public class RichValueParser {
 	}
 	
 	public RichValue parse(String rvStr) {
-		//By default representPlusMinusAsInterval = true
-		//i.e. a ± b is represented as an interval [a-b, a+b]
-		return parse(rvStr, true);
+		//By default representPlusMinusAsInterval = false
+		//i.e. a ± b is not represented as an interval [a-b, a+b]
+		//but as a value and an error
+		return parse(rvStr, false);
 	}	
 	
 	/**
@@ -449,7 +450,7 @@ public class RichValueParser {
 				if (representPlusMinusAsInterval)
 				{	
 					rv.loValue = rv.loValue - sd;
-					rv.upValue = rv.loValue + 2*sd;
+					rv.upValue = rv.loValue + sd;
 				}
 				else
 				{
