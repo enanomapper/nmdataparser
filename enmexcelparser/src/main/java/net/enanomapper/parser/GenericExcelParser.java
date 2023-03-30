@@ -1613,6 +1613,10 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 					pVal.setUpValue(rv.upValue);
 				if (rv.upQualifier != null)
 					pVal.setUpQualifier(rv.upQualifier);
+				if (rv.errorValue != null)
+					pVal.setErrValue(rv.errorValue);
+				if (rv.errorValueQualifier != null)
+					pVal.setErrQualifier(rv.errorValueQualifier);
 			}
 		} else
 			try {
@@ -1648,6 +1652,10 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 										pVal.setUpValue(rv.upValue);
 									if (rv.upQualifier != null)
 										pVal.setUpQualifier(rv.upQualifier);
+									if (rv.errorValue != null)
+										pVal.setErrValue(rv.errorValue);
+									if (rv.errorValueQualifier != null)
+										pVal.setErrQualifier(rv.errorValueQualifier);
 								}
 							}
 						}
