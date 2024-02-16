@@ -1,0 +1,212 @@
+{
+	"TEMPLATE_INFO": {
+		"NAME": "Test4-IOM-Multiple-Substances",
+		"VERSION": "version 1",
+		"TYPE": 1,
+		"ALLOW_QUALIFIER_IN_VALUE_CELL": 1
+	},
+
+	"DATA_ACCESS": {
+		"ITERATION": "SUBSTANCE_RECORD_MAP",
+		"SHEET_INDEX": 1,
+		"START_ROW": 2,
+		"END_ROW": 2,
+
+		"START_HEADER_ROW": 1,
+		"END_HEADER_ROW": 1,
+		"ALLOW_EMPTY": true,
+		"RECOGNITION": "BY_INDEX",
+
+		"VARIABLES": 
+		{
+			"Assay_endpoint": "Cell viability",			 
+			"Outcome_metric": "ng/ml",
+			
+			"Replicates" : 3,
+			
+			"C": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 6,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            },
+            
+            "TimeDesignations": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 8,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            },
+            
+            "TimePoints": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 9,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            },
+
+			"MaterialItemNames": {
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"SHEET_INDEX": 1,
+				"ROW_INDEX": 2,
+				"COLUMN_INDEX": "B",
+				"COLUMN_INDICES": "2-20"
+            }   	
+		},
+		
+		"VARIABLE_MAPPINGS": [
+			{
+				"NAME": "Time",
+				"KEYS_VARIABLE": "TimeDesignations",
+				"VALUES_VARIABLE": "TimePoints"
+			}
+		]
+
+	},
+	
+	"SUBSTANCE_RECORD_MAP": {
+		"MAP_ELEMENT": "SUBSTANCE_NAME",
+		"SUBSTANCE_NAME": "MaterialItemNames",
+		"PUBLIC_NAME": "MaterialItemNames"
+	},
+	
+		
+	"PROTOCOL_APPLICATIONS": [
+	{	
+		"PROTOCOL_ENDPOINT" : "Cell viability",
+		
+		"EFFECTS_BLOCK": [
+		{
+			"LOCATION": {
+				"ITERATION": "ABSOLUTE_LOCATION",
+				"IS_ARRAY": true,
+				"TRIM_ARRAY": true,
+				"SHEET_INDEX": 2,
+				"COLUMN_INDEX": "C",
+				"ROW_INDEX": 3
+			},
+			
+			"ROW_SUBBLOCKS": "= TimePoints.size()",
+			"COLUMN_SUBBLOCKS": "= Replicates",
+			"SUBBLOCK_SIZE_ROWS": "= C.size() + 4",
+			"SUBBLOCK_SIZE_COLUMNS": 5,
+			
+			"VALUE_GROUPS": [
+				{
+					"NAME": "=Assay_endpoint",
+					"ENDPOINT_TYPE" : "average raw data",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 3,
+					"END_COLUMN": 3,
+					"START_ROW": 3,
+					"END_ROW": "=3 + C.size() - 1",
+					"SUBSTANCE_RECORD_MAP": {
+						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
+						"COLUMN_POS": 1,
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+					},					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						},
+						{
+							"NAME": "Concentration",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": -1,
+							"ROW_POS": 0,
+							"UNIT" : "ug/ml"
+						}
+					]	
+				},
+				{
+					"NAME": "Intracellular LDH Control",
+					"ENDPOINT_TYPE" : "control",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 3,
+					"END_COLUMN": 3,
+					"START_ROW": "=3 + C.size()",
+					"END_ROW": "=3 + C.size()",
+					"SUBSTANCE_RECORD_MAP": {
+						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
+						"COLUMN_POS": 1,
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+					},					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						}
+					]	
+				},
+				{
+					"NAME": "=Assay_endpoint",
+					"ENDPOINT_TYPE" : "test",
+					"UNIT": "=Outcome_metric",
+					"START_COLUMN": 4,
+					"END_COLUMN": 4,
+					"START_ROW": 3,
+					"END_ROW": "=3 + C.size() - 1",
+					
+					"PARAMETERS": [
+						{
+							"NAME": "Time point",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 2,
+							"MAPPING": "Time",
+							"UNIT" : "h"
+						},
+						{
+							"NAME": "Replicate",
+							"ASSIGN": "ASSIGN_TO_SUBBLOCK",
+							"COLUMN_POS": 1,
+							"ROW_POS": 1
+						},
+						{
+							"NAME": "Concentration",
+							"ASSIGN": "ASSIGN_TO_VALUE",
+							"COLUMN_POS": -2,
+							"ROW_POS": 0,
+							"UNIT" : "ug/ml"
+						}
+					]	
+				}
+			]			
+		}	
+		]
+	}	
+	]
+
+}
