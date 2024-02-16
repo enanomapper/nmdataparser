@@ -97,7 +97,7 @@
 				"ROW_INDEX": 3
 			},
 			
-			"ROW_SUBBLOCKS": "= TimePoints.size()",
+			"ROW_SUBBLOCKS": "= MaterialItemNames.size()",
 			"COLUMN_SUBBLOCKS": "= Replicates",
 			"SUBBLOCK_SIZE_ROWS": "= C.size() + 4",
 			"SUBBLOCK_SIZE_COLUMNS": 5,
@@ -178,7 +178,11 @@
 					"END_COLUMN": 4,
 					"START_ROW": 3,
 					"END_ROW": "=3 + C.size() - 1",
-					
+					"SUBSTANCE_RECORD_MAP": {
+						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
+						"COLUMN_POS": 1,
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+					},					
 					"PARAMETERS": [
 						{
 							"NAME": "Time point",
