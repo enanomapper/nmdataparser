@@ -66,6 +66,12 @@ public class SubstanceRecordMap
 	
 	public void duplicateProtocolApplication(ProtocolApplication pa) 
 	{
+		if (mapKeys == null) {
+			//Error on SUBSTANCE_RECORD_MAP
+			System.out.println("---------------> Error on SUBSTANCE_RECORD_MAP: No mapping keys available!");
+			return;
+		}
+		
 		for (String mapkey : mapKeys) {
 			SubstanceRecord r = substances.get(mapkey);
 			ProtocolApplication dup_pa = duplicate(pa);
