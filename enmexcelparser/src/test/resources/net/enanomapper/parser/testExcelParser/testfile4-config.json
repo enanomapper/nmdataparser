@@ -99,7 +99,7 @@
 			
 			"ROW_SUBBLOCKS": "= MaterialItemNames.size()",
 			"COLUMN_SUBBLOCKS": "= Replicates",
-			"SUBBLOCK_SIZE_ROWS": "= C.size() + 4",
+			"SUBBLOCK_SIZE_ROWS": "= 2 + C.size() + 2",
 			"SUBBLOCK_SIZE_COLUMNS": 5,
 			
 			"VALUE_GROUPS": [
@@ -114,7 +114,7 @@
 					"SUBSTANCE_RECORD_MAP": {
 						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
 						"COLUMN_POS": 1,
-						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 2)"						
 					},					
 					"PARAMETERS": [
 						{
@@ -151,7 +151,7 @@
 					"SUBSTANCE_RECORD_MAP": {
 						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
 						"COLUMN_POS": 1,
-						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 2)"						
 					},					
 					"PARAMETERS": [
 						{
@@ -181,7 +181,7 @@
 					"SUBSTANCE_RECORD_MAP": {
 						"ASSIGN": "ASSIGN_TO_EXCEL_SHEET",
 						"COLUMN_POS": 1,
-						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 3)"						
+						"ROW_POS": "= 3 + (CUR_ROW_SUBBLOCK - 1) * (2 + C.size() + 2)"						
 					},					
 					"PARAMETERS": [
 						{
