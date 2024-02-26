@@ -124,8 +124,39 @@ public class NMParserTest extends TestCase
 		}
 	}
 	
+	public void test04() throws Exception {
+		// this will close the inputstream automatically
+		try (InputStream fin = getClass().getClassLoader()
+				.getResourceAsStream("net/enanomapper/parser/testExcelParser/testfile4.xlsx")) {
+			boolean isXLSX = true;
+			URL url = getClass().getClassLoader()
+					.getResource("net/enanomapper/parser/testExcelParser/testfile4-config.json");
+			try (GenericExcelParser parser = new GenericExcelParser(fin, new File(url.getFile()), isXLSX)) {
+
+				// System.out.println(parser.getExcelParserConfigurator().toJSONString()
+				// + "\n");
+				
+				int n = 0;
+				while (parser.hasNext()) {
+					SubstanceRecord r = parser.nextRecord();
+					n++;
+					System.out.println("Test04/Record #" + n);
+					testEffectBlocks04(r,n);
+				}
+				
+			} catch (Exception x) {
+				Logger.getAnonymousLogger().log(Level.SEVERE,x.getMessage());
+				throw x;
+			}
+		} catch (Exception x1) {
+			Logger.getAnonymousLogger().log(Level.SEVERE,x1.getMessage());
+			throw x1;
+		}
+	}
+	
 	void checkRecord(SubstanceRecord subRec, int substNum)
 	{
+		//substNum is 1-based index
 		String prefix = "Substance " + substNum + ": ";
 		assertEquals(prefix + "getPublicName()", "NM-00" + substNum, subRec.getPublicName());
 		assertEquals(prefix + "getSubstanceName()", "name-" + substNum, subRec.getSubstanceName());
@@ -221,6 +252,7 @@ public class NMParserTest extends TestCase
 	
 	void testProtocolApplication(int substNum, int paIndex, ProtocolApplication pa)
 	{
+		//substNum is 1-based index, paIndex is 0-based index
 		String prefix = "Substance " + substNum + ", ProtocolApplication " + (paIndex+1) + " : ";
 		Protocol p = (Protocol) pa.getProtocol();
 		assertEquals(prefix + "getProtocol()", "test-protocol-endpoint", p.getEndpoint());
@@ -277,6 +309,7 @@ public class NMParserTest extends TestCase
 	
 	void testEffectRecord(int substNum, int paIndex, int effRecIndex, EffectRecord effRec)
 	{
+		//substNum is 1-based index, paIndex is 0-based index
 		String prefix = "Substance " + substNum + ", ProtocolApplication " + (paIndex+1) + 
 				" Effect Rec. " + (effRecIndex + 1) + " : ";
 		
@@ -450,6 +483,7 @@ public class NMParserTest extends TestCase
 	
 	void testEffectBlocks03(SubstanceRecord r, int substNum)
 	{
+		//substNum is 1-based index
 		String prefix = "Test03/substance #" + substNum;
 		assertEquals(prefix + "getPublicName()", "Material" + substNum, r.getPublicName());
 		assertEquals(prefix + "getExternalids().get(0).getSystemDesignator()", "Sample name", 
@@ -490,7 +524,31 @@ public class NMParserTest extends TestCase
 		assertEquals(prefix + " getLoValue()", expEffValue, effRec.getLoValue());
 		//assertEquals(prefix + " getUnit()", "ng/ml", effRec.getUnit());
 
-	}	
+	}
+	
+	void testEffectBlocks04(SubstanceRecord r, int substNum)
+	{
+		//substNum is 1-based index
+		String prefix = "Test04/substance #" + substNum;
+		assertEquals(prefix + "getPublicName()", "NM-10" + substNum, r.getPublicName());
+		
+				
+		for (ProtocolApplication pa : r.getMeasurements())
+		{						
+			List<EffectRecord> effRecList = pa.getEffects();
+			for (int i = 0; i < effRecList.size(); i++)
+				testEffectRecord04(effRecList.get(i), substNum);
+		}
+		
+		//System.out.println(r.toJSON(null));
+		//System.out.println(r.getMeasurements().get(0).toString());
+	}
+	
+	void testEffectRecord04(EffectRecord effRec, int substNum)
+	{
+		//TODO
+	}
+	
 
 	
 	int replicateToNum (String rep)
