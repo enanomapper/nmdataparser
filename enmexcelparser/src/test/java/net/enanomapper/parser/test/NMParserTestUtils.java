@@ -365,6 +365,27 @@ public class NMParserTestUtils {
 			parser.close();
 		}
 	}
+	
+	public static Object findEffectValue(ProtocolApplication pa, String endpoint, 
+			String conditions[], Object conditionValues[]) 
+	{
+		List<EffectRecord> effRecList = pa.getEffects();
+		for (EffectRecord eff: effRecList) {
+			if (eff.getEndpoint().toString().equals(endpoint)) {
+				Object obj = matchConditions(eff, conditions, conditionValues);
+				if (obj != null)
+					return obj;
+			}
+		}
+		return null;
+	}
+	
+	public static Object matchConditions(EffectRecord eff, String conditions[], Object conditionValues[]) {
+		for (int i = 0; i < conditions.length; i++) {
+			//TODO
+		}		
+		return false;
+	}
 
 
 	@Test
