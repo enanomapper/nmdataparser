@@ -381,9 +381,78 @@ public class NMParserTestUtils {
 	}
 	
 	public static Object matchConditions(EffectRecord eff, String conditions[], Object conditionValues[]) {
+		IParams effCond = (IParams) eff.getConditions();
 		for (int i = 0; i < conditions.length; i++) {
-			//TODO
+			Object condObj = effCond.get(conditions[i]);
+			if (condObj == null)
+				return false;
+			else {
+				if (!matchObjects(condObj, conditionValues[i]))
+					return false;
+			}
 		}		
+		return true;
+	}
+	
+	public static boolean matchObjects(Object valueObj, Object expectedValueObj) 
+	{			
+		Value v = null;
+		if (valueObj instanceof Value) {
+			v = (Value) valueObj;
+		}
+		
+		if (expectedValueObj instanceof String) 
+		{			
+			if ((valueObj instanceof String) || (valueObj instanceof Integer)
+					|| (valueObj instanceof Double) ) 
+			{
+				if (valueObj.toString().equals(expectedValueObj.toString()))
+					return true;
+				else
+					return false;
+			}
+		}
+		
+		//Handle numeric values
+		Double expVal = null;
+		if (expectedValueObj instanceof Double) 
+			expVal = (Double) expectedValueObj;
+		
+		if (expectedValueObj instanceof Integer) 
+			expVal = 1.0 * ((Integer)expectedValueObj).intValue();
+
+		if (expVal != null) 
+		{
+			if (v != null) {
+				if (v.getLoValue() == expVal)
+					return true;
+				else
+					return false;
+			}
+			
+			if (valueObj instanceof Integer) {
+				int intVal = (Integer)valueObj;
+				if (expVal == intVal)
+					return true;
+				else 
+					return false;
+			}
+			
+			if (valueObj instanceof Double) {
+				double doubleVal = (Double)valueObj;
+				if (expVal == doubleVal)
+					return true;
+				else 
+					return false;
+			}
+		}
+		
+		if (expectedValueObj instanceof Value) 
+		{
+			//TODO
+		}
+		
+		
 		return false;
 	}
 
