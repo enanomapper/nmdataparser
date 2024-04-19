@@ -17,9 +17,9 @@ Reads supported data formats (e.g. Excel + JSON configuration) and writes eNanoM
 
 * [JSON configuration documentation](https://github.com/enanomapper/nmdataparser/wiki)
 
-### Data entry templates (NEW!)
+### Data entry templates
 
-[Nanomaterial characterisation and bioassay templates (based on NANoREG/JRC templates)](http://ambit.sourceforge.net/enanomapper/templates) 
+[Template Wizard)](https://enanomapper.adma.ai/help/#templatewizard) 
 
 ### For developers
 
