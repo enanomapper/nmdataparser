@@ -15,7 +15,8 @@ public class SubstanceAnalysisTask
 {
 	public static enum SATaskType {
 		CHECK_EFFECT_VALUE, CHECK_PROTOCOL_PARAMETER_VALUE, CHECK_CONDITION_VALUE, 
-		COUNT_SUBSTANCES, COUNT_EFFECTS, COUNT_PROTOCOLS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, UNDEFINED;
+		COUNT_SUBSTANCES, COUNT_EFFECTS, COUNT_PROTOCOLS, COUNT_PROTOCOL_PARAMETERS, COUNT_CONDITIONS, 
+		BASIC_COUNT, UNDEFINED;
 		
 		public static SATaskType fromString(String s) {
 			try {
@@ -267,6 +268,9 @@ public class SubstanceAnalysisTask
 			case COUNT_EFFECTS:
 				taskCountEffects(records.get(i), i);
 				break;
+			case BASIC_COUNT:
+				taskBasicCount(records.get(i), i);
+				break;	
 			}
 		}
 		
@@ -342,6 +346,12 @@ public class SubstanceAnalysisTask
 	{
 		//TODO
 	}
+	
+	public void taskBasicCount(SubstanceRecord record, int recIndex)
+	{
+		//TODO
+	}
+	
 	
 	boolean checkLogConditions(SubstanceRecord record)
 	{

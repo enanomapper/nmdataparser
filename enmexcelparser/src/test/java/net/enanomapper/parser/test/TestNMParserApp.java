@@ -21,11 +21,17 @@ public class TestNMParserApp {
 	
 	public static void testExcelTemplate(String excelFile, File jsonFile, boolean printJSONConfig)
 			throws Exception {
-		testExcelTemplate(excelFile, jsonFile, printJSONConfig, true);
+		testExcelTemplate(excelFile, jsonFile, printJSONConfig, true, true);
 	}
 	
 	public static void testExcelTemplate(String excelFile, File jsonFile, 
 			boolean printJSONConfig, boolean flagLogVariableMapping) throws Exception 
+	{
+		testExcelTemplate(excelFile, jsonFile, printJSONConfig, flagLogVariableMapping, true);
+	}
+	
+	public static void testExcelTemplate(String excelFile, File jsonFile, 
+			boolean printJSONConfig, boolean flagLogVariableMapping, boolean flagBasicCount) throws Exception 
 	{
 		FileInputStream fin = new FileInputStream(excelFile);
 		try {
@@ -107,6 +113,12 @@ public class TestNMParserApp {
 		} finally {
 
 			fin.close();
+		}
+		
+		if (flagBasicCount) {
+			System.out.println("\nBasic count:");
+			System.out.println("--------------");			
+			//TODO
 		}
 
 	}
