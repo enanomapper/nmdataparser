@@ -5,6 +5,7 @@ import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 import net.enanomapper.parser.excel.SALogicalCondition.SAConditionResult;
@@ -358,7 +359,16 @@ public class SubstanceAnalysisTask
 	
 	public void taskBasicCount(SubstanceRecord record, int recIndex)
 	{
-		//TODO
+		List<ProtocolApplication> paList = record.getMeasurements();
+		outputLine("  Num of Protocol Applications = " + paList.size());
+		for (ProtocolApplication pa: paList) {
+			Protocol prot = (Protocol)pa.getProtocol();
+			outputLine("  " + prot.getTopCategory() + "  " + prot.getCategory());
+			List effects = pa.getEffects();			
+			outputLine("   num of effecs = " + ((effects!=null)?effects.size():0));
+						
+			//TODO
+		}		
 	}
 	
 	
