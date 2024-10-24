@@ -2,12 +2,14 @@ package net.enanomapper.parser.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.GenericExcelParser;
+import net.enanomapper.parser.excel.SubstanceAnalysisTask;
 
 public class TestNMParserApp {
 
@@ -47,11 +49,15 @@ public class TestNMParserApp {
 			if (printJSONConfig)
 				System.out.println(parser.getExcelParserConfigurator()
 						.toJSONString() + "\n");
-
+			
 			int n = 0;
+			List<SubstanceRecord> recordList = new ArrayList<SubstanceRecord>();
+			
 			while (parser.hasNext()) 
 			{
 				SubstanceRecord r = parser.nextRecord();
+				if (flagBasicCount)
+					recordList.add(r);
 				n++;
 				if (n > 1)
 					System.out.println(",");
@@ -110,17 +116,22 @@ public class TestNMParserApp {
 			 * (parser.hasErrors()) System.out.println("\n\nParser errors:\n" +
 			 * parser.errorsToString());
 			 */
+			
+			if (flagBasicCount) {
+				System.out.println("\nBasic count:");
+				System.out.println("--------------");	
+				System.out.println("Number of records = " + recordList.size());
+				
+				SubstanceAnalysisTask sat = SubstanceAnalysisTask.parseFromString("BASIC_COUNT");
+				sat.flagConsoleOutOnly = true;
+				sat.run(recordList);
+			}
+
+			
 		} finally {
 
 			fin.close();
 		}
-		
-		if (flagBasicCount) {
-			System.out.println("\nBasic count:");
-			System.out.println("--------------");			
-			//TODO
-		}
-
 	}
 
 }

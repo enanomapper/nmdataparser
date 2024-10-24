@@ -74,8 +74,16 @@ public class SubstanceAnalysisTask
 		}
 		
 		//Quilifier
-		if (tokens.length < 2)
-			errors.add("Missing qualifier token!");
+		if (tokens.length < 2) {
+			if (saTask.type == SATaskType.BASIC_COUNT) {
+				//Only one token is allowed for BASIC_COUNT task
+				//therefore ending the parsing procedure
+				if (errors.isEmpty())
+					return saTask;
+			}
+			else	
+				errors.add("Missing qualifier token!");
+		}	
 		else {	
 			saTask.qualifier = tokens[1].trim();
 			if (!saTask.qualifier.isEmpty()) 
@@ -280,8 +288,8 @@ public class SubstanceAnalysisTask
 	
 	public void makeResultSummary() 
 	{
-		String okLabel = "OK";
-		String problemLabel = "Problem";
+		String okLabel = "OK ";
+		String problemLabel = "Problems ";
 				
 		switch (type) {
 		case COUNT_SUBSTANCES:
