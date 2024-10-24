@@ -282,7 +282,8 @@ public class SubstanceAnalysisTask
 			}
 		}
 		
-		makeResultSummary();
+		if (type != SATaskType.BASIC_COUNT)
+			makeResultSummary();
 		return 0;
 	}
 	
