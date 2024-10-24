@@ -267,7 +267,7 @@ public class SubstanceAnalysisTask
 		
 		for (int i = 0; i<records.size(); i++)
 		{	
-			outputLine("Record " + (i+1));
+			outputLine("Record " + (i+1) + "  " + records.get(i).getPublicName());
 			
 			switch (type) {
 			case COUNT_SUBSTANCES:
