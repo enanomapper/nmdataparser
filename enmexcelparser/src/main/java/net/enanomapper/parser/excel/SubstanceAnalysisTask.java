@@ -1,7 +1,9 @@
 package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ambit2.base.data.SubstanceRecord;
@@ -12,6 +14,8 @@ import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
 import net.enanomapper.parser.excel.SALogicalCondition.SAConditionResult;
 import net.enanomapper.parser.excel.SALogicalCondition.TargetType;
+
+
 
 
 public class SubstanceAnalysisTask 
@@ -370,14 +374,17 @@ public class SubstanceAnalysisTask
 			List effects = pa.getEffects();
 			outputLine("   num of effecs = " + ((effects!=null)?effects.size():0));	
 			if (effects != null) {
-				
 				StringBuffer sb = new StringBuffer();
 				List<String> conditionList = extractConditions(effects);
 				for (String cond : conditionList)
 					sb.append(cond + ", ");
-				outputLine("   All conditions: " + sb.toString());
+				outputLine("   All conditions(" +  conditionList.size() +"): " + sb.toString());
+				List<ConditionGroup> condGrps = extractConditionGroups(effects);
+				outputLine("   Condition groups(" +  condGrps.size() +"):");
+				for (ConditionGroup cg : condGrps) {
+					outputLine("     " + cg.toSingleLineString());
+				}
 			}
-			
 		}		
 	}
 	
@@ -404,6 +411,65 @@ public class SubstanceAnalysisTask
 		return condList;
 	}
 	
+	class ConditionGroup {
+		public String endpoint = null;
+		public String endpointType = null;
+		public Set<String> conditions = null;
+		public int effectCount = 1;
+
+		public ConditionGroup(String endpoint, String endpointType, Set<String> conditions) {
+			this.endpoint = endpoint;
+			this.endpointType = endpointType;
+			this.conditions = conditions;
+		}
+
+		public boolean equals (ConditionGroup cg) {
+			if (!cg.endpoint.equalsIgnoreCase(endpoint))
+				return false;
+			if (cg.endpointType == null) {
+				if (endpointType != null)
+					return false;
+			}
+			else if (!cg.endpointType.equalsIgnoreCase(endpointType))
+				return false;
+
+			if (!cg.conditions.equals(conditions))
+				return false;
+			return true;
+		}
+
+		public ConditionGroup findInList(List<ConditionGroup> condGrps) {
+			for (ConditionGroup cg : condGrps)
+				if (this.equals(cg))
+					return cg;
+			return null;
+		}
+
+		public String toSingleLineString() {
+			StringBuffer sb = new StringBuffer();
+			sb.append(endpoint + "[" + endpointType + "] (" + effectCount + ")");
+			sb.append(" --> ");
+			for (String cond: conditions)
+				sb.append(cond + ", ");
+			return sb.toString();
+		}
+	}
+
+	List<ConditionGroup> extractConditionGroups(List<EffectRecord> effects)
+	{
+		List<ConditionGroup> condGrps = new ArrayList<ConditionGroup>();
+		for (EffectRecord eff: effects){
+			IParams conditions = (IParams) eff.getConditions();
+			Set<String> keys = conditions.keySet();
+			ConditionGroup cg = new ConditionGroup(eff.getEndpoint().toString(), eff.getEndpointType(), keys);
+			ConditionGroup cgListInst = cg.findInList(condGrps);
+			if (cgListInst == null)
+				condGrps.add(cg);
+			else
+				cgListInst.effectCount++;
+		}
+		return condGrps;
+	}
 	
 	boolean checkLogConditions(SubstanceRecord record)
 	{
