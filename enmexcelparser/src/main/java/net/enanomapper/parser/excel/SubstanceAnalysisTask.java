@@ -2,9 +2,11 @@ package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
 import ambit2.base.data.study.Protocol;
 import ambit2.base.data.study.ProtocolApplication;
 import net.enanomapper.parser.excel.SALogicalCondition.ComparisonOperation;
@@ -361,14 +363,45 @@ public class SubstanceAnalysisTask
 	{
 		List<ProtocolApplication> paList = record.getMeasurements();
 		outputLine("  Num of Protocol Applications = " + paList.size());
+				
 		for (ProtocolApplication pa: paList) {
 			Protocol prot = (Protocol)pa.getProtocol();
 			outputLine("  " + prot.getTopCategory() + "  " + prot.getCategory());
-			List effects = pa.getEffects();			
-			outputLine("   num of effecs = " + ((effects!=null)?effects.size():0));
-						
-			//TODO
+			List effects = pa.getEffects();
+			outputLine("   num of effecs = " + ((effects!=null)?effects.size():0));	
+			if (effects != null) {
+				
+				StringBuffer sb = new StringBuffer();
+				List<String> conditionList = extractConditions(effects);
+				for (String cond : conditionList)
+					sb.append(cond + ", ");
+				outputLine("   All conditions: " + sb.toString());
+			}
+			
 		}		
+	}
+	
+	List<String> extractConditions(List<EffectRecord> effects)
+	{
+		List<String> condList = new ArrayList<String>();
+		for (EffectRecord eff: effects){
+			IParams conditions = (IParams) eff.getConditions();
+			Set<String> keys = conditions.keySet();
+			for (String key : keys)
+				if (!condList.contains(key))
+					condList.add(key);
+		}
+		return condList;
+	}
+	
+	List<String> extractConditions(EffectRecord eff)
+	{		
+		List<String> condList = new ArrayList<String>();
+		IParams conditions = (IParams) eff.getConditions();
+		Set<String> keys = conditions.keySet();
+		for (String key : keys)
+			condList.add(key);
+		return condList;
 	}
 	
 	
