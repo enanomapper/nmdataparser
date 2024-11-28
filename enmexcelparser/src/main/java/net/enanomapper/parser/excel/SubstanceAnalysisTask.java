@@ -485,6 +485,7 @@ public class SubstanceAnalysisTask
 			if (cv.values.size() != values.size())
 				return false;
 			
+			/* This check is excluded from ConditionValues identification
 			for (Object o: cv.values) {
 				boolean match_o = false;
 				for (Object v: values) 
@@ -495,7 +496,7 @@ public class SubstanceAnalysisTask
 				if (!match_o)
 					return false;
 			}
-			
+			*/			
 			return true;
 		}
 		
@@ -532,6 +533,7 @@ public class SubstanceAnalysisTask
 		}
 		return condGrps;
 	}
+	
 	
 	boolean checkLogConditions(SubstanceRecord record)
 	{
