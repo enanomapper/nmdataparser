@@ -385,6 +385,11 @@ public class SubstanceAnalysisTask
 				for (ConditionGroup cg : condGrps) {
 					outputLine("     " + cg.toSingleLineString());
 				}
+				List<ConditionValues> condVals = extractConditionValues(effects);
+				outputLine("   Condition values(" +  condVals.size() +"):");
+				for (ConditionValues cv : condVals) {
+					outputLine("     " + cv.toSingleLineString());
+				}
 			}
 		}		
 	}
@@ -490,10 +495,10 @@ public class SubstanceAnalysisTask
 			if (!cv.condition.equals(condition))
 				return false;
 			
+			/* This check is excluded from ConditionValues identification
 			if (cv.values.size() != values.size())
 				return false;
 			
-			/* This check is excluded from ConditionValues identification
 			for (Object o: cv.values) {
 				boolean match_o = false;
 				for (Object v: values) 
@@ -513,6 +518,16 @@ public class SubstanceAnalysisTask
 				if (this.equals(cv))
 					return cv;
 			return null;
+		}
+		
+		public boolean addValue(Object o) {
+			for (Object v: values) 
+				if (o.toString().equals(v.toString())) {
+					//Object is not added since it is present in the list
+					return false; 
+				}
+			values.add(o);
+			return true;
 		}
 		
 		public String toSingleLineString() {
@@ -542,6 +557,27 @@ public class SubstanceAnalysisTask
 		return condGrps;
 	}
 	
+	List<ConditionValues> extractConditionValues(List<EffectRecord> effects)
+	{
+		List<ConditionValues> condVals = new ArrayList<ConditionValues>();
+		for (EffectRecord eff: effects){
+			IParams conditions = (IParams) eff.getConditions();
+			Set<String> keys = conditions.keySet();
+			for (String key : keys) {
+				ConditionValues cv = new ConditionValues(eff.getEndpoint().toString(), eff.getEndpointType(), key);
+				ConditionValues cvListInst = cv.findInList(condVals);
+				if (cvListInst == null) {
+					cv.values.add(conditions.get(key)); //adding first value
+					condVals.add(cv);
+				}
+				else {
+					cvListInst.addValue(conditions.get(key));
+					cvListInst.effectCount++;
+				}
+			}
+		}
+		return condVals;
+	}
 	
 	boolean checkLogConditions(SubstanceRecord record)
 	{
