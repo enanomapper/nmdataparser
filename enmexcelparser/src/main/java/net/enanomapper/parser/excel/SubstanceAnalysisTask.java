@@ -2,6 +2,7 @@ package net.enanomapper.parser.excel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -461,6 +462,13 @@ public class SubstanceAnalysisTask
 		public String condition = null;
 		public Set<Object> values = null;
 		public int effectCount = 1;
+		
+		public ConditionValues(String endpoint, String endpointType, String condition) {
+			this.endpoint = endpoint;
+			this.endpointType = endpointType;
+			this.condition = condition;
+			this.values = new HashSet<Object>();
+		}
 		
 		public ConditionValues(String endpoint, String endpointType, String condition, Set<Object> values) {
 			this.endpoint = endpoint;
