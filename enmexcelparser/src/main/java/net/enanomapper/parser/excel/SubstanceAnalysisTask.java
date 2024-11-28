@@ -454,6 +454,68 @@ public class SubstanceAnalysisTask
 			return sb.toString();
 		}
 	}
+	
+	class ConditionValues {
+		public String endpoint = null;
+		public String endpointType = null;
+		public String condition = null;
+		public Set<Object> values = null;
+		public int effectCount = 1;
+		
+		public ConditionValues(String endpoint, String endpointType, String condition, Set<Object> values) {
+			this.endpoint = endpoint;
+			this.endpointType = endpointType;
+			this.condition = condition;
+			this.values = values;
+		}
+		
+		public boolean equals(ConditionValues cv) {
+			if (!cv.endpoint.equalsIgnoreCase(endpoint))
+				return false;
+			if (cv.endpointType == null) {
+				if (endpointType != null)
+					return false;
+			}
+			else if (!cv.endpointType.equalsIgnoreCase(endpointType))
+				return false;
+
+			if (!cv.condition.equals(condition))
+				return false;
+			
+			if (cv.values.size() != values.size())
+				return false;
+			
+			for (Object o: cv.values) {
+				boolean match_o = false;
+				for (Object v: values) 
+					if (o.toString().equals(v.toString())) {
+						match_o = true;
+						break;
+					}
+				if (!match_o)
+					return false;
+			}
+			
+			return true;
+		}
+		
+		public ConditionValues findInList(List<ConditionValues> condVals) {
+			for (ConditionValues cv : condVals)
+				if (this.equals(cv))
+					return cv;
+			return null;
+		}
+		
+		public String toSingleLineString() {
+			StringBuffer sb = new StringBuffer();
+			sb.append(endpoint + "[" + endpointType + "]" +
+					"[cond=" + condition+ "]" +"(" + effectCount + ")");
+			sb.append(" --> ");
+			for (Object o: values)
+				sb.append(o.toString() + ", ");
+			return sb.toString();
+		}
+	}	
 
 	List<ConditionGroup> extractConditionGroups(List<EffectRecord> effects)
 	{
