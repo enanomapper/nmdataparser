@@ -521,11 +521,21 @@ public class SubstanceAnalysisTask
 		}
 		
 		public boolean addValue(Object o) {
-			for (Object v: values) 
-				if (o.toString().equals(v.toString())) {
-					//Object is not added since it is present in the list
-					return false; 
+			for (Object v: values) {
+				if (o == null) {
+					//Null object is not added since it is present in the list
+					if (v == null)
+						return false;
 				}
+				else {
+					if (v == null)
+						continue;
+					if (o.toString().equals(v.toString())) {
+						//Object is not added since it is present in the list
+						return false; 
+					}
+				}
+			}	
 			values.add(o);
 			return true;
 		}
@@ -536,7 +546,7 @@ public class SubstanceAnalysisTask
 					"[cond=" + condition+ "]" +"(" + effectCount + ")");
 			sb.append(" --> ");
 			for (Object o: values)
-				sb.append(o.toString() + ", ");
+				sb.append((o==null)?"null":o.toString() + ", ");
 			return sb.toString();
 		}
 	}	
