@@ -11,13 +11,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.json.JsonUtilities;
 
 public class DesignerJson2ConfigJson {
 	
-	private StringBuilder configJson = null;
-	private List<String> configErrors = new ArrayList<String>();
-	private List<String> configWarnings = new ArrayList<String>();
+	//private StringBuilder configJson = null;
+	//private List<String> configErrors = new ArrayList<String>();
+	//private List<String> configWarnings = new ArrayList<String>();
 	
 	
 	public DesignerJson2ConfigJson() {
@@ -28,21 +29,23 @@ public class DesignerJson2ConfigJson {
 		
 	}
 	
+	/*
 	public String getConfigJson() {
 		return configJson.toString();
 	}
+	*/
 	
 	
-	public void convertDesignJson2ConfigJson(String designJsonFile) throws FileNotFoundException, IOException, JsonProcessingException
+	public ExcelParserConfigurator convertDesignJson2ExcelParserConfigurator(String designJsonFile) throws FileNotFoundException, IOException, JsonProcessingException
 	{
-		convertDesignJson2ConfigJson(new FileInputStream(designJsonFile));
+		return convertDesignJson2ExcelParserConfigurator(new FileInputStream(designJsonFile));
 	}
 	
-	public void convertDesignJson2ConfigJson(InputStream designJsonStream) throws FileNotFoundException, IOException, JsonProcessingException
+	public ExcelParserConfigurator convertDesignJson2ExcelParserConfigurator(InputStream designJsonStream) throws FileNotFoundException, IOException, JsonProcessingException
 	{
-		configJson = new StringBuilder();
-		configErrors.clear();
-		configWarnings.clear();
+		//configJson = new StringBuilder();
+		//configErrors.clear();
+		//configWarnings.clear();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
@@ -61,8 +64,10 @@ public class DesignerJson2ConfigJson {
 		}
 
 		JsonUtilities jsonUtils = new JsonUtilities();
-		
+		ExcelParserConfigurator conf = new ExcelParserConfigurator();
 		//TODO
+		
+		return conf;
 		
 	}
 
