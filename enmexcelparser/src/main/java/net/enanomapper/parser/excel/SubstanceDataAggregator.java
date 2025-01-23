@@ -68,17 +68,20 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
 	public List<DRTColumnInfo> drtColumns = null;
+	public List<DRTColumnInfo> rawDrtColumns = null;
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
-	public double dataMatrix[][] = null;
+	public List<double[]> rawDataMatrix = null;
+	public List<double[]> dataMatrix = null;
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
 	public SubstanceDataAggregator() {		
 	}
 	
-	public SubstanceDataAggregator(List<DRTColumnInfo> drtColumns) {
+	public SubstanceDataAggregator(List<DRTColumnInfo> rawDrtColumns, List<DRTColumnInfo> drtColumns) {
+		this.rawDrtColumns = rawDrtColumns;
 		this.drtColumns = drtColumns;
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
