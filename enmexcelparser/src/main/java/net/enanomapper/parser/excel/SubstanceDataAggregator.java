@@ -67,6 +67,7 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
+	public List<DRTColumnInfo> drtColumns = null;
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
@@ -75,6 +76,11 @@ public class SubstanceDataAggregator
 	public ProtocolApplication curPA;
 	
 	public SubstanceDataAggregator() {		
+	}
+	
+	public SubstanceDataAggregator(List<DRTColumnInfo> drtColumns) {
+		this.drtColumns = drtColumns;
+		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
 	
 	void addDefaultIOMBlock() {
