@@ -80,8 +80,8 @@ public class SubstanceDataAggregator
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
-	public List<double[]> rawDataMatrix = null;
-	public List<double[]> resultDataMatrix = null;
+	public List<Object[]> rawDataMatrix = null;
+	public List<Object[]> resultDataMatrix = null;
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
@@ -315,8 +315,15 @@ public class SubstanceDataAggregator
 		aggregatorParameters.clear();
 		expressions.clear();
 		errors.clear();
+		
+		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) {
+			rawDataMatrix = new ArrayList<Object[]>();
+			resultDataMatrix = new ArrayList<Object[]>();
+		}
+			
 	}
 	
+		
 	public AggregatorParameter getAggregatorParameterByName(String name) {
 		for (AggregatorParameter aggPar : aggregatorParameters)
 			if (aggPar.name.equals(name))
