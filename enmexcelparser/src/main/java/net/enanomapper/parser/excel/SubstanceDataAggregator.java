@@ -552,6 +552,19 @@ public class SubstanceDataAggregator
 			sb.append(aggVG.toString("    "));
 		}
 		
+		if (rawDrtColumns != null) {
+			sb.append("rawDrtColumns = \n");
+			for (DRTColumnInfo dstci: rawDrtColumns)
+				sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
+		}
+		
+		if (resultDrtColumns != null) {
+			sb.append("resultDrtColumns = \n");
+			for (DRTColumnInfo dstci: resultDrtColumns)
+				sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
+		}
+		
+		
 		//TODO blocks
 		
 		return sb.toString();
