@@ -36,15 +36,16 @@ public class SubstanceDataAggregator
 		ANALYSE, AGGREGATE, DATA_SIMULATION
 	}
 	
-	public enum DSTColumnType {
+	public enum DRTColumnType {
 		CONDITION, ENDPOINT, MATERIAL
 	}
 	
-	public static class DSTColumnInfo {
+	//DOSE_RESPONSE_TEMLATE
+	public static class DRTColumnInfo {
 		public String name = null;
 		public int index = 1;
-		public DSTColumnType type = DSTColumnType.CONDITION;
-		public DSTColumnInfo(String name, int index, DSTColumnType type) {
+		public DRTColumnType type = DRTColumnType.CONDITION;
+		public DRTColumnInfo(String name, int index, DRTColumnType type) {
 			this.name = name;
 			this.index = index;
 			this.type = type;
@@ -65,7 +66,7 @@ public class SubstanceDataAggregator
 	public List<AggregationValueGroup> valueGroups = new  ArrayList<AggregationValueGroup>();
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
-	public Map<String, String> expressions = new HashMap<String, String>();
+	public Map<String, String> expressions = new HashMap<String, String>();	
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
