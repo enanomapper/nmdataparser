@@ -20,7 +20,7 @@ import net.enanomapper.parser.excel.AggregatorParameter.SubstanceElement;
 public class SubstanceDataAggregator 
 {
 	public enum AggrationMode {
-		DATA_BLOCKS, ROWS, UNDEFINED;
+		DATA_BLOCKS, ROWS, DOSE_RESPONSE_TABLE, UNDEFINED;
 
 		public static AggrationMode fromString(String s) {
 			try {
