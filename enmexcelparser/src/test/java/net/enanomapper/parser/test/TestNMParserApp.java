@@ -11,6 +11,7 @@ import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.excel.SubstanceAnalysisTask;
 import net.enanomapper.parser.excel.SubstanceDataAggregator;
+import net.enanomapper.parser.excel.SubstanceDataAggregator.IterationTask;
 
 public class TestNMParserApp {
 
@@ -132,6 +133,8 @@ public class TestNMParserApp {
 			
 			if (substanbceAggregator != null) {
 				System.out.println("\nRunning Substance Aggregation ...");
+				substanbceAggregator.iterate(recordList, IterationTask.AGGREGATE);
+				
 				//TODO
 			}
 				

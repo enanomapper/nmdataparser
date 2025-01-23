@@ -9,6 +9,8 @@ import java.util.Set;
 
 import ambit2.base.data.SubstanceRecord;
 import ambit2.base.data.study.EffectRecord;
+import ambit2.base.data.study.IParams;
+import ambit2.base.data.study.IValue;
 import ambit2.base.data.study.Params;
 import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.interfaces.IStructureRecord;
@@ -352,6 +354,7 @@ public class SubstanceDataAggregator
 	public void iterate(SubstanceRecord rec, IterationTask itTask) 
 	{
 		curSubstance = rec;
+		System.out.println("Iterating: " + rec.getPublicName());
 		
 		switch (itTask) {
 		case ANALYSE:
@@ -376,6 +379,7 @@ public class SubstanceDataAggregator
 	public void iterate(ProtocolApplication pa, IterationTask itTask)
 	{
 		curPA = pa;
+		//System.out.println("  Prot.App: " + pa.getProtocol());
 		
 		switch (itTask) {
 		case ANALYSE:
@@ -500,19 +504,90 @@ public class SubstanceDataAggregator
 	
 	public void aggregate(SubstanceRecord rec)
 	{
-		//TODO
+		//currently nothing is done
 	}
 	
 	public void aggregate(ProtocolApplication pa)
 	{
-		//TODO
+		//currently nothing is done
 	}
 	
 	public void aggregate(EffectRecord eff)
 	{
-		//TODO
+		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) {
+			//System.out.println("*****" + eff.asJSON());
+			IParams conditions = (IParams)eff.getConditions();
+			if (eff.getEndpointType().equals("RAW")) 
+			{
+				Object dataArray[] = new Object[rawDrtColumns.size()];
+				//Set material
+				DRTColumnInfo matCol = getMaterialColumn(rawDrtColumns);
+				dataArray[matCol.index-1] = curSubstance.getPublicName();
+				//Set effect value
+				String endpoint = eff.getEndpoint().toString();
+				DRTColumnInfo epCol = findColumnByName(endpoint, rawDrtColumns);
+				dataArray[epCol.index-1] = eff.getLoValue();
+				//Set conditions
+				for (Object key: conditions.keySet()) {
+					DRTColumnInfo condCol = findColumnByName(key.toString(), rawDrtColumns);
+					if (condCol == null)
+						continue;
+					Object cond = conditions.get(key);
+					//System.out.println(key.toString() + ":" + extractValueAsString(cond));
+					dataArray[condCol.index-1] = extractValueAsString(cond);					
+				}
+				String data_s = dataArrayToString(dataArray, ", ");
+				System.out.println(data_s + "  " + endpoint);
+				//TODO calculate "material + condition signature" + Map use to agragate all endpoint value to a single row
+				
+			}
+		}
+		
+		//TODO other modes
 	}
 	
+	public DRTColumnInfo findColumnByName(String colName, List<DRTColumnInfo> columns) {
+		for (DRTColumnInfo ci : columns) {
+			if (ci.name.equals(colName))
+				return ci;
+		}
+		return null;
+	}
+	
+	public DRTColumnInfo getMaterialColumn(List<DRTColumnInfo> columns) {
+		for (DRTColumnInfo ci : columns) {
+			if (ci.type == DRTColumnType.MATERIAL)
+				return ci;
+		}
+		return null;
+	}
+	
+	public String extractValueAsString (Object o) {
+		if (o instanceof IValue) {
+			//In this case the unit and qualifier information is omitted
+			IValue v = (IValue)o;
+			return v.getLoValue().toString();
+		}
+		else
+			return o.toString();
+	}
+	
+	public String dataArrayToString(Object dataArray[], String sep) {
+		return dataArrayToString(dataArray, dataArray.length, sep);
+	}
+	
+	public String dataArrayToString(Object dataArray[], int lastIndex, String sep) {
+		StringBuffer sb = new StringBuffer();
+		int n = dataArray.length;
+		if (n > lastIndex)
+			n = lastIndex;
+		for (int i = 0; i < n; i++) {
+			sb.append(dataArray[i]);
+			if (i < n-1)
+				sb.append(sep);
+		}	
+		return sb.toString();
+	}
 	
 	public void exportDataMatrixToCSV(String fileName) throws Exception 
 	{
@@ -526,13 +601,13 @@ public class SubstanceDataAggregator
 	
 	public static SubstanceDataAggregator generateAggregator(ExcelParserConfigurator config)
 	{
-		//TIODO
+		//TODO
 		return null;
 	}
 	
 	public static SubstanceDataAggregator generateAggregator(File jsonConfig)
 	{
-		//TIODO
+		//TODO
 		return null;
 	}
 	
