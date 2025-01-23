@@ -10,9 +10,12 @@ import ambit2.base.data.study.ProtocolApplication;
 import ambit2.base.relation.composition.CompositionRelation;
 import net.enanomapper.parser.GenericExcelParser;
 import net.enanomapper.parser.excel.SubstanceAnalysisTask;
+import net.enanomapper.parser.excel.SubstanceDataAggregator;
 
 public class TestNMParserApp {
 
+	public static SubstanceDataAggregator substanbceAggregator = null;
+	
 	public static void main(String[] args) throws Exception
 	{
 		if (args.length < 2)
@@ -126,6 +129,12 @@ public class TestNMParserApp {
 				sat.flagConsoleOutOnly = true;
 				sat.run(recordList);
 			}
+			
+			if (substanbceAggregator != null) {
+				System.out.println("\nRunning Substance Aggregation ...");
+				//TODO
+			}
+				
 
 			
 		} finally {
