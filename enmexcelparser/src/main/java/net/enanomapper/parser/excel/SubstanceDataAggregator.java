@@ -35,6 +35,21 @@ public class SubstanceDataAggregator
 	public enum IterationTask {
 		ANALYSE, AGGREGATE, DATA_SIMULATION
 	}
+	
+	public enum DSTColumnType {
+		CONDITION, ENDPOINT, MATERIAL
+	}
+	
+	public static class DSTColumnInfo {
+		public String name = null;
+		public int index = 1;
+		public DSTColumnType type = DSTColumnType.CONDITION;
+		public DSTColumnInfo(String name, int index, DSTColumnType type) {
+			this.name = name;
+			this.index = index;
+			this.type = type;
+		}
+	}
 
 	public boolean FlagHandleUnregisteredElements = false;
 	
