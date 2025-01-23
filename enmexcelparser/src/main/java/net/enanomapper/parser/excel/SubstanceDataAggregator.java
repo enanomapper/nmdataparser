@@ -37,7 +37,15 @@ public class SubstanceDataAggregator
 	}
 	
 	public enum DRTColumnType {
-		CONDITION, ENDPOINT, MATERIAL
+		CONDITION, ENDPOINT, MATERIAL, UNDEFINED;
+		public static DRTColumnType fromString(String s) {
+			try {
+				DRTColumnType t = DRTColumnType.valueOf(s);
+				return (t);
+			} catch (Exception e) {
+				return DRTColumnType.UNDEFINED;
+			}
+		}
 	}
 	
 	//DOSE_RESPONSE_TEMLATE
@@ -67,24 +75,101 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
-	public List<DRTColumnInfo> drtColumns = null;
+	public List<DRTColumnInfo> resultDrtColumns = null;
 	public List<DRTColumnInfo> rawDrtColumns = null;
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
 	public List<double[]> rawDataMatrix = null;
-	public List<double[]> dataMatrix = null;
+	public List<double[]> resultDataMatrix = null;
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
 	public SubstanceDataAggregator() {		
 	}
 	
-	public SubstanceDataAggregator(List<DRTColumnInfo> rawDrtColumns, List<DRTColumnInfo> drtColumns) {
+	public SubstanceDataAggregator(List<DRTColumnInfo> rawDrtColumns, List<DRTColumnInfo> resultDrtColumns) {
 		this.rawDrtColumns = rawDrtColumns;
-		this.drtColumns = drtColumns;
+		this.resultDrtColumns = resultDrtColumns;
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
+	
+	public static SubstanceDataAggregator parseDRTAggratorSetupFromString(String str) throws Exception {
+		List<DRTColumnInfo> rawDrtColumns = new ArrayList<DRTColumnInfo>();
+		List<DRTColumnInfo> resultDrtColumns = null;
+		int rawPos = str.indexOf("RAW:");
+		int resPos = str.indexOf("RESULT:");
+		//System.out.println("rawPos = " + rawPos + "   resPos = " + resPos);
+		if (rawPos < 0 && resPos < 0)
+			throw new Exception("No RAW or RESULT section is present!");
+		
+		if (resPos >= 0 && rawPos >= resPos )
+			throw new Exception("RAW: section is expected before RESULT: section!");
+		
+		String rawStr = null;
+		String resStr = null;
+		
+		if (resPos < 0)
+			rawStr = str.substring(rawPos + 4).trim();
+		else {
+			rawStr = str.substring(rawPos + 4, resPos).trim();
+			resStr = str.substring(resPos + 7).trim();
+		}
+		
+		if (rawStr != null) {
+			System.out.println("RAW:" + rawStr);
+			if (rawStr.isEmpty())
+				throw new Exception("Incorrect empty RAW: section!");
+			String tokens[] = rawStr.split(";");
+			int nTok = tokens.length;
+			if (tokens.length % 3 != 0)
+				throw new Exception("Incorrect RAW: tokens number. It must be 3xn!");
+			int k = 0;
+			while (k < nTok) {
+				DRTColumnInfo drtci = parseDRTColumnInfo(tokens[k].trim(), tokens[k+1].trim(), tokens[k+2].trim());
+				if (drtci == null)
+					throw new Exception("Incorrect triple for DRTColumnInfo: " + 
+							tokens[k].trim() + " " + tokens[k+1].trim() + " " + tokens[k+2].trim());
+				else
+					rawDrtColumns.add(drtci);
+				k += 3;
+			}
+		}
+		
+		if (resStr != null) {
+			System.out.println("RESULT:" + resStr);
+			if (resStr.isEmpty())
+				throw new Exception("Incorrect empty RESULT: section!");
+			String tokens[] = resStr.split(";");
+			int nTok = tokens.length;
+			if (tokens.length % 3 != 0)
+				throw new Exception("Incorrect RESULT: tokens number. It must be 3xn!");
+			
+			resultDrtColumns = new ArrayList<DRTColumnInfo>();
+			//TODO
+		}	
+		
+		return new SubstanceDataAggregator(rawDrtColumns, resultDrtColumns);
+		
+	}
+	
+	static DRTColumnInfo parseDRTColumnInfo(String nameStr, String colStr, String typeStr) {
+		int col = -1;
+		try {
+			col = Integer.parseInt(colStr);
+		} catch (Exception e) {
+			return null;
+		}
+		if (col < 0)
+			return null;
+		
+		DRTColumnType type = DRTColumnType.fromString(typeStr);
+		if (type == DRTColumnType.UNDEFINED)
+			return null;
+		
+		return new DRTColumnInfo(nameStr, col, type);
+	}
+	
 	
 	void addDefaultIOMBlock() {
 		blocks.add(new AggregationBlock());
