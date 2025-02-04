@@ -369,8 +369,7 @@ public class SubstanceDataAggregator
 		}
 		
 		List<ProtocolApplication> paList = rec.getMeasurements();
-		for (ProtocolApplication pa : paList) 
-		{
+		for (ProtocolApplication pa : paList) {
 			iterate(pa, itTask);
 		}	
 	}
@@ -394,8 +393,9 @@ public class SubstanceDataAggregator
 		}
 		
 		List<EffectRecord> effects = pa.getEffects();
-		for (EffectRecord eff : effects)
-			iterate(eff, itTask);
+		if (effects != null)
+			for (EffectRecord eff : effects)
+				iterate(eff, itTask);
 	}
 
 	public void iterate(EffectRecord eff, IterationTask itTask)
