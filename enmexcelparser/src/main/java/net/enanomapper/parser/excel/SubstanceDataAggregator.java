@@ -80,6 +80,7 @@ public class SubstanceDataAggregator
 	//public List<DRTColumnInfo> resultDrtColumns = null;
 	//public List<DRTColumnInfo> rawDrtColumns = null;
 	public Map<String, List<DRTColumnInfo>> epDrtColumns = null;  //DRTColumnInfo for various endpoints
+	public List<String> endpointList = null; //List of endpoints to be aggregated (if null all endpoints are considered)
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
@@ -96,11 +97,17 @@ public class SubstanceDataAggregator
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
 	
+	public SubstanceDataAggregator(Map<String, List<DRTColumnInfo>> epDrtColumns, List<String> endpointList) {
+		this.epDrtColumns = epDrtColumns;
+		this.endpointList = endpointList; 
+		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
+	}
+	
 	public static SubstanceDataAggregator parseDRTAggratorSetupFromString(String str) throws Exception 
 	{
 		Map<String, List<DRTColumnInfo>> mapDrtColumns = new HashMap<String, List<DRTColumnInfo>>();
-		
-		//Find all occurances of "##"
+		List<String> endpointList = null;
+		//Find all occurrences of "##"
 		int lastIndex = 0;
 		List<Integer> positions = new ArrayList<Integer>();
 		while(lastIndex != -1) {
@@ -132,6 +139,13 @@ public class SubstanceDataAggregator
 			if (epType.isEmpty())
 				throw new Exception("Incorrect endpoint section\n" + epStr);
 			
+			//Check for reserved words:
+			if (epType.equals("ENDPOINT_LIST")) {
+				String epListStr = epStr.substring(semiColPos+1).trim();
+				endpointList = parseEndpointList(epListStr);
+				continue;
+			}
+			
 			//Parse column info
 			String ciStr = epStr.substring(semiColPos+1).trim();			
 			List<DRTColumnInfo> drtColumns = parseDRTColumnInfoFromString(ciStr, epType);
@@ -139,14 +153,13 @@ public class SubstanceDataAggregator
 			mapDrtColumns.put(epType, drtColumns);
 		}
 		
-		return new SubstanceDataAggregator(mapDrtColumns);		
+		return new SubstanceDataAggregator(mapDrtColumns, endpointList);	
 	}
 	
 	public static List<DRTColumnInfo> parseDRTColumnInfoFromString(String ciStr, String endpointType) throws Exception 
 	{
 		List<DRTColumnInfo> drtColumns = new ArrayList<DRTColumnInfo>();
-		
-		
+				
 		String tokens[] = ciStr.split(";");
 		int nTok = tokens.length;
 		if (tokens.length % 3 != 0)
@@ -164,6 +177,19 @@ public class SubstanceDataAggregator
 		return drtColumns;
 	}
 	
+	public static List<String> parseEndpointList(String epListStr) throws Exception 
+	{
+		List<String> epList = new ArrayList<String>();
+		String tokens[] = epListStr.split(";");
+		for (String tok : tokens) {
+			String ep = tok.trim();
+			if (ep.isEmpty())
+				throw new Exception("Incorrect ##ENDPOINT_LIST: " + epListStr);
+			else
+				epList.add(ep);
+		}	
+		return epList;
+	}
 	
 	static DRTColumnInfo parseDRTColumnInfo(String nameStr, String colStr, String typeStr) {
 		int col = -1;
@@ -529,6 +555,13 @@ public class SubstanceDataAggregator
 			//System.out.println("*****" + eff.asJSON());
 			IParams conditions = (IParams)eff.getConditions();			
 			String endpointType = eff.getEndpointType();
+			String endpoint = eff.getEndpoint().toString();
+			
+			if (endpointList != null) {
+				//check endpoint
+				if (!endpointList.contains(endpoint))
+					return;
+			}
 			
 			if (endpointType != null) {
 				List<DRTColumnInfo> drtColumns = epDrtColumns.get(endpointType);
@@ -538,8 +571,7 @@ public class SubstanceDataAggregator
 					//Set material
 					DRTColumnInfo matCol = getMaterialColumn(drtColumns);
 					dataArray[matCol.index-1] = curSubstance.getPublicName();
-					//Set effect value
-					String endpoint = eff.getEndpoint().toString();
+					//Set effect value					
 					DRTColumnInfo epCol = findColumnByName(endpoint, drtColumns);
 					dataArray[epCol.index-1] = eff.getLoValue();
 					//Set conditions
@@ -659,6 +691,13 @@ public class SubstanceDataAggregator
 				for (DRTColumnInfo dstci: drtColumns)
 					sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
 			}
+		}
+		
+		if (endpointList != null)
+		{
+			sb.append("ENDPOINT_LIST = \n");
+			for (String ep : endpointList)
+				sb.append("    " + ep + "\n");
 		}
 		
 		//TODO blocks
