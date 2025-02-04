@@ -77,8 +77,9 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
-	public List<DRTColumnInfo> resultDrtColumns = null;
-	public List<DRTColumnInfo> rawDrtColumns = null;
+	//public List<DRTColumnInfo> resultDrtColumns = null;
+	//public List<DRTColumnInfo> rawDrtColumns = null;
+	public Map<String, List<DRTColumnInfo>> epDrtColumns = null;  //DRTColumnInfo for various endpoints
 	public List<String> errors = new ArrayList<String>();
 			
 	//work variable
@@ -90,70 +91,79 @@ public class SubstanceDataAggregator
 	public SubstanceDataAggregator() {		
 	}
 	
-	public SubstanceDataAggregator(List<DRTColumnInfo> rawDrtColumns, List<DRTColumnInfo> resultDrtColumns) {
-		this.rawDrtColumns = rawDrtColumns;
-		this.resultDrtColumns = resultDrtColumns;
+	public SubstanceDataAggregator(Map<String, List<DRTColumnInfo>> epDrtColumns) {
+		this.epDrtColumns = epDrtColumns;		
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
 	
-	public static SubstanceDataAggregator parseDRTAggratorSetupFromString(String str) throws Exception {
-		List<DRTColumnInfo> rawDrtColumns = new ArrayList<DRTColumnInfo>();
-		List<DRTColumnInfo> resultDrtColumns = null;
-		int rawPos = str.indexOf("RAW:");
-		int resPos = str.indexOf("RESULT:");
-		//System.out.println("rawPos = " + rawPos + "   resPos = " + resPos);
-		if (rawPos < 0 && resPos < 0)
-			throw new Exception("No RAW or RESULT section is present!");
+	public static SubstanceDataAggregator parseDRTAggratorSetupFromString(String str) throws Exception 
+	{
+		Map<String, List<DRTColumnInfo>> mapDrtColumns = new HashMap<String, List<DRTColumnInfo>>();
 		
-		if (resPos >= 0 && rawPos >= resPos )
-			throw new Exception("RAW: section is expected before RESULT: section!");
-		
-		String rawStr = null;
-		String resStr = null;
-		
-		if (resPos < 0)
-			rawStr = str.substring(rawPos + 4).trim();
-		else {
-			rawStr = str.substring(rawPos + 4, resPos).trim();
-			resStr = str.substring(resPos + 7).trim();
-		}
-		
-		if (rawStr != null) {
-			System.out.println("RAW:" + rawStr);
-			if (rawStr.isEmpty())
-				throw new Exception("Incorrect empty RAW: section!");
-			String tokens[] = rawStr.split(";");
-			int nTok = tokens.length;
-			if (tokens.length % 3 != 0)
-				throw new Exception("Incorrect RAW: tokens number. It must be 3xn!");
-			int k = 0;
-			while (k < nTok) {
-				DRTColumnInfo drtci = parseDRTColumnInfo(tokens[k].trim(), tokens[k+1].trim(), tokens[k+2].trim());
-				if (drtci == null)
-					throw new Exception("Incorrect triple for DRTColumnInfo: " + 
-							tokens[k].trim() + " " + tokens[k+1].trim() + " " + tokens[k+2].trim());
-				else
-					rawDrtColumns.add(drtci);
-				k += 3;
+		//Find all occurances of "##"
+		int lastIndex = 0;
+		List<Integer> positions = new ArrayList<Integer>();
+		while(lastIndex != -1) {
+			lastIndex = str.indexOf("##",lastIndex);
+			if(lastIndex != -1){
+				positions.add(lastIndex);
+				lastIndex += 2;
 			}
 		}
 		
-		if (resStr != null) {
-			System.out.println("RESULT:" + resStr);
-			if (resStr.isEmpty())
-				throw new Exception("Incorrect empty RESULT: section!");
-			String tokens[] = resStr.split(";");
-			int nTok = tokens.length;
-			if (tokens.length % 3 != 0)
-				throw new Exception("Incorrect RESULT: tokens number. It must be 3xn!");
+		if (positions.isEmpty())
+			throw new Exception("No endpoint types defined. Use follwoitn syntax: ##ENDPOINT_TYPE: ...");
+		
+		for (int i = 0; i < positions.size(); i++) 
+		{
+			//Handle endpoint type
+			int pos = positions.get(i);
+			String epStr;
+			if (i == positions.size() -1)
+				epStr = str.substring(pos+2);
+			else
+				epStr = str.substring(pos+2, positions.get(i+1));
 			
-			resultDrtColumns = new ArrayList<DRTColumnInfo>();
-			//TODO
-		}	
+			int semiColPos = epStr.indexOf(":");
+			if (semiColPos == -1 )
+				throw new Exception("Incorrect endpoint section\n" + epStr);
+			
+			String epType = epStr.substring(0,semiColPos).trim();
+			if (epType.isEmpty())
+				throw new Exception("Incorrect endpoint section\n" + epStr);
+			
+			//Parse column info
+			String ciStr = epStr.substring(semiColPos+1).trim();			
+			List<DRTColumnInfo> drtColumns = parseDRTColumnInfoFromString(ciStr, epType);
+			
+			mapDrtColumns.put(epType, drtColumns);
+		}
 		
-		return new SubstanceDataAggregator(rawDrtColumns, resultDrtColumns);
-		
+		return new SubstanceDataAggregator(mapDrtColumns);		
 	}
+	
+	public static List<DRTColumnInfo> parseDRTColumnInfoFromString(String ciStr, String endpointType) throws Exception 
+	{
+		List<DRTColumnInfo> drtColumns = new ArrayList<DRTColumnInfo>();
+		
+		
+		String tokens[] = ciStr.split(";");
+		int nTok = tokens.length;
+		if (tokens.length % 3 != 0)
+			throw new Exception("Incorrect " + endpointType + ": tokens number. It must be 3xn!");
+		int k = 0;
+		while (k < nTok) {
+			DRTColumnInfo drtci = parseDRTColumnInfo(tokens[k].trim(), tokens[k+1].trim(), tokens[k+2].trim());
+			if (drtci == null)
+				throw new Exception("For " + endpointType + ": Incorrect triple for DRTColumnInfo: " + 
+						tokens[k].trim() + " " + tokens[k+1].trim() + " " + tokens[k+2].trim());
+			else
+				drtColumns.add(drtci);
+			k += 3;
+		}		
+		return drtColumns;
+	}
+	
 	
 	static DRTColumnInfo parseDRTColumnInfo(String nameStr, String colStr, String typeStr) {
 		int col = -1;
@@ -514,33 +524,39 @@ public class SubstanceDataAggregator
 	
 	public void aggregate(EffectRecord eff)
 	{
-		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) {
+		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) 
+		{
 			//System.out.println("*****" + eff.asJSON());
-			IParams conditions = (IParams)eff.getConditions();
-			if (eff.getEndpointType().equals("RAW")) 
-			{
-				Object dataArray[] = new Object[rawDrtColumns.size()];
-				//Set material
-				DRTColumnInfo matCol = getMaterialColumn(rawDrtColumns);
-				dataArray[matCol.index-1] = curSubstance.getPublicName();
-				//Set effect value
-				String endpoint = eff.getEndpoint().toString();
-				DRTColumnInfo epCol = findColumnByName(endpoint, rawDrtColumns);
-				dataArray[epCol.index-1] = eff.getLoValue();
-				//Set conditions
-				for (Object key: conditions.keySet()) {
-					DRTColumnInfo condCol = findColumnByName(key.toString(), rawDrtColumns);
-					if (condCol == null)
-						continue;
-					Object cond = conditions.get(key);
-					//System.out.println(key.toString() + ":" + extractValueAsString(cond));
-					dataArray[condCol.index-1] = extractValueAsString(cond);					
+			IParams conditions = (IParams)eff.getConditions();			
+			String endpointType = eff.getEndpointType();
+			
+			if (endpointType != null) {
+				List<DRTColumnInfo> drtColumns = epDrtColumns.get(endpointType);
+				if (drtColumns != null) 
+				{					
+					Object dataArray[] = new Object[drtColumns.size()];
+					//Set material
+					DRTColumnInfo matCol = getMaterialColumn(drtColumns);
+					dataArray[matCol.index-1] = curSubstance.getPublicName();
+					//Set effect value
+					String endpoint = eff.getEndpoint().toString();
+					DRTColumnInfo epCol = findColumnByName(endpoint, drtColumns);
+					dataArray[epCol.index-1] = eff.getLoValue();
+					//Set conditions
+					for (Object key: conditions.keySet()) {
+						DRTColumnInfo condCol = findColumnByName(key.toString(), drtColumns);
+						if (condCol == null)
+							continue;
+						Object cond = conditions.get(key);
+						//System.out.println(key.toString() + ":" + extractValueAsString(cond));
+						dataArray[condCol.index-1] = extractValueAsString(cond);					
+					}
+					String data_s = dataArrayToString(dataArray, ", ");
+					System.out.println(data_s + "  " + endpoint + "  " + endpointType);
+					//TODO calculate "material + condition signature" + Map use to agragate all endpoint value to a single row
 				}
-				String data_s = dataArrayToString(dataArray, ", ");
-				System.out.println(data_s + "  " + endpoint);
-				//TODO calculate "material + condition signature" + Map use to agragate all endpoint value to a single row
-				
 			}
+			
 		}
 		
 		//TODO other modes
@@ -634,18 +650,16 @@ public class SubstanceDataAggregator
 			sb.append(aggVG.toString("    "));
 		}
 		
-		if (rawDrtColumns != null) {
-			sb.append("rawDrtColumns = \n");
-			for (DRTColumnInfo dstci: rawDrtColumns)
-				sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
+		if (epDrtColumns != null) 
+		{
+			Set<String> epTypes = epDrtColumns.keySet();
+			for (String ept :epTypes) {
+				sb.append(ept + " DrtColumns = \n");
+				List<DRTColumnInfo> drtColumns = epDrtColumns.get(ept);
+				for (DRTColumnInfo dstci: drtColumns)
+					sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
+			}
 		}
-		
-		if (resultDrtColumns != null) {
-			sb.append("resultDrtColumns = \n");
-			for (DRTColumnInfo dstci: resultDrtColumns)
-				sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
-		}
-		
 		
 		//TODO blocks
 		
