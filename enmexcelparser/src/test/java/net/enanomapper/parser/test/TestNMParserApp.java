@@ -15,7 +15,7 @@ import net.enanomapper.parser.excel.SubstanceDataAggregator.IterationTask;
 
 public class TestNMParserApp {
 
-	public static SubstanceDataAggregator substanbceAggregator = null;
+	public static SubstanceDataAggregator[] substanceAggregators = null;
 	
 	public static void main(String[] args) throws Exception
 	{
@@ -131,11 +131,14 @@ public class TestNMParserApp {
 				sat.run(recordList);
 			}
 			
-			if (substanbceAggregator != null) {
-				System.out.println("\nRunning Substance Aggregation ...");
-				substanbceAggregator.iterate(recordList, IterationTask.AGGREGATE);
+			if (substanceAggregators != null) {
 				
-				//TODO
+				for (SubstanceDataAggregator sda : substanceAggregators) {
+					System.out.println("\nRunning Substance Aggregation ...");
+					sda.iterate(recordList, IterationTask.AGGREGATE);
+					//TODO
+				}	
+				
 			}
 				
 
