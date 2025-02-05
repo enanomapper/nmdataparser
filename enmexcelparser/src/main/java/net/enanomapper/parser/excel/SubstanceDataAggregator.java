@@ -45,6 +45,13 @@ public class SubstanceDataAggregator
 				DRTColumnType t = DRTColumnType.valueOf(s);
 				return (t);
 			} catch (Exception e) {
+				//Handle short synonymous
+				if (s.equals("CON"))
+					return DRTColumnType.CONDITION;
+				if (s.equals("EP"))
+					return DRTColumnType.ENDPOINT;
+				if (s.equals("MAT"))
+					return DRTColumnType.MATERIAL;
 				return DRTColumnType.UNDEFINED;
 			}
 		}
@@ -169,7 +176,7 @@ public class SubstanceDataAggregator
 			DRTColumnInfo drtci = parseDRTColumnInfo(tokens[k].trim(), tokens[k+1].trim(), tokens[k+2].trim());
 			if (drtci == null)
 				throw new Exception("For " + endpointType + ": Incorrect triple for DRTColumnInfo: " + 
-						tokens[k].trim() + " " + tokens[k+1].trim() + " " + tokens[k+2].trim());
+						tokens[k].trim() + "; " + tokens[k+1].trim() + "; " + tokens[k+2].trim());
 			else
 				drtColumns.add(drtci);
 			k += 3;
