@@ -99,7 +99,8 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
-	public Map<String, List<DRTColumnInfo>> epDrtColumns = null;  //DRTColumnInfo for various endpoints
+	public Map<String, List<DRTColumnInfo>> eptDrtColumns = null;  //DRTColumnInfo for various endpoint types
+	public Map<String, List<String>> eptRowIDColumns = null; //List of columns used for row ID (for each endpoint type)
 	public List<String> endpointList = null; //List of endpoints to be aggregated (if null all endpoints are considered)
 	public List<String> errors = new ArrayList<String>();
 			
@@ -111,13 +112,13 @@ public class SubstanceDataAggregator
 	public SubstanceDataAggregator() {		
 	}
 	
-	public SubstanceDataAggregator(Map<String, List<DRTColumnInfo>> epDrtColumns) {
-		this.epDrtColumns = epDrtColumns;		
+	public SubstanceDataAggregator(Map<String, List<DRTColumnInfo>> eptDrtColumns) {
+		this.eptDrtColumns = eptDrtColumns;		
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
 	
 	public SubstanceDataAggregator(Map<String, List<DRTColumnInfo>> epDrtColumns, List<String> endpointList) {
-		this.epDrtColumns = epDrtColumns;
+		this.eptDrtColumns = epDrtColumns;
 		this.endpointList = endpointList; 
 		aggrationMode = AggrationMode.DOSE_RESPONSE_TABLE;
 	}
@@ -583,7 +584,7 @@ public class SubstanceDataAggregator
 			}
 			
 			if (endpointType != null) {
-				List<DRTColumnInfo> drtColumns = epDrtColumns.get(endpointType);
+				List<DRTColumnInfo> drtColumns = eptDrtColumns.get(endpointType);
 				if (drtColumns != null) 
 				{					
 					Object dataArray[] = new Object[drtColumns.size()];
@@ -701,12 +702,12 @@ public class SubstanceDataAggregator
 			sb.append(aggVG.toString("    "));
 		}
 		
-		if (epDrtColumns != null) 
+		if (eptDrtColumns != null) 
 		{
-			Set<String> epTypes = epDrtColumns.keySet();
+			Set<String> epTypes = eptDrtColumns.keySet();
 			for (String ept :epTypes) {
 				sb.append(ept + " DrtColumns = \n");
-				List<DRTColumnInfo> drtColumns = epDrtColumns.get(ept);
+				List<DRTColumnInfo> drtColumns = eptDrtColumns.get(ept);
 				for (DRTColumnInfo dstci: drtColumns)
 					sb.append("   " + dstci.name + ", " + dstci.index + ", " + dstci.type + "\n");
 			}
