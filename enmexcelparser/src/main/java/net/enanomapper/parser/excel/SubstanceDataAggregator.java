@@ -544,6 +544,7 @@ public class SubstanceDataAggregator
 	public void aggregate(SubstanceRecord rec)
 	{
 		//currently nothing is done
+		//TODO add BLOCKS or SUBBLOCKS for IOM based templates
 	}
 	
 	public void aggregate(ProtocolApplication pa)
