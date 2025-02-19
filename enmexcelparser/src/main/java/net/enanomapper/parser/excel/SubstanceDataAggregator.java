@@ -19,6 +19,21 @@ import net.enanomapper.parser.ExcelParserConfigurator;
 import net.enanomapper.parser.excel.AggregatorParameter.AggregationTarget;
 import net.enanomapper.parser.excel.AggregatorParameter.SubstanceElement;
 
+/** 
+ * 
+ * @author Nick
+ * SubstanceDataAggregator class is used for
+ * aggregating data from Ambit Data Model (i.e. data stored in Substance class instances)
+ * into different data organizations which resemble the Excel templates
+ * 
+ *  
+ * Examples for SubstanceDataAggregator configuration string:
+ * (1) Example for DOSE_RESPONSE_TABLE aggregation
+ * 		##RESULT: Experiment; 1; CON; Material; 2; MAT;  E.exposure_time; 3; CON;
+ * 		Dose; 4; CON; Replicate; 5; CON; AUC; 6; EP ##ENDPOINT_LIST: AUC;
+ * 
+ */
+
 public class SubstanceDataAggregator 
 {
 	public enum AggrationMode {
