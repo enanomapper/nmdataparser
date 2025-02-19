@@ -84,15 +84,12 @@ public class SubstanceDataAggregator
 	public List<AggregatorParameter> aggregatorParameters = new  ArrayList<AggregatorParameter>();
 	public List<AggregatorParameter> unregisteredParameters = new  ArrayList<AggregatorParameter>();
 	public Map<String, String> expressions = new HashMap<String, String>();	
-	//public List<DRTColumnInfo> resultDrtColumns = null;
-	//public List<DRTColumnInfo> rawDrtColumns = null;
 	public Map<String, List<DRTColumnInfo>> epDrtColumns = null;  //DRTColumnInfo for various endpoints
 	public List<String> endpointList = null; //List of endpoints to be aggregated (if null all endpoints are considered)
 	public List<String> errors = new ArrayList<String>();
 			
-	//work variable
-	public List<Object[]> rawDataMatrix = null;
-	public List<Object[]> resultDataMatrix = null;
+	//work variable	
+	public Map<String, List<Object[]>> dataMatrices = new HashMap<String, List<Object[]>>();
 	public SubstanceRecord curSubstance;
 	public ProtocolApplication curPA;
 	
@@ -362,8 +359,7 @@ public class SubstanceDataAggregator
 		errors.clear();
 		
 		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) {
-			rawDataMatrix = new ArrayList<Object[]>();
-			resultDataMatrix = new ArrayList<Object[]>();
+			dataMatrices.clear();
 		}
 			
 	}
