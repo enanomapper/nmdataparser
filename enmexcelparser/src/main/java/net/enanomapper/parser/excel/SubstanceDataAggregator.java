@@ -376,10 +376,14 @@ public class SubstanceDataAggregator
 		
 		if (aggrationMode == AggrationMode.DOSE_RESPONSE_TABLE) {
 			dataMatrices.clear();
+			getDrtRowIDColumns();
 		}
 			
 	}
 	
+	void getDrtRowIDColumns() {
+		//TODO
+	}
 		
 	public AggregatorParameter getAggregatorParameterByName(String name) {
 		for (AggregatorParameter aggPar : aggregatorParameters)
