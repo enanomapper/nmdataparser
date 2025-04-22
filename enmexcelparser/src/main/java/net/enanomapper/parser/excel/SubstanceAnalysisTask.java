@@ -399,7 +399,9 @@ public class SubstanceAnalysisTask
 		List<String> condList = new ArrayList<String>();
 		for (EffectRecord eff: effects){
 			IParams conditions = (IParams) eff.getConditions();
-			Set<String> keys = conditions.keySet();
+			if (conditions == null)
+				continue;
+			Set<String> keys = conditions.keySet();			
 			for (String key : keys)
 				if (!condList.contains(key))
 					condList.add(key);
@@ -411,9 +413,11 @@ public class SubstanceAnalysisTask
 	{		
 		List<String> condList = new ArrayList<String>();
 		IParams conditions = (IParams) eff.getConditions();
-		Set<String> keys = conditions.keySet();
-		for (String key : keys)
-			condList.add(key);
+		if (conditions == null) {			
+			Set<String> keys = conditions.keySet();
+			for (String key : keys)
+				condList.add(key);
+		}
 		return condList;
 	}
 	
@@ -556,7 +560,11 @@ public class SubstanceAnalysisTask
 		List<ConditionGroup> condGrps = new ArrayList<ConditionGroup>();
 		for (EffectRecord eff: effects){
 			IParams conditions = (IParams) eff.getConditions();
-			Set<String> keys = conditions.keySet();
+			Set<String> keys;
+			if (conditions == null)
+				keys = new HashSet<String>();
+			else
+				keys = conditions.keySet();
 			ConditionGroup cg = new ConditionGroup(eff.getEndpoint().toString(), eff.getEndpointType(), keys);
 			ConditionGroup cgListInst = cg.findInList(condGrps);
 			if (cgListInst == null)
@@ -571,8 +579,12 @@ public class SubstanceAnalysisTask
 	{
 		List<ConditionValues> condVals = new ArrayList<ConditionValues>();
 		for (EffectRecord eff: effects){
-			IParams conditions = (IParams) eff.getConditions();
-			Set<String> keys = conditions.keySet();
+			IParams conditions = (IParams) eff.getConditions();			
+			Set<String> keys;
+			if (conditions == null)
+				keys = new HashSet<String>();
+			else
+				keys = conditions.keySet();
 			for (String key : keys) {
 				ConditionValues cv = new ConditionValues(eff.getEndpoint().toString(), eff.getEndpointType(), key);
 				ConditionValues cvListInst = cv.findInList(condVals);
