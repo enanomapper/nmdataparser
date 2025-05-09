@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.KEYWORD;
 import net.enanomapper.parser.ProtocolApplicationDataLocation;
 import net.enanomapper.parser.json.JsonUtilities;
 
@@ -20,7 +21,9 @@ public class DesignerJson2ConfigJson {
 	//private StringBuilder configJson = null;
 	//private List<String> configErrors = new ArrayList<String>();
 	//private List<String> configWarnings = new ArrayList<String>();
+	JsonUtilities jsonUtils = new JsonUtilities();
 	ExcelParserConfigurator curExParConf = null;
+	
 	
 	public DesignerJson2ConfigJson() {
 		init();
@@ -64,7 +67,7 @@ public class DesignerJson2ConfigJson {
 			}
 		}
 
-		JsonUtilities jsonUtils = new JsonUtilities();
+		
 		ExcelParserConfigurator conf = new ExcelParserConfigurator();
 		curExParConf = conf;
 		
@@ -72,11 +75,26 @@ public class DesignerJson2ConfigJson {
 		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
 		conf.protocolAppLocations.add(padl);
 		
-		//TODO
+		// template_layout
+		String template_layout = jsonUtils.extractStringKeyword(root, "template_layout", false);
+		//System.out.println("template_layout = " + template_layout);
 				
+		if (template_layout.equals("pchem"))
+			convertPChemLayoutDesign(root);
+		
+		if (template_layout.equals("dose_response"))
+			convertDoseResponseLayoutDesign(root);
 		
 		return conf;
 		
+	}
+	
+	void convertPChemLayoutDesign(JsonNode root) {
+		//TODO
+	}
+	
+	void convertDoseResponseLayoutDesign(JsonNode root) {
+		//TODO
 	}
 
 }
