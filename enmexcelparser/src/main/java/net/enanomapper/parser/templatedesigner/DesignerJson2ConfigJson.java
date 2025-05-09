@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.enanomapper.parser.ExcelParserConfigurator;
+import net.enanomapper.parser.ProtocolApplicationDataLocation;
 import net.enanomapper.parser.json.JsonUtilities;
 
 public class DesignerJson2ConfigJson {
@@ -19,7 +20,7 @@ public class DesignerJson2ConfigJson {
 	//private StringBuilder configJson = null;
 	//private List<String> configErrors = new ArrayList<String>();
 	//private List<String> configWarnings = new ArrayList<String>();
-	
+	ExcelParserConfigurator curExParConf = null;
 	
 	public DesignerJson2ConfigJson() {
 		init();
@@ -65,7 +66,14 @@ public class DesignerJson2ConfigJson {
 
 		JsonUtilities jsonUtils = new JsonUtilities();
 		ExcelParserConfigurator conf = new ExcelParserConfigurator();
+		curExParConf = conf;
+		
+		//Adding the basic ProtocolApplicationDataLocation
+		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
+		conf.protocolAppLocations.add(padl);
+		
 		//TODO
+				
 		
 		return conf;
 		
