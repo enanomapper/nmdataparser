@@ -71,11 +71,19 @@ public class DesignerJson2ConfigJson {
 		ExcelParserConfigurator conf = new ExcelParserConfigurator();
 		curExParConf = conf;
 		
+		//Handle basic template info
+		String template_date = jsonUtils.extractStringKeyword(root, "template_date", false);
+		String template_status = jsonUtils.extractStringKeyword(root, "template_status", false);
+		String template_name = jsonUtils.extractStringKeyword(root, "template_name", false);
+		String template_author = jsonUtils.extractStringKeyword(root, "template_author", false);
+		conf.templateName = template_name;
+		conf.templateVersion = template_status + "-" + template_date + "-" + template_author;
+				
 		//Adding the basic ProtocolApplicationDataLocation
 		ProtocolApplicationDataLocation padl = new ProtocolApplicationDataLocation();
 		conf.protocolAppLocations.add(padl);
 		
-		// template_layout
+		// Handle template_layout
 		String template_layout = jsonUtils.extractStringKeyword(root, "template_layout", false);
 		//System.out.println("template_layout = " + template_layout);
 				
