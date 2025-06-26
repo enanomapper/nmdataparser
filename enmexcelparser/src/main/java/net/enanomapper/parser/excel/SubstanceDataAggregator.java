@@ -599,14 +599,15 @@ public class SubstanceDataAggregator
 					DRTColumnInfo epCol = findColumnByName(endpoint, drtColumns);
 					dataArray[epCol.index-1] = eff.getLoValue();
 					//Set conditions
-					for (Object key: conditions.keySet()) {
-						DRTColumnInfo condCol = findColumnByName(key.toString(), drtColumns);
-						if (condCol == null)
-							continue;
-						Object cond = conditions.get(key);
-						//System.out.println(key.toString() + ":" + extractValueAsString(cond));
-						dataArray[condCol.index-1] = extractValueAsString(cond);					
-					}
+					if (conditions != null)
+						for (Object key: conditions.keySet()) {
+							DRTColumnInfo condCol = findColumnByName(key.toString(), drtColumns);
+							if (condCol == null)
+								continue;
+							Object cond = conditions.get(key);
+							//System.out.println(key.toString() + ":" + extractValueAsString(cond));
+							dataArray[condCol.index-1] = extractValueAsString(cond);					
+						}
 					String data_s = dataArrayToString(dataArray, ", ");
 					System.out.println(data_s + "  " + endpoint + "  " + endpointType);
 					//TODO calculate "material + condition signature" + Map use to agragate all endpoint value to a single row
