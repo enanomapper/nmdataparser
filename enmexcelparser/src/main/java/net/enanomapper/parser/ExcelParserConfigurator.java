@@ -115,6 +115,7 @@ public class ExcelParserConfigurator {
 	public String dynamicIterationColumnName = null;
 	public boolean FlagDynamicIterationColumnName = false;
 	
+	//A set of additional sheets (secondary data access)
 	public ArrayList<SecondaryDataAccess> secondaryDataAccess = new ArrayList<SecondaryDataAccess>();
 
 	// public Object skipRows = null;
