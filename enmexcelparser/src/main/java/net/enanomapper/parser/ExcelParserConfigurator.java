@@ -465,6 +465,24 @@ public class ExcelParserConfigurator {
 				conf.rowSpan = span;
 			}
 			*/
+			
+			//SECONDARY_DATA_ACCESS			
+			JsonNode secDataAccNode = curNode.path("SECONDARY_DATA_ACCESS");
+			if (!secDataAccNode.isMissingNode()) {
+				if (!secDataAccNode.isArray())
+					conf.configErrors.add(
+							String.format("In JSON Section '%s', the keyword 'SECONDARY_DATA_ACCESS' is not of type array!"
+									,"SECONDARY_DATA_ACCESS"));
+				else {					
+					for (int i = 0; i < secDataAccNode.size(); i++) {
+						SecondaryDataAccess secDatAcc = extractSecondaryDataAccess(curNode.get(i), i, conf);
+						if (secDatAcc == null)
+							return conf;
+						else
+							conf.secondaryDataAccess.add(secDatAcc);
+					}
+				}
+			}
 
 		}
 
@@ -1557,6 +1575,13 @@ public class ExcelParserConfigurator {
 		*/
 
 		return eshc;
+	}
+	
+	public static SecondaryDataAccess extractSecondaryDataAccess(JsonNode node, int jsonArrayIndex,
+			ExcelParserConfigurator conf) 
+	{
+		//TODO
+		return null;
 	}
 
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf,
