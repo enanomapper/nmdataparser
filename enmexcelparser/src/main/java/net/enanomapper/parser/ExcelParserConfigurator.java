@@ -41,6 +41,20 @@ import net.enanomapper.parser.recognition.Tokenize;
  */
 public class ExcelParserConfigurator {
 
+	public static class SecondaryDataAccess {
+		public IterationAccess substanceIteration = IterationAccess.ROW_SINGLE;
+		public boolean FlagSubstanceIteration = false;
+		
+		public int startRow = 2;
+		public boolean FlagStartRow = false;
+
+		public int endRow = -1;
+		public boolean FlagEndRow = false;
+
+		public int sheetIndex = 0;
+		public boolean FlagSheetIndex = false;
+	}
+	
 	private final static Logger logger = Logger.getLogger(ExcelParserConfigurator.class.getName());
 	private static final int numGuideLinesToCheck = 5;
 	private static final String guideLineJSONField = "guideline";
@@ -100,6 +114,8 @@ public class ExcelParserConfigurator {
 
 	public String dynamicIterationColumnName = null;
 	public boolean FlagDynamicIterationColumnName = false;
+	
+	public ArrayList<SecondaryDataAccess> secondaryDataAccess = new ArrayList<SecondaryDataAccess>();
 
 	// public Object skipRows = null;
 	public boolean FlagSkipRows = false;
