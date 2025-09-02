@@ -44,6 +44,7 @@ import ambit2.base.relation.STRUCTURE_RELATION;
 import ambit2.base.relation.composition.CompositionRelation;
 import ambit2.base.relation.composition.Proportion;
 import ambit2.core.io.IRawReader;
+import net.enanomapper.parser.ExcelParserConfigurator.SecondaryDataAccess;
 import net.enanomapper.parser.ParserConstants.DataInterpretation;
 import net.enanomapper.parser.ParserConstants.DynamicIteration;
 import net.enanomapper.parser.ParserConstants.IterationAccess;
@@ -84,6 +85,9 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	//protected Iterator<Row> rowIt = null;
 	//protected Cell curCell = null;
 	protected String primarySheetSynchKey = null;
+	
+	//Secondary Data Access variable
+	int curSecondaryDataAccessIndex = -1;
 	
 	// Helpers for condition references
 	protected HashMap<String, EffectRecord> referencesEffectRecord = new HashMap<String, EffectRecord>();
@@ -232,6 +236,21 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 			parallelSheetStates[i].curRowNum = eshc.startRow;
 		}
+	}
+	
+	protected void initSecondaryDataAccess(int secDatAccIndex) {
+		SecondaryDataAccess secDataAcc = config.secondaryDataAccess.get(secDatAccIndex);
+		primarySheetNum = secDataAcc.sheetIndex;
+		primarySheet = workbook.getSheetAt(primarySheetNum);
+		curRowNum = secDataAcc.startRow;
+
+		iterationLastRowNum = primarySheet.getLastRowNum();
+		if (secDataAcc.FlagEndRow)
+			if (secDataAcc.endRow < iterationLastRowNum)
+				iterationLastRowNum = secDataAcc.endRow;
+
+		logger.info("secondary data access: primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n"
+				+ "Last row# = " + (primarySheet.getLastRowNum() + 1));
 	}
 
 	protected void handleConfigRecognitions() {
@@ -551,7 +570,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		case ROW_SINGLE:
 		case ROW_MULTI_DYNAMIC:
 			// Decision logic: at least one row must be left on the primary
-			// sheet
+			// sheet or secondary data access
 			if (curRowNum <= iterationLastRowNum /*
 													 * primarySheet.
 													 * getLastRowNum()
