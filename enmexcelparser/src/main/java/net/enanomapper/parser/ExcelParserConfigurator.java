@@ -115,8 +115,8 @@ public class ExcelParserConfigurator {
 	public String dynamicIterationColumnName = null;
 	public boolean FlagDynamicIterationColumnName = false;
 	
-	//A set of additional sheets (secondary data access)
-	public ArrayList<SecondaryDataAccess> secondaryDataAccess = new ArrayList<SecondaryDataAccess>();
+	//A set of additional sheets for a secondary data access
+	public ArrayList<SecondaryDataAccess> secondaryDataAccess = null;
 
 	// public Object skipRows = null;
 	public boolean FlagSkipRows = false;
@@ -473,9 +473,11 @@ public class ExcelParserConfigurator {
 					conf.configErrors.add(
 							String.format("In JSON Section '%s', the keyword 'SECONDARY_DATA_ACCESS' is not of type array!"
 									,"SECONDARY_DATA_ACCESS"));
-				else {					
+				else {
+					conf.secondaryDataAccess = new ArrayList<SecondaryDataAccess>();
 					for (int i = 0; i < secDataAccNode.size(); i++) {
-						SecondaryDataAccess secDatAcc = extractSecondaryDataAccess(curNode.get(i), i, conf);
+						SecondaryDataAccess secDatAcc = 
+								extractSecondaryDataAccess(secDataAccNode.get(i), i, conf);
 						if (secDatAcc == null)
 							return conf;
 						else
@@ -779,7 +781,6 @@ public class ExcelParserConfigurator {
 		}
 
 		if (variableLocations != null) {
-
 			if (nDAFields > 0)
 				sb.append(",\n\n");
 			sb.append("\t\t\"VARIABLES\" : \n");
@@ -841,6 +842,45 @@ public class ExcelParserConfigurator {
 			nDAFields++;
 		}
 		*/
+		
+		if (secondaryDataAccess != null) {
+			if (nDAFields > 0)
+				sb.append(",\n\n");
+			sb.append("\t\t\"SECONDARY_DATA_ACCESS\":\n");
+			sb.append("\t\t[\n");
+			for (int i = 0; i < secondaryDataAccess.size(); i++) {
+				sb.append("\t\t\t{\n");
+				int nSDAFields = 0;
+				SecondaryDataAccess secDatAcc = secondaryDataAccess.get(i);
+				
+				if (secDatAcc.FlagSheetIndex) {
+					if (nSDAFields > 0)
+						sb.append(",\n");
+					sb.append("\t\t\t\t\"SHEET_INDEX\" : " + (secDatAcc.sheetIndex + 1)); // 0-based --> 1-based
+					nSDAFields++;
+				}
+				if (secDatAcc.FlagStartRow) {
+					if (nSDAFields > 0)
+						sb.append(",\n");
+					sb.append("\t\t\t\t\"START_ROW\" : " + (secDatAcc.startRow + 1)); // 0-based --> 1-based
+					nSDAFields++;
+				}
+				if (secDatAcc.FlagEndRow) {
+					if (nSDAFields > 0)
+						sb.append(",\n");
+					sb.append("\t\t\t\t\"END_ROW\" : " + (secDatAcc.endRow + 1)); // 0-based --> 1-based
+					nSDAFields++;
+				}
+				if (nSDAFields > 0)
+					sb.append("\n");
+				if (i < secondaryDataAccess.size()-1)
+					sb.append("\t\t\t},\n");
+				else
+					sb.append("\t\t\t}\n");
+			}
+			sb.append("\t\t]");
+			nDAFields++;
+		}
 
 		if (nDAFields > 0)
 			sb.append("\n");
@@ -1579,9 +1619,50 @@ public class ExcelParserConfigurator {
 	
 	public static SecondaryDataAccess extractSecondaryDataAccess(JsonNode node, int jsonArrayIndex,
 			ExcelParserConfigurator conf) 
-	{
-		//TODO
-		return null;
+	{		
+		SecondaryDataAccess secDatAcc = new SecondaryDataAccess();
+		JsonUtilities jsonUtils = new JsonUtilities();
+		
+		// SHEET_INDEX
+		if (!node.path(KEYWORD.SHEET_INDEX.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.SHEET_INDEX.name(), false);
+			if (intValue == null)
+				conf.configErrors.add(String.format("In JSON Section 'SECONDARY_DATA_ACCESS', "
+						+ "in the array element %d keyword '%s':  is incorrect!",
+						(jsonArrayIndex + 1), KEYWORD.SHEET_INDEX.name()));				
+			else {
+				secDatAcc.sheetIndex = intValue - 1; // 1-based --> 0-based
+				secDatAcc.FlagSheetIndex = true;
+			}
+		}
+		
+		// START_ROW
+		if (!node.path(KEYWORD.START_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.START_ROW.name(), false);
+			if (intValue == null)
+				conf.configErrors.add(String.format("In JSON Section 'SECONDARY_DATA_ACCESS', "
+						+ "in the array element %d keyword '%s':  is incorrect!",
+						(jsonArrayIndex + 1), KEYWORD.START_ROW.name()));				
+			else {
+				secDatAcc.startRow = intValue - 1; // 1-based --> 0-based
+				secDatAcc.FlagStartRow = true;
+			}
+		}
+		
+		// END_ROW
+		if (!node.path(KEYWORD.END_ROW.name()).isMissingNode()) {
+			Integer intValue = jsonUtils.extractIntKeyword(node, KEYWORD.END_ROW.name(), false);
+			if (intValue == null)
+				conf.configErrors.add(String.format("In JSON Section 'SECONDARY_DATA_ACCESS', "
+						+ "in the array element %d keyword '%s':  is incorrect!",
+						(jsonArrayIndex + 1), KEYWORD.END_ROW.name()));				
+			else {
+				secDatAcc.endRow = intValue - 1; // 1-based --> 0-based
+				secDatAcc.FlagEndRow = true;
+			}
+		}
+		
+		return secDatAcc;
 	}
 
 	public static HashMap<String, ExcelDataLocation> extractDynamicSection(JsonNode node, ExcelParserConfigurator conf,
