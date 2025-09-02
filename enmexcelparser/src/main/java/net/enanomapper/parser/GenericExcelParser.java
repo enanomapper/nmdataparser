@@ -591,7 +591,14 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 			return false;
 		}
 	}
-
+	
+	private boolean hasExcelDataForSecondaryAccess() {
+		if (config.secondaryDataAccess != null) 
+			if (curSecondaryDataAccessIndex < config.secondaryDataAccess.size())
+				return true;
+		return false;
+	}
+	
 	/**
 	 * 
 	 */
