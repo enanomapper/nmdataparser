@@ -7,6 +7,11 @@ public class EffectRecordDataLocation
 	public boolean simpleEffectBlock = false;
 	public boolean FlagSimpleEffectBlock = false;
 	
+	//When present (i.e. accessSheetIndex >= 0), 
+	//this field is used to determine whether to read the effect record within the
+	//iteration with the current sheet (typically this is needed used secondary data access is used
+	public int accessSheetIndex = -1;  
+	
 	public ExcelDataLocation sampleID = null;
 	public ExcelDataLocation endpoint = null;
 	public String reference = null;
@@ -33,6 +38,15 @@ public class EffectRecordDataLocation
 		if (FlagSimpleEffectBlock) {
 			
 			sb.append(offset + "\t\"SIMPLE_EFFECT_BLOCK\" : " + simpleEffectBlock);
+			nSections++;
+		}
+		
+		if (accessSheetIndex > -1)
+		{
+			if (nSections > 0)
+				sb.append(",\n\n");
+			// 0-based --> 1-based
+			sb.append(offset+"\t" + "\"ACCESS_SHEET_INDEX\" : \"" + (accessSheetIndex +1) + "\"");
 			nSections++;
 		}
 		
