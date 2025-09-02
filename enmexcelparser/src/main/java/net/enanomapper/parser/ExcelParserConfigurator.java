@@ -1251,7 +1251,6 @@ public class ExcelParserConfigurator {
 
 	public static EffectRecordDataLocation extractEffectDataLocation(JsonNode node, ExcelParserConfigurator conf) {
 		EffectRecordDataLocation efrdl = new EffectRecordDataLocation();
-
 		
 		// SIMPLE_EFFECT_BLOCK
 		if (!node.path("SIMPLE_EFFECT_BLOCK").isMissingNode()) {
@@ -1397,6 +1396,24 @@ public class ExcelParserConfigurator {
 				conf.configErrors.add(String.format("%s is not an array!",KEYWORD.ADD_CONDITIONS_BY_REF.name()));
 
 			}
+		}
+		
+		// ACCESS_SHEET_INDEX
+		if (!node.path("ACCESS_SHEET_INDEX").isMissingNode()) {
+			if (jsonUtils == null)
+				jsonUtils = new JsonUtilities();
+			Integer accSheetIndex = jsonUtils.extractIntKeyword(node, "ACCESS_SHEET_INDEX", false);
+			if (accSheetIndex == null) {
+				conf.configErrors.add("Incorrect ACCESS_SHEET_INDEX value: " + jsonUtils.getError());
+			} 
+			else {
+				if (accSheetIndex < 1) 
+					conf.configErrors.add(String.format("Incorrect ACCESS_SHEET_INDEX value: %d",
+							accSheetIndex));
+				else
+					efrdl.accessSheetIndex = accSheetIndex - 1; //1-base --> 0-base
+			}
+			
 		}
 
 		return efrdl;

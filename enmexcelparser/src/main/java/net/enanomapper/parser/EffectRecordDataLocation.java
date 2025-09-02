@@ -46,7 +46,7 @@ public class EffectRecordDataLocation
 			if (nSections > 0)
 				sb.append(",\n\n");
 			// 0-based --> 1-based
-			sb.append(offset+"\t" + "\"ACCESS_SHEET_INDEX\" : \"" + (accessSheetIndex +1) + "\"");
+			sb.append(offset+"\t" + "\"ACCESS_SHEET_INDEX\" : " + (accessSheetIndex +1));
 			nSections++;
 		}
 		
