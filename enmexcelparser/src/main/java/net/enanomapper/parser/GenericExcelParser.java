@@ -212,7 +212,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 				iterationLastRowNum = config.endRow;
 
 		logger.info("primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n"
-				+ "Last row# = " + (primarySheet.getLastRowNum() + 1));
+				+ "Excel last row# = " + (primarySheet.getLastRowNum() + 1) 
+				+ "   iterationLastRowNum = " + (iterationLastRowNum+1) );
 	}
 
 	protected void initParallelSheets() throws Exception {
@@ -243,16 +244,18 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		primarySheetNum = secDataAcc.sheetIndex;
 		primarySheet = workbook.getSheetAt(primarySheetNum);
 		curRowNum = secDataAcc.startRow;
+		curRow = primarySheet.getRow(curRowNum);
 
 		iterationLastRowNum = primarySheet.getLastRowNum();
 		if (secDataAcc.FlagEndRow)
 			if (secDataAcc.endRow < iterationLastRowNum)
 				iterationLastRowNum = secDataAcc.endRow;
 
-		logger.info("secondary data access: primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n"
-				+ "Last row# = " + (primarySheet.getLastRowNum() + 1));
+		logger.info("Secondary data access: primarySheet# = " + (primarySheetNum + 1) + "   starRow# = " + (curRowNum + 1) + "\n"
+				+ "Last row# = " + (primarySheet.getLastRowNum() + 1) 
+				+ "   iterationLastRowNum = " + (iterationLastRowNum + 1));
 	}
-
+	
 	protected void handleConfigRecognitions() {
 		Set<Entry<String, ExcelDataLocation>> locEntries = config.substanceLocations.entrySet();
 		for (Entry<String, ExcelDataLocation> entry : locEntries) {
@@ -492,7 +495,6 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	 */
 	@Override
 	public boolean hasNext() {
-
 		//Separate handling of SUBSTANCE_RECORD_MAP
 		if (config.substanceIteration == IterationAccess.SUBSTANCE_RECORD_MAP) 
 		{
@@ -528,7 +530,8 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 
 		if (nextRecordIndex == -1) // Loading new buffer
 		{
-			if (hasExcelDataForNextRecord()) {
+			if (hasExcelDataForNextRecord()) 
+			{	
 				// This is the actual reading of next substance record/records
 				try {
 					readVariables();
@@ -544,16 +547,15 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 						nextRecordBuffer = loadedRecordsBuffer.get(nextRecordIndex);
 						FlagNextRecordLoaded = true;
 					}
-
-					// nextRecordBuffer = getBasicSubstanceRecord();
-					// if (nextRecordBuffer == null)
-					// nextRecordBuffer = new SubstanceRecord();
-					// FlagNextRecordLoaded = true;
-
+					
 					if (config.FlagSkipRows)
 						iterateExcel_skipRows();
 					else
 						iterateExcel();
+					
+					if (config.secondaryDataAccess != null)
+						checkAndSwitchToSecondaryDataAccess();
+					
 					return FlagNextRecordLoaded;
 				} catch (Exception x) {
 					logger.log(Level.SEVERE, x.getMessage(), x);
@@ -564,6 +566,17 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		} else
 			return true;
 	}
+	
+	protected void checkAndSwitchToSecondaryDataAccess() {		
+		if (curRowNum > iterationLastRowNum) {
+			//Iteration of the current data access reached the end row
+			//Trying to switch to a secondary access iteration
+			//If previous iteration was a normal one then defult value curSecondaryDataAccessIndex = -1
+			curSecondaryDataAccessIndex++;
+			if  (curSecondaryDataAccessIndex < config.secondaryDataAccess.size())
+				initSecondaryDataAccess(curSecondaryDataAccessIndex);
+		}
+	}
 
 	private boolean hasExcelDataForNextRecord() {
 		switch (config.substanceIteration) {
@@ -571,10 +584,7 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		case ROW_MULTI_DYNAMIC:
 			// Decision logic: at least one row must be left on the primary
 			// sheet or secondary data access
-			if (curRowNum <= iterationLastRowNum /*
-													 * primarySheet.
-													 * getLastRowNum()
-													 */)
+			if (curRowNum <= iterationLastRowNum || hasExcelDataForSecondaryAccess())
 				return true;
 			else
 				return false;
@@ -1101,7 +1111,9 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 	 */
 	protected SubstanceRecord getBasicSubstanceRecord() throws Exception {
 		if (config.substanceIteration == IterationAccess.ROW_SINGLE)
-			logger.info("Reading row: " + (curRowNum + 1));
+			logger.info("Reading row: " + (curRowNum + 1) + "  on sheet: " + (primarySheetNum+1) 
+					+ ((curSecondaryDataAccessIndex > -1)?
+							("  curSecondaryDataAccessIndex: " + curSecondaryDataAccessIndex):"") );
 
 		SubstanceRecord r = new SubstanceRecord();
 		clearReferencesInfo();
