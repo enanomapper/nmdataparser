@@ -1426,7 +1426,26 @@ public class GenericExcelParser extends ExcelParserCore implements IRawReader<IS
 		if (padl.effects != null) {
 			for (int i = 0; i < padl.effects.size(); i++)
 				try {
-					EffectRecordDataLocation erdl = padl.effects.get(i);
+					EffectRecordDataLocation erdl = padl.effects.get(i);					
+					
+					if (config.secondaryDataAccess != null && curSecondaryDataAccessIndex != -1) {						
+						//Check accessSheetIndex on secondary data access
+						//accessSheetIndex must correspond to the current primarySheetNum
+						//In this way the default eff. record (erdl.accessSheetIndex == -1) will
+						//be omitted in the secondary data access iteration
+						if (erdl.accessSheetIndex != primarySheetNum )
+							continue; // the effect record should not be read
+					}
+					else {
+						//Check accessSheetIndex on normal data access iteration
+						//If erdl does not have accessSheetIndex set (i.e. accessSheetIndex = -1)
+						//by default the effect record is read in the normal iteration other wise the 
+						//accessSheetIndex must correspond to the current primarySheetNum
+						if (erdl.accessSheetIndex != -1)
+							if (erdl.accessSheetIndex != primarySheetNum )
+								continue; // the effect record should not be read
+					}
+					
 					if (erdl.simpleEffectBlock)
 					{
 						//Handle multiple effects specified as a simple effect block
