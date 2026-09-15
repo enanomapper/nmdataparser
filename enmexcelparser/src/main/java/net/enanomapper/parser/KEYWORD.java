@@ -55,7 +55,16 @@ public enum KEYWORD {
 	},
 	DYNAMIC_ITERATION_SPAN, COLUMN_SPAN, ROW_SPAN, CLEAR_EMPTY_EFFECT_RECORDS,
 	//
-	SUBSTANCE_RECORD, CONTENT, FORMAT, COMPOSITION, SUBSTANCE_RECORD_MAP, MAP_ELEMENT {
+	// SUBSTANCE_RECORD_MAP needs its own constant body: an enum body attaches to
+	// the single preceding constant only, so with the old grouping the isArray()
+	// override reached just MAP_ELEMENT (NanodataImportTest.testNMParser asserts
+	// SUBSTANCE_RECORD_MAP.isArray()).
+	SUBSTANCE_RECORD, CONTENT, FORMAT, COMPOSITION, SUBSTANCE_RECORD_MAP {
+		@Override
+		public boolean isArray() {
+			return true;
+		}
+	}, MAP_ELEMENT {
 		@Override
 		public boolean isArray() {
 			return true;
